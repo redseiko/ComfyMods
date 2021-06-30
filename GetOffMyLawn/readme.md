@@ -1,6 +1,8 @@
 # GetOffMyLawn v0.1.1
 Set the health of any player built in the game to a configurable (default: 100000) value.
 
+[Get the mod at NexusMods](https://www.nexusmods.com/valheim/mods/1349)
+
 ## Dependencies
 None
 
