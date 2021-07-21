@@ -15,7 +15,7 @@ namespace ColorfulWards {
   public class ColorfulWards : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.colorfulwards";
     public const string PluginName = "ColorfulWards";
-    public const string PluginVersion = "1.0.0";
+    public const string PluginVersion = "1.1.0";
 
     private class PrivateAreaData {
       public List<Light> PointLight { get; } = new List<Light>();
@@ -54,6 +54,7 @@ namespace ColorfulWards {
     private static ConfigEntry<string> _targetWardColorHex;
 
     private static ConfigEntry<bool> _useRadiusForVerticalCheck;
+    private static ConfigEntry<bool> _showChangeColorHoverText;
 
     private static ManualLogSource _logger;
     private Harmony _harmony;
@@ -81,6 +82,13 @@ namespace ColorfulWards {
               true,
               "Use the ward radius for access/permission checks vertically. Vanilla is infinite up/down.");
 
+      _showChangeColorHoverText =
+          Config.Bind(
+              "Hud",
+              "showChangeColorHoverText",
+              true,
+              "Show the 'change color' text when hovering over a lightsoure.");
+
       _logger = Logger;
       _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
     }
@@ -92,12 +100,7 @@ namespace ColorfulWards {
     }
 
     private void UpdateColorHexValue(object sender, EventArgs eventArgs) {
-      _targetWardColorHex.Value =
-          string.Format(
-              "#{0}",
-              _targetWardColor.Value.a == 1.0f
-                  ? ColorUtility.ToHtmlStringRGB(_targetWardColor.Value)
-                  : ColorUtility.ToHtmlStringRGBA(_targetWardColor.Value));
+      _targetWardColorHex.Value = $"{GetColorHtmlString(_targetWardColor.Value)}";
     }
 
     private void UpdateColorValue(object sender, EventArgs eventArgs) {
@@ -106,9 +109,16 @@ namespace ColorfulWards {
       }
     }
 
+    private static string GetColorHtmlString(Color color) {
+      return color.a == 1.0f
+          ? ColorUtility.ToHtmlStringRGB(color)
+          : ColorUtility.ToHtmlStringRGBA(color);
+    }
+
     [HarmonyPatch(typeof(PrivateArea))]
     private class PrivateAreaPatch {
       private static readonly int _privateAreaColorHashCode = "PrivateAreaColor".GetStableHashCode();
+      private static readonly int _privateAreaColorAlphaHashCode = "PrivateAreaColorAlpha".GetStableHashCode();
 
       private static readonly KeyboardShortcut _changeColorActionShortcut =
           new KeyboardShortcut(KeyCode.E, KeyCode.LeftShift);
@@ -161,7 +171,9 @@ namespace ColorfulWards {
           __instance.m_nview.ClaimOwnership();
         }
 
-        __instance.m_nview.GetZDO().Set(_privateAreaColorHashCode, Utils.ColorToVec3(_targetWardColor.Value));
+        __instance.m_nview.m_zdo.Set(_privateAreaColorHashCode, Utils.ColorToVec3(_targetWardColor.Value));
+        __instance.m_nview.m_zdo.Set(_privateAreaColorAlphaHashCode, _targetWardColor.Value.a);
+
         __instance.m_flashEffect.Create(__instance.transform.position, __instance.transform.rotation);
 
         if (_privateAreaData.TryGetValue(__instance, out PrivateAreaData privateAreaData)) {
@@ -197,24 +209,31 @@ namespace ColorfulWards {
           return;
         }
 
-        privateAreaData.TargetColor = Utils.Vec3ToColor(__instance.m_nview.m_zdo.m_vec3[_privateAreaColorHashCode]);
+        Color wardColor = Utils.Vec3ToColor(__instance.m_nview.m_zdo.m_vec3[_privateAreaColorHashCode]);
+        wardColor.a = __instance.m_nview.m_zdo.GetFloat(_privateAreaColorAlphaHashCode, defaultValue: 1f);
+
+        privateAreaData.TargetColor = wardColor;
         SetPrivateAreaColors(__instance, privateAreaData);
       }
 
       [HarmonyPostfix]
       [HarmonyPatch(nameof(PrivateArea.GetHoverText))]
       private static void PrivateAreaGetHoverText(ref PrivateArea __instance, ref string __result) {
-        if (!_isModEnabled.Value || !__instance || !__instance.m_piece || !__instance.m_piece.IsCreator()) {
+        if (!_isModEnabled.Value
+            || !_showChangeColorHoverText.Value
+            || !__instance
+            || !__instance.m_piece
+            || !__instance.m_piece.IsCreator()) {
           return;
         }
 
         __result =
             string.Format(
-                "{0}\n[<color={1}>{2}</color>] Change color to: <color={3}>{3}</color>",
+                "{0}\n[<color={1}>{2}</color>] Change color to: <color=#{3}>#{3}</color>",
                 __result,
                 "#ffa726",
                 _changeColorActionShortcut,
-                _targetWardColorHex.Value);
+                GetColorHtmlString(_targetWardColor.Value));
       }
     }
 

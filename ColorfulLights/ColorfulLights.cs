@@ -2,6 +2,8 @@
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -12,7 +14,7 @@ namespace ColorfulLights {
   public class ColorfulLights : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.colorfullights";
     public const string PluginName = "ColorfulLights";
-    public const string PluginVersion = "1.0.0";
+    public const string PluginVersion = "1.1.0";
 
     private class FireplaceData {
       public List<ParticleSystem> Systems { get; }
@@ -33,6 +35,8 @@ namespace ColorfulLights {
     private static ConfigEntry<Color> _targetFireplaceColor;
     private static ConfigEntry<string> _targetFireplaceColorHex;
 
+    private static ConfigEntry<bool> _showChangeColorHoverText;
+
     private static ManualLogSource _logger;
     private Harmony _harmony;
 
@@ -49,25 +53,18 @@ namespace ColorfulLights {
               $"#{ColorUtility.ToHtmlStringRGB(Color.cyan)}",
               "Target color to set torch/fire to, in HTML hex-form.");
 
-      void UpdateColorHexValue() =>
-          _targetFireplaceColorHex.Value =
-              string.Format(
-                  "#{0}",
-                  _targetFireplaceColor.Value.a == 1.0f
-                      ? ColorUtility.ToHtmlStringRGB(_targetFireplaceColor.Value)
-                      : ColorUtility.ToHtmlStringRGBA(_targetFireplaceColor.Value));
+      _targetFireplaceColor.SettingChanged += UpdateColorHexValue;
+      _targetFireplaceColorHex.SettingChanged += UpdateColorValue;
 
-      _targetFireplaceColor.SettingChanged += (sender, eventArgs) => UpdateColorHexValue();
-      UpdateColorHexValue();
-
-      _targetFireplaceColorHex.SettingChanged += (sender, eventArgs) => {
-        if (ColorUtility.TryParseHtmlString(_targetFireplaceColorHex.Value, out Color color)) {
-          _targetFireplaceColor.Value = color;
-        }
-      };
+      _showChangeColorHoverText =
+          Config.Bind(
+              "Hud",
+              "showChangeColorHoverText",
+              true,
+              "Show the 'change color' text when hovering over a lightsoure.");
 
       _logger = Logger;
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), null);
+      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
     }
 
     private void OnDestroy() {
@@ -76,15 +73,27 @@ namespace ColorfulLights {
       }
     }
 
+    private void UpdateColorHexValue(object sender, EventArgs eventArgs) {
+      _targetFireplaceColorHex.Value = $"{GetColorHtmlString(_targetFireplaceColor.Value)}";
+    }
+
+    private void UpdateColorValue(object sender, EventArgs eventArgs) {
+      if (ColorUtility.TryParseHtmlString(_targetFireplaceColorHex.Value, out Color color)) {
+        _targetFireplaceColor.Value = color;
+      }
+    }
+
+    private static string GetColorHtmlString(Color color) {
+      return color.a == 1.0f
+          ? ColorUtility.ToHtmlStringRGB(color)
+          : ColorUtility.ToHtmlStringRGBA(color);
+    }
+
     [HarmonyPatch(typeof(Fireplace))]
     private class FireplacePatch {
-      private static readonly string _hoverTextTemplate =
-          "{0} ( $piece_fire_fuel {1}/{2} )\n"
-              + "[<color={3}>$KEY_Use</color>] $piece_use\n"
-              + "[<color={4}>{5}</color>] Change color to: <color={6}>{6}</color>";
-
       private static readonly int _fuelHashCode = "fuel".GetStableHashCode();
       private static readonly int _fireplaceColorHashCode = "FireplaceColor".GetStableHashCode();
+      private static readonly int _fireplaceColorAlphaHashCode = "FireplaceColorAlpha".GetStableHashCode();
 
       private static readonly KeyboardShortcut _changeColorActionShortcut =
           new KeyboardShortcut(KeyCode.E, KeyCode.LeftShift);
@@ -99,25 +108,20 @@ namespace ColorfulLights {
         _fireplaceData.Add(__instance, ExtractFireplaceData(__instance));
       }
 
-      [HarmonyPrefix]
+      [HarmonyPostfix]
       [HarmonyPatch(nameof(Fireplace.GetHoverText))]
-      private static bool FireplaceGetHoverTextPrefix(ref Fireplace __instance, ref string __result) {
-        if (!_isModEnabled.Value || !__instance) {
-          return true;
+      private static void FireplaceGetHoverTextPostfix(ref Fireplace __instance, ref string __result) {
+        if (!_isModEnabled.Value || !_showChangeColorHoverText.Value || !__instance) {
+          return;
         }
 
         __result = Localization.instance.Localize(
             string.Format(
-                _hoverTextTemplate,
-                __instance.m_name,
-                __instance.m_nview.m_zdo.GetFloat(_fuelHashCode, 0f).ToString("N02"),
-                __instance.m_maxFuel,
-                "#ffee58",
-                "#ffa726",
+                "{0}\n[<color={1}>{2}</color>] Change fire color to: <color=#{3}>#{3}</color>",
+                __result,
+                "#FFA726",
                 _changeColorActionShortcut,
-               _targetFireplaceColorHex.Value));
-
-        return false;
+                GetColorHtmlString(_targetFireplaceColor.Value)));
       }
 
       [HarmonyPrefix]
@@ -145,7 +149,9 @@ namespace ColorfulLights {
           __instance.m_nview.ClaimOwnership();
         }
 
-        __instance.m_nview.GetZDO().Set(_fireplaceColorHashCode, Utils.ColorToVec3(_targetFireplaceColor.Value));
+        __instance.m_nview.m_zdo.Set(_fireplaceColorHashCode, Utils.ColorToVec3(_targetFireplaceColor.Value));
+        __instance.m_nview.m_zdo.Set(_fireplaceColorAlphaHashCode, _targetFireplaceColor.Value.a);
+
         __instance.m_fuelAddedEffects.Create(__instance.transform.position, __instance.transform.rotation);
 
         if (_fireplaceData.TryGetValue(__instance, out FireplaceData fireplaceData)) {
@@ -216,6 +222,7 @@ namespace ColorfulLights {
         }
 
         Color fireplaceColor = Utils.Vec3ToColor(__instance.m_nview.m_zdo.m_vec3[_fireplaceColorHashCode]);
+        fireplaceColor.a = __instance.m_nview.m_zdo.GetFloat(_fireplaceColorAlphaHashCode, 1f);
 
         SetParticleColors(fireplaceData.Systems, fireplaceData.Renderers, fireplaceColor);
         fireplaceData.TargetColor = fireplaceColor;
