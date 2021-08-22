@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using BepInEx.Logging;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
@@ -9,7 +10,7 @@ namespace GetOffMyLawn {
   [BepInPlugin(Package, ModName, Version)]
   public class GetOffMyLawn : BaseUnityPlugin {
     public const string Package = "redseiko.valheim.getoffmylawn";
-    public const string Version = "0.1.1";
+    public const string Version = "0.2.0";
     public const string ModName = "Get Off My Lawn";
 
     private static ConfigEntry<bool> _isModEnabled;
@@ -18,16 +19,17 @@ namespace GetOffMyLawn {
     private static ConfigEntry<bool> _showTopLeftMessageOnPieceRepair;
     private static ConfigEntry<bool> _showRepairEffectOnWardActivation;
 
+    private static ManualLogSource _logger;
     private Harmony _harmony;
 
     private void Awake() {
-      _isModEnabled = Config.Bind("Global", "isModEnabled", true, "Whether the mod should be enabled.");
+      _isModEnabled = Config.Bind("Global", "isModEnabled", true, "Globally enable or disable this mod.");
 
       _pieceHealth =
           Config.Bind(
-              "PieceValues",
-              "pieceHealth",
-              100000f,
+              "PieceValue",
+              "targetPieceHealth",
+              100_000_000f,
               "Target value to set piece health to when creating and repairing.");
 
       _showTopLeftMessageOnPieceRepair =
@@ -44,7 +46,8 @@ namespace GetOffMyLawn {
               false,
               "Shows the repair effect on affected pieces when activating a ward.");
 
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), null);
+      _logger = Logger;
+      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
     }
 
     private void OnDestroy() {
@@ -65,6 +68,28 @@ namespace GetOffMyLawn {
         if (_isModEnabled.Value) {
           __instance.m_monsterTargetRayMask = LayerMask.GetMask(_targetRayMask);
         }
+      }
+
+      [HarmonyPrefix]
+      [HarmonyPatch(nameof(BaseAI.FindRandomStaticTarget))]
+      private static bool FindRandomStaticTargetPrefix(ref StaticTarget __result) {
+        if (!_isModEnabled.Value) {
+          return true;
+        }
+
+        __result = null;
+        return false;
+      }
+
+      [HarmonyPrefix]
+      [HarmonyPatch(nameof(BaseAI.FindClosestStaticPriorityTarget))]
+      private static bool FindClosestStaticPriorityTargetPrefix(ref StaticTarget __result) {
+        if (!_isModEnabled.Value) {
+          return true;
+        }
+
+        __result = null;
+        return false;
       }
     }
 
@@ -90,24 +115,19 @@ namespace GetOffMyLawn {
           return;
         }
 
-        if (__instance.m_category == Piece.PieceCategory.Misc
-            || __instance.m_category == Piece.PieceCategory.Building
-            || __instance.m_category == Piece.PieceCategory.Crafting
-            || __instance.m_category == Piece.PieceCategory.Furniture) {
-          ZLog.Log(string.Format(
-              "Creating piece '{0}' with health: {1}",
-              Localization.instance.Localize(__instance.m_name),
-              _pieceHealth.Value));
+        _logger.LogInfo(
+            string.Format(
+                "Creating piece '{0}' with health: {1}",
+                Localization.instance.Localize(__instance.m_name), _pieceHealth.Value));
 
-          __instance.m_nview.GetZDO().Set(_healthHashcode, _pieceHealth.Value);
-        }
+        __instance.m_nview.GetZDO().Set(_healthHashcode, _pieceHealth.Value);
       }
     }
 
     [HarmonyPatch(typeof(PrivateArea))]
     private class PrivateAreaPatch {
-      private static readonly int _healthHashcode = "health".GetStableHashCode();
-      private static readonly List<Piece> _pieces = new List<Piece>();
+      private static readonly int _healthHashCode = "health".GetStableHashCode();
+      private static readonly List<Piece> _pieces = new();
       private static int _pieceCount = 0;
 
       [HarmonyPostfix]
@@ -122,38 +142,32 @@ namespace GetOffMyLawn {
 
         Piece.GetAllPiecesInRadius(__instance.transform.position, __instance.m_radius, _pieces);
 
-        foreach (var piece in _pieces) {
+        foreach (Piece piece in _pieces) {
           if (piece.GetComponent<Plant>()) {
             continue;
           }
 
-          if (piece.m_category == Piece.PieceCategory.Misc
-              || piece.m_category == Piece.PieceCategory.Building
-              || piece.m_category == Piece.PieceCategory.Crafting
-              || piece.m_category == Piece.PieceCategory.Furniture) {
-            piece.m_nview.GetZDO().Set(_healthHashcode, _pieceHealth.Value);
+          piece.m_nview.GetZDO().Set(_healthHashCode, _pieceHealth.Value);
 
-            if (_showRepairEffectOnWardActivation.Value) {
-              piece.m_placeEffect.Create(piece.transform.position, piece.transform.rotation);
-            }
-
-            _pieceCount++;
+          if (_showRepairEffectOnWardActivation.Value) {
+            piece.m_placeEffect.Create(piece.transform.position, piece.transform.rotation);
           }
+
+          _pieceCount++;
         }
 
-        ZLog.Log(string.Format("Repaired {0} pieces to health: {1}", _pieceCount, _pieceHealth.Value));
+        _logger.LogInfo($"Repaired {_pieceCount} pieces to health: {_pieceHealth.Value}");
 
         if (_showTopLeftMessageOnPieceRepair.Value) {
           Player.m_localPlayer.Message(
-              MessageHud.MessageType.TopLeft,
-              string.Format("Repaired {0} pieces to health: {1}", _pieceCount, _pieceHealth.Value));
+              MessageHud.MessageType.TopLeft, $"Repaired {_pieceCount} pieces to health: {_pieceHealth.Value}");
         }
       }
     }
 
     [HarmonyPatch(typeof(Player))]
     private class PlayerPatch {
-      private static readonly int _healthHashcode = "health".GetStableHashCode();
+      private static readonly int _healthHashCode = "health".GetStableHashCode();
 
       [HarmonyPrefix]
       [HarmonyPatch(nameof(Player.Repair))]
@@ -170,18 +184,17 @@ namespace GetOffMyLawn {
 
         string pieceName = Localization.instance.Localize(hoveringPiece.m_name);
 
-        if (!PrivateArea.CheckAccess(hoveringPiece.transform.position, radius: 0f, flash: false, wardCheck: false)) {
-          ZLog.Log(string.Format("Unable to repair piece '{0}' due to ward in range.", pieceName));
+        if (!PrivateArea.CheckAccess(hoveringPiece.transform.position, flash: true)) {
+          _logger.LogInfo($"Unable to repair piece '{pieceName}' due to ward in range.");
           return;
         }
 
-        hoveringPiece.m_nview.GetZDO().Set(_healthHashcode, _pieceHealth.Value);
-        ZLog.Log(string.Format("Repaired piece '{0}' to health: {1}", pieceName, _pieceHealth.Value));
+        hoveringPiece.m_nview.GetZDO().Set(_healthHashCode, _pieceHealth.Value);
+        _logger.LogInfo($"Repaired piece '{pieceName}' to health: {_pieceHealth.Value}");
 
         if (_showTopLeftMessageOnPieceRepair.Value) {
           __instance.Message(
-              MessageHud.MessageType.TopLeft,
-              string.Format("Repaired piece '{0}' to health: {1}", pieceName, _pieceHealth.Value));
+              MessageHud.MessageType.TopLeft, $"Repaired piece '{pieceName}' to health: {_pieceHealth.Value}");
         }
       }
     }

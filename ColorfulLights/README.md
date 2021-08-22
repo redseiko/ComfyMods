@@ -15,9 +15,20 @@
 
 # Changelog
 
+## 1.3.0
+
+  * Fixed colors not applying to the Light component in the `Point light` GameObject.
+  * Now writes the PlayerId to a new ZDO field: `LastColoredByPlayerId`.
+
+## 1.2.0
+
+  * Fixed a memory leak when caching lights/fires. Now starts a coroutine to clean-up the cache.
+
 ## 1.1.0
+
   * Adding configuration setting to hide the 'change color' prompt over a torch or fireplace.
   * Now saves the target color's **alpha** value to the ZDO and reads/uses this alpha value if present in the ZDO.
 
 ## 1.0.0
+
   * Initial release.

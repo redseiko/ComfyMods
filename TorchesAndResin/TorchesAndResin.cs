@@ -9,7 +9,7 @@ namespace TorchesAndResin {
   public class TorchesAndResin : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.torchesandresin";
     public const string PluginName = "Torches and Resin";
-    public const string PluginVersion = "0.0.4";
+    public const string PluginVersion = "1.0.0";
 
     private const float _torchStartingFuel = 10000f;
 
@@ -26,13 +26,11 @@ namespace TorchesAndResin {
 
     private void Awake() {
       _isModEnabled = Config.Bind("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), null);
+      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
     }
 
     private void OnDestroy() {
-      if (_harmony != null) {
-        _harmony.UnpatchSelf();
-      }
+      _harmony?.UnpatchSelf();
     }
 
     [HarmonyPatch(typeof(Fireplace))]

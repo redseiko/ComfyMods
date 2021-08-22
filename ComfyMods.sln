@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetOffMyLawn", "GetOffMyLawn\GetOffMyLawn.csproj", "{514D9344-A1B0-4EDF-93A8-17C7AE859946}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SectorDisplay", "SectorDisplay\SectorDisplay.csproj", "{989836D4-2272-4820-80E5-C9CBBFCE8BE8}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{625013F1-80A3-402C-B631-E5D52A9681C2}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -14,8 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OdinSaves", "OdinSaves\OdinSaves.csproj", "{649FAD21-6342-4434-8747-28DB2FE311BC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PieceTracking", "PieceTracking\PieceTracking.csproj", "{4D6518A8-DEE7-49B8-9DA6-A4FE055BF4EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LetMePlay", "LetMePlay\LetMePlay.csproj", "{89EF3289-8B5A-4174-8B1E-A082AB4FE9BE}"
 EndProject
@@ -35,6 +31,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeikoColorWheel", "SeikoCol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YachtClub", "YachtClub\YachtClub.csproj", "{9D96B8E2-F417-46E6-BDE9-05A32EC504CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DyeHard", "DyeHard\DyeHard.csproj", "{7C3156D5-B19A-467C-BF87-D37AEACCBC56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EulersRuler", "EulersRuler\EulersRuler.csproj", "{86A1824A-1BBE-404B-A4E3-F619D06CA938}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterZeeLog", "BetterZeeLog\BetterZeeLog.csproj", "{D1094B63-AB04-4330-B85E-D68E855E2E04}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterConnectPanel", "BetterConnectPanel\BetterConnectPanel.csproj", "{5A1E27DB-61CA-4120-8809-388F3BD65329}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterZeeDeeOhs", "BetterZeeDeeOhs\BetterZeeDeeOhs.csproj", "{AD9046E8-110B-4326-BC37-7D879DA3B3F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,18 +51,10 @@ Global
 		{514D9344-A1B0-4EDF-93A8-17C7AE859946}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{514D9344-A1B0-4EDF-93A8-17C7AE859946}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{514D9344-A1B0-4EDF-93A8-17C7AE859946}.Release|Any CPU.Build.0 = Release|Any CPU
-		{989836D4-2272-4820-80E5-C9CBBFCE8BE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{989836D4-2272-4820-80E5-C9CBBFCE8BE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{989836D4-2272-4820-80E5-C9CBBFCE8BE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{989836D4-2272-4820-80E5-C9CBBFCE8BE8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{649FAD21-6342-4434-8747-28DB2FE311BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{649FAD21-6342-4434-8747-28DB2FE311BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{649FAD21-6342-4434-8747-28DB2FE311BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{649FAD21-6342-4434-8747-28DB2FE311BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4D6518A8-DEE7-49B8-9DA6-A4FE055BF4EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4D6518A8-DEE7-49B8-9DA6-A4FE055BF4EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4D6518A8-DEE7-49B8-9DA6-A4FE055BF4EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4D6518A8-DEE7-49B8-9DA6-A4FE055BF4EA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{89EF3289-8B5A-4174-8B1E-A082AB4FE9BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{89EF3289-8B5A-4174-8B1E-A082AB4FE9BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89EF3289-8B5A-4174-8B1E-A082AB4FE9BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -93,6 +91,26 @@ Global
 		{9D96B8E2-F417-46E6-BDE9-05A32EC504CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D96B8E2-F417-46E6-BDE9-05A32EC504CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D96B8E2-F417-46E6-BDE9-05A32EC504CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C3156D5-B19A-467C-BF87-D37AEACCBC56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C3156D5-B19A-467C-BF87-D37AEACCBC56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C3156D5-B19A-467C-BF87-D37AEACCBC56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C3156D5-B19A-467C-BF87-D37AEACCBC56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86A1824A-1BBE-404B-A4E3-F619D06CA938}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86A1824A-1BBE-404B-A4E3-F619D06CA938}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86A1824A-1BBE-404B-A4E3-F619D06CA938}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86A1824A-1BBE-404B-A4E3-F619D06CA938}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1094B63-AB04-4330-B85E-D68E855E2E04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1094B63-AB04-4330-B85E-D68E855E2E04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1094B63-AB04-4330-B85E-D68E855E2E04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1094B63-AB04-4330-B85E-D68E855E2E04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A1E27DB-61CA-4120-8809-388F3BD65329}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A1E27DB-61CA-4120-8809-388F3BD65329}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A1E27DB-61CA-4120-8809-388F3BD65329}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A1E27DB-61CA-4120-8809-388F3BD65329}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD9046E8-110B-4326-BC37-7D879DA3B3F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD9046E8-110B-4326-BC37-7D879DA3B3F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD9046E8-110B-4326-BC37-7D879DA3B3F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD9046E8-110B-4326-BC37-7D879DA3B3F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

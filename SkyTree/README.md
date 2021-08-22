@@ -2,6 +2,17 @@
 
   * Makes the tree in the sky (Yggdrasil / World Tree) solid and a foundation to build on.
 
-# Instructions
+## Instructions
 
   * Unzip `SkyTree.dll` to `/Valheim/BepInEx/plugins/`.
+
+## Changelog
+
+### 1.1.0
+
+  * Updated project template and references to use latest DLLs.
+  * Small code clean-up.
+
+### 1.0.0
+
+  * Initial release.

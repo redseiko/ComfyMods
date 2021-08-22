@@ -7,7 +7,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace ColorfulWards {
@@ -15,7 +14,7 @@ namespace ColorfulWards {
   public class ColorfulWards : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.colorfulwards";
     public const string PluginName = "ColorfulWards";
-    public const string PluginVersion = "1.1.0";
+    public const string PluginVersion = "1.2.0";
 
     private class PrivateAreaData {
       public List<Light> PointLight { get; } = new List<Light>();
@@ -46,8 +45,7 @@ namespace ColorfulWards {
       }
     }
 
-    private static readonly ConditionalWeakTable<PrivateArea, PrivateAreaData> _privateAreaData =
-        new ConditionalWeakTable<PrivateArea, PrivateAreaData>();
+    private static readonly Dictionary<PrivateArea, PrivateAreaData> _privateAreaData = new();
 
     private static ConfigEntry<bool> _isModEnabled;
     private static ConfigEntry<Color> _targetWardColor;
@@ -100,7 +98,7 @@ namespace ColorfulWards {
     }
 
     private void UpdateColorHexValue(object sender, EventArgs eventArgs) {
-      _targetWardColorHex.Value = $"{GetColorHtmlString(_targetWardColor.Value)}";
+      _targetWardColorHex.Value = $"#{GetColorHtmlString(_targetWardColor.Value)}";
     }
 
     private void UpdateColorValue(object sender, EventArgs eventArgs) {
@@ -120,8 +118,7 @@ namespace ColorfulWards {
       private static readonly int _privateAreaColorHashCode = "PrivateAreaColor".GetStableHashCode();
       private static readonly int _privateAreaColorAlphaHashCode = "PrivateAreaColorAlpha".GetStableHashCode();
 
-      private static readonly KeyboardShortcut _changeColorActionShortcut =
-          new KeyboardShortcut(KeyCode.E, KeyCode.LeftShift);
+      private static readonly KeyboardShortcut _changeColorActionShortcut = new(KeyCode.E, KeyCode.LeftShift);
 
       [HarmonyPrefix]
       [HarmonyPatch(nameof(PrivateArea.IsInside))]
@@ -143,6 +140,12 @@ namespace ColorfulWards {
         }
 
         _privateAreaData.Add(__instance, new PrivateAreaData(__instance));
+      }
+
+      [HarmonyPrefix]
+      [HarmonyPatch(nameof(PrivateArea.OnDestroy))]
+      private static void PrivateAreaOnDestroyPrefix(ref PrivateArea __instance) {
+        _privateAreaData.Remove(__instance);
       }
 
       [HarmonyPrefix]

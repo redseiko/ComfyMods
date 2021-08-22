@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace ColorfulPieces {
@@ -14,13 +13,10 @@ namespace ColorfulPieces {
   public class ColorfulPieces : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.colorfulpieces";
     public const string PluginName = "ColorfulPieces";
-    public const string PluginVersion = "0.9.0";
+    public const string PluginVersion = "1.1.0";
 
-    private static readonly KeyboardShortcut _changeColorActionShortcut =
-        new KeyboardShortcut(KeyCode.R, KeyCode.LeftShift);
-
-    private static readonly KeyboardShortcut _clearColorActionShortcut =
-        new KeyboardShortcut(KeyCode.R, KeyCode.LeftAlt);
+    private static readonly KeyboardShortcut _changeColorActionShortcut = new(KeyCode.R, KeyCode.LeftShift);
+    private static readonly KeyboardShortcut _clearColorActionShortcut = new(KeyCode.R, KeyCode.LeftAlt);
 
     private static readonly int _pieceColorHashCode = "PieceColor".GetStableHashCode();
     private static readonly int _pieceEmissionColorFactorHashCode = "PieceEmissionColorFactor".GetStableHashCode();
@@ -51,13 +47,13 @@ namespace ColorfulPieces {
       }
     }
 
-    private static readonly ConditionalWeakTable<WearNTear, WearNTearData> _wearNTearData =
-        new ConditionalWeakTable<WearNTear, WearNTearData>();
+    private static readonly Dictionary<WearNTear, WearNTearData> _wearNTearDataCache = new();
 
     private static ConfigEntry<bool> _isModEnabled;
     private static ConfigEntry<Color> _targetPieceColor;
     private static ConfigEntry<string> _targetPieceColorHex;
     private static ConfigEntry<float> _targetPieceEmissionColorFactor;
+    private static ConfigEntry<bool> _showChangeRemoveColorPrompt;
 
     private static ManualLogSource _logger;
     private Harmony _harmony;
@@ -85,7 +81,10 @@ namespace ColorfulPieces {
               0.4f,
               new ConfigDescription(
                   "Factor to multiply the target color by and set as emission color.",
-                  new AcceptableValueRange<float>(0.0f, 0.6f)));
+                  new AcceptableValueRange<float>(0f, 0.6f)));
+
+      _showChangeRemoveColorPrompt =
+          Config.Bind("Hud", "showChangeRemoveColorPrompt", true, "Show the 'change/remove' color text prompt.");
 
       _logger = Logger;
       _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
@@ -127,6 +126,7 @@ namespace ColorfulPieces {
           || !wearNTear.m_nview
           || !wearNTear.m_nview.IsValid()
           || !PrivateArea.CheckAccess(wearNTear.transform.position, flash: true)) {
+        _logger.LogWarning("Piece does not have a valid ZNetView or is in a PrivateArea.");
         return false;
       }
 
@@ -145,10 +145,15 @@ namespace ColorfulPieces {
       wearNTear.m_nview.m_zdo.Set(_pieceColorHashCode, Utils.ColorToVec3(_targetPieceColor.Value));
       wearNTear.m_nview.m_zdo.Set(_pieceEmissionColorFactorHashCode, _targetPieceEmissionColorFactor.Value);
 
-      if (_wearNTearData.TryGetValue(wearNTear, out WearNTearData wearNTearData)) {
+      if (_wearNTearDataCache.TryGetValue(wearNTear, out WearNTearData wearNTearData)) {
         wearNTearData.TargetColor = _targetPieceColor.Value;
         wearNTearData.TargetEmissionColorFactor = _targetPieceEmissionColorFactor.Value;
+
         SetWearNTearColors(wearNTearData);
+      }
+
+      if (wearNTear.m_piece) {
+        wearNTear.m_piece.m_placeEffect.Create(wearNTear.transform.position, wearNTear.transform.rotation);
       }
     }
 
@@ -162,10 +167,15 @@ namespace ColorfulPieces {
         wearNTear.m_nview.m_zdo.IncreseDataRevision();
       }
 
-      if (_wearNTearData.TryGetValue(wearNTear, out WearNTearData wearNTearData)) {
+      if (_wearNTearDataCache.TryGetValue(wearNTear, out WearNTearData wearNTearData)) {
         wearNTearData.TargetColor = Color.clear;
         wearNTearData.TargetEmissionColorFactor = 0f;
+
         ClearWearNTearColors(wearNTearData);
+      }
+
+      if (wearNTear.m_piece) {
+        wearNTear.m_piece.m_placeEffect.Create(wearNTear.transform.position, wearNTear.transform.rotation);
       }
     }
 
@@ -178,7 +188,13 @@ namespace ColorfulPieces {
           return;
         }
 
-        _wearNTearData.Add(__instance, new WearNTearData(__instance));
+        _wearNTearDataCache[__instance] = new WearNTearData(__instance);
+      }
+
+      [HarmonyPrefix]
+      [HarmonyPatch(nameof(WearNTear.OnDestroy))]
+      private static void WearNTearOnDestroyPrefix(ref WearNTear __instance) {
+        _wearNTearDataCache.Remove(__instance);
       }
 
       [HarmonyPostfix]
@@ -190,7 +206,7 @@ namespace ColorfulPieces {
             || __instance.m_nview.m_zdo == null
             || __instance.m_nview.m_zdo.m_zdoMan == null
             || __instance.m_nview.m_zdo.m_vec3 == null
-            || !_wearNTearData.TryGetValue(__instance, out WearNTearData wearNTearData)
+            || !_wearNTearDataCache.TryGetValue(__instance, out WearNTearData wearNTearData)
             || wearNTearData.LastDataRevision >= __instance.m_nview.m_zdo.m_dataRevision) {
           return;
         }
@@ -219,13 +235,18 @@ namespace ColorfulPieces {
     private class HudPatch {
       private static readonly string _hoverNameTextTemplate =
         "{0}{1}"
-            + "[<color={2}>{3}</color>] Change color to: <color=#{4}>#{4}</color> (f: <color=#{4}>{5}</color>)\n"
-            + "[<color={6}>{7}</color>] Clear existing color\n";
+            + "[<color={2}>{3}</color>] Change piece color to: <color=#{4}>#{4}</color> (f: <color=#{4}>{5}</color>)\n"
+            + "[<color={6}>{7}</color>] Clear existing piece color\n";
 
       [HarmonyPostfix]
       [HarmonyPatch(nameof(Hud.UpdateCrosshair))]
       private static void HudUpdateCrosshairPostfix(ref Hud __instance, ref Player player) {
-        if (!_isModEnabled.Value || !__instance || !player || player != Player.m_localPlayer || !player.m_hovering) {
+        if (!_isModEnabled.Value
+            || !_showChangeRemoveColorPrompt.Value
+            || !__instance
+            || !player
+            || player != Player.m_localPlayer
+            || !player.m_hovering) {
           return;
         }
 

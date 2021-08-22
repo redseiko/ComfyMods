@@ -13,3 +13,18 @@
   3. Hover over any building piece ***that you are the owner of*** and a prompt will appear.
      * Hit `LeftShift + R` to change the building piece color to the target color and emission factor.
      * Hit `LeftAlt + R` to clear any existing colors from the building piece.
+     * This prompt can be hidden by disabling the `showChangeRemoveColorPrompt` setting.
+
+# Changelog
+
+## 1.1.0
+
+  * Fixed a memory leak causing the game to crash/freeze during a player profile save.
+    * This is because we used ConditionalWeakTable to cache piece materials but the Unity docs state that
+      UnityEngine.Object does not support WeakReferences.
+    * Changed to a Dictionary instead and patch `WearNTear.OnDestroy()` to remove the reference.
+  * Added configuration setting to hide the 'change color' and 'remove color' prompt over a ward.
+
+## 1.0.0
+
+  * Initial release.
