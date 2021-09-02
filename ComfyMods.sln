@@ -41,6 +41,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterConnectPanel", "Bette
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterZeeDeeOhs", "BetterZeeDeeOhs\BetterZeeDeeOhs.csproj", "{AD9046E8-110B-4326-BC37-7D879DA3B3F1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silence", "Silence\Silence.csproj", "{80FE78CC-4CBB-4A45-9790-809B6ED70B46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shortcuts", "Shortcuts\Shortcuts.csproj", "{149D97C3-4482-49C6-AB51-74F0164D425A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +115,14 @@ Global
 		{AD9046E8-110B-4326-BC37-7D879DA3B3F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD9046E8-110B-4326-BC37-7D879DA3B3F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD9046E8-110B-4326-BC37-7D879DA3B3F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80FE78CC-4CBB-4A45-9790-809B6ED70B46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80FE78CC-4CBB-4A45-9790-809B6ED70B46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80FE78CC-4CBB-4A45-9790-809B6ED70B46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80FE78CC-4CBB-4A45-9790-809B6ED70B46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{149D97C3-4482-49C6-AB51-74F0164D425A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{149D97C3-4482-49C6-AB51-74F0164D425A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{149D97C3-4482-49C6-AB51-74F0164D425A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{149D97C3-4482-49C6-AB51-74F0164D425A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,7 +2,6 @@
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
-using System;
 using System.Reflection;
 using UnityEngine;
 
@@ -11,7 +10,7 @@ namespace DyeHard {
   public class DyeHard : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.dyehard";
     public const string PluginName = "DyeHard";
-    public const string PluginVersion = "1.0.0";
+    public const string PluginVersion = "1.0.1";
 
     private static readonly int _hairColorHashCode = "HairColor".GetStableHashCode();
 
@@ -21,7 +20,6 @@ namespace DyeHard {
 
     private static ConfigEntry<bool> _isModEnabled;
 
-    private static ManualLogSource _logger;
     private Harmony _harmony;
 
     private static Player _localPlayer;
@@ -53,8 +51,7 @@ namespace DyeHard {
       _playerHairColorHex.SettingChanged += (sender, eventArgs) => UpdatePlayerHairColorValue();
       _playerHairGlow.SettingChanged += (sender, eventArgs) => SetPlayerZdoHairColor();
 
-      _logger = Logger;
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
+      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
     }
 
     private void OnDestroy() {
