@@ -15,9 +15,10 @@ namespace TorchesAndResin {
 
     private static readonly int _fuelHashCode = "fuel".GetStableHashCode();
     private static readonly string[] _eligibleTorchItemNames = {
-      "$piece_groundtorchwood",
-      "$piece_groundtorch",
-      "$piece_sconce"
+      "piece_groundtorch_wood", // standing wood torch
+      "piece_groundtorch", // standing iron torch
+      "piece_walltorch", // sconce torch
+      "piece_brazierceiling01" // brazier
     };
 
     private static ConfigEntry<bool> _isModEnabled;
@@ -42,7 +43,7 @@ namespace TorchesAndResin {
             || !__instance.m_nview
             || !__instance.m_nview.IsValid()
             || !__instance.m_nview.IsOwner()
-            || Array.IndexOf(_eligibleTorchItemNames, __instance.m_name) < 0) {
+            || Array.IndexOf(_eligibleTorchItemNames, __instance.m_nview.GetPrefabName()) < 0) {
           return;
         }
 
