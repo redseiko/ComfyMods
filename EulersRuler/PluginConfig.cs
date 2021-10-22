@@ -6,7 +6,7 @@ using UnityEngine;
 namespace EulersRuler {
   class PluginConfig {
     [Flags]
-    internal enum HoverPiecePanelRow {
+    public enum HoverPiecePanelRow {
       None = 0,
       Name = 1,
       Health = 2,
@@ -16,25 +16,25 @@ namespace EulersRuler {
     }
 
     [Flags]
-    internal enum PlacementGhostPanelRow {
+    public enum PlacementGhostPanelRow {
       None = 0,
       Name = 1,
       Euler = 2,
       Quaternion = 4,
     }
 
-    internal static ConfigEntry<bool> _isModEnabled;
+    public static ConfigEntry<bool> _isModEnabled;
 
-    internal static ConfigEntry<Vector2> _hoverPiecePanelPosition;
-    internal static ConfigEntry<HoverPiecePanelRow> _hoverPiecePanelEnabledRows;
-    internal static ConfigEntry<int> _hoverPiecePanelFontSize;
-    internal static ConfigEntry<bool> _showHoverPieceHealthBar;
+    public static ConfigEntry<Vector2> _hoverPiecePanelPosition;
+    public static ConfigEntry<HoverPiecePanelRow> _hoverPiecePanelEnabledRows;
+    public static ConfigEntry<int> _hoverPiecePanelFontSize;
+    public static ConfigEntry<bool> _showHoverPieceHealthBar;
 
-    internal static ConfigEntry<Vector2> _placementGhostPanelPosition;
-    internal static ConfigEntry<PlacementGhostPanelRow> _placementGhostPanelEnabledRows;
-    internal static ConfigEntry<int> _placementGhostPanelFontSize;
+    public static ConfigEntry<Vector2> _placementGhostPanelPosition;
+    public static ConfigEntry<PlacementGhostPanelRow> _placementGhostPanelEnabledRows;
+    public static ConfigEntry<int> _placementGhostPanelFontSize;
 
-    internal static void CreateConfig(ConfigFile config) {
+    public static void CreateConfig(ConfigFile config) {
       _isModEnabled = config.Bind("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
 
       _hoverPiecePanelPosition =

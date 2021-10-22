@@ -1,10 +1,13 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+
 using HarmonyLib;
+
 using System;
 using System.Collections;
 using System.Reflection;
+
 using UnityEngine;
 
 namespace SkyTree {
@@ -12,21 +15,21 @@ namespace SkyTree {
   public class SkyTree : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.skytree";
     public const string PluginName = "SkyTree";
-    public const string PluginVersion = "1.1.0";
+    public const string PluginVersion = "1.2.0";
 
-    private static ConfigEntry<bool> _isModEnabled;
+    static ConfigEntry<bool> _isModEnabled;
 
-    private static ManualLogSource _logger;
-    private Harmony _harmony;
+    static ManualLogSource _logger;
+    Harmony _harmony;
 
-    private void Awake() {
+    public void Awake() {
       _isModEnabled = Config.Bind("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
 
       _logger = Logger;
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
+      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginVersion);
     }
 
-    private void OnDestroy() {
+    public void OnDestroy() {
       _harmony?.UnpatchSelf();
     }
 
@@ -41,9 +44,9 @@ namespace SkyTree {
       }
     }
 
-    private static IEnumerator FixYggdrasilBranchCoroutine() {
-      _logger.LogInfo("Starting FixYggdrasilBranch coroutine.");
+    static IEnumerator FixYggdrasilBranchCoroutine() {
       WaitForSeconds waitInterval = new(seconds: 3f);
+      _logger.LogInfo("Starting FixYggdrasilBranch coroutine.");
 
       while (true) {
         yield return waitInterval;
@@ -74,7 +77,7 @@ namespace SkyTree {
 
           MeshFilter filter = branch.GetComponentInChildren<MeshFilter>();
 
-          if (!filter || !branch.TryGetComponent(out MeshCollider collider)) {
+          if (!filter || branch.TryGetComponent(out MeshCollider collider)) {
             continue;
           }
 

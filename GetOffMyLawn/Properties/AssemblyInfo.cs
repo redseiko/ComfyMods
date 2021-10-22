@@ -33,5 +33,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion(GetOffMyLawn.GetOffMyLawn.Version)]
-[assembly: AssemblyFileVersion(GetOffMyLawn.GetOffMyLawn.Version)]
+[assembly: AssemblyVersion(GetOffMyLawn.GetOffMyLawn.PluginVersion)]
+[assembly: AssemblyFileVersion(GetOffMyLawn.GetOffMyLawn.PluginVersion)]

@@ -2,13 +2,13 @@
 using UnityEngine.UI;
 
 namespace EulersRuler {
-  internal class TwoColumnPanel {
-    private readonly Font _textFont = null;
-    private int _textFontSize = 18;
+  public class TwoColumnPanel {
+     readonly Font _textFont = null;
+     int _textFontSize = 18;
 
-    private GameObject _panel = null;
-    private GameObject _leftColumn = null;
-    private GameObject _rightColumn = null;
+     GameObject _panel = null;
+     GameObject _leftColumn = null;
+     GameObject _rightColumn = null;
 
     internal TwoColumnPanel(Transform parent, Font textFont) {
       _textFont = textFont;

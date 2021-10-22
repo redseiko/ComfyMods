@@ -4,16 +4,26 @@
   * Fireworks launched from bonfires will also be colored **AND** visible to others with the mod.
   * Those without the mod will still see yellow torches, green guck torches and standard yellow fireworks.
 
-# Instructions
+## Instructions
 
   1. Unzip `ColorfulLights.dll` to your `/Valheim/BepInEx/plugins/` folder.
   2. In-game, press F1 to bring up the ConfigurationManager and navigate to the ColorfulLights section.
      * Change the target color using the RGB sliders or using an HTML color code.
   3. Hover or any torch or fireplace and a prompt to change its color will appear.
      * This prompt can be hidden by disabling the `showChangeColorHoverText` setting.
+     * Prompt font-size can be configured with the `colorPromptFontSize` setting.
   4. Hit `LeftShift + E` to change the color.
 
-# Changelog
+## Changelog
+
+### 1.5.0
+
+  * Added an option to change the font-size for the text prompt on hover.
+
+## 1.4.0
+
+  * Updated for Hearth & Home.
+  * Renamed `LastColoredByPlayerId` ZDO key to `LightLastColoredBy`.
 
 ## 1.3.0
 

@@ -8,6 +8,7 @@ namespace Shortcuts {
 
     public static ConfigEntry<KeyboardShortcut> _toggleConsoleShortcut;
     public static ConfigEntry<KeyboardShortcut> _toggleHudShortcut;
+    public static ConfigEntry<KeyboardShortcut> _toggleConnectPanelShortcut;
 
     public static ConfigEntry<KeyboardShortcut> _takeScreenshotShortcut;
     public static ConfigEntry<KeyboardShortcut> _toggleMouseCaptureShortcut;
@@ -15,6 +16,7 @@ namespace Shortcuts {
     public static ConfigEntry<KeyboardShortcut> _toggleDebugFlyShortcut;
     public static ConfigEntry<KeyboardShortcut> _toggleDebugNoCostShortcut;
     public static ConfigEntry<KeyboardShortcut> _debugKillAllShortcut;
+    public static ConfigEntry<KeyboardShortcut> _debugRemoveDropsShortcut;
 
     public static ConfigEntry<KeyboardShortcut> _hotbarItem1Shortcut;
     public static ConfigEntry<KeyboardShortcut> _hotbarItem2Shortcut;
@@ -42,6 +44,13 @@ namespace Shortcuts {
               "toggleHudShortcut",
               new KeyboardShortcut(KeyCode.F3, KeyCode.LeftControl),
               "Shortcut to toggle the Hud on/off.");
+
+      _toggleConnectPanelShortcut =
+          config.Bind(
+              "ConnectPanel",
+              "toggleConnectPanelShortcut",
+              new KeyboardShortcut(KeyCode.F2),
+              "Shortcut to toggle the ConnectPanel on/off.");
 
       _takeScreenshotShortcut =
           config.Bind(
@@ -77,6 +86,13 @@ namespace Shortcuts {
               "debugKillAllShortcut",
               new KeyboardShortcut(KeyCode.None),
               "Shortcut to kill/damage all mobs around player. Unbound by default.");
+
+      _debugRemoveDropsShortcut =
+          config.Bind(
+              "Debugmode",
+              "debugRemoveDropsShortcut",
+              new KeyboardShortcut(KeyCode.None),
+              "Shortcut to 'removedrops' command. Unbound by default.");
 
       _hotbarItem1Shortcut =
           config.Bind(

@@ -2,7 +2,6 @@
 
 using HarmonyLib;
 
-using System;
 using System.Collections;
 using System.Reflection;
 using UnityEngine;
@@ -15,39 +14,39 @@ namespace EulersRuler {
   public class EulersRuler : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.eulersruler";
     public const string PluginName = "EulersRuler";
-    public const string PluginVersion = "1.1.1";
+    public const string PluginVersion = "1.2.0";
 
-    private static readonly Gradient _healthPercentGradient = CreateHealthPercentGradient();
-    private static readonly Gradient _stabilityPercentGradient = CreateStabilityPercentGradient();
+    static readonly Gradient _healthPercentGradient = CreateHealthPercentGradient();
+    static readonly Gradient _stabilityPercentGradient = CreateStabilityPercentGradient();
 
-    private static readonly int _healthHashCode = "health".GetStableHashCode();
+    static readonly int _healthHashCode = "health".GetStableHashCode();
 
-    private static TwoColumnPanel _hoverPiecePanel;
-    private static Text _pieceNameTextLabel;
-    private static Text _pieceNameTextValue;
-    private static Text _pieceHealthTextLabel;
-    private static Text _pieceHealthTextValue;
-    private static Text _pieceStabilityTextLabel;
-    private static Text _pieceStabilityTextValue;
-    private static Text _pieceEulerTextLabel;
-    private static Text _pieceEulerTextValue;
-    private static Text _pieceQuaternionTextLabel;
-    private static Text _pieceQuaternionTextValue;
+    static TwoColumnPanel _hoverPiecePanel;
+    static Text _pieceNameTextLabel;
+    static Text _pieceNameTextValue;
+    static Text _pieceHealthTextLabel;
+    static Text _pieceHealthTextValue;
+    static Text _pieceStabilityTextLabel;
+    static Text _pieceStabilityTextValue;
+    static Text _pieceEulerTextLabel;
+    static Text _pieceEulerTextValue;
+    static Text _pieceQuaternionTextLabel;
+    static Text _pieceQuaternionTextValue;
 
-    private static TwoColumnPanel _placementGhostPanel;
-    private static Text _placementGhostNameTextLabel;
-    private static Text _placementGhostNameTextValue;
-    private static Text _placementGhostEulerTextLabel;
-    private static Text _placementGhostEulerTextValue;
-    private static Text _placementGhostQuaternionTextLabel;
-    private static Text _placementGhostQuaternionTextValue;
+    static TwoColumnPanel _placementGhostPanel;
+    static Text _placementGhostNameTextLabel;
+    static Text _placementGhostNameTextValue;
+    static Text _placementGhostEulerTextLabel;
+    static Text _placementGhostEulerTextValue;
+    static Text _placementGhostQuaternionTextLabel;
+    static Text _placementGhostQuaternionTextValue;
 
-    private static GameObject _pieceHealthRoot;
-    private static GuiBar _pieceHealthBar;
+    static GameObject _pieceHealthRoot;
+    static GuiBar _pieceHealthBar;
 
-    private Harmony _harmony;
+    Harmony _harmony;
 
-    void Awake() {
+    public void Awake() {
       CreateConfig(Config);
 
       _isModEnabled.SettingChanged += (sender, eventArgs) => {
@@ -71,10 +70,10 @@ namespace EulersRuler {
       _placementGhostPanelFontSize.SettingChanged +=
           (sender, eventArgs) => _placementGhostPanel?.SetFontSize(_placementGhostPanelFontSize.Value);
 
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
+      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
     }
 
-    void OnDestroy() {
+    public void OnDestroy() {
       _harmony?.UnpatchSelf();
     }
 
@@ -101,7 +100,7 @@ namespace EulersRuler {
       }
     }
 
-    private static void CreatePanels(Hud hud) {
+    static void CreatePanels(Hud hud) {
       _hoverPiecePanel =
           new TwoColumnPanel(hud.m_crosshair.transform, hud.m_hoverName.font)
               .SetPosition(_hoverPiecePanelPosition.Value)
@@ -133,7 +132,7 @@ namespace EulersRuler {
       _placementGhostQuaternionTextLabel.text = "Quaternion \u2318";
     }
 
-    private static IEnumerator UpdatePropertiesCoroutine() {
+    static IEnumerator UpdatePropertiesCoroutine() {
       WaitForSeconds waitInterval = new(seconds: 0.25f);
 
       while (true) {
@@ -148,7 +147,7 @@ namespace EulersRuler {
       }
     }
 
-    private static void UpdateHoverPieceProperties(Piece piece, HoverPiecePanelRow enabledRows) {
+    static void UpdateHoverPieceProperties(Piece piece, HoverPiecePanelRow enabledRows) {
       if (!piece || !piece.m_nview || !piece.m_nview.IsValid() || !piece.TryGetComponent(out WearNTear wearNTear)) {
         _hoverPiecePanel?.SetActive(false);
         return;
@@ -163,7 +162,7 @@ namespace EulersRuler {
       UpdateHoverPieceQuaternionRow(wearNTear, enabledRows.HasFlag(HoverPiecePanelRow.Quaternion));
     }
 
-    private static void UpdateHoverPieceNameRow(Piece piece, bool isRowEnabled) {
+    static void UpdateHoverPieceNameRow(Piece piece, bool isRowEnabled) {
       _pieceNameTextLabel.gameObject.SetActive(isRowEnabled);
       _pieceNameTextValue.gameObject.SetActive(isRowEnabled);
 
@@ -172,7 +171,7 @@ namespace EulersRuler {
       }
     }
 
-    private static void UpdateHoverPieceHealthRow(WearNTear wearNTear, bool isRowEnabled) {
+    static void UpdateHoverPieceHealthRow(WearNTear wearNTear, bool isRowEnabled) {
       _pieceHealthTextLabel.gameObject.SetActive(isRowEnabled);
       _pieceHealthTextValue.gameObject.SetActive(isRowEnabled);
 
@@ -191,7 +190,7 @@ namespace EulersRuler {
       }
     }
 
-    private static void UpdateHoverPieceStabilityRow(WearNTear wearNTear, bool isRowEnabled) {
+    static void UpdateHoverPieceStabilityRow(WearNTear wearNTear, bool isRowEnabled) {
       _pieceStabilityTextLabel.gameObject.SetActive(isRowEnabled);
       _pieceStabilityTextValue.gameObject.SetActive(isRowEnabled);
 
@@ -211,7 +210,7 @@ namespace EulersRuler {
       }
     }
 
-    private static void UpdateHoverPieceEulerRow(WearNTear wearNTear, bool isRowEnabled) {
+    static void UpdateHoverPieceEulerRow(WearNTear wearNTear, bool isRowEnabled) {
       _pieceEulerTextLabel.gameObject.SetActive(isRowEnabled);
       _pieceEulerTextValue.gameObject.SetActive(isRowEnabled);
 
@@ -220,16 +219,16 @@ namespace EulersRuler {
       }
     }
 
-    private static void UpdateHoverPieceQuaternionRow(WearNTear wearNTear, bool isRowEnabled) {
+    static void UpdateHoverPieceQuaternionRow(WearNTear wearNTear, bool isRowEnabled) {
       _pieceQuaternionTextLabel.gameObject.SetActive(isRowEnabled);
       _pieceQuaternionTextValue.gameObject.SetActive(isRowEnabled);
 
       if (isRowEnabled) {
-        _pieceQuaternionTextValue.text = $"<color=#D7CCC8>{wearNTear.transform.rotation}</color>";
+        _pieceQuaternionTextValue.text = $"<color=#D7CCC8>{wearNTear.transform.rotation.ToString("N2")}</color>";
       }
     }
 
-    private static void UpdateHoverPieceHealthBar(Piece piece, bool isEnabled) {
+    static void UpdateHoverPieceHealthBar(Piece piece, bool isEnabled) {
       if (!isEnabled
           || !_pieceHealthRoot
           || !_pieceHealthBar
@@ -250,7 +249,7 @@ namespace EulersRuler {
       _pieceHealthBar.SetColor(_healthPercentGradient.Evaluate(healthPercent));
     }
 
-    private static void UpdatePlacementGhostProperties(GameObject placementGhost, PlacementGhostPanelRow enabledRows) {
+    static void UpdatePlacementGhostProperties(GameObject placementGhost, PlacementGhostPanelRow enabledRows) {
       if (!placementGhost
           || enabledRows == PlacementGhostPanelRow.None
           || !placementGhost.TryGetComponent(out Piece piece)) {
@@ -265,7 +264,7 @@ namespace EulersRuler {
       UpdatePlacementGhostQuaternionRow(placementGhost, enabledRows.HasFlag(PlacementGhostPanelRow.Quaternion));
     }
 
-    private static void UpdatePlacementGhostNameRow(Piece piece, bool isRowEnabled) {
+    static void UpdatePlacementGhostNameRow(Piece piece, bool isRowEnabled) {
       _placementGhostNameTextLabel.gameObject.SetActive(isRowEnabled);
       _placementGhostNameTextValue.gameObject.SetActive(isRowEnabled);
 
@@ -274,7 +273,7 @@ namespace EulersRuler {
       }
     }
 
-    private static void UpdatePlacementGhostEulerRow(GameObject placementGhost, bool isRowEnabled) {
+    static void UpdatePlacementGhostEulerRow(GameObject placementGhost, bool isRowEnabled) {
       _placementGhostEulerTextLabel.gameObject.SetActive(isRowEnabled);
       _placementGhostEulerTextValue.gameObject.SetActive(isRowEnabled);
 
@@ -283,16 +282,17 @@ namespace EulersRuler {
       }
     }
 
-    private static void UpdatePlacementGhostQuaternionRow(GameObject placementGhost, bool isRowEnabled) {
+    static void UpdatePlacementGhostQuaternionRow(GameObject placementGhost, bool isRowEnabled) {
       _placementGhostQuaternionTextLabel.gameObject.SetActive(isRowEnabled);
       _placementGhostQuaternionTextValue.gameObject.SetActive(isRowEnabled);
 
       if (isRowEnabled) {
-        _placementGhostQuaternionTextValue.text = $"<color=#D7CCC8>{placementGhost.transform.rotation}</color>";
+        _placementGhostQuaternionTextValue.text =
+            $"<color=#D7CCC8>{placementGhost.transform.rotation.ToString("N2")}</color>";
       }
     }
 
-    private static Gradient CreateHealthPercentGradient() {
+    static Gradient CreateHealthPercentGradient() {
       Gradient gradient = new();
 
       gradient.SetKeys(
@@ -309,7 +309,7 @@ namespace EulersRuler {
       return gradient;
     }
 
-    private static Gradient CreateStabilityPercentGradient() {
+    static Gradient CreateStabilityPercentGradient() {
       Gradient gradient = new();
 
       gradient.SetKeys(

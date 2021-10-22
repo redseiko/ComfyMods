@@ -11,9 +11,19 @@
      * Change the target color using the RGB sliders or using an HTML color code.
   3. Hover over any portal ***that you are the owner of*** and a prompt to change its color will appear.
      * This prompt can be hidden by disabling the `showChangeColorHoverText` setting.
+     * Prompt font-size can be configured with the `colorPromptFontSize` setting.
   4. Hit `LeftShift + E` to change the color.
 
 # Changelog
+
+## 1.4.0
+
+  * Added an option to change the font-size for the text prompt on hover.
+
+## 1.3.0
+
+  * Updated for Hearth & Home.
+  * Added `PortalLastColoredBy` ZDO property that is set whenever a player changes the portals color.
 
 ## 1.2.0
 

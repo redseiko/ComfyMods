@@ -12,7 +12,7 @@ namespace BetterZeeLog {
   public class BetterZeeLog : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.betterzeelog";
     public const string PluginName = "BetterZeeLog";
-    public const string PluginVersion = "1.1.0";
+    public const string PluginVersion = "1.1.1";
 
     static ConfigEntry<bool> _isModEnabled;
     static ConfigEntry<bool> _removeStackTraceForNonErrorLogType;

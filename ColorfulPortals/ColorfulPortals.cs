@@ -14,18 +14,21 @@ namespace ColorfulPortals {
   public class ColorfulPortals : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.colorfulportals";
     public const string PluginName = "ColorfulPortals";
-    public const string PluginVersion = "1.2.0";
+    public const string PluginVersion = "1.4.0";
 
-    private static ConfigEntry<bool> _isModEnabled;
-    private static ConfigEntry<Color> _targetPortalColor;
-    private static ConfigEntry<string> _targetPortalColorHex;
+    static ConfigEntry<bool> _isModEnabled;
+    static ConfigEntry<Color> _targetPortalColor;
+    static ConfigEntry<string> _targetPortalColorHex;
 
-    private static ConfigEntry<bool> _showChangeColorHoverText;
+    static ConfigEntry<bool> _showChangeColorHoverText;
+    static ConfigEntry<int> _colorPromptFontSize;
 
-    private static ManualLogSource _logger;
-    private Harmony _harmony;
+    static ManualLogSource _logger;
+    Harmony _harmony;
 
-    private void Awake() {
+    public void Awake() {
+      _logger = Logger;
+
       _isModEnabled = Config.Bind("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
 
       _targetPortalColor =
@@ -45,35 +48,35 @@ namespace ColorfulPortals {
           Config.Bind(
               "Hud", "showChangeColorHoverText", true, "Show the 'change color' text when hovering over a portal.");
 
-      _logger = Logger;
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
+      _colorPromptFontSize =
+          Config.Bind("Hud", "colorPromptFontSize", 15, "Font size for the 'change color' text prompt.");
+
+      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
 
       StartCoroutine(RemovedDestroyedTeleportWorldsCoroutine());
     }
 
-    private void OnDestroy() {
-      if (_harmony != null) {
-        _harmony.UnpatchSelf();
-      }
+    public void OnDestroy() {
+      _harmony?.UnpatchSelf();
     }
 
-    private void UpdateColorHexValue(object sender, EventArgs eventArgs) {
+    void UpdateColorHexValue(object sender, EventArgs eventArgs) {
       _targetPortalColorHex.Value = $"#{GetColorHtmlString(_targetPortalColor.Value)}";
     }
 
-    private void UpdateColorValue(object sender, EventArgs eventArgs) {
+    void UpdateColorValue(object sender, EventArgs eventArgs) {
       if (ColorUtility.TryParseHtmlString(_targetPortalColorHex.Value, out Color color)) {
         _targetPortalColor.Value = color;
       }
     }
 
-    private static string GetColorHtmlString(Color color) {
+    static string GetColorHtmlString(Color color) {
       return color.a == 1.0f
           ? ColorUtility.ToHtmlStringRGB(color)
           : ColorUtility.ToHtmlStringRGBA(color);
     }
 
-    private class TeleportWorldData {
+    class TeleportWorldData {
       public List<Light> Lights { get; } = new List<Light>();
       public List<ParticleSystem> Systems { get; } = new List<ParticleSystem>();
       public List<Material> Materials { get; } = new List<Material>();
@@ -92,9 +95,9 @@ namespace ColorfulPortals {
       }
     }
 
-    private static readonly Dictionary<TeleportWorld, TeleportWorldData> _teleportWorldDataCache = new();
+    static readonly Dictionary<TeleportWorld, TeleportWorldData> _teleportWorldDataCache = new();
 
-    private static IEnumerator RemovedDestroyedTeleportWorldsCoroutine() {
+    static IEnumerator RemovedDestroyedTeleportWorldsCoroutine() {
       WaitForSeconds waitThirtySeconds = new(seconds: 30f);
       List<KeyValuePair<TeleportWorld, TeleportWorldData>> existingPortals = new();
       int portalCount = 0;
@@ -111,11 +114,14 @@ namespace ColorfulPortals {
         }
 
         existingPortals.Clear();
-        _logger.LogInfo($"Removed {portalCount - _teleportWorldDataCache.Count}/{portalCount} portal references.");
+
+        if (portalCount > 0) {
+          _logger.LogInfo($"Removed {portalCount - _teleportWorldDataCache.Count}/{portalCount} portal references.");
+        }
       }
     }
 
-    private static bool TryGetTeleportWorld(TeleportWorld key, out TeleportWorldData value) {
+    static bool TryGetTeleportWorld(TeleportWorld key, out TeleportWorldData value) {
       if (key) {
         return _teleportWorldDataCache.TryGetValue(key, out value);
       }
@@ -125,15 +131,16 @@ namespace ColorfulPortals {
     }
 
     [HarmonyPatch(typeof(TeleportWorld))]
-    private class TeleportWorldPatch {
-      private static readonly int _teleportWorldColorHashCode = "TeleportWorldColor".GetStableHashCode();
-      private static readonly int _teleportWorldColorAlphaHashCode = "TeleportWorldColorAlpha".GetStableHashCode();
+    class TeleportWorldPatch {
+      static readonly int _teleportWorldColorHashCode = "TeleportWorldColor".GetStableHashCode();
+      static readonly int _teleportWorldColorAlphaHashCode = "TeleportWorldColorAlpha".GetStableHashCode();
+      static readonly int _portalLastColoredByHashCode = "PortalLastColoredBy".GetStableHashCode();
 
-      private static readonly KeyboardShortcut _changeColorActionShortcut = new(KeyCode.E, KeyCode.LeftShift);
+      static readonly KeyboardShortcut _changeColorActionShortcut = new(KeyCode.E, KeyCode.LeftShift);
 
       [HarmonyPostfix]
       [HarmonyPatch(nameof(TeleportWorld.Awake))]
-      private static void TeleportWorldAwakePostfix(ref TeleportWorld __instance) {
+      static void TeleportWorldAwakePostfix(ref TeleportWorld __instance) {
         if (!_isModEnabled.Value || !__instance) {
           return;
         }
@@ -159,23 +166,24 @@ namespace ColorfulPortals {
 
       [HarmonyPostfix]
       [HarmonyPatch(nameof(TeleportWorld.GetHoverText))]
-      private static void TeleportWorldGetHoverTextPostfix(ref TeleportWorld __instance, ref string __result) {
+      static void TeleportWorldGetHoverTextPostfix(ref TeleportWorld __instance, ref string __result) {
         if (!_isModEnabled.Value || !_showChangeColorHoverText.Value || !__instance) {
           return;
         }
 
         __result =
             string.Format(
-                "{0}\n[<color={1}>{2}</color>] Change color to: <color={3}>{3}</color>",
+                "{0}\n<size={4}>[<color={1}>{2}</color>] Change color to: <color={3}>{3}</color></size>",
                 __result,
                 "#FFA726",
                 _changeColorActionShortcut,
-                _targetPortalColorHex.Value);
+                _targetPortalColorHex.Value,
+                _colorPromptFontSize.Value);
       }
 
       [HarmonyPrefix]
       [HarmonyPatch(nameof(TeleportWorld.Interact))]
-      private static bool TeleportWorldInteractPrefix(
+      static bool TeleportWorldInteractPrefix(
           ref TeleportWorld __instance, ref bool __result, Humanoid human, bool hold) {
         if (!_isModEnabled.Value || hold || !__instance.m_nview || !_changeColorActionShortcut.IsDown()) {
           return true;
@@ -200,6 +208,7 @@ namespace ColorfulPortals {
 
         __instance.m_nview.m_zdo.Set(_teleportWorldColorHashCode, Utils.ColorToVec3(_targetPortalColor.Value));
         __instance.m_nview.m_zdo.Set(_teleportWorldColorAlphaHashCode, _targetPortalColor.Value.a);
+        __instance.m_nview.m_zdo.Set(_portalLastColoredByHashCode, Player.m_localPlayer?.GetPlayerID() ?? 0L);
 
         if (_teleportWorldDataCache.TryGetValue(__instance, out TeleportWorldData teleportWorldData)) {
           teleportWorldData.TargetColor = _targetPortalColor.Value;
@@ -212,7 +221,7 @@ namespace ColorfulPortals {
 
       [HarmonyPostfix]
       [HarmonyPatch(nameof(TeleportWorld.UpdatePortal))]
-      private static void TeleportWorldUpdatePortalPostfix(ref TeleportWorld __instance) {
+      static void TeleportWorldUpdatePortalPostfix(ref TeleportWorld __instance) {
         if (!_isModEnabled.Value
             || !__instance
             || !__instance.m_nview
@@ -231,7 +240,7 @@ namespace ColorfulPortals {
         SetTeleportWorldColors(teleportWorldData);
       }
 
-      private static void SetTeleportWorldColors(TeleportWorldData teleportWorldData) {
+      static void SetTeleportWorldColors(TeleportWorldData teleportWorldData) {
         foreach (Light light in teleportWorldData.Lights) {
           light.color = teleportWorldData.TargetColor;
         }

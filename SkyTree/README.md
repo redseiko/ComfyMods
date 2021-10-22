@@ -8,6 +8,11 @@
 
 ## Changelog
 
+### 1.2.0
+
+  * Updated for Hearth & Home.
+  * Fixed a bug in adding a collider to the SkyTree.
+
 ### 1.1.0
 
   * Updated project template and references to use latest DLLs.

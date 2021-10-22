@@ -26,6 +26,11 @@
 
 ## Changelog
 
+### 1.2.0
+
+  * Updated for Hearth & Home.
+  * Increased decimal points for Quaternion values to 2.
+
 ### 1.1.1
 
   * Fixed a `NullReferenceException` when the player deconstructs the current hovered piece.

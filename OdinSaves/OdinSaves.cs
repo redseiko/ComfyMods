@@ -3,22 +3,23 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 
 using HarmonyLib;
+
 using System.Collections;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace OdinSaves {
-  [BepInPlugin(OdinSaves.Package, OdinSaves.ModName, OdinSaves.Version)]
+  [BepInPlugin(Package, ModName, Version)]
   public class OdinSaves : BaseUnityPlugin {
     public const string Package = "redseiko.valheim.odinsaves";
-    public const string Version = "1.0.0";
-    public const string ModName = "Odin Saves";
+    public const string Version = "1.0.1";
+    public const string ModName = "OdinSaves";
 
     private static ConfigEntry<bool> _isModEnabled;
     private static ConfigEntry<int> savePlayerProfileInterval;

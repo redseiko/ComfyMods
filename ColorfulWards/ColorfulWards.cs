@@ -1,12 +1,14 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+
 using HarmonyLib;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
+
 using UnityEngine;
 
 namespace ColorfulWards {
@@ -14,50 +16,24 @@ namespace ColorfulWards {
   public class ColorfulWards : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.colorfulwards";
     public const string PluginName = "ColorfulWards";
-    public const string PluginVersion = "1.2.0";
+    public const string PluginVersion = "1.3.0";
 
-    private class PrivateAreaData {
-      public List<Light> PointLight { get; } = new List<Light>();
-      public List<Material> GlowMaterial { get; } = new List<Material>();
-      public List<ParticleSystem> SparcsSystem { get; } = new List<ParticleSystem>();
-      public List<ParticleSystemRenderer> SparcsRenderer { get; } = new List<ParticleSystemRenderer>();
-      public List<ParticleSystem> FlareSystem { get; } = new List<ParticleSystem>();
+    static readonly Dictionary<PrivateArea, PrivateAreaData> _privateAreaData = new();
 
-      public Color TargetColor { get; set; } = Color.clear;
+    static ConfigEntry<bool> _isModEnabled;
+    static ConfigEntry<Color> _targetWardColor;
+    static ConfigEntry<string> _targetWardColorHex;
 
-      public PrivateAreaData(PrivateArea privateArea) {
-        PointLight.AddRange(FindChildren(privateArea, "Point light").Select(go => go.GetComponent<Light>()));
-        GlowMaterial.AddRange(FindChildren(privateArea, "default").Select(go => go.GetComponent<Renderer>().material));
+    static ConfigEntry<bool> _useRadiusForVerticalCheck;
+    static ConfigEntry<bool> _showChangeColorHoverText;
+    static ConfigEntry<int> _colorPromptFontSize;
 
-        foreach (GameObject sparcsObject in FindChildren(privateArea, "sparcs")) {
-          SparcsSystem.Add(sparcsObject.GetComponent<ParticleSystem>());
-          SparcsRenderer.Add(sparcsObject.GetComponent<ParticleSystemRenderer>());
-        }
+    static ManualLogSource _logger;
+    Harmony _harmony;
 
-        FlareSystem.AddRange(FindChildren(privateArea, "flare").Select(go => go.GetComponent<ParticleSystem>()));
-      }
+    public void Awake() {
+      _logger = Logger;
 
-      private IEnumerable<GameObject> FindChildren(PrivateArea privateArea, string name) {
-        return privateArea
-            .GetComponentsInChildren<Transform>()
-            .Where(t => t.name == name && t.gameObject != null)
-            .Select(t => t.gameObject);
-      }
-    }
-
-    private static readonly Dictionary<PrivateArea, PrivateAreaData> _privateAreaData = new();
-
-    private static ConfigEntry<bool> _isModEnabled;
-    private static ConfigEntry<Color> _targetWardColor;
-    private static ConfigEntry<string> _targetWardColorHex;
-
-    private static ConfigEntry<bool> _useRadiusForVerticalCheck;
-    private static ConfigEntry<bool> _showChangeColorHoverText;
-
-    private static ManualLogSource _logger;
-    private Harmony _harmony;
-
-    private void Awake() {
       _isModEnabled = Config.Bind("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
 
       _targetWardColor =
@@ -87,42 +63,43 @@ namespace ColorfulWards {
               true,
               "Show the 'change color' text when hovering over a lightsoure.");
 
-      _logger = Logger;
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
+      _colorPromptFontSize =
+          Config.Bind("Hud", "colorPromptFontSize", 15, "Font size for the 'change/remove/copy' color text prompt.");
+
+      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
     }
 
-    private void OnDestroy() {
-      if (_harmony != null) {
-        _harmony.UnpatchSelf();
-      }
+    public void OnDestroy() {
+      _harmony?.UnpatchSelf();
     }
 
-    private void UpdateColorHexValue(object sender, EventArgs eventArgs) {
+    void UpdateColorHexValue(object sender, EventArgs eventArgs) {
       _targetWardColorHex.Value = $"#{GetColorHtmlString(_targetWardColor.Value)}";
     }
 
-    private void UpdateColorValue(object sender, EventArgs eventArgs) {
+    void UpdateColorValue(object sender, EventArgs eventArgs) {
       if (ColorUtility.TryParseHtmlString(_targetWardColorHex.Value, out Color color)) {
         _targetWardColor.Value = color;
       }
     }
 
-    private static string GetColorHtmlString(Color color) {
+    static string GetColorHtmlString(Color color) {
       return color.a == 1.0f
           ? ColorUtility.ToHtmlStringRGB(color)
           : ColorUtility.ToHtmlStringRGBA(color);
     }
 
     [HarmonyPatch(typeof(PrivateArea))]
-    private class PrivateAreaPatch {
-      private static readonly int _privateAreaColorHashCode = "PrivateAreaColor".GetStableHashCode();
-      private static readonly int _privateAreaColorAlphaHashCode = "PrivateAreaColorAlpha".GetStableHashCode();
+    class PrivateAreaPatch {
+      static readonly int _privateAreaColorHashCode = "PrivateAreaColor".GetStableHashCode();
+      static readonly int _privateAreaColorAlphaHashCode = "PrivateAreaColorAlpha".GetStableHashCode();
+      static readonly int _wardLastColoredByHashCode = "WardLastColoredBy".GetStableHashCode();
 
-      private static readonly KeyboardShortcut _changeColorActionShortcut = new(KeyCode.E, KeyCode.LeftShift);
+      static readonly KeyboardShortcut _changeColorActionShortcut = new(KeyCode.E, KeyCode.LeftShift);
 
       [HarmonyPrefix]
       [HarmonyPatch(nameof(PrivateArea.IsInside))]
-      private static bool PrivateAreaIsInside(
+      static bool PrivateAreaIsInside(
           ref PrivateArea __instance, ref bool __result, Vector3 point, float radius) {
         if (!_isModEnabled.Value || !_useRadiusForVerticalCheck.Value) {
           return true;
@@ -134,7 +111,7 @@ namespace ColorfulWards {
 
       [HarmonyPostfix]
       [HarmonyPatch(nameof(PrivateArea.Awake))]
-      private static void PrivateAreaAwakePostfix(ref PrivateArea __instance) {
+      static void PrivateAreaAwakePostfix(ref PrivateArea __instance) {
         if (!_isModEnabled.Value || !__instance) {
           return;
         }
@@ -144,13 +121,13 @@ namespace ColorfulWards {
 
       [HarmonyPrefix]
       [HarmonyPatch(nameof(PrivateArea.OnDestroy))]
-      private static void PrivateAreaOnDestroyPrefix(ref PrivateArea __instance) {
+      static void PrivateAreaOnDestroyPrefix(ref PrivateArea __instance) {
         _privateAreaData.Remove(__instance);
       }
 
       [HarmonyPrefix]
       [HarmonyPatch(nameof(PrivateArea.Interact))]
-      private static bool PrivateAreaInteractPrefix(
+      static bool PrivateAreaInteractPrefix(
           ref PrivateArea __instance, ref bool __result, Humanoid human, bool hold) {
         if (!_isModEnabled.Value || hold || !_changeColorActionShortcut.IsDown() || !__instance.m_piece) {
           return true;
@@ -176,6 +153,7 @@ namespace ColorfulWards {
 
         __instance.m_nview.m_zdo.Set(_privateAreaColorHashCode, Utils.ColorToVec3(_targetWardColor.Value));
         __instance.m_nview.m_zdo.Set(_privateAreaColorAlphaHashCode, _targetWardColor.Value.a);
+        __instance.m_nview.m_zdo.Set(_wardLastColoredByHashCode, Player.m_localPlayer?.GetPlayerID() ?? 0L);
 
         __instance.m_flashEffect.Create(__instance.transform.position, __instance.transform.rotation);
 
@@ -190,7 +168,7 @@ namespace ColorfulWards {
         return false;
       }
 
-      private static IEnumerator UpdateEnabledEffect(PrivateArea privateArea) {
+      static IEnumerator UpdateEnabledEffect(PrivateArea privateArea) {
         if (privateArea.IsEnabled()) {
           privateArea.m_enabledEffect.SetActive(false);
           yield return new WaitForEndOfFrame();
@@ -200,7 +178,7 @@ namespace ColorfulWards {
 
       [HarmonyPostfix]
       [HarmonyPatch(nameof(PrivateArea.UpdateStatus))]
-      private static void PrivateAreaUpdateStatusPostfix(ref PrivateArea __instance) {
+      static void PrivateAreaUpdateStatusPostfix(ref PrivateArea __instance) {
         if (!_isModEnabled.Value
             || !__instance
             || !__instance.m_nview
@@ -221,7 +199,7 @@ namespace ColorfulWards {
 
       [HarmonyPostfix]
       [HarmonyPatch(nameof(PrivateArea.GetHoverText))]
-      private static void PrivateAreaGetHoverText(ref PrivateArea __instance, ref string __result) {
+      static void PrivateAreaGetHoverText(ref PrivateArea __instance, ref string __result) {
         if (!_isModEnabled.Value
             || !_showChangeColorHoverText.Value
             || !__instance
@@ -232,15 +210,16 @@ namespace ColorfulWards {
 
         __result =
             string.Format(
-                "{0}\n[<color={1}>{2}</color>] Change color to: <color=#{3}>#{3}</color>",
+                "{0}\n<size={4}>[<color={1}>{2}</color>] Change ward color to: <color=#{3}>#{3}</color></size>",
                 __result,
-                "#ffa726",
+                "#FFA726",
                 _changeColorActionShortcut,
-                GetColorHtmlString(_targetWardColor.Value));
+                GetColorHtmlString(_targetWardColor.Value),
+                _colorPromptFontSize.Value);
       }
     }
 
-    private static void SetPrivateAreaColors(PrivateArea privateArea, PrivateAreaData privateAreaData) {
+    static void SetPrivateAreaColors(PrivateArea privateArea, PrivateAreaData privateAreaData) {
       foreach (Light light in privateAreaData.PointLight) {
         light.color = privateAreaData.TargetColor;
       }

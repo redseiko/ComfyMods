@@ -4,7 +4,8 @@
     * Console
       * toggleConsoleShortcut
     * Debugmode
-      * debugKillallShortcut
+      * debugKillAllShortcut
+      * debugRemoveDropsShortcut
       * toggleDebugFlyShortcut
       * toggleDebugNoCostShortcut
     * GameCamera
@@ -21,17 +22,27 @@
       * hotbarItem8Shortcut
     * Hud
       * toggleHudShortcut
+    * ConnectPanel
+      * toggleConnectPanelShortcut
 
 ## Dependencies
 
-  * BepInEx `v5.4.1500`
-    * https://valheim.thunderstore.io/package/download/denikson/BepInExPack_Valheim/5.4.1500/
+  * BepInEx `v5.4.1501`
+    * https://valheim.thunderstore.io/package/download/denikson/BepInExPack_Valheim/5.4.1501/
 
 ## Notes
 
-  * Un-binds the debugmode KillAll shortcut (`K`) by default because of many accidental pet deaths. :(
+  * Un-binds the debugmode KillAll shortcut `K` by default because of many accidental pet deaths. :(
+  * Un-binds the debugmode RemoveAll shortcut `L` by default.
 
 ## Changelog
+
+### 1.1.0
+
+  * Updated for Hearth and Home.
+  * Added toggles for:
+    * Debugmode - removedrops `L`
+    * ConnectPanel - toggle `F2`
 
 ### 1.0.0
 
