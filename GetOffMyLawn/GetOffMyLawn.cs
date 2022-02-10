@@ -4,9 +4,11 @@ using BepInEx.Logging;
 
 using HarmonyLib;
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
 
 using UnityEngine;
 
@@ -15,7 +17,7 @@ namespace GetOffMyLawn {
   public class GetOffMyLawn : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.getoffmylawn";
     public const string PluginName = "GetOffMyLawn";
-    public const string PluginVersion = "1.2.1";
+    public const string PluginVersion = "1.3.0";
 
     static ConfigEntry<bool> _isModEnabled;
     static ConfigEntry<float> _pieceHealth;
@@ -24,6 +26,13 @@ namespace GetOffMyLawn {
 
     static ConfigEntry<bool> _showTopLeftMessageOnPieceRepair;
     static ConfigEntry<bool> _showRepairEffectOnWardActivation;
+
+    static List<string> _removablePieceOverrides = new List<string>() {
+      "$tool_cart",
+      "$ship_longship",
+      "$ship_raft",
+      "$ship_karve"
+    };
 
     static ManualLogSource _logger;
     Harmony _harmony;
@@ -217,6 +226,22 @@ namespace GetOffMyLawn {
           __instance.Message(
               MessageHud.MessageType.TopLeft, $"Repaired piece '{pieceName}' to health: {_pieceHealth.Value}");
         }
+      }
+
+      [HarmonyTranspiler]
+      [HarmonyPatch(nameof(Player.RemovePiece))]
+      static IEnumerable<CodeInstruction> RemovePieceTranspiler(IEnumerable<CodeInstruction> instructions) {
+        return new CodeMatcher(instructions)
+          .MatchForward(
+            useEnd: false,
+            new CodeMatch(OpCodes.Ldfld, typeof(Piece).GetField(nameof(Piece.m_canBeRemoved)))
+          )
+          .SetInstructionAndAdvance(Transpilers.EmitDelegate<Func<Piece, bool>>(CanBeRemovedDelegate))
+          .InstructionEnumeration();
+      }
+
+      static bool CanBeRemovedDelegate(Piece piece) {
+        return piece.m_canBeRemoved || _removablePieceOverrides.Contains(piece.m_name);
       }
     }
 

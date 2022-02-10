@@ -20,6 +20,9 @@
 
 ## Changelog
 
+### 1.3.0
+  * Destroy Carts & Boats with the Hammer like regular build pieces
+
 ### 1.2.1
 
   * Actually check the `enablePieceHealthDamageThreshold` config value for the WearNTear.ApplyDamage() patch.
