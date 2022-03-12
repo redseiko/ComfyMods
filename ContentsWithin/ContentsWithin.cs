@@ -14,7 +14,7 @@ namespace ContentsWithin {
     static ConfigEntry<bool> _isModEnabled;
     static ConfigEntry<KeyboardShortcut> _toggleShowContentsShortcut;
 
-    static bool isVisible;
+    private static bool isRealGuiVisible;
 
     static Container _lastHoverContainer = null;
     static GameObject _lastHoverObject = null;
@@ -41,29 +41,22 @@ namespace ContentsWithin {
     }
 
     [HarmonyPatch(typeof(Player))]
-    class PlayerPatch {
-      [HarmonyPostfix]
-      [HarmonyPatch(nameof(Player.UpdateHover))]
+    public class PlayerPatch {
+      [HarmonyPatch(nameof(Player.UpdateHover)), HarmonyPostfix]
       public static void UpdateHoverPostfix(Player __instance) {
         if (!_isModEnabled.Value || _lastHoverObject == __instance.m_hovering) {
           return;
         }
 
         _lastHoverObject = __instance.m_hovering;
-
-        if (_lastHoverObject) {
-          _lastHoverContainer = _lastHoverObject.GetComponentInParent<Container>();
-        } else {
-          _lastHoverContainer = null;
-        }
+        _lastHoverContainer = _lastHoverObject ? _lastHoverObject.GetComponentInParent<Container>() : null;
       }
     }
 
     [HarmonyPatch(typeof(InventoryGui))]
-    class InventoryGuiPatch {
-      [HarmonyPostfix]
-      [HarmonyPatch(nameof(InventoryGui.Awake))]
-      static void AwakePostfix(ref InventoryGui __instance) {
+    public class InventoryGuiPatch {
+      [HarmonyPatch(nameof(InventoryGui.Awake)), HarmonyPostfix]
+      public static void AwakePostfix(ref InventoryGui __instance) {
         _inventoryPanel = __instance.m_player.Ref()?.gameObject;
         _containerPanel = __instance.m_container.Ref()?.gameObject;
         _infoPanel = __instance.m_infoPanel.Ref()?.gameObject;
@@ -71,52 +64,50 @@ namespace ContentsWithin {
         _takeAllButton = __instance.m_takeAllButton.Ref()?.gameObject;
       }
 
-      [HarmonyPrefix]
-      [HarmonyPatch(nameof(InventoryGui.Show))]
-      public static void ShowPostfix(InventoryGui __instance) {
-        isVisible = true;
+      [HarmonyPatch(nameof(InventoryGui.Show)), HarmonyPostfix]
+      public static void ShowPostfix() {
+        isRealGuiVisible = true;
       }
 
-      [HarmonyPrefix]
-      [HarmonyPatch(nameof(InventoryGui.Hide))]
-      public static void HidePrefix(InventoryGui __instance) {
-        isVisible = false;
+      [HarmonyPatch(nameof(InventoryGui.Hide)), HarmonyPostfix]
+      public static void HidePostfix() {
+        isRealGuiVisible = false;
       }
 
-      [HarmonyPrefix]
-      [HarmonyPatch(nameof(InventoryGui.Update))]
+      [HarmonyPatch(nameof(InventoryGui.Update)), HarmonyPrefix]
       public static void UpdatePrefix(InventoryGui __instance) {
-        if (_isModEnabled.Value && !isVisible) {
+        if (_isModEnabled.Value && !isRealGuiVisible) {
           __instance.m_animator.SetBool("visible", false);
         }
       }
 
-      [HarmonyPostfix]
-      [HarmonyPatch(nameof(InventoryGui.Update))]
+      [HarmonyPatch(nameof(InventoryGui.Update)), HarmonyPostfix]
       public static void UpdatePostfix(InventoryGui __instance) {
-        _inventoryPanel.Ref()?.SetActive(!_isModEnabled.Value || isVisible);
-        _craftingPanel.Ref()?.SetActive(!_isModEnabled.Value || isVisible);
-        _infoPanel.Ref()?.SetActive(!_isModEnabled.Value || isVisible);
-        _takeAllButton.Ref()?.SetActive(!_isModEnabled.Value || isVisible);
+        _inventoryPanel.Ref()?.SetActive(!_isModEnabled.Value || isRealGuiVisible);
+        _craftingPanel.Ref()?.SetActive(!_isModEnabled.Value || isRealGuiVisible);
+        _infoPanel.Ref()?.SetActive(!_isModEnabled.Value || isRealGuiVisible);
+        _takeAllButton.Ref()?.SetActive(!_isModEnabled.Value || isRealGuiVisible);
 
-        if (!_isModEnabled.Value) {
+        if (!_isModEnabled.Value || isRealGuiVisible) {
           return;
         }
 
-        if (!isVisible) {
-          if (_lastHoverContainer && PrivateArea.CheckAccess(_lastHoverContainer.transform.position, 0f, false, false)) {
-            InventoryGui.instance.m_animator.SetBool("visible", true);
-            InventoryGui.instance.m_hiddenFrames = 10;
-            InventoryGui.instance.m_container.gameObject.SetActive(true);
-            InventoryGui.instance.m_containerGrid.UpdateInventory(_lastHoverContainer.GetInventory(), null, null);
-            InventoryGui.instance.m_containerGrid.ResetView();
-            InventoryGui.instance.m_containerName.text = Localization.instance.Localize(_lastHoverContainer.GetInventory().GetName());
-            int containerWeight = Mathf.CeilToInt(_lastHoverContainer.GetInventory().GetTotalWeight());
-            InventoryGui.instance.m_containerWeight.text = containerWeight.ToString();
-          } else {
-            InventoryGui.instance.m_animator.SetBool("visible", false);
-          }
+        if (_lastHoverContainer && PrivateArea.CheckAccess(_lastHoverContainer.transform.position, 0f, false, false)) {
+          ShowPreviewContainer();
+        } else {
+          InventoryGui.instance.m_animator.SetBool("visible", false);
         }
+      }
+
+      private static void ShowPreviewContainer() {
+        InventoryGui.instance.m_animator.SetBool("visible", true);
+        InventoryGui.instance.m_hiddenFrames = 10;
+        InventoryGui.instance.m_container.gameObject.SetActive(true);
+        InventoryGui.instance.m_containerGrid.UpdateInventory(_lastHoverContainer.GetInventory(), null, null);
+        InventoryGui.instance.m_containerGrid.ResetView();
+        InventoryGui.instance.m_containerName.text = Localization.instance.Localize(_lastHoverContainer.GetInventory().GetName());
+        int containerWeight = Mathf.CeilToInt(_lastHoverContainer.GetInventory().GetTotalWeight());
+        InventoryGui.instance.m_containerWeight.text = containerWeight.ToString();
       }
     }
   }
