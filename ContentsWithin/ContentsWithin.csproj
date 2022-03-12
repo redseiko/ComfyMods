@@ -82,6 +82,9 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>$(GamePath)\unstripped_corlib\UnityEngine.UI.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>$(GamePath)\unstripped_corlib\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContentsWithin.cs" />
