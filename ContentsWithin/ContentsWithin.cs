@@ -73,12 +73,8 @@ namespace ContentsWithin {
 
       [HarmonyPrefix]
       [HarmonyPatch(nameof(InventoryGui.Show))]
-      public static void ShowPostfix(InventoryGui __instance, ref Container container) {
+      public static void ShowPostfix(InventoryGui __instance) {
         isVisible = true;
-
-        if (_isModEnabled.Value && !container && _lastHoverContainer) {
-          container = _lastHoverContainer;
-        }
       }
 
       [HarmonyPrefix]
@@ -110,11 +106,15 @@ namespace ContentsWithin {
         if (!isVisible) {
           if (_lastHoverContainer) {
             InventoryGui.instance.m_animator.SetBool("visible", true);
+            InventoryGui.instance.m_hiddenFrames = 10;
             InventoryGui.instance.m_container.gameObject.SetActive(true);
             InventoryGui.instance.m_containerGrid.UpdateInventory(_lastHoverContainer.GetInventory(), null, null);
-            InventoryGui.instance.m_hiddenFrames = 10;
+            InventoryGui.instance.m_containerGrid.ResetView();
+            InventoryGui.instance.m_containerName.text = Localization.instance.Localize(_lastHoverContainer.GetInventory().GetName());
+            int containerWeight = Mathf.CeilToInt(_lastHoverContainer.GetInventory().GetTotalWeight());
+            InventoryGui.instance.m_containerWeight.text = containerWeight.ToString();
           } else {
-            InventoryGui.instance.m_container.gameObject.SetActive(false);
+            InventoryGui.instance.m_animator.SetBool("visible", false);
           }
         }
       }
