@@ -104,7 +104,7 @@ namespace ContentsWithin {
         }
 
         if (!isVisible) {
-          if (_lastHoverContainer) {
+          if (_lastHoverContainer && PrivateArea.CheckAccess(_lastHoverContainer.transform.position, 0f, false, false)) {
             InventoryGui.instance.m_animator.SetBool("visible", true);
             InventoryGui.instance.m_hiddenFrames = 10;
             InventoryGui.instance.m_container.gameObject.SetActive(true);
