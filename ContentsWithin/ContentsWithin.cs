@@ -122,6 +122,11 @@ namespace ContentsWithin {
         }
       }
 
+      [HarmonyPatch(nameof(InventoryGui.SetupDragItem)), HarmonyPrefix]
+      public static bool SetupDragItemPrefix() {
+        return ShowRealGUI();
+      }
+
       private static void ShowPreviewContainer() {
         InventoryGui.instance.m_animator.SetBool("visible", true);
         InventoryGui.instance.m_hiddenFrames = 10;
