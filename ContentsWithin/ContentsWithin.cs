@@ -15,6 +15,7 @@ namespace ContentsWithin {
     static ConfigEntry<KeyboardShortcut> _toggleShowContentsShortcut;
 
     private static bool isRealGuiVisible;
+    private static bool showContent = true;
 
     static Container _lastHoverContainer = null;
     static GameObject _lastHoverObject = null;
@@ -38,6 +39,28 @@ namespace ContentsWithin {
               "Shortcut to toggle on/off the 'show container contents' feature.");
 
       _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
+    }
+
+    private void Update() {
+      if (!_isModEnabled.Value) {
+        return;
+      }
+
+      if (_toggleShowContentsShortcut.Value.IsDown()) {
+        showContent = !showContent;
+
+        if (MessageHud.instance) {
+          MessageHud.instance.ShowMessage(MessageHud.MessageType.Center, $"ShowContainerContents: {showContent}");
+        }
+
+        if (!showContent && !isRealGuiVisible && InventoryGui.instance) {
+          InventoryGui.instance.Hide();
+        }
+      }
+    }
+
+    private static bool ShowRealGUI() {
+      return !_isModEnabled.Value || !showContent || isRealGuiVisible;
     }
 
     [HarmonyPatch(typeof(Player))]
@@ -76,19 +99,19 @@ namespace ContentsWithin {
 
       [HarmonyPatch(nameof(InventoryGui.Update)), HarmonyPrefix]
       public static void UpdatePrefix(InventoryGui __instance) {
-        if (_isModEnabled.Value && !isRealGuiVisible) {
+        if (!ShowRealGUI()) {
           __instance.m_animator.SetBool("visible", false);
         }
       }
 
       [HarmonyPatch(nameof(InventoryGui.Update)), HarmonyPostfix]
       public static void UpdatePostfix(InventoryGui __instance) {
-        _inventoryPanel.Ref()?.SetActive(!_isModEnabled.Value || isRealGuiVisible);
-        _craftingPanel.Ref()?.SetActive(!_isModEnabled.Value || isRealGuiVisible);
-        _infoPanel.Ref()?.SetActive(!_isModEnabled.Value || isRealGuiVisible);
-        _takeAllButton.Ref()?.SetActive(!_isModEnabled.Value || isRealGuiVisible);
+        _inventoryPanel.Ref()?.SetActive(ShowRealGUI());
+        _craftingPanel.Ref()?.SetActive(ShowRealGUI());
+        _infoPanel.Ref()?.SetActive(ShowRealGUI());
+        _takeAllButton.Ref()?.SetActive(ShowRealGUI());
 
-        if (!_isModEnabled.Value || isRealGuiVisible) {
+        if (ShowRealGUI()) {
           return;
         }
 
