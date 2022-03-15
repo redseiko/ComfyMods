@@ -115,11 +115,22 @@ namespace ContentsWithin {
           return;
         }
 
-        if (_lastHoverContainer && PrivateArea.CheckAccess(_lastHoverContainer.transform.position, 0f, false, false)) {
+        if (HasContainerAccess(_lastHoverContainer)) {
           ShowPreviewContainer();
         } else {
           InventoryGui.instance.m_animator.SetBool("visible", false);
         }
+      }
+
+      private static bool HasContainerAccess(Container container) {
+        if (!container) {
+          return false;
+        }
+
+        bool areaAccess = PrivateArea.CheckAccess(container.transform.position, 0f, false, false);
+        bool chestAccess = container.CheckAccess(Game.m_instance.m_playerProfile.m_playerID);
+
+        return areaAccess && chestAccess;
       }
 
       [HarmonyPatch(nameof(InventoryGui.SetupDragItem)), HarmonyPrefix]
