@@ -14,7 +14,7 @@ namespace TorchesAndResin {
   public class TorchesAndResin : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.torchesandresin";
     public const string PluginName = "TorchesAndResin";
-    public const string PluginVersion = "1.2.0";
+    public const string PluginVersion = "1.3.0";
 
     const float _torchStartingFuel = 10000f;
 
@@ -23,7 +23,8 @@ namespace TorchesAndResin {
       "piece_groundtorch_wood", // standing wood torch
       "piece_groundtorch", // standing iron torch
       "piece_walltorch", // sconce torch
-      "piece_brazierceiling01" // brazier
+      "piece_brazierceiling01", // hanging brazier
+      "piece_brazierfloor01", // floor brazier
     };
 
     static ConfigEntry<bool> _isModEnabled;
