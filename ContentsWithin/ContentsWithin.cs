@@ -76,6 +76,16 @@ namespace ContentsWithin {
       }
     }
 
+    [HarmonyPatch(typeof(GuiBar))]
+    public class GuiBarPatch {
+      [HarmonyPatch(nameof(GuiBar.SetValue)), HarmonyPrefix]
+      public static void GuiBarSetValuePrefix(GuiBar __instance) {
+        if (__instance.m_firstSet) {
+          __instance.m_width = __instance.m_bar.sizeDelta.x;
+        }
+      }
+    }
+
     [HarmonyPatch(typeof(InventoryGui))]
     public class InventoryGuiPatch {
       [HarmonyPatch(nameof(InventoryGui.Awake)), HarmonyPostfix]
