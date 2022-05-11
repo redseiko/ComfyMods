@@ -2,6 +2,7 @@
 using BepInEx.Configuration;
 using HarmonyLib;
 using System.Reflection;
+using BepInEx.Bootstrap;
 using UnityEngine;
 
 namespace ContentsWithin {
@@ -88,13 +89,17 @@ namespace ContentsWithin {
 
     [HarmonyPatch(typeof(InventoryGui))]
     public class InventoryGuiPatch {
-      [HarmonyPatch(nameof(InventoryGui.Awake)), HarmonyPostfix]
+      [HarmonyPatch(nameof(InventoryGui.Awake)), HarmonyPostfix, HarmonyPriority(Priority.Low)]
       public static void AwakePostfix(ref InventoryGui __instance) {
         _inventoryPanel = __instance.m_player.Ref()?.gameObject;
         _containerPanel = __instance.m_container.Ref()?.gameObject;
         _infoPanel = __instance.m_infoPanel.Ref()?.gameObject;
         _craftingPanel = __instance.m_inventoryRoot.Find("Crafting").Ref()?.gameObject;
         _takeAllButton = __instance.m_takeAllButton.Ref()?.gameObject;
+
+        if (Chainloader.PluginInfos.ContainsKey("randyknapp.mods.auga")) {
+          _craftingPanel = __instance.m_inventoryRoot.Find("RightPanel").Ref()?.gameObject;
+        }
       }
 
       [HarmonyPatch(nameof(InventoryGui.Show)), HarmonyPostfix]
