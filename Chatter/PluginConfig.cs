@@ -57,6 +57,7 @@ namespace Chatter {
     // Username
     public static ConfigEntry<string> ChatMessageUsernamePrefix { get; private set; } = default!;
     public static ConfigEntry<string> ChatMessageUsernamePostfix { get; private set; } = default!;
+    public static ConfigEntry<string> DisallowChatMessageHudStartTexts { get; private set; } = default!;
 
     public static void BindConfig(ConfigFile config) {
       Config = config;
@@ -170,6 +171,16 @@ namespace Chatter {
               defaultValue: string.Empty,
               new ConfigDescription(
                   "If non-empty, adds the text to the end of a ChatMessage username.",
+                  acceptableValues: null,
+                  new ConfigurationManagerAttributes { Order = 1 }));
+
+      DisallowChatMessageHudStartTexts =
+          config.Bind(
+              "Username",
+              "disallowChatMessageHudStartTexts",
+              defaultValue: string.Empty,
+              new ConfigDescription(
+                  "Start Text for HUD Messages that won\'t be added to the message queue. Separated by \',\'",
                   acceptableValues: null,
                   new ConfigurationManagerAttributes { Order = 1 }));
 

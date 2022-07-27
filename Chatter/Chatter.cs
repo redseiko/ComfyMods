@@ -17,7 +17,7 @@ namespace Chatter {
   public class Chatter : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.chatter";
     public const string PluginName = "Chatter";
-    public const string PluginVersion = "1.1.0";
+    public const string PluginVersion = "1.1.1";
 
     Harmony _harmony;
 
@@ -334,6 +334,13 @@ namespace Chatter {
             || !ChatPanel?.Panel
             || !ShowMessageHudCenterMessages.Value) {
           return;
+        }
+
+        if (!DisallowChatMessageHudStartTexts.Value.IsNullOrWhiteSpace()) {
+          string[] disallowedHudMessages = DisallowChatMessageHudStartTexts.Value.Split(',');
+          foreach (string disallowedString in disallowedHudMessages) {
+            if (text.StartsWith(disallowedString.Trim())) return;
+          }
         }
 
         AddChatMessage(new() { MessageType = ChatMessageType.HudCenter, Timestamp = DateTime.Now, Text = text});
