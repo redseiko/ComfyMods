@@ -3,9 +3,15 @@ using BepInEx.Logging;
 
 using HarmonyLib;
 
+using Jotunn.Managers;
+
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
+
+using UnityEngine;
 
 using static PotteryBarn.PluginConfig;
 
@@ -14,10 +20,14 @@ namespace PotteryBarn {
   public class PotteryBarn : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.potterybarn";
     public const string PluginName = "PotteryBarn";
-    public const string PluginVersion = "1.2.1";
+    public const string PluginVersion = "1.3.0";
 
     static ManualLogSource _logger;
     Harmony _harmony;
+
+    static Piece.PieceCategory _prefabPieceCategory;
+    static Sprite _standardPrefabIconSprite;
+    static Quaternion _prefabIconRenderRotation;
 
     public void Awake() {
       _logger = Logger;
@@ -25,6 +35,8 @@ namespace PotteryBarn {
       BindConfig(Config);
 
       _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
+
+      _prefabPieceCategory = PieceManager.Instance.AddPieceCategory("_HammerPieceTable", "Prefab");
     }
 
     public void OnDestroy() {
@@ -43,6 +55,9 @@ namespace PotteryBarn {
         yield break;
       }
 
+      _standardPrefabIconSprite = _standardPrefabIconSprite ??= CreateColorSprite(new Color32(34, 132, 73, 64));
+      _prefabIconRenderRotation = Quaternion.Euler(0f, -45f, 0f);
+
       pieceTable.AddPiece(GetExistingPiece("turf_roof").SetName("turf_roof"));
       pieceTable.AddPiece(GetExistingPiece("turf_roof_top").SetName("turf_roof_top"));
       pieceTable.AddPiece(GetExistingPiece("turf_roof_wall").SetName("turf_roof_wall"));
@@ -52,6 +67,29 @@ namespace PotteryBarn {
       pieceTable.AddPiece(
           GetExistingPiece("stone_floor")
               .SetResource("Stone", r => r.SetAmount(12).SetRecover(true)));
+
+      pieceTable.AddPiece(
+          GetExistingPiece("wood_ledge")
+              .SetResource("Wood", r => r.SetAmount(1).SetRecover(true)));
+
+      
+
+      foreach (KeyValuePair<string, Dictionary<string, int>> entry in Requirements.creatorShopItems.OrderBy(o => o.Key).ToList()) {
+        GetOrAddPieceComponent(entry.Key, _prefabPieceCategory, pieceTable)
+          .SetResources(CreateRequirements(entry.Value));
+      }
+    }
+
+    static Piece.Requirement[] CreateRequirements(Dictionary<string, int> data) {
+      Piece.Requirement[] requirements = new Piece.Requirement[data.Count];
+      for (int index = 0; index < data.Count; index++) {
+        KeyValuePair<string, int> item = data.ElementAt(index);
+        Piece.Requirement req = new Piece.Requirement();
+        req.m_resItem = PrefabManager.Cache.GetPrefab<GameObject>(item.Key).GetComponent<ItemDrop>();
+        req.m_amount = item.Value;
+        requirements[index] = req;
+      }
+      return requirements;
     }
 
     static PieceTable GetPieceTable(string pieceTableName) {
@@ -63,6 +101,78 @@ namespace PotteryBarn {
 
     static Piece GetExistingPiece(string prefabName) {
       return ZNetScene.m_instance.Ref()?.GetPrefab(prefabName).Ref()?.GetComponent<Piece>();
+    }
+
+    static Piece GetOrAddPieceComponent(string prefabName, Piece.PieceCategory pieceCategory, PieceTable pieceTable) {
+      GameObject prefab = ZNetScene.instance.GetPrefab(prefabName);
+      bool isScalable = prefab.TryGetComponent(out ZNetView zNetView) && zNetView.m_syncInitialScale;
+      if (!prefab.TryGetComponent(out Piece piece)) {
+        log($"Adding piece componenet to prefab {prefab.name}");
+        piece = prefab.AddComponent<Piece>();
+
+        piece.m_name = FormatPrefabName(prefab.name);
+        SetPlacementRestrictions(piece);
+        piece.m_category = pieceCategory;
+      }
+
+      piece.m_icon ??= LoadOrRenderIcon(prefab, _prefabIconRenderRotation, _standardPrefabIconSprite);
+
+      if (!pieceTable.m_pieces.Contains(prefab)) {
+        pieceTable.m_pieces.Add(prefab);
+        ZLog.Log($"Added Piece {piece.m_name} to PieceTable {pieceTable.name}");
+      }
+
+      piece.m_description = isScalable ? $"{prefab.name} (Scalable)" : $"{prefab.name}";
+
+      return piece;
+    }
+
+    static readonly Regex PrefabNameRegex = new(@"([a-z])([A-Z])");
+
+    static string FormatPrefabName(string prefabName) {
+      return PrefabNameRegex
+          .Replace(prefabName, "$1 $2")
+          .TrimStart(' ')
+          .Replace('_', ' ')
+          .Replace("  ", " ");
+    }
+
+    static Sprite LoadOrRenderIcon(GameObject prefab, Quaternion renderRotation, Sprite defaultSprite) {
+      RenderManager.RenderRequest request = new(prefab) {
+        Rotation = renderRotation,
+      };
+
+      return RenderManager.Instance.Render(request).Ref() ?? defaultSprite;
+    }
+
+    static Piece SetPlacementRestrictions(Piece piece) {
+      piece.m_repairPiece = false;
+      piece.m_groundOnly = false;
+      piece.m_groundPiece = false;
+      piece.m_cultivatedGroundOnly = false;
+      piece.m_waterPiece = false;
+      piece.m_noInWater = false;
+      piece.m_notOnWood = false;
+      piece.m_notOnTiltingSurface = false;
+      piece.m_inCeilingOnly = false;
+      piece.m_notOnFloor = false;
+      piece.m_onlyInTeleportArea = false;
+      piece.m_allowedInDungeons = false;
+      piece.m_clipEverything = false;
+
+      return piece;
+    }
+
+    static Sprite CreateColorSprite(Color color) {
+      Texture2D texture = new(1, 1);
+      texture.SetPixel(0, 0, color);
+      texture.Apply();
+
+      return Sprite.Create(texture, new(0, 0, 1, 1), Vector2.zero);
+    }
+
+    public static void log(string message) {
+      _logger.LogMessage(message);
     }
   }
 }
