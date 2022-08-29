@@ -29,6 +29,12 @@ namespace PotteryBarn {
     static Sprite _standardPrefabIconSprite;
     static Quaternion _prefabIconRenderRotation;
 
+    public static bool OverrideSelectedPrefab;
+    public static GameObject SelectedPrefab;
+    public static Piece SelectedPiece;
+
+    public static bool isDropTableDisabled = false;
+
     public void Awake() {
       _logger = Logger;
 
@@ -72,7 +78,7 @@ namespace PotteryBarn {
           GetExistingPiece("wood_ledge")
               .SetResource("Wood", r => r.SetAmount(1).SetRecover(true)));
 
-      
+
 
       foreach (KeyValuePair<string, Dictionary<string, int>> entry in Requirements.creatorShopItems.OrderBy(o => o.Key).ToList()) {
         GetOrAddPieceComponent(entry.Key, _prefabPieceCategory, pieceTable)
@@ -107,9 +113,14 @@ namespace PotteryBarn {
       GameObject prefab = ZNetScene.instance.GetPrefab(prefabName);
       bool isScalable = prefab.TryGetComponent(out ZNetView zNetView) && zNetView.m_syncInitialScale;
       if (!prefab.TryGetComponent(out Piece piece)) {
-        log($"Adding piece componenet to prefab {prefab.name}");
         piece = prefab.AddComponent<Piece>();
+        piece.m_nview = prefab.GetComponent<ZNetView>();
+        if (piece.m_nview == null) {
+          log($"No znetview for {prefab.name}");
+        }
 
+        piece.m_canBeRemoved = Requirements.isPrefabDeconstructable(prefab.name);
+        piece.m_targetNonPlayerBuilt = false;
         piece.m_name = FormatPrefabName(prefab.name);
         SetPlacementRestrictions(piece);
         piece.m_category = pieceCategory;
@@ -122,7 +133,7 @@ namespace PotteryBarn {
         ZLog.Log($"Added Piece {piece.m_name} to PieceTable {pieceTable.name}");
       }
 
-      piece.m_description = isScalable ? $"{prefab.name} (Scalable)" : $"{prefab.name}";
+      piece.m_description = prefab.name;
 
       return piece;
     }

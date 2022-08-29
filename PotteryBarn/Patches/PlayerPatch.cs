@@ -18,7 +18,7 @@ namespace PotteryBarn.Patches {
       [HarmonyPatch(nameof(Player.SetupPlacementGhost))]
       static void SetupPlacementGhostPostfix(ref Player __instance) {
         if (IsModEnabled.Value) {
-          __instance.m_maxPlaceDistance = 24;
+          //__instance.m_maxPlaceDistance = 6;
         }
       }
 
@@ -102,7 +102,7 @@ namespace PotteryBarn.Patches {
     }
 
     static float MaxDistanceDelegate(float distance) {
-      return IsModEnabled.Value ? 24 : distance;
+      return distance;
     }
   }
 }
