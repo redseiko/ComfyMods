@@ -10,19 +10,12 @@ using HarmonyLib;
 using UnityEngine;
 
 using static PotteryBarn.PluginConfig;
+using static PotteryBarn.PotteryBarn;
 
 namespace PotteryBarn.Patches {
-    [HarmonyPatch(typeof(Player))]
-    public class PlayerPatch {
-      [HarmonyPostfix]
-      [HarmonyPatch(nameof(Player.SetupPlacementGhost))]
-      static void SetupPlacementGhostPostfix(ref Player __instance) {
-        if (IsModEnabled.Value) {
-          //__instance.m_maxPlaceDistance = 6;
-        }
-      }
-
-      [HarmonyTranspiler]
+  [HarmonyPatch(typeof(Player))]
+  public class PlayerPatch {
+    [HarmonyTranspiler]
     [HarmonyPatch(nameof(Player.SetupPlacementGhost))]
     static IEnumerable<CodeInstruction> SetupPlacementGhostTranspiler(IEnumerable<CodeInstruction> instructions) {
       return new CodeMatcher(instructions)
@@ -91,18 +84,27 @@ namespace PotteryBarn.Patches {
       return clonedPrefab;
     }
 
-    [HarmonyTranspiler]
-    [HarmonyPatch(nameof(Player.PieceRayTest))]
-    static IEnumerable<CodeInstruction> PieceRayTestTranspiler(IEnumerable<CodeInstruction> instructions) {
-      return new CodeMatcher(instructions)
-          .MatchForward(useEnd: false, new CodeMatch(OpCodes.Ldc_R4), new CodeMatch(OpCodes.Ldloc_0))
-          .Advance(offset: 1)
-          .InsertAndAdvance(Transpilers.EmitDelegate<Func<float, float>>(MaxDistanceDelegate))
-          .InstructionEnumeration();
-    }
-
-    static float MaxDistanceDelegate(float distance) {
-      return distance;
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(Player.CheckCanRemovePiece))]
+    static bool CheckCanRemovePrefix(Player __instance, Piece piece, ref bool __result) {
+      if (IsModEnabled.Value) {
+        if(!piece.IsPlacedByPlayer() && isCreatorShopPiece(piece)) {
+          log("Cannot deconstruct world generated item using pottery barn.");
+          __result = false;
+          return false;
+        }
+        if(isCreatorShopPiece(piece) && !piece.IsCreator()) {
+          log("Cannot deconstruct pottery barn piece you did not build yourself.");
+          __result = false;
+          return false;
+        }
+        if(!isDestructibleCreatorShopPiece(piece)) {
+          log("This pottery barn piece cannot be deconstructed. You must destroy with damage.");
+          __result = false;
+          return false;
+        }
+      }
+      return true;
     }
   }
 }

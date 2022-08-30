@@ -11,14 +11,17 @@ using static PotteryBarn.PotteryBarn;
 
 namespace PotteryBarn.Patches {
   [HarmonyPatch(typeof(Piece))]
-  internal class PiecePatch {
+  public class PiecePatch {
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Piece), "DropResources")]
     public static void DropResourcePrefix(Piece __instance) {
-      if(Requirements.creatorShopItems.Keys.Contains(__instance.m_description)) {
+      // Should not need to check against cultivator creator shop items here because they do not pass the Player.CanRemovePiece check
+      if(Requirements.hammerCreatorShopItems.Keys.Contains(__instance.m_description)) {
         isDropTableDisabled = true;
       }
+
+      log($"Piece description {__instance.m_description}");
       foreach (Piece.Requirement requirement in __instance.m_resources) {
         GameObject gameObject = requirement.m_resItem.gameObject;
         if(gameObject != null) {
@@ -27,9 +30,10 @@ namespace PotteryBarn.Patches {
       }
     }
   }
+  
 
-  [HarmonyPatch(typeof(DropOnDestroyed))]
-  internal class DropOnDestroyedPatch {
+    [HarmonyPatch(typeof(DropOnDestroyed))]
+  public  class DropOnDestroyedPatch {
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(DropOnDestroyed), "OnDestroyed")]
