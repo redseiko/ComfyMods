@@ -98,7 +98,7 @@ namespace PotteryBarn.Patches {
           __result = false;
           return false;
         }
-        if(!isDestructibleCreatorShopPiece(piece)) {
+        if(!isDestructibleCreatorShopPiece(piece) && isCreatorShopPiece(piece)) {
           log("This pottery barn piece cannot be deconstructed. You must destroy with damage.");
           __result = false;
           return false;

@@ -84,6 +84,21 @@ namespace PotteryBarn {
        {"StatueSeed", new Dictionary<string, int>() {
           {"Stone", 20 },
           {"MushroomBlue", 5 }}},
+
+       // Roots, Vines, and Glowing Mushroom
+       {"root07", new Dictionary<string, int>() {
+          {"ElderBark", 2 }}},
+       {"root08", new Dictionary<string, int>() {
+          {"ElderBark", 2 }}},
+       {"root11", new Dictionary<string, int>() {
+          {"ElderBark", 2 }}},
+       {"root12", new Dictionary<string, int>() {
+          {"ElderBark", 2 }}},
+       {"vines", new Dictionary<string, int>() {
+          {"Wood", 2 }}},
+       {"GlowingMushroom", new Dictionary<string, int>() {
+          {"MushroomYellow", 3 },
+          {"MushroomBlue", 1 }}}
     };
 
     public static readonly Dictionary<string, Dictionary<string, int>> cultivatorCreatorShopItems = new Dictionary<string, Dictionary<string, int>>() {
@@ -98,16 +113,6 @@ namespace PotteryBarn {
           {"Wood", 2 }}},
        {"shrub_2_heath", new Dictionary<string, int>() {
           {"Wood", 2 }}},
-       {"vines", new Dictionary<string, int>() {
-          {"Wood", 2 }}},
-       {"root07", new Dictionary<string, int>() {
-          {"ElderBark", 2 }}},
-       {"root08", new Dictionary<string, int>() {
-          {"ElderBark", 2 }}},
-       {"root11", new Dictionary<string, int>() {
-          {"ElderBark", 2 }}},
-       {"root12", new Dictionary<string, int>() {
-          {"ElderBark", 2 }}},
        {"marker01", new Dictionary<string, int>() {
           {"Stone", 10 }}},
        {"marker02", new Dictionary<string, int>() {
@@ -121,10 +126,8 @@ namespace PotteryBarn {
        {"highstone", new Dictionary<string, int>() {
           {"Stone", 50 }}},
        {"widestone", new Dictionary<string, int>() {
-          {"Stone", 50 }}},
-       {"GlowingMushroom", new Dictionary<string, int>() {
-          {"MushroomYellow", 3 },
-          {"MushroomBlue", 1 }}},
+          {"Stone", 50 }}}
+       
     };
 
     public static readonly Dictionary<string, string> craftingStationRequirements = new Dictionary<string, string>() {
