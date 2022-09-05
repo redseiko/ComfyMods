@@ -46,6 +46,7 @@
 | CreatorShop | StatueEvil              | Stonecutter      | 5x Blue mushroom  | 20x Stone          |                    |              |                   |
 | CreatorShop | StatueHare              | Stonecutter      | 5x Blue mushroom  | 20x Stone          |                    |              |                   |
 | CreatorShop | StatueSeed              | Stonecutter      | 5x Blue mushroom  | 20x Stone          |                    |              |                   |
+| CreatorShop | stonechest              | Stonecutter      | 10x Blue mushroom | 20x Stone          |                    |              |                   |
 | CreatorShop | Vines                   | Workbench        | 2x Wood           |                    |                    |              |                   |
 
 ### Hammer

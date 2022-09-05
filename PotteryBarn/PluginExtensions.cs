@@ -3,6 +3,10 @@ using System.Linq;
 
 namespace PotteryBarn {
   public static class PieceExtensions {
+    public static Piece AddPlantComponent(this Piece piece) {
+      piece.GetComponent<Plant>();
+      return piece;
+    }
     public static Piece SetCanBeRemoved(this Piece piece, bool canBeRemoved) {
       piece.m_canBeRemoved = canBeRemoved;
       return piece;

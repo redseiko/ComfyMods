@@ -62,7 +62,7 @@ namespace PotteryBarn {
           {"BoneFragments", 4 },
           {"MushroomBlue", 1 }}},
 
-      // Statues and Skulls
+      // Statues, Stone Chests, and Skulls
        {"Skull1", new Dictionary<string, int>() {
           {"BoneFragments", 10 },
           {"MushroomBlue", 1 }}},
@@ -84,6 +84,9 @@ namespace PotteryBarn {
        {"StatueSeed", new Dictionary<string, int>() {
           {"Stone", 20 },
           {"MushroomBlue", 5 }}},
+       {"stonechest", new Dictionary<string, int>() {
+          {"Stone", 20 },
+          {"MushroomBlue", 10 }}},
 
        // Roots, Vines, and Glowing Mushroom
        {"root07", new Dictionary<string, int>() {
@@ -101,34 +104,33 @@ namespace PotteryBarn {
           {"MushroomBlue", 1 }}}
     };
 
-    public static readonly Dictionary<string, Dictionary<string, int>> cultivatorCreatorShopItems = new Dictionary<string, Dictionary<string, int>>() {
-       // Natural Items
-       {"Bush01", new Dictionary<string, int>() {
-          {"Wood", 2 }}},
-       {"Bush01_heath", new Dictionary<string, int>() {
-          {"Wood", 2 }}},
-       {"Bush02_en", new Dictionary<string, int>() {
-          {"Wood", 3 }}},
-       {"shrub_2", new Dictionary<string, int>() {
-          {"Wood", 2 }}},
-       {"shrub_2_heath", new Dictionary<string, int>() {
-          {"Wood", 2 }}},
-       {"marker01", new Dictionary<string, int>() {
-          {"Stone", 10 }}},
-       {"marker02", new Dictionary<string, int>() {
-          {"Stone", 10 }}},
-       {"Rock_3", new Dictionary<string, int>() {
-          {"Stone", 30 }}},
-       {"Rock_4", new Dictionary<string, int>() {
-          {"Stone", 30 }}},
-       {"Rock_7", new Dictionary<string, int>() {
-          {"Stone", 10 }}},
-       {"highstone", new Dictionary<string, int>() {
-          {"Stone", 50 }}},
-       {"widestone", new Dictionary<string, int>() {
-          {"Stone", 50 }}}
-       
-    };
+    //public static readonly Dictionary<string, Dictionary<string, int>> cultivatorCreatorShopItems = new Dictionary<string, Dictionary<string, int>>() {
+    //   // Natural Items
+    //   {"Bush01", new Dictionary<string, int>() {
+    //      {"Wood", 2 }}},
+    //   {"Bush01_heath", new Dictionary<string, int>() {
+    //      {"Wood", 2 }}},
+    //   {"Bush02_en", new Dictionary<string, int>() {
+    //      {"Wood", 3 }}},
+    //   {"shrub_2", new Dictionary<string, int>() {
+    //      {"Wood", 2 }}},
+    //   {"shrub_2_heath", new Dictionary<string, int>() {
+    //      {"Wood", 2 }}},
+    //   {"marker01", new Dictionary<string, int>() {
+    //      {"Stone", 10 }}},
+    //   {"marker02", new Dictionary<string, int>() {
+    //      {"Stone", 10 }}},
+    //   {"Rock_3", new Dictionary<string, int>() {
+    //      {"Stone", 30 }}},
+    //   {"Rock_4", new Dictionary<string, int>() {
+    //      {"Stone", 30 }}},
+    //   {"Rock_7", new Dictionary<string, int>() {
+    //      {"Stone", 10 }}},
+    //   {"highstone", new Dictionary<string, int>() {
+    //      {"Stone", 50 }}},
+    //   {"widestone", new Dictionary<string, int>() {
+    //      {"Stone", 50 }}}
+    //};
 
     public static readonly Dictionary<string, string> craftingStationRequirements = new Dictionary<string, string>() {
       {"goblin_banner", "piece_workbench" },
@@ -149,7 +151,8 @@ namespace PotteryBarn {
       {"StatueDeer", "piece_stonecutter" },
       {"StatueEvil", "piece_stonecutter" },
       {"StatueHare", "piece_stonecutter" },
-      {"StatueSeed", "piece_stonecutter" }
+      {"StatueSeed", "piece_stonecutter" },
+      {"stonechest", "piece_stonecutter" }
     };
 
   }

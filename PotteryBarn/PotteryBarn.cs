@@ -86,13 +86,14 @@ namespace PotteryBarn {
           .SetTargetNonPlayerBuilt(false);
       }
 
-      foreach (KeyValuePair<string, Dictionary<string, int>> entry in Requirements.cultivatorCreatorShopItems.OrderBy(o => o.Key).ToList()) {
-        GetOrAddPieceComponent(entry.Key, GetPieceTable("_CultivatorPieceTable"))
-          .SetResources(CreateRequirements(entry.Value))
-          .SetCanBeRemoved(false)
-          .SetTargetNonPlayerBuilt(false)
-          .SetGroundOnly(true);
-      }
+      //foreach (KeyValuePair<string, Dictionary<string, int>> entry in Requirements.cultivatorCreatorShopItems.OrderBy(o => o.Key).ToList()) {
+      //  GetOrAddPieceComponent(entry.Key, GetPieceTable("_CultivatorPieceTable"), true)
+      //    .SetResources(CreateRequirements(entry.Value))
+      //    .SetCanBeRemoved(false)
+      //    .SetTargetNonPlayerBuilt(false)
+      //    .SetGroundOnly(true)
+      //    .AddPlantComponent();
+      //}
     }
 
     static Piece.Requirement[] CreateRequirements(Dictionary<string, int> data) {
@@ -120,7 +121,6 @@ namespace PotteryBarn {
 
     static Piece GetOrAddPieceComponent(string prefabName, PieceTable pieceTable) {
       GameObject prefab = ZNetScene.instance.GetPrefab(prefabName);
-
       if (!prefab.TryGetComponent(out Piece piece)) {
         piece = prefab.AddComponent<Piece>();
         piece.m_name = FormatPrefabName(prefab.name);
@@ -188,7 +188,7 @@ namespace PotteryBarn {
     }
 
     public static bool isCreatorShopPiece(Piece piece) {
-      if (Requirements.hammerCreatorShopItems.Keys.Contains(piece.m_description) || Requirements.cultivatorCreatorShopItems.Keys.Contains(piece.m_description)) {
+      if (Requirements.hammerCreatorShopItems.Keys.Contains(piece.m_description)) {
         return true;
       }
       return false;
@@ -222,9 +222,8 @@ namespace PotteryBarn {
       return false;
     }
     public static CraftingStation GetCraftingStation(string prefabName) {
-      string stationName = Requirements.craftingStationRequirements[prefabName];
-      if(!stationName.IsNullOrWhiteSpace()) {
-        return PrefabManager.Instance.GetPrefab(stationName).GetComponent<CraftingStation>();
+      if (Requirements.craftingStationRequirements.ContainsKey(prefabName)) {
+        return PrefabManager.Instance.GetPrefab(Requirements.craftingStationRequirements[prefabName]).GetComponent<CraftingStation>();
       }
       return null;
     }
