@@ -31,6 +31,7 @@ namespace PotteryBarn {
     static Sprite _standardPrefabIconSprite;
     static Quaternion _prefabIconRenderRotation;
 
+    public static bool _debug = false;
     public static bool isDropTableDisabled = false;
 
     public void Awake() {
@@ -184,7 +185,9 @@ namespace PotteryBarn {
     }
 
     public static void log(string message) {
-      _logger.LogMessage(message);
+      if(_debug) {
+        _logger.LogMessage(message);
+      }
     }
 
     public static bool isCreatorShopPiece(Piece piece) {
