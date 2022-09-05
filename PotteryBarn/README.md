@@ -18,7 +18,7 @@
   * New prefabs (that exist in the game) will be available to build!
   * You might need to pick-up/drop a stone/wood/resource to have the recipe trigger.
 
-### Creator Shop
+### Creator Shop Items
 
 | Category    | Prefab                  | Crafting Station | Resource          | Resource           | Resource           | Resource     | Resource          |
 |-------------|-------------------------|------------------|-------------------|--------------------|--------------------|--------------|-------------------|
@@ -48,6 +48,11 @@
 | CreatorShop | StatueSeed              | Stonecutter      | 5x Blue mushroom  | 20x Stone          |                    |              |                   |
 | CreatorShop | stonechest              | Stonecutter      | 10x Blue mushroom | 20x Stone          |                    |              |                   |
 | CreatorShop | Vines                   | Workbench        | 2x Wood           |                    |                    |              |                   |
+
+### Creator Shop Functionality
+
+  * Player may only break down creator shop places they have placed themselves. This is to ensure world generated items cannot be broken down for mats farming.
+  * World generated pieces will drop the same vanilla material drop table when broken with attacks/damage.
 
 ### Hammer
 
