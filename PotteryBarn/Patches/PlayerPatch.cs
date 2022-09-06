@@ -85,12 +85,13 @@ namespace PotteryBarn.Patches {
     [HarmonyPatch(nameof(Player.CheckCanRemovePiece))]
     static bool CheckCanRemovePrefix(Player __instance, Piece piece, ref bool __result) {
       if (IsModEnabled.Value) {
+        // Prevents world generated piece from player removal with build hammer.
         if (!piece.IsPlacedByPlayer() && IsCreatorShopPiece(piece)) {
-          LogMessage("Cannot deconstruct world generated item using pottery barn.");
           __result = false;
           return false;
         }
 
+        // Prevents player from breaking pottery barn pieces they didn't create themselves.
         if (IsCreatorShopPiece(piece) && !piece.IsCreator()) {
           LogMessage("Cannot deconstruct pottery barn piece you did not build yourself.");
           __result = false;
