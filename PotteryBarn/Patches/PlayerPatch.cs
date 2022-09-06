@@ -93,13 +93,12 @@ namespace PotteryBarn.Patches {
 
         // Prevents player from breaking pottery barn pieces they didn't create themselves.
         if (IsCreatorShopPiece(piece) && !piece.IsCreator()) {
-          LogMessage("Cannot deconstruct pottery barn piece you did not build yourself.");
           __result = false;
           return false;
         }
 
+        // Enforces destruction by damage rather than build hammer.
         if (!IsDestructibleCreatorShopPiece(piece) && IsCreatorShopPiece(piece)) {
-          LogMessage("This pottery barn piece cannot be deconstructed. You must destroy with damage.");
           __result = false;
           return false;
         }
