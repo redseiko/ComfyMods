@@ -72,6 +72,10 @@
 
 ## Changelog
 
+### 1.4.1
+
+  * Repairs with negative damage should now take effect. Vanilla repair previously overwrote negative repair values.
+
 ### 1.4.0
 
   * Moved all configuration code into new `PluginConfig` class.

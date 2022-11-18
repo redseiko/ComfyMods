@@ -7,6 +7,8 @@ using System.Reflection.Emit;
 using static GetOffMyLawn.GetOffMyLawn;
 using static GetOffMyLawn.PluginConfig;
 
+using UnityEngine;
+
 namespace GetOffMyLawn {
   [HarmonyPatch(typeof(Player))]
   public class PlayerPatch {
@@ -50,6 +52,9 @@ namespace GetOffMyLawn {
         __instance.Message(
             MessageHud.MessageType.TopLeft, $"Repaired piece '{pieceName}' to health: {PieceHealth.Value}");
       }
+
+      hoveringPiece.GetComponent<WearNTear>().m_lastRepair = Time.time;
+
     }
 
     [HarmonyTranspiler]
