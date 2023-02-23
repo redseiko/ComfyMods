@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="Enigma.cs" />
     <Compile Include="Patches\CharacterPatch.cs" />
+    <Compile Include="Patches\EnemyHudPatch.cs" />
     <Compile Include="PluginConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -4,7 +4,7 @@ using System;
 
 using static Enigma.Enigma;
 
-namespace Entitlement.Patches {
+namespace Enigma.Patches {
   [HarmonyPatch(typeof(Character))]
   public class CharacterPatch {
 
@@ -20,5 +20,18 @@ namespace Entitlement.Patches {
       }
       return true;
     }
+
+
+    //[HarmonyPrefix]
+    //[HarmonyPatch(nameof(Character.IsBoss))]
+    //public static bool IsBossPrefix(ref Character __instance, ref bool __result) {
+    //  if (__instance.TryGetComponent(out ZNetView zNetView)) {
+    //    if(zNetView.GetZDO().GetBool(BossDesignationFieldName, false) && !string.IsNullOrEmpty(zNetView.GetZDO().GetString(CustomNameFieldName))) {
+    //      __result = true;
+    //      return false;
+    //    }
+    //  }
+    //  return true;
+    //}
   }
 }

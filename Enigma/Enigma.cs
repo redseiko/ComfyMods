@@ -16,6 +16,8 @@ namespace Enigma {
     Harmony _harmony;
 
     public static readonly string CustomNameFieldName = "customEnemyName";
+    public static readonly string HasSeenFieldName = "hasSeenEnemy";
+    public static readonly string BossDesignationFieldName = "isCustomBoss";
 
     public void Awake() {
       BindConfig(Config);

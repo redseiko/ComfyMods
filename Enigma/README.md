@@ -4,6 +4,9 @@
 
 ## Instructions
 
+Allows reading of custom enemy names in Comfy Events. Biome-style announcement will flash the first time you encounter a
+particular mob with a custom name if that mob is designated as a boss. This may be disabled in the config.
+
 ### Manual
 
   * Un-zip `Enigma.dll` to your `/Valheim/BepInEx/plugins/` folder.
