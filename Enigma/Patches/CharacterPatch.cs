@@ -22,16 +22,16 @@ namespace Enigma.Patches {
     }
 
 
-    //[HarmonyPrefix]
-    //[HarmonyPatch(nameof(Character.IsBoss))]
-    //public static bool IsBossPrefix(ref Character __instance, ref bool __result) {
-    //  if (__instance.TryGetComponent(out ZNetView zNetView)) {
-    //    if(zNetView.GetZDO().GetBool(BossDesignationFieldName, false) && !string.IsNullOrEmpty(zNetView.GetZDO().GetString(CustomNameFieldName))) {
-    //      __result = true;
-    //      return false;
-    //    }
-    //  }
-    //  return true;
-    //}
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(Character.IsBoss))]
+    public static bool IsBossPrefix(ref Character __instance, ref bool __result) {
+      if (__instance.TryGetComponent(out ZNetView zNetView)) {
+        if (zNetView.GetZDO().GetBool(BossDesignationFieldName, false) && !string.IsNullOrEmpty(zNetView.GetZDO().GetString(CustomNameFieldName))) {
+          __result = true;
+          return false;
+        }
+      }
+      return true;
+    }
   }
 }

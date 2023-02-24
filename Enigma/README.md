@@ -16,6 +16,10 @@ particular mob with a custom name if that mob is designated as a boss. This may 
   2. Go to Settings > Import local mod > Select `Enigma_v1.0.0.zip`.
   3. Click "OK/Import local mod" on the pop-up for information.
 
+## Attributions
+
+  * Icon provided by Lyka on Comfy AKA @Jenniely on twitter.
+
 ## Changelog
 
 ### 1.0.0
