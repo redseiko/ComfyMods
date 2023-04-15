@@ -22,6 +22,10 @@ particular mob with a custom name if that mob is designated as a boss. This may 
 
 ## Changelog
 
+### 1.0.1
+
+  * Added null check.
+
 ### 1.0.0
 
   * Initial release.
