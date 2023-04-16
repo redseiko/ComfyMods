@@ -1,0 +1,8 @@
+{
+  "name": "Enigma",
+  "version_number": "0.1.0",
+  "author": "bruce",
+  "description": "Decoding enemy names.",
+  "website_url": "",
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.1900" ]
+}
