@@ -20,7 +20,7 @@ namespace ComfySigns {
   public class ComfySigns : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.comfysigns";
     public const string PluginName = "ComfySigns";
-    public const string PluginVersion = "1.2.1";
+    public const string PluginVersion = "1.3.0";
 
     Harmony _harmony;
 
@@ -82,7 +82,7 @@ namespace ComfySigns {
     public static readonly EventHandler OnSignConfigChanged = (_, _) => {
       TMP_FontAsset font = UIFonts.GetFontAsset(SignDefaultTextFont.Value);
 
-      if (UseFallbackFonts.Value && font != null) {
+      if (UseFallbackFonts.Value && font) {
         AddFallbackFont(font);
       }
 
@@ -116,11 +116,18 @@ namespace ComfySigns {
         }
       }
     };
+
     public static void AddFallbackFont(TMP_FontAsset font) {
-      if (font.fallbackFontAssetTable != null) {
-        font.fallbackFontAssetTable.Add(UIFonts.GetFontAsset("Norse SDF"));
+      TMP_FontAsset fallbackFont = UIFonts.GetFontAsset("Norse SDF");
+      
+      if (!fallbackFont || !font) {
+        return;
+      }
+
+      if (font.fallbackFontAssetTable != null && !font.fallbackFontAssetTable.Contains(fallbackFont)) {
+        font.fallbackFontAssetTable.Add(fallbackFont);
       } else {
-        font.fallbackFontAssetTable = new List<TMP_FontAsset>() { UIFonts.GetFontAsset("Norse SDF") };
+        font.fallbackFontAssetTable = new List<TMP_FontAsset>() { fallbackFont };
       }
     }
   }

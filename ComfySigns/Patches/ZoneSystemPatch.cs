@@ -5,15 +5,16 @@ using ComfyLib;
 using static ComfySigns.ComfySigns;
 using static ComfySigns.PluginConfig;
 
-namespace ComfySigns.Patches {
+namespace ComfySigns {
   [HarmonyPatch(typeof(ZoneSystem))]
-  public class ZoneSystemPatch {
+  static class ZoneSystemPatch {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(ZoneSystem.Awake))]
-    public static void ZoneSystemAwakePostfix(ZoneSystem __instance) {
+    static void AwakePostfix(ZoneSystem __instance) {
       if (!UseFallbackFonts.Value) {
         return;
       }
+
       AddFallbackFont(UIFonts.GetFontAsset(SignDefaultTextFont.Value));
     }
   }
