@@ -37,10 +37,14 @@
 
 ### Thunderstore (manual)
 
-  * Go to Settings > Import local mod > Select `ComfySigns_v1.2.0.zip`.
+  * Go to Settings > Import local mod > Select `ComfySigns_v1.2.1.zip`.
   * Click "OK/Import local mod" on the pop-up for information.
 
 ## Changelog
+
+### 1.2.1
+
+  * Added Norse SDF as global fallback font to support additional characters throughout font selections.
 
 ### 1.2.0
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 using BepInEx;
@@ -19,7 +20,7 @@ namespace ComfySigns {
   public class ComfySigns : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.comfysigns";
     public const string PluginName = "ComfySigns";
-    public const string PluginVersion = "1.2.0";
+    public const string PluginVersion = "1.2.1";
 
     Harmony _harmony;
 
@@ -80,6 +81,11 @@ namespace ComfySigns {
 
     public static readonly EventHandler OnSignConfigChanged = (_, _) => {
       TMP_FontAsset font = UIFonts.GetFontAsset(SignDefaultTextFont.Value);
+
+      if (UseFallbackFonts.Value && font != null) {
+        AddFallbackFont(font);
+      }
+
       Color color = SignDefaultTextColor.Value;
 
       foreach (Sign sign in Resources.FindObjectsOfTypeAll<Sign>()) {
@@ -110,5 +116,12 @@ namespace ComfySigns {
         }
       }
     };
+    public static void AddFallbackFont(TMP_FontAsset font) {
+      if (font.fallbackFontAssetTable != null) {
+        font.fallbackFontAssetTable.Add(UIFonts.GetFontAsset("Norse SDF"));
+      } else {
+        font.fallbackFontAssetTable = new List<TMP_FontAsset>() { UIFonts.GetFontAsset("Norse SDF") };
+      }
+    }
   }
 }

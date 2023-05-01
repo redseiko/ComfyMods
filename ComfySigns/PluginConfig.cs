@@ -15,9 +15,11 @@ using UnityEngine;
 namespace ComfySigns {
   public static class PluginConfig {
     public static ConfigEntry<bool> IsModEnabled { get; private set; }
+    public static ConfigEntry<bool> UseFallbackFonts { get; private set; }
 
     public static void BindConfig(ConfigFile config) {
       IsModEnabled = config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
+      UseFallbackFonts = config.BindInOrder("Fonts", "useFallbackFonts", true, "Use fallback fonts to support additional characters.");
 
       _fejdStartupBindConfigQueue.Enqueue(() => BindLoggingConfig(config));
       _fejdStartupBindConfigQueue.Enqueue(() => BindSignConfig(config));
