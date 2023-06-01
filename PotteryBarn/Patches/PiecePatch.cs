@@ -22,6 +22,11 @@ namespace PotteryBarn {
         }
         return false;
       }
+
+      if(DvergrPieces.DvergrPrefabs.Keys.Contains(__instance.m_description) && !__instance.IsPlacedByPlayer()) {
+        return false;
+      }
+
       return true;
     }
   }

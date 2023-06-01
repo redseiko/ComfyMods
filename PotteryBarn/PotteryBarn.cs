@@ -21,12 +21,13 @@ namespace PotteryBarn {
   public class PotteryBarn : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.potterybarn";
     public const string PluginName = "PotteryBarn";
-    public const string PluginVersion = "1.5.1";
+    public const string PluginVersion = "1.6.0";
 
     static ManualLogSource _logger;
     Harmony _harmony;
 
     static Piece.PieceCategory _hammerCreatorShopCategory;
+    static Piece.PieceCategory _hammerBuildingCategory;
     static Piece.PieceCategory _cultivatorCreatorShopCategory;
     static Sprite _standardPrefabIconSprite;
     static Quaternion _prefabIconRenderRotation;
@@ -55,6 +56,7 @@ namespace PotteryBarn {
 
     static void AddHammerPieces(PieceTable pieceTable) {
       _hammerCreatorShopCategory = PieceManager.Instance.AddPieceCategory("_HammerPieceTable", "CreatorShop");
+      _hammerBuildingCategory = PieceManager.Instance.AddPieceCategory("_HammerPieceTable", "Building");
 
       _standardPrefabIconSprite = _standardPrefabIconSprite ??= CreateColorSprite(new Color32(34, 132, 73, 64));
       _prefabIconRenderRotation = Quaternion.Euler(0f, -45f, 0f);
@@ -80,7 +82,19 @@ namespace PotteryBarn {
         GetOrAddPieceComponent(entry.Key, pieceTable)
             .SetResources(CreateRequirements(entry.Value))
             .SetCategory(_hammerCreatorShopCategory)
-            .SetCraftingStation(GetCraftingStation(entry.Key))
+            .SetCraftingStation(GetCraftingStation(Requirements.craftingStationRequirements, entry.Key))
+            .SetCanBeRemoved(true)
+            .SetTargetNonPlayerBuilt(false);
+      }
+
+      foreach (
+    KeyValuePair<string, Dictionary<string, int>> entry in
+        DvergrPieces.DvergrPrefabs.OrderBy(o => o.Key).ToList()) {
+        ZLog.Log(entry.Key);
+        GetOrAddPieceComponent(entry.Key, pieceTable)
+            .SetResources(CreateRequirements(entry.Value))
+            .SetCategory(_hammerBuildingCategory)
+            .SetCraftingStation(GetCraftingStation(DvergrPieces.DvergrPrefabCraftingStationRequirements, entry.Key))
             .SetCanBeRemoved(true)
             .SetTargetNonPlayerBuilt(false);
       }
@@ -100,7 +114,7 @@ namespace PotteryBarn {
         GetOrAddPieceComponent(entry.Key, pieceTable)
             .SetResources(CreateRequirements(entry.Value))
             .SetCategory(_cultivatorCreatorShopCategory)
-            .SetCraftingStation(GetCraftingStation(entry.Key))
+            .SetCraftingStation(GetCraftingStation(Requirements.craftingStationRequirements, entry.Key))
             .SetCanBeRemoved(true)
             .SetTargetNonPlayerBuilt(false);
       }
@@ -204,6 +218,14 @@ namespace PotteryBarn {
       }
     }
 
+    public static bool IsNewDvergrPiece(Piece piece) {
+      if (DvergrPieces.DvergrPrefabs.Keys.Contains(piece.m_description)) {
+        return true;
+      }
+
+      return false;
+    }
+
     public static bool IsCreatorShopPiece(Piece piece) {
       if (Requirements.HammerCreatorShopItems.Keys.Contains(piece.m_description)) {
         return true;
@@ -244,10 +266,10 @@ namespace PotteryBarn {
       return false;
     }
 
-    public static CraftingStation GetCraftingStation(string prefabName) {
-      if (Requirements.craftingStationRequirements.ContainsKey(prefabName)) {
+    public static CraftingStation GetCraftingStation(Dictionary<string, string> requirements, string prefabName) {
+      if (requirements.ContainsKey(prefabName)) {
         return PrefabManager.Instance
-            .GetPrefab(Requirements.craftingStationRequirements[prefabName])
+            .GetPrefab(requirements[prefabName])
             .GetComponent<CraftingStation>();
       }
 

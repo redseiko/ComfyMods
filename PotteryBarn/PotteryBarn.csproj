@@ -114,6 +114,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DvergrPieces.cs" />
     <Compile Include="Patches\ArmorStandPatch.cs" />
     <Compile Include="Patches\EffectListPatch.cs" />
     <Compile Include="Patches\PiecePatch.cs" />

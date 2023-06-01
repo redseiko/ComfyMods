@@ -94,6 +94,12 @@ namespace PotteryBarn {
        {"root12", new Dictionary<string, int>() {
           {"ElderBark", 2 }}},
 
+       // Dvergr Items
+       {"trader_wagon_destructable", new Dictionary<string, int>() {
+          {"YggdrasilWood", 50 },
+          {"BronzeNails", 80 },
+          {"Tar", 10 },
+          {"MushroomBlue", 5 }}},
     };
 
     public static readonly Dictionary<string, Dictionary<string, int>> CultivatorCreatorShopItems =
@@ -154,7 +160,8 @@ namespace PotteryBarn {
       {"StatueEvil", "piece_stonecutter" },
       {"StatueHare", "piece_stonecutter" },
       {"StatueSeed", "piece_stonecutter" },
-      {"stonechest", "piece_stonecutter" }
+      {"stonechest", "piece_stonecutter" },
+      {"trader_wagon_destructable", "piece_workbench" }
     };
   }
 }
