@@ -76,6 +76,71 @@ namespace PotteryBarn {
         { "Copper", 10 }}},
     };
 
+    public static readonly Dictionary<string, Dictionary<string, int>> DvergrPrefabDefaultDrops = new() {
+      { "blackmarble_head01", new Dictionary<string, int>() {
+        { "CopperScrap", 2 }}},
+      { "blackmarble_head02", new Dictionary<string, int>() {
+        { "CopperScrap", 2 }}},
+      { "metalbar_1x2", new Dictionary<string, int>() {
+        { "Copper", 8 }}},
+      { "blackmarble_2x2_enforced", new Dictionary<string, int>() {
+        { "BlackMarble", 1 }}},
+      { "blackmarble_out_2", new Dictionary<string, int>() {
+        { "BlackMarble", 1 }}},
+      { "blackmarble_slope_1x2", new Dictionary<string, int>() {
+        { "BlackMarble", 3 }}},
+      { "blackmarble_tile_floor_1x1", new Dictionary<string, int>() {
+        { "BlackMarble", 2 }}},
+      { "blackmarble_tile_floor_2x2", new Dictionary<string, int>() {
+        { "BlackMarble", 2 }}},
+      { "blackmarble_tile_wall_2x4", new Dictionary<string, int>() {
+        { "BlackMarble", 1 }}},
+      { "blackmarble_base_2", new Dictionary<string, int>() {
+        { "BlackMarble", 1 }}},
+      { "blackmarble_column_3", new Dictionary<string, int>() {
+        { "BlackMarble", 1 }}},
+      { "blackmarble_floor_large", new Dictionary<string, int>() {
+        { "BlackMarble", 8 }}},
+      { "blackmarble_head_big01", new Dictionary<string, int>() {
+        { "BlackMarble", 1 }}},
+      { "blackmarble_head_big02", new Dictionary<string, int>() {
+        { "BlackMarble", 1 }}},
+      { "dvergrprops_wood_floor", new Dictionary<string, int>() {
+        { "Wood", 2 }}},
+      { "dvergrprops_wood_stair", new Dictionary<string, int>() {
+        { "YggdrasilWood", 4 }}},
+      { "piece_dvergr_pole", new Dictionary<string, int>() {
+        { "YggdrasilWood", 1 },
+        { "Copper", 1 }}},
+      { "piece_dvergr_wood_door", new Dictionary<string, int>() {
+        { "YggdrasilWood", 2 },
+        { "Copper", 2 }}},
+      { "piece_dvergr_wood_wall", new Dictionary<string, int>() {
+        { "YggdrasilWood", 6 },
+        { "Copper", 3 }}},
+      { "dvergrprops_banner", new Dictionary<string, int>() {
+        { "JuteBlue", 1 }}},
+      { "dvergrprops_curtain", new Dictionary<string, int>() {
+        { "JuteBlue", 2 }}},
+      { "dvergrprops_wood_beam", new Dictionary<string, int>() {
+        { "Wood", 1 }}},
+      { "dvergrprops_wood_pole", new Dictionary<string, int>() {
+        { "CopperScrap", 1 }}},
+      { "dvergrprops_wood_stake", new Dictionary<string, int>() {
+        { "Wood", 1 }}},
+      { "dvergrprops_wood_wall", new Dictionary<string, int>() {
+        { "Wood", 2 },
+        { "CopperScrap", 1 }}},
+      { "dvergrtown_stair_corner_wood_left", new Dictionary<string, int>() {
+        { "Wood", 2 },
+        { "CopperScrap", 1 }}},
+      { "dvergrprops_lantern_standing", new Dictionary<string, int>() {
+        { "SurtlingCore", 2}}},
+      { "dvergrprops_hooknchain", new Dictionary<string, int>() {
+        { "Chain", 1 },
+        { "Copper", 1 }}},
+    };
+
     public static readonly Dictionary<string, string> DvergrPrefabCraftingStationRequirements = new() {
       {"blackmarble_head01", "blackforge"},
       {"blackmarble_head02", "blackforge"},
