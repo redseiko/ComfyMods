@@ -7,6 +7,40 @@
   * New prefabs (that exist in the game) will be available to build!
   * You might need to pick-up/drop a stone/wood/resource to have the recipe trigger.
 
+### Dvergr Piece Update
+
+| Category    | Prefab                            | Crafting Station | Resource           | Resource           | Resource         | Resource |
+|-------------|-----------------------------------|------------------|--------------------|--------------------|------------------|----------|
+| Building    | blackmarble_head01                | Black forge      | 4x Copper          |                    |                  |          |
+| Building    | blackmarble_head02                | Black forge      | 4x Copper          |                    |                  |          |
+| Building    | metalbar_1x2                      | Black forge      | 8x Copper          |                    |                  |          |
+| Building    | blackmarble_2x2_enforced          | Black forge      | 8x Black marble    | 4x Copper          |                  |          |
+| Building    | blackmarble_out_2                 | Stonecutter      | 8x Black marble    |                    |                  |          |
+| Building    | blackmarble_slope_1x2             | Stonecutter      | 3x Black marble    |                    |                  |          |
+| Building    | blackmarble_tile_floor_1x1        | Stonecutter      | 2x Black marble    |                    |                  |          |
+| Building    | blackmarble_tile_floor_2x2        | Stonecutter      | 4x Black marble    |                    |                  |          |
+| Building    | blackmarble_tile_wall_2x4         | Stonecutter      | 8x Black marble    |                    |                  |          |
+| Building    | blackmarble_base_2                | Stonecutter      | 10x Black marble   |                    |                  |          |
+| Building    | blackmarble_column_3              | Stonecutter      | 24x Black marble   |                    |                  |          |
+| Building    | blackmarble_floor_large           | Stonecutter      | 80x Black marble   |                    |                  |          |
+| Building    | blackmarble_head_big01            | Stonecutter      | 8x Black marble    |                    |                  |          |
+| Building    | blackmarble_head_big02            | Stonecutter      | 8x Black marble    |                    |                  |          |
+| Building    | dvergrprops_wood_floor            | Workbench        | 2x Yggdrasil wood  |                    |                  |          |
+| Building    | dvergrprops_wood_stair            | Workbench        | 2x Yggdrasil wood  |                    |                  |          |
+| Building    | piece_dvergr_pole                 | Black forge      | 2x Yggdrasil wood  | 1x Copper          |                  |          |
+| Building    | piece_dvergr_wood_door            | Black forge      | 12x Yggdrasil wood | 12x Copper         |                  |          |
+| Building    | piece_dvergr_wood_wall            | Black forge      | 10x Yggdrasil wood | 5x Copper          |                  |          |
+| Building    | dvergrprops_banner                | Workbench        | 2x Yggdrasil wood  | 4x Blue jute       |                  |          |
+| Building    | dvergrprops_curtain               | Workbench        | 2x Yggdrasil wood  | 4x Blue jute       |                  |          |
+| Building    | dvergrprops_wood_beam             | Workbench        | 12x Yggdrasil wood |                    |                  |          |
+| Building    | dvergrprops_wood_pole             | Black Forge      | 8x Yggdrasil wood  | 4x Copper          |                  |          |
+| Building    | dvergrprops_wood_stake            | Black Forge      | 2x Yggdrasil wood  | 1x Iron            |                  |          |
+| Building    | dvergrprops_wood_wall             | Black Forge      | 32x Yggdrasil Wood | 16x Copper         |                  |          |
+| Building    | dvergrtown_stair_corner_wood_left | Black Forge      | 6x Yggdrasil Wood  | 3x Copper          |                  |          |
+| Building    | dvergrprops_lantern_standing      | Black Forge      | 1x Lantern         |                    |                  |          |
+| CreatorShop | trade_wagon_destructable          | Black Forge      | 10x Blue mushroom  | 50x Yggdrasil wood | 80x Bronze nails | 10x Tar  |
+| Building    | dvergrprops_hooknchain            | Black Forge      | 5x Iron            | 10x Copper         |                  |          |
+
 ### Creator Shop Items
 
 | Category    | Prefab                  | Crafting Station | Resource          | Resource           | Resource           | Resource     | Resource          |
@@ -85,6 +119,8 @@
 ### 1.6.0
 
   * Added dvergr pieces.
+  * World generated pieces will have the same drop rate as vanilla if destroyed with damage or the build hammer.
+  * Player constructed pieces will return recipe costs and may be broken by other players (not just the creator) for any items not on the CreatorShop tab.
 
 ### 1.5.1
 

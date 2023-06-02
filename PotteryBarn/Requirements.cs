@@ -99,7 +99,7 @@ namespace PotteryBarn {
           {"YggdrasilWood", 50 },
           {"BronzeNails", 80 },
           {"Tar", 10 },
-          {"MushroomBlue", 5 }}},
+          {"MushroomBlue", 10 }}},
     };
 
     public static readonly Dictionary<string, Dictionary<string, int>> CultivatorCreatorShopItems =
