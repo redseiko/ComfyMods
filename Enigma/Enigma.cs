@@ -11,7 +11,7 @@ namespace Enigma {
   public class Enigma : BaseUnityPlugin {
     public const string PluginGuid = "bruce.valheim.enigma";
     public const string PluginName = "Enigma";
-    public const string PluginVersion = "1.0.1";
+    public const string PluginVersion = "1.0.2";
 
     Harmony _harmony;
 
