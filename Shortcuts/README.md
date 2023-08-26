@@ -39,7 +39,7 @@
 
 ### Thunderstore (manual)
 
-  * Go to Settings > Import local mod > Select `Shortcuts_v1.3.0.zip`.
+  * Go to Settings > Import local mod > Select `Shortcuts_v1.4.0.zip`.
   * Click "OK/Import local mod" on the pop-up for information.
 
 ## Notes
@@ -49,6 +49,10 @@
   * Check out our community driven listing site at: [valheimlist.org](https://valheimlist.org/)
 
 ## Changelog
+
+### 1.4.0
+
+  * Updated code match references for Input class to ZInput class for compatibility with patch 0.217.14.
 
 ### 1.3.0
 

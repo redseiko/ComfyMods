@@ -15,7 +15,7 @@ namespace Shortcuts {
   public class Shortcuts : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.shortcuts";
     public const string PluginName = "Shortcuts";
-    public const string PluginVersion = "1.3.0";
+    public const string PluginVersion = "1.4.0";
 
     Harmony _harmony;
 
@@ -32,9 +32,9 @@ namespace Shortcuts {
     }
 
     public static readonly CodeMatch InputGetKeyDownMatch =
-        new(OpCodes.Call, AccessTools.Method(typeof(Input), nameof(Input.GetKeyDown), new Type[] { typeof(KeyCode) }));
+        new(OpCodes.Call, AccessTools.Method(typeof(ZInput), nameof(ZInput.GetKeyDown), new Type[] { typeof(KeyCode) }));
 
     public static readonly CodeMatch InputGetKeyMatch =
-        new(OpCodes.Call, AccessTools.Method(typeof(Input), nameof(Input.GetKey), new Type[] { typeof(KeyCode) }));
+        new(OpCodes.Call, AccessTools.Method(typeof(ZInput), nameof(ZInput.GetKey), new Type[] { typeof(KeyCode) }));
   }
 }
