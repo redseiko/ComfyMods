@@ -3,6 +3,7 @@
 using System;
 
 using static Enigma.Enigma;
+using static Enigma.PluginConfig;
 
 namespace Enigma.Patches {
   [HarmonyPatch(typeof(Character))]
@@ -11,7 +12,11 @@ namespace Enigma.Patches {
     [HarmonyPrefix]
     [HarmonyPatch(nameof(Character.GetHoverName))]
     public static bool GetHoverNamePrefix(ref Character __instance, ref string __result) {
-      if (!__instance || !__instance.TryGetComponent(out ZNetView zNetView) || zNetView.GetZDO() == null) {
+      if (!IsModEnabled.Value
+          || __instance == null 
+          || !__instance.TryGetComponent(out ZNetView zNetView) 
+          || zNetView.GetZDO() == null) {
+
         return true;
       }
 
@@ -29,7 +34,11 @@ namespace Enigma.Patches {
     [HarmonyPrefix]
     [HarmonyPatch(nameof(Character.IsBoss))]
     public static bool IsBossPrefix(ref Character __instance, ref bool __result) {
-      if (!__instance || !__instance.TryGetComponent(out ZNetView zNetView) || zNetView.GetZDO() == null) {
+      if (!IsModEnabled.Value
+          || __instance == null
+          || !__instance.TryGetComponent(out ZNetView zNetView) 
+          || zNetView.GetZDO() == null) {
+
         return true;
       }
 

@@ -13,7 +13,7 @@ particular mob with a custom name if that mob is designated as a boss. This may 
 
 ### Thunderstore (manual)
 
-  2. Go to Settings > Import local mod > Select `Enigma_v1.0.2.zip`.
+  2. Go to Settings > Import local mod > Select `Enigma_v1.1.0.zip`.
   3. Click "OK/Import local mod" on the pop-up for information.
 
 ## Attributions
@@ -21,6 +21,10 @@ particular mob with a custom name if that mob is designated as a boss. This may 
   * Icon provided by Lyka on Comfy AKA @Jenniely on twitter.
 
 ## Changelog
+
+### 1.1.0
+
+  * Updated for compatibility with 0.217.14
 
 ### 1.0.2
 
