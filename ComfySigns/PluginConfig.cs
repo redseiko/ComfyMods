@@ -59,7 +59,7 @@ namespace ComfySigns {
           config.BindInOrder(
               "Sign.Text",
               "defaultTextFont",
-              "Norse SDF",
+              "Valheim-Norse",
               "Sign.m_textWidget.font default value.",
               new AcceptableValueList<string>(fontNames));
 

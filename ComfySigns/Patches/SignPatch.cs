@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
 using ComfyLib;
 
 using HarmonyLib;
 
 using TMPro;
-
-using UnityEngine;
 
 using static ComfySigns.PluginConfig;
 
@@ -19,9 +16,16 @@ namespace ComfySigns {
     [HarmonyPatch(nameof(Sign.Awake))]
     static void AwakePostfix(ref Sign __instance) {
       if (IsModEnabled.Value) {
-        __instance.m_textWidget
-            .SetFont(UIFonts.GetFontAsset(SignDefaultTextFont.Value))
-            .SetColor(SignDefaultTextColor.Value);
+        //__instance.m_textWidget
+        //    .SetFont(UIFonts.GetFontAsset(SignDefaultTextFont.Value))
+        //    .SetColor(SignDefaultTextColor.Value);
+        TMP_FontAsset valheimNorseFont =  UIFonts.GetFontAsset(UIFonts.ValheimNorse);
+        ZLog.Log($"ValheimNorseFont-material: {valheimNorseFont.material.name}");
+
+        ZLog.Log($"TextWidth.fontSharedMaterial: {__instance.m_textWidget.fontSharedMaterial}");
+        __instance.m_textWidget.fontSharedMaterial = valheimNorseFont.material;
+
+        __instance.m_textWidget.color = SignDefaultTextColor.Value;
 
         __instance.m_characterLimit = 999;
       }

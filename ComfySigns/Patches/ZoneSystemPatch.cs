@@ -15,7 +15,7 @@ namespace ComfySigns {
         return;
       }
 
-      AddFallbackFont(UIFonts.GetFontAsset(SignDefaultTextFont.Value));
+      //AddFallbackFont(UIFonts.GetFontAsset(SignDefaultTextFont.Value));
     }
   }
 }

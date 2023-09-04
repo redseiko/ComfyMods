@@ -1,8 +1,8 @@
 {
   "name": "ComfySigns",
-  "version_number": "1.3.0",
+  "version_number": "1.4.0",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/ComfySigns",
   "author": "ComfyMods",
   "description": "Colorful and comfy signs.",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2100" ]
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2105" ]
 }

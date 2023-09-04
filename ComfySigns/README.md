@@ -29,18 +29,11 @@
   * The `enablePartyEffect` config option **must be turned on** (in `SignEffect.Party` section).
   * Wrap your sign text with this tag: `<link=party>Sign Text Goes Here</link>`
 
-## Installation
-
-### Manual
-
-  * Un-zip `ComfySigns.dll` to your `/Valheim/BepInEx/plugins/` folder.
-
-### Thunderstore (manual)
-
-  * Go to Settings > Import local mod > Select `ComfySigns_v1.3.0.zip`.
-  * Click "OK/Import local mod" on the pop-up for information.
-
 ## Changelog
+
+### 1.4.0
+
+  * Updated for `v0.217.14` patch.
 
 ### 1.3.0
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using TMPro;
@@ -20,6 +21,8 @@ namespace ComfyLib {
       return font;
     }
 
+    public static readonly string ValheimNorse = "Valheim-Norse";
+
     static readonly Dictionary<string, TMP_FontAsset> _fontAssetCache = new();
 
     public static TMP_FontAsset GetFontAsset(string fontName) {
@@ -27,7 +30,13 @@ namespace ComfyLib {
         fontAsset = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().FirstOrDefault(f => f.name == fontName);
 
         if (!fontAsset) {
-          fontAsset = TMP_FontAsset.CreateFontAsset(GetFont(fontName));
+          Font font = GetFont(fontName);
+
+          if (!font) {
+            throw new Exception($"Could not find Font with name: {fontName}");
+          }
+
+          fontAsset = TMP_FontAsset.CreateFontAsset(font);
         }
 
         _fontAssetCache[fontName] = fontAsset;
