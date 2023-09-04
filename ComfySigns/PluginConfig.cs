@@ -19,7 +19,9 @@ namespace ComfySigns {
 
     public static void BindConfig(ConfigFile config) {
       IsModEnabled = config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
-      UseFallbackFonts = config.BindInOrder("Fonts", "useFallbackFonts", true, "Use fallback fonts to support additional characters.");
+
+      UseFallbackFonts =
+          config.BindInOrder("Fonts", "useFallbackFonts", true, "Use fallback fonts to support additional characters.");
 
       _fejdStartupBindConfigQueue.Enqueue(() => BindLoggingConfig(config));
       _fejdStartupBindConfigQueue.Enqueue(() => BindSignConfig(config));
@@ -42,37 +44,36 @@ namespace ComfySigns {
       TMP_Settings.instance.m_warningsDisabled = SuppressUnicodeNotFoundWarning.Value;
     }
 
-    public static ConfigEntry<string> SignDefaultTextFont { get; private set; }
-    public static ExtendedColorConfigEntry SignDefaultTextColor { get; private set; }
+    public static ConfigEntry<string> SignDefaultTextFontAsset { get; private set; }
+    public static ExtendedColorConfigEntry SignDefaultTextFontColor { get; private set; }
 
     public static ConfigEntry<bool> SignTextIgnoreSizeTags { get; private set; }
 
     public static void BindSignConfig(ConfigFile config) {
       string[] fontNames =
-          Resources.FindObjectsOfTypeAll<Font>()
+          Resources.FindObjectsOfTypeAll<TMP_FontAsset>()
               .Select(f => f.name)
-              .Concat(Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Select(f => f.name))
-              .OrderBy(f => f)
+              .Concat(Resources.FindObjectsOfTypeAll<Font>().Select(f => f.name))
               .ToArray();
 
-      SignDefaultTextFont =
+      SignDefaultTextFontAsset =
           config.BindInOrder(
               "Sign.Text",
-              "defaultTextFont",
+              "defaultTextFontAsset",
               "Valheim-Norse",
-              "Sign.m_textWidget.font default value.",
+              "Sign.m_textWidget.fontAsset (TMP) default value.",
               new AcceptableValueList<string>(fontNames));
 
-      SignDefaultTextFont.SettingChanged += ComfySigns.OnSignConfigChanged;
+      SignDefaultTextFontAsset.SettingChanged += ComfySigns.OnSignConfigChanged;
 
-      SignDefaultTextColor =
+      SignDefaultTextFontColor =
           new(config,
               "Sign.Text",
-              "defaultTextColor",
+              "defaultTextFontColor",
               Color.white,
               "Sign.m_textWidget.color default value.");
 
-      SignDefaultTextColor.ConfigEntry.SettingChanged += ComfySigns.OnSignConfigChanged;
+      SignDefaultTextFontColor.ConfigEntry.SettingChanged += ComfySigns.OnSignConfigChanged;
 
       SignTextIgnoreSizeTags =
           config.Bind(

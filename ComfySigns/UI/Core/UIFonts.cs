@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace ComfyLib {
   public static class UIFonts {
-    public static Font AveriaSerifLibre { get => GetFont("AveriaSerifLibre-Regular"); }
+    public static Font AveriaSerifLibre { get => GetFont("AveriaSerifLibre-Bold"); }
 
     static readonly Dictionary<string, Font> _fontCache = new();
 

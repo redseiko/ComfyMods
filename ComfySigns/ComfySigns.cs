@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 using BepInEx;
@@ -24,13 +23,13 @@ namespace ComfySigns {
 
     Harmony _harmony;
 
-    public void Awake() {
+    void Awake() {
       BindConfig(Config);
 
       _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
     }
 
-    public void OnDestroy() {
+    void OnDestroy() {
       _harmony?.UnpatchSelf();
     }
 
@@ -80,21 +79,7 @@ namespace ComfySigns {
     }
 
     public static readonly EventHandler OnSignConfigChanged = (_, _) => {
-      TMP_FontAsset font = UIFonts.GetFontAsset(SignDefaultTextFont.Value);
-
-      if (UseFallbackFonts.Value && font) {
-        AddFallbackFont(font);
-      }
-
-      Color color = SignDefaultTextColor.Value;
-
-      foreach (Sign sign in Resources.FindObjectsOfTypeAll<Sign>()) {
-        if (sign && sign.m_nview && sign.m_nview.IsValid() && sign.m_textWidget) {
-          sign.m_textWidget
-              .SetFont(font)
-              .SetColor(color);
-        }
-      }
+      SetupSignPrefabs(ZNetScene.s_instance);
     };
 
     public static readonly EventHandler OnSignTextTagsConfigChanged = (_, _) => {
@@ -117,14 +102,41 @@ namespace ComfySigns {
       }
     };
 
-    public static void AddFallbackFont(TMP_FontAsset font) {
-      if (!font) {
+    public static void SetupSignPrefabs(ZNetScene netScene) {
+      if (!netScene) {
         return;
       }
 
+      TMP_FontAsset fontAsset = UIFonts.GetFontAsset(SignDefaultTextFontAsset.Value);
+      Color fontColor = SignDefaultTextFontColor.Value;
+
+      if (UseFallbackFonts.Value) {
+        AddFallbackFont(fontAsset);
+      }
+
+      foreach (GameObject prefab in netScene.m_namedPrefabs.Values) {
+        if (prefab.TryGetComponent(out Sign sign)) {
+          SetupSignFont(sign, fontAsset, fontColor);
+        }
+      }
+
+      foreach (ZNetView netView in netScene.m_instances.Values) {
+        if (netView.TryGetComponent(out Sign sign)) {
+          SetupSignFont(sign, fontAsset, fontColor);
+        }
+      }
+    }
+
+    public static void SetupSignFont(Sign sign, TMP_FontAsset fontAsset, Color color) {
+      sign.m_textWidget.font = fontAsset;
+      sign.m_textWidget.fontSharedMaterial = fontAsset.material;
+      sign.m_textWidget.color = color;
+    }
+
+    public static void AddFallbackFont(TMP_FontAsset font) {
       TMP_FontAsset fallbackFont = UIFonts.GetFontAsset(UIFonts.ValheimNorse);
       
-      if (!fallbackFont) {
+      if (!font || !fallbackFont || fallbackFont == font) {
         return;
       }
 

@@ -34,6 +34,9 @@
 ### 1.4.0
 
   * Updated for `v0.217.14` patch.
+  * Modified handling the default `Valheim-Norse` font used for Signs to just change the `fontSharedMaterial`.
+  * Renamed the config options for `defaultTextFont` and `defaultTextColor` to force new default handling above.
+
 
 ### 1.3.0
 
