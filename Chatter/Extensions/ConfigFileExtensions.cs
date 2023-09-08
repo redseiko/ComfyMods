@@ -7,14 +7,14 @@ using HarmonyLib;
 
 namespace ComfyLib {
   public static class ConfigFileExtensions {
-    static readonly Dictionary<string, int> SectionToOrderCache = new();
+    static readonly Dictionary<string, int> _sectionToOrderCache = new();
 
     static int GetSettingOrder(string section) {
-      if (!SectionToOrderCache.TryGetValue(section, out int order)) {
+      if (!_sectionToOrderCache.TryGetValue(section, out int order)) {
         order = 0;
       }
 
-      SectionToOrderCache[section] = order - 1;
+      _sectionToOrderCache[section] = order - 1;
       return order;
     }
 
@@ -43,7 +43,7 @@ namespace ComfyLib {
         string key,
         T defaultValue,
         string description,
-        System.Action<ConfigEntryBase> customDrawer = null,
+        Action<ConfigEntryBase> customDrawer = null,
         bool browsable = true,
         bool hideDefaultButton = false) {
       return config.Bind(
@@ -67,33 +67,10 @@ namespace ComfyLib {
     }
 
     internal sealed class ConfigurationManagerAttributes {
-      public System.Action<ConfigEntryBase> CustomDrawer;
+      public Action<ConfigEntryBase> CustomDrawer;
       public bool? Browsable;
       public bool? HideDefaultButton;
       public int? Order;
-    }
-
-    public static void LateBindInOrder(this ConfigFile config, Action<ConfigFile> bindFunc) {
-      _lateBindEntries.Enqueue(() => bindFunc.Invoke(config));
-    }
-
-    static readonly Queue<Action> _lateBindEntries = new();
-
-    [HarmonyPatch(typeof(FejdStartup))]
-    static class FejdStartupPatch {
-      [HarmonyPostfix]
-      [HarmonyPatch(nameof(FejdStartup.Awake))]
-      static void AwakePostfix() {
-        while (_lateBindEntries.Count > 0) {
-          _lateBindEntries.Dequeue()?.Invoke();
-        }
-      }
-
-      [HarmonyPostfix]
-      [HarmonyPatch(nameof(FejdStartup.OnDestroy))]
-      static void OnDestroyPostfix() {
-        _lateBindEntries.Clear();
-      }
     }
   }
 }

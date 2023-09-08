@@ -105,6 +105,7 @@
     <Compile Include="Core\ChatMessage.cs" />
     <Compile Include="Chatter.cs" />
     <Compile Include="Extensions\UnityExtensions.cs" />
+    <Compile Include="UI\Builder\InputFieldCell.cs" />
     <Compile Include="UI\ContentRow.cs" />
     <Compile Include="UI\Core\UIBuilder.cs" />
     <Compile Include="UI\Core\UIResources.cs" />

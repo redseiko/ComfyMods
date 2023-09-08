@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Chatter {
+namespace ComfyLib {
   public static class CanvasGroupExtensions {
     public static CanvasGroup SetAlpha(this CanvasGroup canvasGroup, float alpha) {
       canvasGroup.alpha = alpha;
@@ -400,32 +400,32 @@ namespace Chatter {
   }
 
   public static class SelectableExtensions {
-    public static Selectable SetColors(this Selectable selectable, ColorBlock colors) {
+    public static T SetColors<T>(this T selectable, ColorBlock colors) where T : Selectable {
       selectable.colors = colors;
       return selectable;
     }
 
-    public static Selectable SetImage(this Selectable selectable, Image image) {
+    public static T SetImage<T>(this T selectable, Image image) where T : Selectable {
       selectable.image = image;
       return selectable;
     }
 
-    public static Selectable SetInteractable(this Selectable selectable, bool interactable) {
+    public static T SetInteractable<T>(this T selectable, bool interactable) where T : Selectable {
       selectable.interactable = interactable;
       return selectable;
     }
 
-    public static Selectable SetTargetGraphic(this Selectable selectable, Graphic graphic) {
+    public static T SetTargetGraphic<T>(this T selectable, Graphic graphic) where T : Selectable {
       selectable.targetGraphic = graphic;
       return selectable;
     }
 
-    public static Selectable SetTransition(this Selectable selectable, Selectable.Transition transition) {
+    public static T SetTransition<T>(this T selectable, Selectable.Transition transition) where T : Selectable{
       selectable.transition = transition;
       return selectable;
     }
 
-    public static Selectable SetNavigationMode(this Selectable selectable, Navigation.Mode mode) {
+    public static T SetNavigationMode<T>(this T selectable, Navigation.Mode mode) where T : Selectable {
       Navigation navigation = selectable.navigation;
       navigation.mode = mode;
       selectable.navigation = navigation;
