@@ -7,6 +7,7 @@ using ComfyLib;
 using HarmonyLib;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 using static Chatter.PluginConfig;
 
@@ -29,18 +30,31 @@ namespace Chatter {
       _harmony?.UnpatchSelf();
     }
 
-    public static bool IsChatMessageQueued { get; set; }
+    public static CircularQueue<ChatMessage> MessageHistory { get; } = new(capacity: 50, _ => { });
+    public static CircularQueue<ContentRow> MessageRows { get; } = new(capacity: 50, DestroyContentRow);
 
+    public static bool IsChatMessageQueued { get; set; }
     public static ChatPanel ChatterChatPanel { get; private set; }
 
     public static void ToggleChatter(Chat chat, bool toggleOn) {
-      //  ToggleVanillaChat(Chat.m_instance, !toggle);
+      ToggleVanillaChat(chat, !toggleOn);
       ToggleChatPanel(chat, toggleOn);
       //  TerminalCommands.ToggleCommands(toggle);
 
-      //  if (Chat.m_instance) {
-      //    Chat.m_instance.m_input = toggle && ChatPanel?.Panel ? ChatPanel.InputField : _chatInputField;
-      //  }
+      // TODO: conditional restore to vanilla-references cached.
+      chat.m_input = ChatterChatPanel.TextInput.InputField;
+      chat.m_chatWindow = ChatterChatPanel.Panel.GetComponent<RectTransform>();
+      chat.m_hideDelay = HideChatPanelDelay.Value;
+    }
+
+    // TODO: cache the vanilla-references before toggling.
+    public static void ToggleVanillaChat(Chat chat, bool toggleOn) {
+      foreach (Image image in chat.m_chatWindow.GetComponentsInChildren<Image>(includeInactive: true)) {
+        image.gameObject.SetActive(toggleOn);
+      }
+
+      chat.m_chatWindow.GetComponent<RectMask2D>().enabled = toggleOn;
+      chat.m_output.gameObject.SetActive(toggleOn);
     }
 
     public static void ToggleChatPanel(Chat chat, bool toggleOn) {
@@ -55,25 +69,42 @@ namespace Chatter {
             .SetSizeDelta(ChatPanelSizeDelta.Value)
             .SetAsFirstSibling();
 
-        ChatterChatPanel.TextInput.InputField.onSubmit.AddListener(OnChatTextInput);
+        ChatterChatPanel.PanelDragger.OnEndDragEvent += (_, position) => ChatPanelPosition.Value = position;
+        ChatterChatPanel.TextInput.InputField.onSubmit.AddListener(_ => Chat.m_instance.SendInput());
+
+        RebuildMessageRows();
       }
 
       ChatterChatPanel.Panel.SetActive(toggleOn);
     }
 
     public static void AddChatMessage(ChatMessage message) {
-      if (!ChatterChatPanel?.Panel) {
-        return;
-      }
+      MessageHistory.Enqueue(message);
 
-      MessageCell contentMessage = ChatterChatPanel.CreateContentMessage();
-      contentMessage.Label.text = ChatMessageUtils.GetChatMessageText(message);
+      if (ChatterChatPanel?.Panel) {
+        CreateContentRow(message, ChatterChatPanel.Content.transform);
+      }
     }
 
-    public static void OnChatTextInput(string input) {
-      Chat.m_instance.m_input.text = ChatterChatPanel.TextInput.InputField.text;
-      Chat.m_instance.SendInput();
-      ChatterChatPanel.TextInput.InputField.text = string.Empty;
+    static void RebuildMessageRows() {
+      MessageRows.ClearItems();
+
+      if (ChatterChatPanel?.Panel) {
+        foreach (ChatMessage message in MessageHistory) {
+          CreateContentRow(message, ChatterChatPanel.Content.transform);
+        }
+      }
+    }
+
+    public static ContentRow CreateContentRow(ChatMessage message, Transform parentTransform) {
+      ContentRow row = new(parentTransform);
+      row.Label.text = ChatMessageUtils.GetChatMessageText(message);
+
+      return row;
+    }
+
+    public static void DestroyContentRow(ContentRow row) {
+      Destroy(row.Row);
     }
 
     //internal static readonly CircularQueue<ChatMessage> MessageHistory = new(50, _ => { });
@@ -181,18 +212,6 @@ namespace Chatter {
     //  chatPanel.TextToggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.Text));
     //}
 
-    //static void ToggleVanillaChat(Chat chat, bool toggle) {
-    //  if (chat) {
-    //    chat.m_chatWindow.GetComponent<RectMask2D>().enabled = toggle;
-
-    //    foreach (Image image in chat.m_chatWindow.GetComponentsInChildren<Image>(includeInactive: true)) {
-    //      image.gameObject.SetActive(toggle);
-    //    }
-
-    //    chat.m_output.gameObject.SetActive(toggle);
-    //  }
-    //}
-
     //internal static void HideChatPanelDelegate(float hideTimer) {
     //  if (IsModEnabled.Value && _chatPanel?.Panel) {
     //    bool isVisible = (hideTimer < HideChatPanelDelay.Value || Menu.IsVisible()) && !Hud.IsUserHidden();
@@ -286,18 +305,6 @@ namespace Chatter {
     //  Destroy(row.Divider);
     //}
 
-    //static void RebuildMessageRows() {
-    //  MessageRows.ClearItems();
-
-    //  if (!_chatPanel?.Panel) {
-    //    return;
-    //  }
-
-    //  foreach (ChatMessage message in MessageHistory) {
-    //    CreateChatMessageRow(message);
-    //  }
-    //}
-
     //static void ToggleChatPanelMessageDividers(bool toggle) {
     //  if (ChatMessageLayout.Value == MessageLayoutType.SingleRow) {
     //    return;
@@ -359,11 +366,6 @@ namespace Chatter {
     //          .Where(text => text.name == ChatPanel.HeaderRightCellName)) {
     //    text.color = color;
     //  }
-    //}
-
-    //[HarmonyPatch(typeof(Menu))]
-    //class MenuPatch {
-
     //}
 
     //[HarmonyPatch(typeof(MessageHud))]

@@ -7,6 +7,7 @@ namespace Chatter {
   public class ChatPanel {
     public GameObject Panel { get; private set; }
     public CanvasGroup PanelCanvasGroup { get; private set; }
+    public RectTransformDragger PanelDragger { get; private set; }
 
     public GameObject ContentViewport { get; private set; }
     public GameObject Content { get; private set; }
@@ -14,13 +15,12 @@ namespace Chatter {
 
     public InputFieldCell TextInput { get; private set; }
 
-    public CircularQueue<MessageCell> ContentMessages { get; private set; }
-
     //public GameObject Grabber { get; init; }
 
     public ChatPanel(Transform parentTransform) {
       Panel = CreateChildPanel(parentTransform);
       PanelCanvasGroup = Panel.GetComponent<CanvasGroup>();
+      PanelDragger = Panel.GetComponent<RectTransformDragger>();
 
       ContentViewport = CreateChildViewport(Panel.transform);
       Content = CreateChildContent(ContentViewport.transform);
@@ -31,8 +31,6 @@ namespace Chatter {
       TextInput.Cell.AddComponent<LayoutElement>()
           .SetFlexible(width: 1f)
           .SetPreferred(height: 35f);
-
-      ContentMessages = new(64, DestroyContentMessage);
 
     //  Grabber = CreateGrabber(Panel.transform);
     //  _grabberCanvasGroup = Grabber.GetComponent<CanvasGroup>();
@@ -65,6 +63,9 @@ namespace Chatter {
       panel.AddComponent<CanvasGroup>()
           .SetAlpha(1f)
           .SetBlocksRaycasts(true);
+
+      panel.AddComponent<RectTransformDragger>()
+          .SetTargetRectTransform(panel.GetComponent<RectTransform>());
 
       return panel;
     }
@@ -115,21 +116,15 @@ namespace Chatter {
       scrollRect.content = content.GetComponent<RectTransform>();
       scrollRect.horizontal = false;
       scrollRect.vertical = true;
-      scrollRect.movementType = ScrollRect.MovementType.Clamped;
+      scrollRect.movementType = ScrollRect.MovementType.Elastic;
       scrollRect.scrollSensitivity = 30f;
 
       return scrollRect;
     }
 
-    public MessageCell CreateContentMessage() {
-      MessageCell cell = new(Content.transform);
-      ContentMessages.EnqueueItem(cell);
-
-      return cell;
-    }
-
-    void DestroyContentMessage(MessageCell contentMessage) {
-      UnityEngine.Object.Destroy(contentMessage.Cell);
+    public void OffsetVerticalScrollPosition(float offset) {
+      float percent = (offset / (Content.transform as RectTransform).sizeDelta.y);
+      ContentScrollRect.verticalNormalizedPosition += percent;
     }
 
     //public Toggle SayToggle { get; private set; } = default!;
@@ -146,11 +141,6 @@ namespace Chatter {
 
     //public void SetVerticalScrollPosition(float position) {
     //  ScrollRect.verticalNormalizedPosition = position;
-    //}
-
-    //public void OffsetVerticalScrollPosition(float offset) {
-    //  float percent = (offset / _contentRectTransform.sizeDelta.y);
-    //  ScrollRect.verticalNormalizedPosition += percent;
     //}
 
     //GameObject CreateGrabber(Transform parentTransform) {

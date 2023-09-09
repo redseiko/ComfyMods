@@ -4,27 +4,27 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace ComfyLib {
-  public class MessageCell {
-    public GameObject Cell { get; private set; }
+  public class ContentRow {
+    public GameObject Row { get; private set; }
     public TextMeshProUGUI Label { get; private set; }
 
-    public MessageCell(Transform parentTransform) {
-      GameObject cell = new("Message", typeof(RectTransform));
-      cell.SetParent(parentTransform);
+    public ContentRow(Transform parentTransform) {
+      GameObject row = new("Message", typeof(RectTransform));
+      row.SetParent(parentTransform);
 
-      cell.GetComponent<RectTransform>()
+      row.GetComponent<RectTransform>()
           .SetSizeDelta(Vector2.zero);
 
-      cell.AddComponent<VerticalLayoutGroup>()
+      row.AddComponent<VerticalLayoutGroup>()
           .SetChildControl(width: true, height: true)
           .SetChildForceExpand(width: false, height: false);
 
-      Label = CreateChildLabel(cell.transform);
+      Label = CreateChildLabel(row.transform);
     }
 
     TextMeshProUGUI CreateChildLabel(Transform parentTransform) {
       TextMeshProUGUI label = UIBuilder.CreateLabel(parentTransform);
-      label.name = "Message.Text";
+      label.name = "Label";
 
       label.alignment = TextAlignmentOptions.Left;
       label.enableWordWrapping = true;

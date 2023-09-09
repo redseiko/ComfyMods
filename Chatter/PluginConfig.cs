@@ -15,9 +15,14 @@ namespace Chatter {
     public static ConfigEntry<Vector2> ChatPanelPosition { get; private set; }
     public static ConfigEntry<Vector2> ChatPanelSizeDelta { get; private set; }
 
-    //  // Behaviour
-    //  public static ConfigEntry<int> HideChatPanelDelay { get; private set; }
+    // Behaviour
+    public static ConfigEntry<int> HideChatPanelDelay { get; private set; }
     //  public static ConfigEntry<float> HideChatPanelAlpha { get; private set; }
+
+    // Scrolling
+    public static ConfigEntry<KeyboardShortcut> ScrollContentUpShortcut { get; private set; }
+    public static ConfigEntry<KeyboardShortcut> ScrollContentDownShortcut { get; private set; }
+    public static ConfigEntry<float> ScrollContentOffsetInterval { get; private set; }
 
     //  // Content
     //  public static ConfigEntry<bool> ShowMessageHudCenterMessages { get; private set; }
@@ -58,10 +63,7 @@ namespace Chatter {
     //  // Panel
     //  public static ConfigEntry<float> ChatContentWidthOffset { get; private set; }
 
-    //  // Scrolling
-    //  public static ConfigEntry<KeyboardShortcut> ScrollContentUpShortcut { get; private set; }
-    //  public static ConfigEntry<KeyboardShortcut> ScrollContentDownShortcut { get; private set; }
-    //  public static ConfigEntry<float> ScrollContentOffsetInterval { get; private set; }
+
 
     // Colors
     public static ConfigEntry<Color> ChatMessageTextDefaultColor { get; private set; }
@@ -103,14 +105,36 @@ namespace Chatter {
       ChatPanelSizeDelta.SettingChanged +=
           (_, _) => (ChatterChatPanel?.Panel.transform as RectTransform).sizeDelta = ChatPanelSizeDelta.Value;
 
-      //    // Behaviour
-      //    HideChatPanelDelay ??=
-      //        config.Bind(
-      //            "Behaviour",
-      //            "hideChatPanelDelay",
-      //            defaultValue: 10,
-      //            new ConfigDescription(
-      //                "Delay (in seconds) before hiding the ChatPanel.", new AcceptableValueRange<int>(1, 180)));
+      // Behaviour
+      HideChatPanelDelay =
+          config.BindInOrder(
+              "ChatPanel.Behaviour",
+              "hideChatPanelDelay",
+              defaultValue: 10,
+              "Delay (in seconds) before hiding the ChatPanel.",
+              new AcceptableValueRange<int>(1, 180));
+
+      // Scrolling
+      ScrollContentUpShortcut =
+          config.BindInOrder(
+              "ChatPanel.Scrolling",
+              "scrollContentUpShortcut",
+              new KeyboardShortcut(KeyCode.PageUp),
+              "Keyboard shortcut to scroll the ChatPanel content up.");
+
+      ScrollContentDownShortcut =
+          config.BindInOrder(
+              "ChatPanel.Scrolling",
+              "scrollContentDownShortcut",
+              new KeyboardShortcut(KeyCode.PageDown),
+              "Keyboard shortcut to scroll the ChatPanel content down.");
+
+      ScrollContentOffsetInterval =
+          config.BindInOrder(
+              "CahtPanel.Scrolling",
+              "scrollContentOffsetInterval",
+              defaultValue: 200f,
+              "Interval (in pixels) to scroll the ChatPanel content up/down.");
 
       //    HideChatPanelAlpha ??=
       //        config.Bind(
@@ -208,28 +232,6 @@ namespace Chatter {
       //            defaultValue: 10f,
       //            "Spacing (in pixels) to use between rows when using 'SingleRow' layout.",
       //            new AcceptableValueRange<float>(-100, 100));
-
-      //    // Scrolling
-      //    ScrollContentUpShortcut =
-      //        config.BindInOrder(
-      //            "Scrolling",
-      //            "scrollContentUpShortcut",
-      //            new KeyboardShortcut(KeyCode.PageUp),
-      //            "Keyboard shortcut to scroll the ChatPanel content up.");
-
-      //    ScrollContentDownShortcut =
-      //        config.BindInOrder(
-      //            "Scrolling",
-      //            "scrollContentDownShortcut",
-      //            new KeyboardShortcut(KeyCode.PageDown),
-      //            "Keyboard shortcut to scroll the ChatPanel content down.");
-
-      //    ScrollContentOffsetInterval =
-      //        config.BindInOrder(
-      //            "Scrolling",
-      //            "scrollContentOffsetInterval",
-      //            defaultValue: 200f,
-      //            "Interval (in pixels) to scroll the ChatPanel content up/down.");
 
       // Colors
       ChatMessageTextDefaultColor =

@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 
 using HarmonyLib;
+
+using TMPro;
 
 using UnityEngine;
 
@@ -15,19 +19,16 @@ namespace Chatter {
     [HarmonyPatch(nameof(Chat.Awake))]
     static void AwakePostfix(Chat __instance) {
       //_chatInputField = __instance.m_input;
-
-      //BindChatConfig(__instance, _chatPanel);
       //MessageRows.ClearItems();
 
       ToggleChatter(__instance, IsModEnabled.Value);
-      //__instance.StartCoroutine(DelayedAwake());
+      SetupWorldText(__instance);
     }
 
-    //static IEnumerator DelayedAwake() {
-    //  yield return null;
-
-    //  ToggleChatter(IsModEnabled.Value);
-    //}
+    static void SetupWorldText(Chat chat) {
+      chat.m_worldTextBase = WorldTextUtils.CreateWorldTextTemplate(chat.m_worldTextBase.transform.parent);
+      chat.m_worldTextBase.SetActive(false);
+    }
 
     //  [HarmonyTranspiler]
     //  [HarmonyPatch(nameof(Chat.InputText))]
@@ -118,46 +119,37 @@ namespace Chatter {
     //        .InstructionEnumeration();
     //  }
 
-    //  [HarmonyPostfix]
-    //  [HarmonyPatch(nameof(Chat.Update))]
-    //  static void UpdatePostfix(ref Chat __instance) {
-    //    if (!IsModEnabled.Value || !IsChatPanelVisible) {
-    //      return;
-    //    }
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(Chat.Update))]
+    static void UpdatePostfix(ref Chat __instance) {
+      if (!IsModEnabled.Value || !ChatterChatPanel?.Panel) {
+        return;
+      }
 
-    //    if (ScrollContentUpShortcut.Value.IsDown()) {
-    //      Chatter.ChatPanel?.OffsetVerticalScrollPosition(ScrollContentOffsetInterval.Value);
-    //      __instance.m_hideTimer = 0f;
-    //    }
+      if (ScrollContentUpShortcut.Value.IsDown() && ChatterChatPanel.Panel.activeInHierarchy) {
+        ChatterChatPanel.OffsetVerticalScrollPosition(ScrollContentOffsetInterval.Value);
+        __instance.m_hideTimer = 0f;
+      }
 
-    //    if (ScrollContentDownShortcut.Value.IsDown()) {
-    //      Chatter.ChatPanel?.OffsetVerticalScrollPosition(-ScrollContentOffsetInterval.Value);
-    //      __instance.m_hideTimer = 0f;
-    //    }
-    //  }
+      if (ScrollContentDownShortcut.Value.IsDown()) {
+        ChatterChatPanel.OffsetVerticalScrollPosition(-ScrollContentOffsetInterval.Value);
+        __instance.m_hideTimer = 0f;
+      }
+    }
 
+    [HarmonyTranspiler]
+    [HarmonyPatch(nameof(Chat.AddInworldText))]
+    static IEnumerable<CodeInstruction> AddInworldTextTranspiler(IEnumerable<CodeInstruction> instructions) {
+      return new CodeMatcher(instructions)
+          .MatchForward(
+              useEnd: false,
+              new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(string), nameof(string.ToUpper))))
+          .SetInstructionAndAdvance(Transpilers.EmitDelegate<Func<string, string>>(ToUpperDelegate))
+          .InstructionEnumeration();
+    }
 
-    //  [HarmonyTranspiler]
-    //  [HarmonyPatch(nameof(Chat.AddInworldText))]
-    //  static IEnumerable<CodeInstruction> AddInworldTextTranspiler(IEnumerable<CodeInstruction> instructions) {
-    //    return new CodeMatcher(instructions)
-    //        .MatchForward(
-    //            useEnd: false,
-    //            new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(string), nameof(string.ToUpper))))
-    //        .SetInstructionAndAdvance(Transpilers.EmitDelegate<Func<string, string>>(ToUpperDelegate))
-    //        .InstructionEnumeration();
-    //  }
-
-    //  static string ToUpperDelegate(string text) {
-    //    return IsModEnabled.Value ? text : text.ToUpper();
-    //  }
-
-    //  [HarmonyPostfix]
-    //  [HarmonyPatch(nameof(Chat.UpdateWorldTextField))]
-    //  static void UpdateWorldTextFieldPostfix(ref Chat __instance, ref Chat.WorldTextInstance wt) {
-    //    if (IsModEnabled.Value) {
-    //      wt.m_textMeshField.fontMaterial = __instance.m_output.fontMaterial;
-    //    }
-    //  }
+    static string ToUpperDelegate(string text) {
+      return IsModEnabled.Value ? text : text.ToUpper();
+    }
   }
 }

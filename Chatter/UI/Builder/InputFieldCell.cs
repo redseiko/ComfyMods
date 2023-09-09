@@ -19,6 +19,11 @@ namespace ComfyLib {
 
       InputField = CreateChildInputField(Cell.transform);
       InputFieldPlaceholder = InputField.placeholder.GetComponent<TextMeshProUGUI>();
+
+      InputField
+          .SetTargetGraphic(Background)
+          .SetTransition(Selectable.Transition.ColorTint)
+          .SetNavigationMode(Navigation.Mode.None);
     }
 
     GameObject CreateChildCell(Transform parentTransform) {
@@ -78,16 +83,11 @@ namespace ComfyLib {
       placeholder.color = new(1f, 1f, 1f, 0.3f);
       placeholder.text = "...";
 
-      GuiInputField inputField = parentTransform.gameObject.AddComponent<GuiInputField>();
+      GuiInputField inputField = row.AddComponent<GuiInputField>();
       inputField.textViewport = row.GetComponent<RectTransform>();
       inputField.textComponent = label;
       inputField.placeholder = placeholder;
       inputField.onFocusSelectAll = false;
-
-      inputField
-          .SetTargetGraphic(parentTransform.gameObject.GetComponent<Graphic>())
-          .SetTransition(Selectable.Transition.ColorTint)
-          .SetNavigationMode(Navigation.Mode.None);
 
       inputField.OnInputLayoutChanged();
       inputField.MoveToStartOfLine(false, false);
