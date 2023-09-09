@@ -29,6 +29,8 @@ namespace Chatter {
       _harmony?.UnpatchSelf();
     }
 
+    public static bool IsChatMessageQueued { get; set; }
+
     public static ChatPanel ChatterChatPanel { get; private set; }
 
     public static void ToggleChatter(Chat chat, bool toggleOn) {
@@ -52,6 +54,8 @@ namespace Chatter {
             .SetPosition(ChatPanelPosition.Value)
             .SetSizeDelta(ChatPanelSizeDelta.Value)
             .SetAsFirstSibling();
+
+        ChatterChatPanel.TextInput.InputField.onSubmit.AddListener(OnChatTextInput);
       }
 
       ChatterChatPanel.Panel.SetActive(toggleOn);
@@ -64,7 +68,12 @@ namespace Chatter {
 
       MessageCell contentMessage = ChatterChatPanel.CreateContentMessage();
       contentMessage.Label.text = ChatMessageUtils.GetChatMessageText(message);
-      contentMessage.Label.color = ChatMessageUtils.GetMessageTextColor(message.MessageType);
+    }
+
+    public static void OnChatTextInput(string input) {
+      Chat.m_instance.m_input.text = ChatterChatPanel.TextInput.InputField.text;
+      Chat.m_instance.SendInput();
+      ChatterChatPanel.TextInput.InputField.text = string.Empty;
     }
 
     //internal static readonly CircularQueue<ChatMessage> MessageHistory = new(50, _ => { });

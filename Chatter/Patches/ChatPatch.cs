@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Text.RegularExpressions;
 
 using HarmonyLib;
 
-using Fishlabs;
+using UnityEngine;
 
 using static Chatter.Chatter;
 using static Chatter.PluginConfig;
@@ -46,46 +47,34 @@ namespace Chatter {
     //    return value;
     //  }
 
-    //  [HarmonyPrefix]
-    //  [HarmonyPatch(nameof(Chat.OnNewChatMessage))]
-    //  static void OnNewChatMessagePrefix(
-    //      ref long senderID, ref Vector3 pos, ref Talker.Type type, ref UserInfo user, ref string text) {
-    //    if (!IsModEnabled.Value) {
-    //      return;
-    //    }
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(Chat.OnNewChatMessage))]
+    static void OnNewChatMessagePrefix(long senderID, Vector3 pos, Talker.Type type, UserInfo user, string text) {
+      if (!IsModEnabled.Value) {
+        return;
+      }
 
-    //    _isCreatingChatMessage = true;
+      ChatMessage message = new() {
+        MessageType = ChatMessageUtils.GetChatMessageType(type),
+        Timestamp = DateTime.Now,
+        SenderId = senderID,
+        Position = pos,
+        TalkerType = type,
+        Username = user.Name,
+        Text = Regex.Replace(text, @"(<|>)", " "),
+      };
 
-    //    ChatMessage message = new() {
-    //      MessageType = GetMessageType(type),
-    //      Timestamp = DateTime.Now,
-    //      SenderId = senderID,
-    //      Position = pos,
-    //      TalkerType = type,
-    //      Username = user.Name,
-    //      Text = Regex.Replace(text, @"(<|>)", " "),
-    //    };
+      IsChatMessageQueued = true;
+      AddChatMessage(message);
+    }
 
-    //    AddChatMessage(message);
-    //  }
-
-    //  static ChatMessageType GetMessageType(Talker.Type talkerType) {
-    //    return talkerType switch {
-    //      Talker.Type.Normal => ChatMessageType.Say,
-    //      Talker.Type.Shout => ChatMessageType.Shout,
-    //      Talker.Type.Whisper => ChatMessageType.Whisper,
-    //      Talker.Type.Ping => ChatMessageType.Ping,
-    //      _ => ChatMessageType.Text
-    //    };
-    //  }
-
-    //  [HarmonyPostfix]
-    //  [HarmonyPatch(nameof(Chat.OnNewChatMessage))]
-    //  static void OnNewChatMessagePostfix() {
-    //    if (IsModEnabled.Value) {
-    //      _isCreatingChatMessage = false;
-    //    }
-    //  }
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(Chat.OnNewChatMessage))]
+    static void OnNewChatMessagePostfix() {
+      if (IsModEnabled.Value) {
+        IsChatMessageQueued = false;
+      }
+    }
 
     //  [HarmonyTranspiler]
     //  [HarmonyPatch(nameof(Chat.Update))]

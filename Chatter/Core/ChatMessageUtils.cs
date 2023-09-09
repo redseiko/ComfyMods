@@ -4,8 +4,20 @@ using UnityEngine;
 
 using static Chatter.PluginConfig;
 
+using static UnityEngine.ColorUtility;
+
 namespace Chatter {
   public static class ChatMessageUtils {
+    public static ChatMessageType GetChatMessageType(Talker.Type talkerType) {
+      return talkerType switch {
+        Talker.Type.Normal => ChatMessageType.Say,
+        Talker.Type.Shout => ChatMessageType.Shout,
+        Talker.Type.Whisper => ChatMessageType.Whisper,
+        Talker.Type.Ping => ChatMessageType.Ping,
+        _ => ChatMessageType.Text
+      };
+    }
+
     public static string GetChatMessageText(ChatMessage message) {
       return ChatMessageLayout.Value switch {
         MessageLayoutType.SingleRow =>
@@ -22,11 +34,11 @@ namespace Chatter {
       }
 
       return ChatMessageLayout.Value switch {
-        //MessageLayoutType.WithHeaderRow =>
-        //    $"{ChatMessageUsernamePrefix.Value}{username}{ChatMessageUsernamePostfix.Value}",
+        MessageLayoutType.WithHeaderRow =>
+            $"{ChatMessageUsernamePrefix.Value}{username}{ChatMessageUsernamePostfix.Value}",
 
         MessageLayoutType.SingleRow =>
-            $"<color=#{ColorUtility.ToHtmlStringRGBA(ChatMessageTextDefaultColor.Value)}>[ {username} ]</color>",
+            $"[ <color=#{ToHtmlStringRGBA(ChatMessageUsernameColor.Value)}>{username}</color> ]",
 
         _ => username,
       };
@@ -36,10 +48,7 @@ namespace Chatter {
       return ChatMessageLayout.Value switch {
         MessageLayoutType.SingleRow =>
             ChatMessageShowTimestamp.Value
-                ? string.Format(
-                        "<color=#{0}>{1:t}</color>",
-                        ColorUtility.ToHtmlStringRGBA(ChatMessageTimestampColor.Value),
-                        timestamp)
+                ? $"<color=#{ToHtmlStringRGBA(ChatMessageTimestampColor.Value)}>{timestamp:t}</color>"
                 : string.Empty,
 
         _ => timestamp.ToString("T"),
@@ -55,10 +64,7 @@ namespace Chatter {
 
       return ChatMessageLayout.Value switch {
         MessageLayoutType.SingleRow =>
-            string.Format(
-                "<color=#{0}>{1}</color>",
-                ColorUtility.ToHtmlStringRGBA(GetMessageTextColor(message.MessageType)),
-                text),
+            $"<color=#{ToHtmlStringRGBA(GetMessageTextColor(message.MessageType))}>{text}</color>",
 
         _ => text,
       };

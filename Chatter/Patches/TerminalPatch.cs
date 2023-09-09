@@ -35,7 +35,7 @@ namespace Chatter {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Terminal.AddString), typeof(string))]
     static void AddStringFinalPostfix(Terminal __instance, string text) {
-      if (IsModEnabled.Value && __instance is Chat) {
+      if (IsModEnabled.Value && __instance is Chat && !Chatter.IsChatMessageQueued) {
         Chatter.AddChatMessage(
           new() {
             MessageType = ChatMessageType.Text,
@@ -43,11 +43,6 @@ namespace Chatter {
             Text = text,
           });
       }
-      //if (!IsModEnabled.Value || __instance != Chat.m_instance || !_chatPanel?.Panel || _isCreatingChatMessage) {
-      //  return;
-      //}
-
-      //AddChatMessage(new() { MessageType = ChatMessageType.Text, Timestamp = DateTime.Now, Text = text });
     }
   }
 }

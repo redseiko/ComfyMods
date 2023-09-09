@@ -70,11 +70,13 @@ namespace Chatter {
     public static ConfigEntry<Color> ChatMessageTextWhisperColor { get; private set; }
     public static ConfigEntry<Color> ChatMessageTextPingColor { get; private set; }
     public static ConfigEntry<Color> ChatMessageTextMessageHudColor { get; private set; }
+
+    public static ConfigEntry<Color> ChatMessageUsernameColor { get; private set; }
     public static ConfigEntry<Color> ChatMessageTimestampColor { get; private set; }
 
-    //  // Username
-    //  public static ConfigEntry<string> ChatMessageUsernamePrefix { get; private set; }
-    //  public static ConfigEntry<string> ChatMessageUsernamePostfix { get; private set; }
+    // Username
+    public static ConfigEntry<string> ChatMessageUsernamePrefix { get; private set; }
+    public static ConfigEntry<string> ChatMessageUsernamePostfix { get; private set; }
 
     public static void BindConfig(ConfigFile config) {
       Config = config;
@@ -207,21 +209,6 @@ namespace Chatter {
       //            "Spacing (in pixels) to use between rows when using 'SingleRow' layout.",
       //            new AcceptableValueRange<float>(-100, 100));
 
-      //    // Username
-      //    ChatMessageUsernamePrefix =
-      //        config.BindInOrder(
-      //            "Username",
-      //            "chatMessageUsernamePrefix",
-      //            defaultValue: string.Empty,
-      //            "If non-empty, adds the text to the beginning of a ChatMesage username.");
-
-      //    ChatMessageUsernamePostfix =
-      //        config.BindInOrder(
-      //            "Username",
-      //            "chatMessageUsernamePostfix",
-      //            defaultValue: string.Empty,
-      //            "If non-empty, adds the text to the end of a ChatMessage username.");
-
       //    // Scrolling
       //    ScrollContentUpShortcut =
       //        config.BindInOrder(
@@ -287,12 +274,34 @@ namespace Chatter {
               new Color(1f, 0.647f, 0f, 1.0f), // <color=orange> #FFA500
               "Color for 'MessageHud' chat messages.");
 
+      ChatMessageUsernameColor =
+          config.BindInOrder(
+              "ChatMessage.Text.Colors",
+              "chatMessageUsernameColor",
+              new Color(1f, 0.647f, 0f),
+              "Color for the username shown in chat messages.");
+
       ChatMessageTimestampColor =
           config.BindInOrder(
               "ChatMessage.Text.Colors",
               "chatMessageTimestampColor",
               (Color) new Color32(244, 246, 247, 255),
               "Color for any timestamp shown in the chat messages.");
+
+      // Username
+      ChatMessageUsernamePrefix =
+          config.BindInOrder(
+              "ChatMessage.WithHeaderRow.Username",
+              "chatMessageUsernamePrefix",
+              defaultValue: string.Empty,
+              "If non-empty, adds the text to the beginning of a ChatMesage username in 'WithHeaderRow' mode.");
+
+      ChatMessageUsernamePostfix =
+          config.BindInOrder(
+              "ChatMessage.WithHeaderRow.Username",
+              "chatMessageUsernamePostfix",
+              defaultValue: string.Empty,
+              "If non-empty, adds the text to the end of a ChatMessage username in 'WithheaderRow' mode.");
 
       //    config.LateBindInOrder(config => BindChatMessageFont(config));
 
@@ -392,31 +401,6 @@ namespace Chatter {
     //            new Color(0.75f, 0.75f, 0.75f, 1f),
     //            "Style - MessageToggle.Text - text color when toggle is disabled.");
     //  }
-
-    //public static void BindChatPanelSize(RectTransform chatWindowRectTransform) {
-    //  ChatPanelPosition =
-    //      Config.BindInOrder(
-    //          "ChatPanel",
-    //          "chatPanelPosition",
-    //          chatWindowRectTransform.anchoredPosition,
-    //          "The Vector2 position of the ChatPanel.");
-
-    //  ChatPanelSize =
-    //      Config.BindInOrder(
-    //          "ChatPanel",
-    //          "chatPanelSize",
-    //          chatWindowRectTransform.sizeDelta - new Vector2(10f, 0f),
-    //          "The size (width, height) of the ChatPanel.");
-
-    //  ChatContentWidthOffset ??=
-    //      Config.Bind(
-    //          "Panel",
-    //          "chatContentWidthOffset",
-    //          -50f,
-    //          new ConfigDescription(
-    //              "Offsets the width of a row in the ChatPanel content.",
-    //              new AcceptableValueRange<float>(-400, 400)));
-    //}
   }
 
   //internal sealed class ConfigurationManagerAttributes {
