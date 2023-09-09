@@ -104,15 +104,16 @@
   <ItemGroup>
     <Compile Include="Core\ChatMessage.cs" />
     <Compile Include="Chatter.cs" />
+    <Compile Include="Core\ChatMessageUtils.cs" />
     <Compile Include="Extensions\UnityExtensions.cs" />
+    <Compile Include="Patches\MenuPatch.cs" />
     <Compile Include="UI\Builder\InputFieldCell.cs" />
-    <Compile Include="UI\ContentRow.cs" />
+    <Compile Include="UI\Builder\MessageCell.cs" />
     <Compile Include="UI\Core\UIBuilder.cs" />
     <Compile Include="UI\Core\UIResources.cs" />
     <Compile Include="Utils\CircularQueue.cs" />
     <Compile Include="Config\StringListConfigEntry.cs" />
     <Compile Include="Extensions\ConfigFileExtensions.cs" />
-    <Compile Include="Utils\IsExternalInit.cs" />
     <Compile Include="Extensions\PluginExtensions.cs" />
     <Compile Include="UI\Core\UIExtensions.cs" />
     <Compile Include="Patches\ChatPatch.cs" />

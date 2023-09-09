@@ -79,11 +79,7 @@ namespace ComfyLib {
     }
 
     public static RectTransform RectTransform(this GameObject gameObject) {
-      return gameObject ? gameObject.GetComponent<RectTransform>() : null;
-    }
-
-    public static Text Text(this GameObject gameObject) {
-      return gameObject ? gameObject.GetComponent<Text>() : null;
+      return (RectTransform) gameObject.transform;
     }
   }
 

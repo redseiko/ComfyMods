@@ -15,12 +15,12 @@ namespace Chatter {
   }
 
   public class ChatMessage {
-    public ChatMessageType MessageType { get; init; } = ChatMessageType.Text;
-    public DateTime Timestamp { get; init; } = DateTime.MinValue;
-    public long SenderId { get; init; } = 0L;
-    public Vector3 Position { get; init; } = Vector3.zero;
-    public Talker.Type TalkerType { get; init; } = Talker.Type.Normal;
-    public string Username { get; init; } = string.Empty;
-    public string Text { get; init; } = string.Empty;
+    public ChatMessageType MessageType { get; set; } = ChatMessageType.Text;
+    public DateTime Timestamp { get; set; } = DateTime.MinValue;
+    public long SenderId { get; set; } = 0L;
+    public Vector3 Position { get; set; } = Vector3.zero;
+    public Talker.Type TalkerType { get; set; } = Talker.Type.Normal;
+    public string Username { get; set; } = string.Empty;
+    public string Text { get; set; } = string.Empty;
   }
 }

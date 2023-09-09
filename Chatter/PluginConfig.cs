@@ -34,9 +34,14 @@ namespace Chatter {
     //  public static StringListConfigEntry HudCenterTextFilterList { get; private set; }
     //  public static StringListConfigEntry OtherTextFilterList { get; private set; }
 
-    //  // Layout
-    //  public static ConfigEntry<Chatter.MessageLayoutType> ChatMessageLayout { get; private set; }
-    //  public static ConfigEntry<bool> ChatMessageShowTimestamp { get; private set; }
+    public enum MessageLayoutType {
+      WithHeaderRow,
+      SingleRow
+    }
+
+    // Layout
+    public static ConfigEntry<MessageLayoutType> ChatMessageLayout { get; private set; }
+    public static ConfigEntry<bool> ChatMessageShowTimestamp { get; private set; }
 
     //  // Style
     //  public static ConfigEntry<string> ChatMessageFont { get; private set; }
@@ -58,14 +63,14 @@ namespace Chatter {
     //  public static ConfigEntry<KeyboardShortcut> ScrollContentDownShortcut { get; private set; }
     //  public static ConfigEntry<float> ScrollContentOffsetInterval { get; private set; }
 
-    //  // Colors
-    //  public static ConfigEntry<Color> ChatMessageTextDefaultColor { get; private set; }
-    //  public static ConfigEntry<Color> ChatMessageTextSayColor { get; private set; }
-    //  public static ConfigEntry<Color> ChatMessageTextShoutColor { get; private set; }
-    //  public static ConfigEntry<Color> ChatMessageTextWhisperColor { get; private set; }
-    //  public static ConfigEntry<Color> ChatMessageTextPingColor { get; private set; }
-    //  public static ConfigEntry<Color> ChatMessageTextMessageHudColor { get; private set; }
-    //  public static ConfigEntry<Color> ChatMessageTimestampColor { get; private set; }
+    // Colors
+    public static ConfigEntry<Color> ChatMessageTextDefaultColor { get; private set; }
+    public static ConfigEntry<Color> ChatMessageTextSayColor { get; private set; }
+    public static ConfigEntry<Color> ChatMessageTextShoutColor { get; private set; }
+    public static ConfigEntry<Color> ChatMessageTextWhisperColor { get; private set; }
+    public static ConfigEntry<Color> ChatMessageTextPingColor { get; private set; }
+    public static ConfigEntry<Color> ChatMessageTextMessageHudColor { get; private set; }
+    public static ConfigEntry<Color> ChatMessageTimestampColor { get; private set; }
 
     //  // Username
     //  public static ConfigEntry<string> ChatMessageUsernamePrefix { get; private set; }
@@ -80,7 +85,7 @@ namespace Chatter {
           Config.BindInOrder(
               "ChatPanel",
               "chatPanelPosition",
-              new Vector2(-10f, 200f),
+              new Vector2(-10f, 100f),
               "The Vector2 position of the ChatPanel.");
 
       ChatPanelSizeDelta =
@@ -91,10 +96,10 @@ namespace Chatter {
               "The size (width, height) of the ChatPanel.");
 
       ChatPanelPosition.SettingChanged +=
-          (_, _) => ChatterChatPanel?.PanelRectTransform.SetPosition(ChatPanelPosition.Value);
+          (_, _) => (ChatterChatPanel?.Panel.transform as RectTransform).anchoredPosition = ChatPanelPosition.Value;
 
       ChatPanelSizeDelta.SettingChanged +=
-          (_, _) => ChatterChatPanel?.PanelRectTransform.SetSizeDelta(ChatPanelSizeDelta.Value);
+          (_, _) => (ChatterChatPanel?.Panel.transform as RectTransform).sizeDelta = ChatPanelSizeDelta.Value;
 
       //    // Behaviour
       //    HideChatPanelDelay ??=
@@ -150,20 +155,20 @@ namespace Chatter {
       //                | ChatMessageType.Text,
       //            "ChatPanel content row toggles to enable on game start.");
 
-      //    // Layout
-      //    ChatMessageLayout ??=
-      //        config.Bind(
-      //            "Layout",
-      //            "chatMessageLayout",
-      //            Chatter.MessageLayoutType.WithHeaderRow,
-      //            "Determines which layout to use when displaying a chat message.");
+      // Layout
+      ChatMessageLayout =
+          config.BindInOrder(
+              "ChatMessage.Layout",
+              "chatMessageLayout",
+              MessageLayoutType.WithHeaderRow,
+              "Determines which layout to use when displaying a chat message.");
 
-      //    ChatMessageShowTimestamp ??=
-      //        config.Bind(
-      //            "Layout",
-      //            "chatMessageShowTimestamp",
-      //            defaultValue: true,
-      //            "Show a timestamp for each group of chat messages (except system/default).");
+      ChatMessageShowTimestamp =
+          config.BindInOrder(
+              "ChatMessage.Layout",
+              "chatMessageShowTimestamp",
+              defaultValue: true,
+              "Show a timestamp for each group of chat messages (except system/default).");
 
       //    // Style
       //    ChatPanelBackgroundColor ??=
@@ -239,76 +244,55 @@ namespace Chatter {
       //            defaultValue: 200f,
       //            "Interval (in pixels) to scroll the ChatPanel content up/down.");
 
-      //    // Colors
-      //    ChatMessageTextDefaultColor ??=
-      //        config.Bind(
-      //            "Colors",
-      //            "chatMessageTextDefaultColor",
-      //            Color.white,
-      //            new ConfigDescription(
-      //                "Color for default/system chat messages.",
-      //                acceptableValues: null,
-      //                new ConfigurationManagerAttributes { Order = 6 }));
+      // Colors
+      ChatMessageTextDefaultColor =
+          config.BindInOrder(
+              "ChatMessage.Text.Colors",
+              "chatMessageTextDefaultColor",
+              Color.white,
+              "Color for default/system chat messages.");
 
-      //    ChatMessageTextSayColor ??=
-      //        config.Bind(
-      //            "Colors",
-      //            "chatMessageTextSayColor",
-      //            Color.white,
-      //            new ConfigDescription(
-      //                "Color for 'normal/say' chat messages.",
-      //                acceptableValues: null,
-      //                new ConfigurationManagerAttributes { Order = 5 }));
+      ChatMessageTextSayColor =
+          config.BindInOrder(
+              "ChatMessage.Text.Colors",
+              "chatMessageTextSayColor",
+              Color.white,
+              "Color for 'normal/say' chat messages.");
 
-      //    ChatMessageTextShoutColor ??=
-      //        config.Bind(
-      //            "Colors",
-      //            "chatMessageTextShoutColor",
-      //            Color.yellow,
-      //            new ConfigDescription(
-      //                "Color for 'shouting' chat messages.",
-      //                acceptableValues: null,
-      //                new ConfigurationManagerAttributes { Order = 4 }));
+      ChatMessageTextShoutColor =
+          config.BindInOrder(
+              "ChatMessage.Text.Colors",
+              "chatMessageTextShoutColor",
+              Color.yellow,
+              "Color for 'shouting' chat messages.");
 
-      //    ChatMessageTextWhisperColor ??=
-      //        config.Bind(
-      //            "Colors",
-      //            "chatMessageTextWhisperColor",
-      //            new Color(0.502f, 0f, 0.502f, 1f), // <color=purple> #800080
-      //            new ConfigDescription(
-      //                "Color for 'whisper' chat messages.",
-      //                acceptableValues: null,
-      //                new ConfigurationManagerAttributes { Order = 3 }));
+      ChatMessageTextWhisperColor =
+          config.BindInOrder(
+              "ChatMessage.Text.Colors",
+              "chatMessageTextWhisperColor",
+              new Color(0.502f, 0f, 0.502f, 1f), // <color=purple> #800080
+              "Color for 'whisper' chat messages.");
 
-      //    ChatMessageTextPingColor ??=
-      //        config.Bind(
-      //            "Colors",
-      //            "chatMessageTextPingColor",
-      //            Color.cyan,
-      //            new ConfigDescription(
-      //                "Color for 'ping' chat messages.",
-      //                acceptableValues: null,
-      //                new ConfigurationManagerAttributes { Order = 2 }));
+      ChatMessageTextPingColor =
+          config.BindInOrder(
+              "ChatMessage.Text.Colors",
+              "chatMessageTextPingColor",
+              Color.cyan,
+              "Color for 'ping' chat messages.");
 
-      //    ChatMessageTextMessageHudColor ??=
-      //        config.Bind(
-      //            "Colors",
-      //            "chatMessageTextMessageHudColor",
-      //            new Color(1f, 0.647f, 0f, 1.0f), // <color=orange> #FFA500
-      //            new ConfigDescription(
-      //                "Color for 'MessageHud' chat messages.",
-      //                acceptableValues: null,
-      //                new ConfigurationManagerAttributes { Order = 1 }));
+      ChatMessageTextMessageHudColor =
+          config.BindInOrder(
+              "ChatMessage.Text.Colors",
+              "chatMessageTextMessageHudColor",
+              new Color(1f, 0.647f, 0f, 1.0f), // <color=orange> #FFA500
+              "Color for 'MessageHud' chat messages.");
 
-      //    ChatMessageTimestampColor ??=
-      //        config.Bind(
-      //            "Colors",
-      //            "chatMessageTimestampColor",
-      //            (Color) new Color32(244, 246, 247, 255),
-      //            new ConfigDescription(
-      //                "Color for any timestamp shown in the chat messages.",
-      //                acceptableValues: null,
-      //                new ConfigurationManagerAttributes { Order = 0 }));
+      ChatMessageTimestampColor =
+          config.BindInOrder(
+              "ChatMessage.Text.Colors",
+              "chatMessageTimestampColor",
+              (Color) new Color32(244, 246, 247, 255),
+              "Color for any timestamp shown in the chat messages.");
 
       //    config.LateBindInOrder(config => BindChatMessageFont(config));
 

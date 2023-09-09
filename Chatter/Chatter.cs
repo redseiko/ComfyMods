@@ -6,6 +6,8 @@ using ComfyLib;
 
 using HarmonyLib;
 
+using UnityEngine;
+
 using static Chatter.PluginConfig;
 
 namespace Chatter {
@@ -43,10 +45,10 @@ namespace Chatter {
       if (!ChatterChatPanel?.Panel) {
         ChatterChatPanel = new(chat.m_chatWindow.parent);
 
-        ChatterChatPanel.PanelRectTransform
-            .SetAnchorMin(new(1f, 0.5f))
-            .SetAnchorMax(new(1f, 0.5f))
-            .SetPivot(new(1f, 0.5f))
+        ChatterChatPanel.Panel.GetComponent<RectTransform>()
+            .SetAnchorMin(Vector2.right)
+            .SetAnchorMax(Vector2.right)
+            .SetPivot(Vector2.right)
             .SetPosition(ChatPanelPosition.Value)
             .SetSizeDelta(ChatPanelSizeDelta.Value)
             .SetAsFirstSibling();
@@ -55,10 +57,15 @@ namespace Chatter {
       ChatterChatPanel.Panel.SetActive(toggleOn);
     }
 
-    //public enum MessageLayoutType {
-    //  WithHeaderRow,
-    //  SingleRow
-    //}
+    public static void AddChatMessage(ChatMessage message) {
+      if (!ChatterChatPanel?.Panel) {
+        return;
+      }
+
+      MessageCell contentMessage = ChatterChatPanel.CreateContentMessage();
+      contentMessage.Label.text = ChatMessageUtils.GetChatMessageText(message);
+      contentMessage.Label.color = ChatMessageUtils.GetMessageTextColor(message.MessageType);
+    }
 
     //internal static readonly CircularQueue<ChatMessage> MessageHistory = new(50, _ => { });
     //internal static readonly CircularQueue<ContentRow> MessageRows = new(50, DestroyMessageRow);
@@ -347,24 +354,7 @@ namespace Chatter {
 
     //[HarmonyPatch(typeof(Menu))]
     //class MenuPatch {
-    //  [HarmonyPostfix]
-    //  [HarmonyPatch(nameof(Menu.Show))]
-    //  static void ShowPostfix() {
-    //    if (IsModEnabled.Value) {
-    //      ChatPanel?.ToggleGrabber(true);
-    //      ChatPanel?.SetPanelSize(ChatPanelSize.Value);
-    //    }
-    //  }
 
-    //  [HarmonyPostfix]
-    //  [HarmonyPatch(nameof(Menu.Hide))]
-    //  static void HidePostfix() {
-    //    if (IsModEnabled.Value) {
-    //      ChatPanel?.ToggleGrabber(false);
-    //      ChatPanel?.SetPanelSize(ChatPanelSize.Value);
-    //      ChatPanel?.SetVerticalScrollPosition(0f);
-    //    }
-    //  }
     //}
 
     //[HarmonyPatch(typeof(MessageHud))]
@@ -395,24 +385,7 @@ namespace Chatter {
     //  }
     //}
 
-    //public static bool ShouldShowMessage(ChatMessage message) {
-    //  return message.MessageType switch {
-    //    ChatMessageType.Say => ShouldShowText(message.Text, SayTextFilterList.CachedValues),
-    //    ChatMessageType.Shout => ShouldShowText(message.Text, ShoutTextFilterList.CachedValues),
-    //    ChatMessageType.Whisper => ShouldShowText(message.Text, WhisperTextFilterList.CachedValues),
-    //    ChatMessageType.HudCenter => ShouldShowText(message.Text, HudCenterTextFilterList.CachedValues),
-    //    ChatMessageType.Text => ShouldShowText(message.Text, OtherTextFilterList.CachedValues),
-    //    _ => true
-    //  };
-    //}
 
-    //static bool ShouldShowText(string text, List<string> filters) {
-    //  if (filters.Count == 0) {
-    //    return true;
-    //  }
-
-    //  return !filters.Any(f => text.IndexOf(f, 0, StringComparison.OrdinalIgnoreCase) != -1);
-    //}
 
     //static void CreateChatMessageRow(ChatMessage message) {
     //  if (ShouldCreateDivider(message)) {
@@ -464,66 +437,6 @@ namespace Chatter {
     //    ChatMessageType.Whisper => _chatPanel.WhisperToggle.isOn,
     //    ChatMessageType.Ping => _chatPanel.PingToggle.isOn,
     //    _ => true,
-    //  };
-    //}
-
-    //static string GetUsernameText(string username) {
-    //  if (username.Length == 0) {
-    //    return string.Empty;
-    //  }
-
-    //  return ChatMessageLayout.Value switch {
-    //    MessageLayoutType.WithHeaderRow =>
-    //        $"{ChatMessageUsernamePrefix.Value}{username}{ChatMessageUsernamePostfix.Value}",
-    //    MessageLayoutType.SingleRow =>
-    //        $"<color=#{ToHtmlStringRGBA(ChatMessageTextDefaultColor.Value)}>[ {username} ]</color>",
-    //    _ => username,
-    //  };
-    //}
-
-    //static string GetTimestampText(DateTime timestamp) {
-    //  return ChatMessageLayout.Value switch {
-    //    MessageLayoutType.SingleRow => 
-    //        ChatMessageShowTimestamp.Value
-    //            ? string.Format(
-    //                  "<color=#{0}>{1:t}</color>", ToHtmlStringRGBA(ChatMessageTimestampColor.Value), timestamp)
-    //            : string.Empty,
-    //    _ => timestamp.ToString("T"),
-    //  };
-    //}
-
-    //static string GetBodyText(ChatMessage message) {
-    //  return ChatMessageLayout.Value switch {
-    //    MessageLayoutType.SingleRow =>
-    //        string.Join(
-    //            " ", GetTimestampText(message.Timestamp), GetUsernameText(message.Username), GetMessageText(message)),
-    //    _ => GetMessageText(message)
-    //  };
-    //}
-
-    //static string GetMessageText(ChatMessage message) {
-    //  string text =
-    //      message.MessageType switch {
-    //        ChatMessageType.Ping => $"Ping! {message.Position}",
-    //        _ => message.Text
-    //      };
-
-    //  return ChatMessageLayout.Value switch {
-    //    MessageLayoutType.SingleRow =>
-    //        string.Format("<color=#{0}>{1}</color>", ToHtmlStringRGBA(GetMessageTextColor(message.MessageType)), text),
-    //    _ => text,
-    //  };
-    //}
-
-    //static Color GetMessageTextColor(ChatMessageType messageType) {
-    //  return messageType switch {
-    //    ChatMessageType.Text => ChatMessageTextDefaultColor.Value,
-    //    ChatMessageType.HudCenter => ChatMessageTextMessageHudColor.Value,
-    //    ChatMessageType.Say => ChatMessageTextSayColor.Value,
-    //    ChatMessageType.Shout => ChatMessageTextShoutColor.Value,
-    //    ChatMessageType.Whisper => ChatMessageTextWhisperColor.Value,
-    //    ChatMessageType.Ping => ChatMessageTextPingColor.Value,
-    //    _ => ChatMessageTextDefaultColor.Value,
     //  };
     //}
   }

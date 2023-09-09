@@ -49,7 +49,7 @@ namespace ComfyLib {
       TextMeshProUGUI label = UIBuilder.CreateLabel(row.transform);
       label.SetName("Text");
 
-      label.GetComponent<RectTransform>()
+      label.rectTransform
           .SetAnchorMin(Vector2.zero)
           .SetAnchorMax(Vector2.one)
           .SetSizeDelta(Vector2.zero)
@@ -65,7 +65,7 @@ namespace ComfyLib {
       TextMeshProUGUI placeholder = UIBuilder.CreateLabel(row.transform);
       placeholder.SetName("Placeholder");
 
-      placeholder.GetComponent<RectTransform>()
+      placeholder.rectTransform
           .SetAnchorMin(Vector2.zero)
           .SetAnchorMax(Vector2.one)
           .SetSizeDelta(Vector2.zero)

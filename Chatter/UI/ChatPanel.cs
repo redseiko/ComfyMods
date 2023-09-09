@@ -6,30 +6,25 @@ using UnityEngine.UI;
 namespace Chatter {
   public class ChatPanel {
     public GameObject Panel { get; private set; }
-    public RectTransform PanelRectTransform { get; private set; }
     public CanvasGroup PanelCanvasGroup { get; private set; }
 
-    public GameObject Viewport { get; private set; }
+    public GameObject ContentViewport { get; private set; }
     public GameObject Content { get; private set; }
+    public ScrollRect ContentScrollRect { get; private set; }
 
     public InputFieldCell TextInput { get; private set; }
 
-    //public CanvasGroup CanvasGroup { get; init; }
+    public CircularQueue<MessageCell> ContentMessages { get; private set; }
+
     //public GameObject Grabber { get; init; }
-    //public GameObject Viewport { get; init; }
-    //public GameObject Content { get; init; }
-    //public Image ContentImage { get; init; }
-    //public ScrollRect ScrollRect { get; init; }
-    //public GameObject TextPrefab { get; init; }
-    //public InputField InputField { get; init; }
 
     public ChatPanel(Transform parentTransform) {
       Panel = CreateChildPanel(parentTransform);
-      PanelRectTransform = Panel.GetComponent<RectTransform>();
       PanelCanvasGroup = Panel.GetComponent<CanvasGroup>();
 
-      Viewport = CreateChildViewport(Panel.transform);
-      Content = CreateChildContent(Viewport.transform);
+      ContentViewport = CreateChildViewport(Panel.transform);
+      Content = CreateChildContent(ContentViewport.transform);
+      ContentScrollRect = CreateChildScrollRect(ContentViewport, Content);
 
       TextInput = new(Panel.transform);
 
@@ -37,21 +32,12 @@ namespace Chatter {
           .SetFlexible(width: 1f)
           .SetPreferred(height: 35f);
 
-    //  Content = CreateContent(Viewport.transform);
-    //  ContentImage = Content.GetComponent<Image>();
-    //  _contentRectTransform = Content.GetComponent<RectTransform>();
-    //  _contentLayoutGroup = Content.GetComponent<VerticalLayoutGroup>();
-
-    //  ScrollRect = CreateScrollRect(Panel, Viewport, Content);
-
-    //  InputField = CreateChatInputField(Panel.transform);
-    //  _inputFieldImage = InputField.GetComponentInParent<Image>();
+      ContentMessages = new(64, DestroyContentMessage);
 
     //  Grabber = CreateGrabber(Panel.transform);
     //  _grabberCanvasGroup = Grabber.GetComponent<CanvasGroup>();
 
     //  _contentWidthOffset = _contentLayoutGroup.padding.horizontal * -1f;
-    //  _panelRectTransform.SetAsFirstSibling();
     }
 
     GameObject CreateChildPanel(Transform parentTransform) {
@@ -100,19 +86,20 @@ namespace Chatter {
     }
 
     GameObject CreateChildContent(Transform parentTransform) {
-      GameObject content = new("ChatPanel.Content", typeof(RectTransform));
+      GameObject content = new("Content", typeof(RectTransform));
       content.SetParent(parentTransform);
 
       content.GetComponent<RectTransform>()
           .SetAnchorMin(Vector2.zero)
-          .SetAnchorMax(Vector2.zero)
+          .SetAnchorMax(Vector2.right)
           .SetPivot(Vector2.zero)
-          .SetPosition(Vector2.zero);
+          .SetPosition(Vector2.zero)
+          .SetSizeDelta(Vector2.zero);
 
       content.AddComponent<VerticalLayoutGroup>()
           .SetChildControl(width: true, height: true)
           .SetChildForceExpand(width: false, height: false)
-          .SetSpacing(16f);
+          .SetSpacing(8f);
 
       content.AddComponent<ContentSizeFitter>()
           .SetHorizontalFit(ContentSizeFitter.FitMode.Unconstrained)
@@ -121,21 +108,29 @@ namespace Chatter {
       return content;
     }
 
-    //public const string RowName = "Message.Row";
-    //public const string RowHeaderName = "Message.Row.Header";
-    //public const string HeaderLeftCellName = "Row.Header.LeftCell";
-    //public const string HeaderRightCellName = "Row.Header.RightCell";
-    //public const string ContentRowBodyName = "Message.Row.Text";
+    ScrollRect CreateChildScrollRect(GameObject viewport, GameObject content) {
+      ScrollRect scrollRect = viewport.AddComponent<ScrollRect>();
 
-    //readonly RectTransform _panelRectTransform;
-    //readonly RectTransform _viewportRectTransform;
-    //readonly RectMask2D _viewportRectMask;
-    //readonly Image _viewportImage;
-    //readonly RectTransform _contentRectTransform;
-    //readonly VerticalLayoutGroup _contentLayoutGroup;
-    //readonly Image _inputFieldImage;
-    //readonly Text _textPrefabText;
-    //readonly CanvasGroup _grabberCanvasGroup;
+      scrollRect.viewport = viewport.GetComponent<RectTransform>();
+      scrollRect.content = content.GetComponent<RectTransform>();
+      scrollRect.horizontal = false;
+      scrollRect.vertical = true;
+      scrollRect.movementType = ScrollRect.MovementType.Clamped;
+      scrollRect.scrollSensitivity = 30f;
+
+      return scrollRect;
+    }
+
+    public MessageCell CreateContentMessage() {
+      MessageCell cell = new(Content.transform);
+      ContentMessages.EnqueueItem(cell);
+
+      return cell;
+    }
+
+    void DestroyContentMessage(MessageCell contentMessage) {
+      UnityEngine.Object.Destroy(contentMessage.Cell);
+    }
 
     //public Toggle SayToggle { get; private set; } = default!;
     //public Toggle ShoutToggle { get; private set; } = default!;
@@ -143,86 +138,6 @@ namespace Chatter {
     //public Toggle PingToggle { get; private set; } = default!;
     //public Toggle MessageHudToggle { get; private set; } = default!;
     //public Toggle TextToggle { get; private set; } = default!;
-
-    //float _contentWidthOffset = 0f;
-
-    //public void SetFont(Font font) {
-    //  _textPrefabText.font = font;
-
-    //  foreach (Text text in Panel.GetComponentsInChildren<Text>(includeInactive: true)) {
-    //    if (text.font != font) {
-    //      text.font = font;
-    //    }
-    //  }
-
-    //  TMP_FontAsset fontAsset = UIResources.GetFontAssetByFont(font);
-
-    //  foreach (TMP_Text tmpText in Content.GetComponentsInChildren<TMP_Text>(includeInactive: true)) {
-    //    if (tmpText.font != fontAsset) {
-    //      tmpText.font = fontAsset;
-    //    }
-    //  }
-    //}
-
-    //public void SetFontSize(int fontSize) {
-    //  _textPrefabText.fontSize = fontSize;
-
-    //  foreach (Text text in Panel.GetComponentsInChildren<Text>(includeInactive: true)) {
-    //    text.fontSize = text.name == ContentRowBodyName ? fontSize : fontSize - 2;
-    //  }
-
-    //  foreach (TMP_Text text in Panel.GetComponentsInChildren<TMP_Text>(includeInactive: true)) {
-    //    text.fontSize = text.name == ContentRowBodyName ? fontSize : fontSize - 2;
-    //  }
-    //}
-
-    //public void SetPanelBackgroundColor(Color color) {
-    //  _viewportImage.color = color;
-    //  _inputFieldImage.color = color;
-    //}
-
-    //public void SetPanelRectMaskSoftness(Vector2 softness) {
-    //  _viewportRectMask.softness = Vector2Int.RoundToInt(softness);
-    //}
-
-    //public void SetPanelPosition(Vector2 position) {
-    //  _panelRectTransform.anchoredPosition = position;
-    //}
-
-    //public void SetPanelSize(Vector2 sizeDelta) {
-    //  _panelRectTransform.sizeDelta = sizeDelta;
-    //  _viewportRectTransform.sizeDelta = sizeDelta;
-    //  SetRowLayoutPreferredWidths();
-    //}
-
-    //public void SetContentWidthOffset(float widthOffset) {
-    //  _contentWidthOffset = widthOffset;
-    //  SetRowLayoutPreferredWidths();
-    //}
-
-    //void SetRowLayoutPreferredWidths() {
-    //  float preferredWidth = _panelRectTransform.sizeDelta.x + _contentWidthOffset;
-
-    //  foreach (
-    //      LayoutElement layout in Content
-    //          .GetComponentsInChildren<LayoutElement>(includeInactive: true)
-    //          .Where(layout => layout.name == ContentRowBodyName)) {
-    //    layout.preferredWidth = preferredWidth;
-    //  }
-    //}
-
-    //public void SetContentSpacing(float spacing) {
-    //  _contentLayoutGroup.spacing = spacing;
-    //}
-
-    //public void SetContentBodySpacing(float spacing) {
-    //  foreach (
-    //      VerticalLayoutGroup layoutGroup in Content
-    //          .GetComponentsInChildren<VerticalLayoutGroup>(includeInactive: true)
-    //          .Where(lg => lg.name == RowName)) {
-    //    layoutGroup.SetSpacing(spacing);
-    //  }
-    //}
 
     //public void ToggleGrabber(bool toggle) {
     //  _grabberCanvasGroup.alpha = toggle ? 1f : 0f;
@@ -237,7 +152,6 @@ namespace Chatter {
     //  float percent = (offset / _contentRectTransform.sizeDelta.y);
     //  ScrollRect.verticalNormalizedPosition += percent;
     //}
-
 
     //GameObject CreateGrabber(Transform parentTransform) {
     //  GameObject grabber = new("ChatPanel.Grabber", typeof(RectTransform));
@@ -371,29 +285,6 @@ namespace Chatter {
     //  toggle.isOn = false;
 
     //  return toggle;
-    //}
-
-    //static Sprite CreateGradientSprite() {
-    //  Texture2D texture = new(width: 1, height: 2) {
-    //    wrapMode = TextureWrapMode.Clamp
-    //  };
-
-    //  texture.SetPixel(0, 0, Color.white);
-    //  texture.SetPixel(0, 1, Color.clear);
-    //  texture.Apply();
-
-    //  return Sprite.Create(texture, new(0, 0, 1, 2), Vector2.zero);
-    //}
-
-    //static ScrollRect CreateScrollRect(GameObject panel, GameObject viewport, GameObject content) {
-    //  ScrollRect panelScroll = panel.AddComponent<ScrollRect>();
-    //  panelScroll.viewport = viewport.GetComponent<RectTransform>();
-    //  panelScroll.content = content.GetComponent<RectTransform>();
-    //  panelScroll.horizontal = false;
-    //  panelScroll.vertical = true;
-    //  panelScroll.scrollSensitivity = 30f;
-
-    //  return panelScroll;
     //}
 
     //public GameObject CreateMessageDivider(Transform parentTransform) {

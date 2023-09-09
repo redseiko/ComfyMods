@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 
-namespace Chatter {
+namespace ComfyLib {
   public class CircularQueue<T> : ConcurrentQueue<T> {
     readonly int _capacity;
     readonly Action<T> _dequeueFunc;

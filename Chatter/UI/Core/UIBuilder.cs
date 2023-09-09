@@ -129,7 +129,7 @@ namespace ComfyLib {
           UnityEngine.Object.Instantiate(UnifiedPopup.instance.bodyText, parentTransform, worldPositionStays: false);
 
       label.name = "Label";
-      label.fontSize = 18f;
+      label.fontSize = 16f;
       label.enableAutoSizing = false;
       label.richText = true;
       label.color = Color.white;
