@@ -102,6 +102,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\ChatPanelUtils.cs" />
     <Compile Include="Core\ChatTextInputUtils.cs" />
     <Compile Include="Core\ChatMessage.cs" />
     <Compile Include="Chatter.cs" />
@@ -109,8 +110,11 @@
     <Compile Include="Core\WorldTextUtils.cs" />
     <Compile Include="Extensions\UnityExtensions.cs" />
     <Compile Include="Patches\MenuPatch.cs" />
+    <Compile Include="Patches\MessageHudPatch.cs" />
     <Compile Include="UI\Builder\InputFieldCell.cs" />
     <Compile Include="UI\Builder\ContentRow.cs" />
+    <Compile Include="UI\Builder\ToggleCell.cs" />
+    <Compile Include="UI\Builder\ToggleRow.cs" />
     <Compile Include="UI\Core\UIBuilder.cs" />
     <Compile Include="UI\Core\UIResources.cs" />
     <Compile Include="Utils\CircularQueue.cs" />

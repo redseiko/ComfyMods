@@ -44,7 +44,6 @@ namespace Chatter {
 
       // TODO: conditional restore to vanilla-references cached.
       chat.m_input = ChatterChatPanel.TextInput.InputField;
-      //chat.m_chatWindow = ChatterChatPanel.Panel.GetComponent<RectTransform>();
     }
 
     // TODO: cache the vanilla-references before toggling.
@@ -73,6 +72,7 @@ namespace Chatter {
         ChatterChatPanel.TextInput.InputField.onSubmit.AddListener(_ => Chat.m_instance.SendInput());
 
         SetChatTextInputDefaultPrefix(ChatterChatPanel, ChatPanelDefaultMessageTypeToUse.Value);
+        ChatterChatPanel.SetupContentRowToggles(ChatPanelContentRowTogglesToEnable.Value);
 
         RebuildMessageRows();
       }
@@ -81,19 +81,23 @@ namespace Chatter {
     }
 
     public static void AddChatMessage(ChatMessage message) {
-      MessageHistory.Enqueue(message);
+      MessageHistory.EnqueueItem(message);
 
       if (ChatterChatPanel?.Panel) {
         CreateContentRow(message, ChatterChatPanel.Content.transform);
       }
     }
 
-    static void RebuildMessageRows() {
+    public static void RebuildMessageRows() {
       MessageRows.ClearItems();
 
-      if (ChatterChatPanel?.Panel) {
-        foreach (ChatMessage message in MessageHistory) {
-          CreateContentRow(message, ChatterChatPanel.Content.transform);
+      if (!ChatterChatPanel?.Panel) {
+        return;
+      }
+
+      foreach (ChatMessage message in MessageHistory) {
+        if (ChatterChatPanel.IsMessageTypeActive(message.MessageType)) {
+          MessageRows.EnqueueItem(CreateContentRow(message, ChatterChatPanel.Content.transform));
         }
       }
     }
@@ -106,7 +110,9 @@ namespace Chatter {
     }
 
     public static void DestroyContentRow(ContentRow row) {
-      Destroy(row.Row);
+      if (row?.Row) {
+        Destroy(row.Row);
+      }
     }
 
     public static void HideChatPanelDelegate(float hideTimer) {
@@ -133,63 +139,21 @@ namespace Chatter {
 
     public static void EnableChatPanelDelegate() {
       if (IsModEnabled.Value) {
-        ChatterChatPanel.TextInput.InputField.Ref()?.SetEnabled(true);
+        ChatterChatPanel?.TextInput.InputField.Ref()?.SetEnabled(true);
       }
     }
 
     public static bool DisableChatPanelDelegate(bool active) {
       if (IsModEnabled.Value) {
-        ChatterChatPanel.TextInput.InputField.Ref()?.SetEnabled(false);
+        if (!Menu.IsVisible()) {
+          ChatterChatPanel?.TextInput.InputField.Ref()?.SetEnabled(false);
+        }
+
         return true;
       }
 
       return active;
     }
-
-    //static ChatPanel CreateChatPanel(Chat chat) {
-    //  if (!chat) {
-    //    return null;
-    //  }
-
-    //  ChatPanel chatPanel = new(chat.m_chatWindow.transform.parent);
-    //  RectTransform panelRectTransform = chatPanel.Panel.GetComponent<RectTransform>();
-    //  Outline panelOutline = chatPanel.Panel.GetComponent<Outline>();
-
-    //  PanelDragger dragger = chatPanel.Grabber.GetComponentInChildren<PanelDragger>();
-    //  dragger.TargetRectTransform = panelRectTransform;
-    //  dragger.TargetOutline = panelOutline;
-    //  dragger.OnEndDragAction = position => ChatPanelPosition.Value = position;
-
-    //  PanelResizer resizer = chatPanel.Grabber.GetComponentInChildren<PanelResizer>();
-    //  resizer.TargetRectTransform = panelRectTransform;
-    //  resizer.TargetOutline = panelOutline;
-    //  resizer.OnEndDragAction =
-    //      size => {
-    //        ChatPanelSize.Value = size;
-    //        ChatPanelPosition.Value = panelRectTransform.anchoredPosition;
-    //      };
-
-    //  SetupChatPanelContentRowToggles(chatPanel, ChatPanelContentRowTogglesToEnable.Value);
-
-    //  return chatPanel;
-    //}
-
-    //static void SetupChatPanelContentRowToggles(ChatPanel chatPanel, ChatMessageType togglesToEnable) {
-    //  chatPanel.SayToggle.onValueChanged.AddListener(isOn => ToggleContentRows(isOn, ChatMessageType.Say));
-    //  chatPanel.ShoutToggle.onValueChanged.AddListener(isOn => ToggleContentRows(isOn, ChatMessageType.Shout));
-    //  chatPanel.PingToggle.onValueChanged.AddListener(isOn => ToggleContentRows(isOn, ChatMessageType.Ping));
-    //  chatPanel.WhisperToggle.onValueChanged.AddListener(isOn => ToggleContentRows(isOn, ChatMessageType.Whisper));
-    //  chatPanel.MessageHudToggle.onValueChanged.AddListener(
-    //      isOn => ToggleContentRows(isOn, ChatMessageType.HudCenter));
-    //  chatPanel.TextToggle.onValueChanged.AddListener(isOn => ToggleContentRows(isOn, ChatMessageType.Text));
-
-    //  chatPanel.SayToggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.Say));
-    //  chatPanel.ShoutToggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.Shout));
-    //  chatPanel.PingToggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.Ping));
-    //  chatPanel.WhisperToggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.Whisper));
-    //  chatPanel.MessageHudToggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.HudCenter));
-    //  chatPanel.TextToggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.Text));
-    //}
 
     //public static void BindChatConfig(Chat chat, ChatPanel chatPanel) {
     //  if (_isPluginConfigBound) {
@@ -233,19 +197,6 @@ namespace Chatter {
     //  ChatMessageTimestampColor.OnSettingChanged(SetTimestampTextColor);
 
     //  MessageToggleTextFontSize.SettingChanged += (_, _) => ChatPanel?.SetupMessageTypeToggles();
-    //}
-
-    //public static ChatPanel ChatPanel {
-    //  get => _chatPanel?.Panel ? _chatPanel : null;
-    //}
-
-    //public static bool IsChatPanelVisible {
-    //  get => _chatPanel?.Panel ? _isChatPanelVisible : false;
-    //}
-
-    //static void DestroyMessageRow(ContentRow row) {
-    //  Destroy(row.Row);
-    //  Destroy(row.Divider);
     //}
 
     //static void ToggleChatPanelMessageDividers(bool toggle) {
@@ -311,36 +262,6 @@ namespace Chatter {
     //  }
     //}
 
-    //[HarmonyPatch(typeof(MessageHud))]
-    //class MessageHudPatch {
-    //  [HarmonyPostfix]
-    //  [HarmonyPatch(nameof(MessageHud.ShowMessage))]
-    //  static void ShowMessagePostfix(ref MessageHud.MessageType type, ref string text) {
-    //    if (!IsModEnabled.Value
-    //        || type != MessageHud.MessageType.Center
-    //        || !ChatPanel?.Panel
-    //        || !ShowMessageHudCenterMessages.Value) {
-    //      return;
-    //    }
-
-    //    AddChatMessage(new() { MessageType = ChatMessageType.HudCenter, Timestamp = DateTime.Now, Text = text});
-    //  }
-    //}
-
-    //public static void AddChatMessage(ChatMessage message) {
-    //  if (ShouldShowMessage(message)) {
-    //    MessageHistory.EnqueueItem(message);
-    //  } else {
-    //    return;
-    //  }
-
-    //  if (_chatPanel.Panel) {
-    //    CreateChatMessageRow(message);
-    //  }
-    //}
-
-
-
     //static void CreateChatMessageRow(ChatMessage message) {
     //  if (ShouldCreateDivider(message)) {
     //    GameObject divider = _chatPanel.CreateMessageDivider(_chatPanel.Content.transform);
@@ -380,18 +301,6 @@ namespace Chatter {
 
     //static bool ShouldShowDivider() {
     //  return ShowChatPanelMessageDividers.Value && ChatMessageLayout.Value == MessageLayoutType.WithHeaderRow;
-    //}
-
-    //static bool IsMessageTypeActive(ChatMessageType messageType) {
-    //  return messageType switch {
-    //    ChatMessageType.Text => _chatPanel.TextToggle.isOn,
-    //    ChatMessageType.HudCenter => _chatPanel.MessageHudToggle.isOn,
-    //    ChatMessageType.Say => _chatPanel.SayToggle.isOn,
-    //    ChatMessageType.Shout => _chatPanel.ShoutToggle.isOn,
-    //    ChatMessageType.Whisper => _chatPanel.WhisperToggle.isOn,
-    //    ChatMessageType.Ping => _chatPanel.PingToggle.isOn,
-    //    _ => true,
-    //  };
     //}
   }
 }

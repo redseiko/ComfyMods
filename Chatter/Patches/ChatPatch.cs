@@ -7,8 +7,6 @@ using Fishlabs;
 
 using HarmonyLib;
 
-using TMPro;
-
 using UnityEngine;
 
 using static Chatter.Chatter;
@@ -20,8 +18,7 @@ namespace Chatter {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Chat.Awake))]
     static void AwakePostfix(Chat __instance) {
-      //_chatInputField = __instance.m_input;
-      //MessageRows.ClearItems();
+      MessageRows.ClearItems();
 
       ToggleChatter(__instance, IsModEnabled.Value);
       SetupWorldText(__instance);
@@ -31,24 +28,23 @@ namespace Chatter {
       chat.m_worldTextBase = WorldTextUtils.CreateWorldTextTemplate(chat.m_worldTextBase.transform.parent);
       chat.m_worldTextBase.SetActive(false);
     }
+    [HarmonyTranspiler]
+    [HarmonyPatch(nameof(Chat.InputText))]
+    static IEnumerable<CodeInstruction> InputTextTranspiler(IEnumerable<CodeInstruction> instructions) {
+      return new CodeMatcher(instructions)
+          .MatchForward(useEnd: true, new CodeMatch(OpCodes.Ldstr, "say "))
+          .Advance(offset: 1)
+          .InsertAndAdvance(Transpilers.EmitDelegate<Func<string, string>>(PrefixSayDelegate))
+          .InstructionEnumeration();
+    }
 
-    //  [HarmonyTranspiler]
-    //  [HarmonyPatch(nameof(Chat.InputText))]
-    //  static IEnumerable<CodeInstruction> InputTextTranspiler(IEnumerable<CodeInstruction> instructions) {
-    //    return new CodeMatcher(instructions)
-    //        .MatchForward(useEnd: true, new CodeMatch(OpCodes.Ldstr, "say "))
-    //        .Advance(offset: 1)
-    //        .InsertAndAdvance(Transpilers.EmitDelegate<Func<string, string>>(PrefixSayDelegate))
-    //        .InstructionEnumeration();
-    //  }
+    static string PrefixSayDelegate(string value) {
+      if (IsModEnabled.Value) {
+        return ChatTextInputUtils.ChatTextInputDefaultPrefix;
+      }
 
-    //  static string PrefixSayDelegate(string value) {
-    //    if (IsModEnabled.Value) {
-    //      return ChatInputTextDefaultPrefix;
-    //    }
-
-    //    return value;
-    //  }
+      return value;
+    }
 
     [HarmonyPrefix]
     [HarmonyPatch(nameof(Chat.OnNewChatMessage))]
@@ -91,6 +87,7 @@ namespace Chatter {
               new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideDelay))),
               new CodeMatch(OpCodes.Clt),
               new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))))
+          .ThrowIfInvalid("Could not patch HideChatPanelDelegate.")
           .InsertAndAdvance(
               new CodeInstruction(OpCodes.Ldarg_0),
               new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideTimer))),
@@ -107,6 +104,7 @@ namespace Chatter {
               new CodeMatch(
                   OpCodes.Callvirt,
                   AccessTools.Method(typeof(GuiInputField), nameof(GuiInputField.ActivateInputField))))
+          .ThrowIfInvalid("Could not patch EnableChatPanelDelegate.")
           .InsertAndAdvance(Transpilers.EmitDelegate<Action>(EnableChatPanelDelegate))
           .MatchForward(
               useEnd: false,
@@ -117,6 +115,7 @@ namespace Chatter {
               new CodeMatch(OpCodes.Ldarg_0),
               new CodeMatch(OpCodes.Ldc_I4_0),
               new CodeMatch(OpCodes.Stfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_focused))))
+          .ThrowIfInvalid("Could not patch DisableChatPanelDelegate.")
           .Advance(offset: 3)
           .InsertAndAdvance(Transpilers.EmitDelegate<Func<bool, bool>>(DisableChatPanelDelegate))
           .InstructionEnumeration();
@@ -137,6 +136,25 @@ namespace Chatter {
       if (ScrollContentDownShortcut.Value.IsDown()) {
         ChatterChatPanel.OffsetContentVerticalScrollPosition(-ScrollContentOffsetInterval.Value);
         __instance.m_hideTimer = 0f;
+      }
+    }
+
+    [HarmonyTranspiler]
+    [HarmonyPatch(nameof(Chat.SendInput))]
+    static IEnumerable<CodeInstruction> SendInputTranspiler(IEnumerable<CodeInstruction> instructions) {
+      return new CodeMatcher(instructions)
+          .MatchForward(
+              useEnd: false,
+              new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))))
+          .InsertAndAdvance(Transpilers.EmitDelegate<Func<bool, bool>>(DisableChatPanelDelegate))
+          .InstructionEnumeration();
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(Chat.SendInput))]
+    static void SendInputPostfix() {
+      if (IsModEnabled.Value) {
+        ChatterChatPanel?.SetContentVerticalScrollPosition(0f);
       }
     }
 

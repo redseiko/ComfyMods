@@ -15,7 +15,7 @@ namespace Chatter {
 
     public InputFieldCell TextInput { get; private set; }
 
-    //public GameObject Grabber { get; init; }
+    public ToggleRow MessageTypeToggleRow { get; private set; }
 
     public ChatPanel(Transform parentTransform) {
       Panel = CreateChildPanel(parentTransform);
@@ -32,10 +32,10 @@ namespace Chatter {
           .SetFlexible(width: 1f)
           .SetPreferred(height: 35f);
 
-    //  Grabber = CreateGrabber(Panel.transform);
-    //  _grabberCanvasGroup = Grabber.GetComponent<CanvasGroup>();
-
-    //  _contentWidthOffset = _contentLayoutGroup.padding.horizontal * -1f;
+      MessageTypeToggleRow = new(Panel.transform);
+      MessageTypeToggleRow.Row.AddComponent<LayoutElement>()
+          .SetFlexible(width: 1f)
+          .SetPreferred(height: 35f);
     }
 
     GameObject CreateChildPanel(Transform parentTransform) {
@@ -53,7 +53,7 @@ namespace Chatter {
           .SetChildControl(width: true, height: true)
           .SetChildForceExpand(width: false, height: false)
           .SetPadding(left: 8, right: 8, top: 8, bottom: 8)
-          .SetSpacing(8f);
+          .SetSpacing(6f);
 
       panel.AddComponent<Image>()
           .SetType(Image.Type.Sliced)
@@ -131,151 +131,9 @@ namespace Chatter {
       ContentScrollRect.verticalNormalizedPosition = position;
     }
 
-    //public Toggle SayToggle { get; private set; } = default!;
-    //public Toggle ShoutToggle { get; private set; } = default!;
-    //public Toggle WhisperToggle { get; private set; } = default!;
-    //public Toggle PingToggle { get; private set; } = default!;
-    //public Toggle MessageHudToggle { get; private set; } = default!;
-    //public Toggle TextToggle { get; private set; } = default!;
-
-    //public void ToggleGrabber(bool toggle) {
-    //  _grabberCanvasGroup.alpha = toggle ? 1f : 0f;
-    //  _grabberCanvasGroup.blocksRaycasts = toggle;
-    //}
-
-    //GameObject CreateGrabber(Transform parentTransform) {
-    //  GameObject grabber = new("ChatPanel.Grabber", typeof(RectTransform));
-    //  grabber.SetParent(parentTransform);
-
-    //  grabber.GetComponent<RectTransform>()
-    //      .SetAnchorMin(Vector2.zero)
-    //      .SetAnchorMax(Vector2.zero)
-    //      .SetPivot(Vector2.zero)
-    //      .SetPosition(Vector2.zero);
-
-    //  grabber.AddComponent<HorizontalLayoutGroup>()
-    //      .SetChildControl(width: true, height: true)
-    //      .SetChildForceExpand(width: false, height: false);
-
-    //  grabber.AddComponent<Image>()
-    //      .SetSprite(UIBuilder.CreateRect(10, 10, Color.white))
-    //      .SetType(Image.Type.Filled)
-    //      .SetColor(new(1f, 1f, 1f, 0.125f));
-
-    //  grabber.AddComponent<CanvasGroup>();
-
-    //  CreateGrabberResizer(grabber.transform);
-    //  CreateGrabberDragger(grabber.transform);
-    //  CreateShowMessageTypeTogglesRow(grabber.transform);
-
-    //  return grabber;
-    //}
-
-    //GameObject CreateGrabberResizer(Transform parentTransform) {
-    //  TMP_Text resizerLabel = UIBuilder.CreateLabel(parentTransform);
-
-    //  GameObject resizer = resizerLabel.gameObject;
-    //  resizer.name = "Grabber.Resizer";
-
-    //  resizer.AddComponent<LayoutElement>()
-    //      .SetPreferred(width: 30f, height: 30f);
-
-    //  resizer.AddComponent<PanelResizer>();
-
-    //  resizerLabel.fontSize = 18f;
-    //  resizerLabel.alignment = TextAlignmentOptions.Center;
-    //  resizerLabel.color = Color.white;
-    //  resizerLabel.text = "\u2922";
-
-    //  return resizer;
-    //}
-
-    //GameObject CreateGrabberDragger(Transform parentTransform) {
-    //  GameObject dragger = new("Grabber.Dragger", typeof(RectTransform));
-    //  dragger.SetParent(parentTransform.transform);
-
-    //  dragger.AddComponent<LayoutElement>()
-    //      .SetFlexible(width: 1f)
-    //      .SetPreferred(height: 30f);
-
-    //  dragger.AddComponent<Image>()
-    //      .SetSprite(UIBuilder.CreateRect(10, 10, Color.white))
-    //      .SetType(Image.Type.Filled)
-    //      .SetColor(new(0.75f, 0.75f, 0.75f, 0.1875f))
-    //      .SetRaycastTarget(true);
-
-    //  dragger.AddComponent<PanelDragger>();
-
-    //  return dragger;
-    //}
-
-    //GameObject CreateShowMessageTypeTogglesRow(Transform parentTransform) {
-    //  GameObject row = new("Show.Toggles.Row", typeof(RectTransform));
-    //  row.SetParent(parentTransform.transform);
-
-    //  row.AddComponent<HorizontalLayoutGroup>()
-    //      .SetChildControl(width: true, height: true)
-    //      .SetChildForceExpand(width: false, height: false)
-    //      .SetPadding(left: 10, right: 10, top: 2, bottom: 2)
-    //      .SetSpacing(10f);
-
-    //  row.AddComponent<ContentSizeFitter>()
-    //      .SetHorizontalFit(ContentSizeFitter.FitMode.PreferredSize)
-    //      .SetVerticalFit(ContentSizeFitter.FitMode.PreferredSize);
-
-    //  row.AddComponent<Image>()
-    //      .SetSprite(UIBuilder.CreateRect(10, 10, Color.white))
-    //      .SetType(Image.Type.Filled)
-    //      .SetColor(new(0.75f, 0.75f, 0.75f, 0.125f));
-
-    //  SayToggle = CreateMessageTypeToggle(row.transform, "Say");
-    //  ShoutToggle = CreateMessageTypeToggle(row.transform, "Shout");
-    //  WhisperToggle = CreateMessageTypeToggle(row.transform, "Whisper");
-    //  PingToggle = CreateMessageTypeToggle(row.transform, "Ping");
-    //  MessageHudToggle = CreateMessageTypeToggle(row.transform, "Hud");
-    //  TextToggle = CreateMessageTypeToggle(row.transform, "Text");
-
-    //  return row;
-    //}
-
-    //readonly List<TMP_Text> _toggleTextLabels = new();
-
-    //public void SetupMessageTypeToggles() {
-    //  foreach (TMP_Text label in _toggleTextLabels) {
-    //    label.fontSize = PluginConfig.MessageToggleTextFontSize.Value;
-    //  }
-    //}
-
-    //Toggle CreateMessageTypeToggle(Transform parentTransform, string label) {
-    //  TMP_Text toggleText = UIBuilder.CreateLabel(parentTransform);
-    //  _toggleTextLabels.Add(toggleText);
-
-    //  GameObject togglePrefab = toggleText.gameObject;
-    //  togglePrefab.name = $"Toggle.{label}";
-
-    //  togglePrefab.AddComponent<LayoutElement>()
-    //      .SetPreferred(height: 30f);
-
-    //  toggleText.fontSize = PluginConfig.MessageToggleTextFontSize.Value;
-    //  toggleText.color = PluginConfig.MessageToggleTextColorEnabled.Value;
-    //  toggleText.alignment = TextAlignmentOptions.Center;
-    //  toggleText.text = label;
-
-    //  Toggle toggle = togglePrefab.AddComponent<Toggle>();
-    //  toggle.targetGraphic = toggleText;
-
-    //  toggle.onValueChanged.AddListener(
-    //      isOn => {
-    //        toggleText.color =
-    //            isOn
-    //                ? PluginConfig.MessageToggleTextColorEnabled.Value
-    //                : PluginConfig.MessageToggleTextColorDisabled.Value;
-    //      });
-
-    //  toggle.isOn = false;
-
-    //  return toggle;
-    //}
+    public void ToggleGrabber(bool toggleOn) {
+      MessageTypeToggleRow.Row.SetActive(toggleOn);
+    }
 
     //public GameObject CreateMessageDivider(Transform parentTransform) {
     //  GameObject divider = new("Message.Divider", typeof(RectTransform));

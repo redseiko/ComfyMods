@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+
+using BepInEx;
 
 using UnityEngine;
 
@@ -21,11 +24,15 @@ namespace Chatter {
     public static string GetChatMessageText(ChatMessage message) {
       return ChatMessageLayout.Value switch {
         MessageLayoutType.SingleRow =>
-            string.Join(
-                " ", GetTimestampText(message.Timestamp), GetUsernameText(message.Username), GetMessageText(message)),
+            JoinIgnoringEmpty(
+                GetTimestampText(message.Timestamp), GetUsernameText(message.Username), GetMessageText(message)),
 
         _ => GetMessageText(message)
       };
+    }
+
+    static string JoinIgnoringEmpty(params string[] values) {
+      return string.Join(" ", values.Where(value => !string.IsNullOrEmpty(value)));
     }
 
     public static string GetUsernameText(string username) {
@@ -45,6 +52,10 @@ namespace Chatter {
     }
 
     public static string GetTimestampText(DateTime timestamp) {
+      if (!ChatMessageShowTimestamp.Value) {
+        return string.Empty;
+      }
+
       return ChatMessageLayout.Value switch {
         MessageLayoutType.SingleRow =>
             ChatMessageShowTimestamp.Value

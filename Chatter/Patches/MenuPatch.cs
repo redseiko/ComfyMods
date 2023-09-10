@@ -10,8 +10,8 @@ namespace Chatter {
     static void ShowPostfix() {
       if (IsModEnabled.Value) {
         Chat.m_instance.m_hideTimer = 0f;
-        //ChatPanel?.ToggleGrabber(true);
-        //ChatPanel?.SetPanelSize(ChatPanelSize.Value);
+        Chatter.EnableChatPanelDelegate();
+        Chatter.ChatterChatPanel?.ToggleGrabber(true);
       }
     }
 
@@ -20,8 +20,7 @@ namespace Chatter {
     static void HidePostfix() {
       if (IsModEnabled.Value) {
         Chatter.ChatterChatPanel?.SetContentVerticalScrollPosition(0f);
-        //ChatPanel?.ToggleGrabber(false);
-        //ChatPanel?.SetPanelSize(ChatPanelSize.Value);
+        Chatter.ChatterChatPanel?.ToggleGrabber(false);
       }
     }
   }

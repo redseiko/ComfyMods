@@ -17,14 +17,13 @@ namespace ComfyLib {
 
       row.AddComponent<VerticalLayoutGroup>()
           .SetChildControl(width: true, height: true)
-          .SetChildForceExpand(width: false, height: false);
+          .SetChildForceExpand(width: true, height: false);
 
       Label = CreateChildLabel(row.transform);
     }
 
     TextMeshProUGUI CreateChildLabel(Transform parentTransform) {
       TextMeshProUGUI label = UIBuilder.CreateLabel(parentTransform);
-      label.name = "Label";
 
       label.alignment = TextAlignmentOptions.Left;
       label.enableWordWrapping = true;

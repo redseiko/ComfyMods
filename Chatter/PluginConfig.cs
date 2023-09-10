@@ -24,13 +24,13 @@ namespace Chatter {
     public static ConfigEntry<KeyboardShortcut> ScrollContentDownShortcut { get; private set; }
     public static ConfigEntry<float> ScrollContentOffsetInterval { get; private set; }
 
-    //  // Content
-    //  public static ConfigEntry<bool> ShowMessageHudCenterMessages { get; private set; }
+    // Content
+    public static ConfigEntry<bool> ShowMessageHudCenterMessages { get; private set; }
     //  public static ConfigEntry<bool> ShowChatPanelMessageDividers { get; private set; }
 
     // Defaults
     public static ConfigEntry<Talker.Type> ChatPanelDefaultMessageTypeToUse { get; private set; }
-    //  public static ConfigEntry<ChatMessageType> ChatPanelContentRowTogglesToEnable { get; private set; }
+    public static ConfigEntry<ChatMessageType> ChatPanelContentRowTogglesToEnable { get; private set; }
 
     //  // Filters
     //  public static StringListConfigEntry SayTextFilterList { get; private set; }
@@ -89,14 +89,14 @@ namespace Chatter {
           Config.BindInOrder(
               "ChatPanel",
               "chatPanelPosition",
-              new Vector2(-10f, 100f),
+              new Vector2(-10f, 125f),
               "The Vector2 position of the ChatPanel.");
 
       ChatPanelSizeDelta =
           Config.BindInOrder(
               "ChatPanel",
               "chatPanelSizeDelta",
-              new Vector2(400f, 400f),
+              new Vector2(500f, 500f),
               "The size (width, height) of the ChatPanel.");
 
       ChatPanelPosition.SettingChanged +=
@@ -142,17 +142,18 @@ namespace Chatter {
               "CahtPanel.Scrolling",
               "scrollContentOffsetInterval",
               defaultValue: 200f,
-              "Interval (in pixels) to scroll the ChatPanel content up/down.");
+              "Interval (in pixels) to scroll the ChatPanel content up/down.",
+              new AcceptableValueRange<float>(-1000f, 1000f));
 
       //    BindFilters(config);
 
-      //    // Content
-      //    ShowMessageHudCenterMessages ??=
-      //        config.BindInOrder(
-      //            "Content",
-      //            "showMessageHudCenterMessages",
-      //            defaultValue: true,
-      //            "Show messages from the MessageHud that display in the top-center (usually boss messages).");
+      // Content
+      ShowMessageHudCenterMessages ??=
+          config.BindInOrder(
+              "Content",
+              "showMessageHudCenterMessages",
+              defaultValue: true,
+              "Show messages from the MessageHud that display in the top-center (usually boss messages).");
 
       //    ShowChatPanelMessageDividers ??=
       //        config.BindInOrder(
@@ -169,24 +170,24 @@ namespace Chatter {
               defaultValue: Talker.Type.Normal,
               "ChatPanel input default message type to use on game start. Ping value is ignored.");
 
-      //    ChatPanelContentRowTogglesToEnable ??=
-      //        config.BindInOrder(
-      //            "Defaults",
-      //            "chatPanelContentRowTogglesToEnable",
-      //            defaultValue:
-      //                ChatMessageType.Say
-      //                | ChatMessageType.Shout
-      //                | ChatMessageType.Whisper
-      //                | ChatMessageType.HudCenter
-      //                | ChatMessageType.Text,
-      //            "ChatPanel content row toggles to enable on game start.");
+      ChatPanelContentRowTogglesToEnable =
+          config.BindInOrder(
+              "Defaults",
+              "chatPanelContentRowTogglesToEnable",
+              defaultValue:
+                  ChatMessageType.Say
+                  | ChatMessageType.Shout
+                  | ChatMessageType.Whisper
+                  | ChatMessageType.HudCenter
+                  | ChatMessageType.Text,
+              "ChatPanel content row toggles to enable on game start.");
 
       // Layout
       ChatMessageLayout =
           config.BindInOrder(
               "ChatMessage.Layout",
               "chatMessageLayout",
-              MessageLayoutType.WithHeaderRow,
+              MessageLayoutType.SingleRow,
               "Determines which layout to use when displaying a chat message.");
 
       ChatMessageShowTimestamp =
@@ -273,7 +274,7 @@ namespace Chatter {
           config.BindInOrder(
               "ChatMessage.Text.Colors",
               "chatMessageTextMessageHudColor",
-              new Color(1f, 0.647f, 0f, 1.0f), // <color=orange> #FFA500
+              new Color(1f, 0.807f, 0f, 1.0f), // <color=orange> #FFA500
               "Color for 'MessageHud' chat messages.");
 
       ChatMessageUsernameColor =
