@@ -102,6 +102,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\ChatTextInputUtils.cs" />
     <Compile Include="Core\ChatMessage.cs" />
     <Compile Include="Chatter.cs" />
     <Compile Include="Core\ChatMessageUtils.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="Core\TerminalCommands.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CHANGELOG.md" />
     <None Include="manifest.json" />
     <None Include="README.md" />
     <None Include="icon.png" />

@@ -17,7 +17,7 @@ namespace Chatter {
 
     // Behaviour
     public static ConfigEntry<int> HideChatPanelDelay { get; private set; }
-    //  public static ConfigEntry<float> HideChatPanelAlpha { get; private set; }
+    public static ConfigEntry<float> HideChatPanelAlpha { get; private set; }
 
     // Scrolling
     public static ConfigEntry<KeyboardShortcut> ScrollContentUpShortcut { get; private set; }
@@ -28,8 +28,8 @@ namespace Chatter {
     //  public static ConfigEntry<bool> ShowMessageHudCenterMessages { get; private set; }
     //  public static ConfigEntry<bool> ShowChatPanelMessageDividers { get; private set; }
 
-    //  // Defaults
-    //  public static ConfigEntry<Talker.Type> ChatPanelDefaultMessageTypeToUse { get; private set; }
+    // Defaults
+    public static ConfigEntry<Talker.Type> ChatPanelDefaultMessageTypeToUse { get; private set; }
     //  public static ConfigEntry<ChatMessageType> ChatPanelContentRowTogglesToEnable { get; private set; }
 
     //  // Filters
@@ -114,6 +114,14 @@ namespace Chatter {
               "Delay (in seconds) before hiding the ChatPanel.",
               new AcceptableValueRange<int>(1, 180));
 
+      HideChatPanelAlpha =
+          config.BindInOrder(
+              "ChatPanel.Behaviour",
+              "hideChatPanelAlpha",
+              defaultValue: 0.2f,
+              "Color alpha (in %) for the ChatPanel when hidden.",
+              new AcceptableValueRange<float>(0f, 1f));
+
       // Scrolling
       ScrollContentUpShortcut =
           config.BindInOrder(
@@ -136,14 +144,6 @@ namespace Chatter {
               defaultValue: 200f,
               "Interval (in pixels) to scroll the ChatPanel content up/down.");
 
-      //    HideChatPanelAlpha ??=
-      //        config.Bind(
-      //            "Behaviour",
-      //            "hideChatPanelAlpha",
-      //            defaultValue: 0.2f,
-      //            new ConfigDescription(
-      //                "Color alpha (in %) for the ChatPanel when hidden.", new AcceptableValueRange<float>(0f, 1f)));
-
       //    BindFilters(config);
 
       //    // Content
@@ -161,13 +161,13 @@ namespace Chatter {
       //            defaultValue: true,
       //            "Show the horizontal dividers between groups of messages.");
 
-      //    // Defaults
-      //    ChatPanelDefaultMessageTypeToUse ??=
-      //        config.BindInOrder(
-      //            "Defaults",
-      //            "chatPanelDefaultMessageTypeToUse",
-      //            defaultValue: Talker.Type.Normal,
-      //            "ChatPanel input default message type to use on game start. Ping value is ignored.");
+      // Defaults
+      ChatPanelDefaultMessageTypeToUse =
+          config.BindInOrder(
+              "ChatPanel.Defaults",
+              "chatPanelDefaultMessageTypeToUse",
+              defaultValue: Talker.Type.Normal,
+              "ChatPanel input default message type to use on game start. Ping value is ignored.");
 
       //    ChatPanelContentRowTogglesToEnable ??=
       //        config.BindInOrder(

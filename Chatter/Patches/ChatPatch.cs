@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 
+using Fishlabs;
+
 using HarmonyLib;
 
 using TMPro;
@@ -77,47 +79,48 @@ namespace Chatter {
       }
     }
 
-    //  [HarmonyTranspiler]
-    //  [HarmonyPatch(nameof(Chat.Update))]
-    //  static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
-    //    return new CodeMatcher(instructions)
-    //        .MatchForward(
-    //            useEnd: true,
-    //            new CodeMatch(OpCodes.Ldarg_0),
-    //            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideTimer))),
-    //            new CodeMatch(OpCodes.Ldarg_0),
-    //            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideDelay))),
-    //            new CodeMatch(OpCodes.Clt),
-    //            new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))))
-    //        .InsertAndAdvance(
-    //            new CodeInstruction(OpCodes.Ldarg_0),
-    //            new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideTimer))),
-    //            Transpilers.EmitDelegate<Action<float>>(HideChatPanelDelegate))
-    //        .MatchForward(
-    //            useEnd: false,
-    //            new CodeMatch(OpCodes.Ldarg_0),
-    //            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_input))),
-    //            new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(Component), "get_gameObject")),
-    //            new CodeMatch(OpCodes.Ldc_I4_1),
-    //            new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))),
-    //            new CodeMatch(OpCodes.Ldarg_0),
-    //            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_input))),
-    //            new CodeMatch(
-    //                OpCodes.Callvirt, AccessTools.Method(typeof(InputField), nameof(InputField.ActivateInputField))))
-    //        .InsertAndAdvance(Transpilers.EmitDelegate<Action>(EnableChatPanelDelegate))
-    //        .MatchForward(
-    //            useEnd: false,
-    //            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_input))),
-    //            new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(Component), "get_gameObject")),
-    //            new CodeMatch(OpCodes.Ldc_I4_0),
-    //            new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))),
-    //            new CodeMatch(OpCodes.Ldarg_0),
-    //            new CodeMatch(OpCodes.Ldc_I4_0),
-    //            new CodeMatch(OpCodes.Stfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_focused))))
-    //        .Advance(offset: 3)
-    //        .InsertAndAdvance(Transpilers.EmitDelegate<Func<bool, bool>>(DisableChatPanelDelegate))
-    //        .InstructionEnumeration();
-    //  }
+    [HarmonyTranspiler]
+    [HarmonyPatch(nameof(Chat.Update))]
+    static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
+      return new CodeMatcher(instructions)
+          .MatchForward(
+              useEnd: true,
+              new CodeMatch(OpCodes.Ldarg_0),
+              new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideTimer))),
+              new CodeMatch(OpCodes.Ldarg_0),
+              new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideDelay))),
+              new CodeMatch(OpCodes.Clt),
+              new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))))
+          .InsertAndAdvance(
+              new CodeInstruction(OpCodes.Ldarg_0),
+              new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideTimer))),
+              Transpilers.EmitDelegate<Action<float>>(HideChatPanelDelegate))
+          .MatchForward(
+              useEnd: false,
+              new CodeMatch(OpCodes.Ldarg_0),
+              new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_input))),
+              new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(Component), "get_gameObject")),
+              new CodeMatch(OpCodes.Ldc_I4_1),
+              new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))),
+              new CodeMatch(OpCodes.Ldarg_0),
+              new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_input))),
+              new CodeMatch(
+                  OpCodes.Callvirt,
+                  AccessTools.Method(typeof(GuiInputField), nameof(GuiInputField.ActivateInputField))))
+          .InsertAndAdvance(Transpilers.EmitDelegate<Action>(EnableChatPanelDelegate))
+          .MatchForward(
+              useEnd: false,
+              new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_input))),
+              new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(Component), "get_gameObject")),
+              new CodeMatch(OpCodes.Ldc_I4_0),
+              new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))),
+              new CodeMatch(OpCodes.Ldarg_0),
+              new CodeMatch(OpCodes.Ldc_I4_0),
+              new CodeMatch(OpCodes.Stfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_focused))))
+          .Advance(offset: 3)
+          .InsertAndAdvance(Transpilers.EmitDelegate<Func<bool, bool>>(DisableChatPanelDelegate))
+          .InstructionEnumeration();
+    }
 
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Chat.Update))]
@@ -127,13 +130,21 @@ namespace Chatter {
       }
 
       if (ScrollContentUpShortcut.Value.IsDown() && ChatterChatPanel.Panel.activeInHierarchy) {
-        ChatterChatPanel.OffsetVerticalScrollPosition(ScrollContentOffsetInterval.Value);
+        ChatterChatPanel.OffsetContentVerticalScrollPosition(ScrollContentOffsetInterval.Value);
         __instance.m_hideTimer = 0f;
       }
 
       if (ScrollContentDownShortcut.Value.IsDown()) {
-        ChatterChatPanel.OffsetVerticalScrollPosition(-ScrollContentOffsetInterval.Value);
+        ChatterChatPanel.OffsetContentVerticalScrollPosition(-ScrollContentOffsetInterval.Value);
         __instance.m_hideTimer = 0f;
+      }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(Chat.HasFocus))]
+    static void HasFocusPostfix(ref Chat __instance, ref bool __result) {
+      if (IsModEnabled.Value && ChatterChatPanel?.Panel) {
+        __result = ChatterChatPanel.Panel.activeInHierarchy && __instance.m_input.isFocused;
       }
     }
 

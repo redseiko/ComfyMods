@@ -19,9 +19,9 @@ namespace Chatter {
     [HarmonyPatch(nameof(Menu.Hide))]
     static void HidePostfix() {
       if (IsModEnabled.Value) {
+        Chatter.ChatterChatPanel?.SetContentVerticalScrollPosition(0f);
         //ChatPanel?.ToggleGrabber(false);
         //ChatPanel?.SetPanelSize(ChatPanelSize.Value);
-        //ChatPanel?.SetVerticalScrollPosition(0f);
       }
     }
   }

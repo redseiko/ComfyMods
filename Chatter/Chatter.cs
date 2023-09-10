@@ -10,13 +10,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using static Chatter.PluginConfig;
+using static Chatter.ChatTextInputUtils;
 
 namespace Chatter {
   [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
   public class Chatter : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.chatter";
     public const string PluginName = "Chatter";
-    public const string PluginVersion = "1.5.0";
+    public const string PluginVersion = "2.0.0";
 
     Harmony _harmony;
 
@@ -43,8 +44,7 @@ namespace Chatter {
 
       // TODO: conditional restore to vanilla-references cached.
       chat.m_input = ChatterChatPanel.TextInput.InputField;
-      chat.m_chatWindow = ChatterChatPanel.Panel.GetComponent<RectTransform>();
-      chat.m_hideDelay = HideChatPanelDelay.Value;
+      //chat.m_chatWindow = ChatterChatPanel.Panel.GetComponent<RectTransform>();
     }
 
     // TODO: cache the vanilla-references before toggling.
@@ -71,6 +71,8 @@ namespace Chatter {
 
         ChatterChatPanel.PanelDragger.OnEndDragEvent += (_, position) => ChatPanelPosition.Value = position;
         ChatterChatPanel.TextInput.InputField.onSubmit.AddListener(_ => Chat.m_instance.SendInput());
+
+        SetChatTextInputDefaultPrefix(ChatterChatPanel, ChatPanelDefaultMessageTypeToUse.Value);
 
         RebuildMessageRows();
       }
@@ -107,65 +109,42 @@ namespace Chatter {
       Destroy(row.Row);
     }
 
-    //internal static readonly CircularQueue<ChatMessage> MessageHistory = new(50, _ => { });
-    //internal static readonly CircularQueue<ContentRow> MessageRows = new(50, DestroyMessageRow);
+    public static void HideChatPanelDelegate(float hideTimer) {
+      if (IsModEnabled.Value && ChatterChatPanel.Panel) {
+        bool isVisible = (hideTimer < HideChatPanelDelay.Value || Menu.IsVisible()) && !Hud.IsUserHidden();
 
-    //internal static bool _isPluginConfigBound = false;
+        if (isVisible == ChatterChatPanel.PanelCanvasGroup.blocksRaycasts) {
+          return;
+        }
 
-    //internal static ChatPanel _chatPanel = null;
-    //internal static InputField _chatInputField = null;
+        if (isVisible) {
+          ChatterChatPanel.PanelCanvasGroup
+              .SetAlpha(1f)
+              .SetBlocksRaycasts(true);
+        } else {
+          ChatterChatPanel.PanelCanvasGroup
+              .SetAlpha(Hud.IsUserHidden() ? 0f : HideChatPanelAlpha.Value)
+              .SetBlocksRaycasts(false);
 
-    //internal static bool _isCreatingChatMessage = false;
-    //static bool _isChatPanelVisible = false;
+          ChatterChatPanel.SetContentVerticalScrollPosition(0f);
+        }
+      }
+    }
 
-    //public static string ChatInputTextDefaultPrefix { get; private set; } = "say ";
+    public static void EnableChatPanelDelegate() {
+      if (IsModEnabled.Value) {
+        ChatterChatPanel.TextInput.InputField.Ref()?.SetEnabled(true);
+      }
+    }
 
-    //public static void SetChatInputTextDefaultPrefix(Talker.Type talkerType) {
-    //  ChatInputTextDefaultPrefix =
-    //      talkerType switch {
-    //        Talker.Type.Shout => "s ",
-    //        Talker.Type.Whisper => "w ",
-    //        _ => "say ",
-    //      };
+    public static bool DisableChatPanelDelegate(bool active) {
+      if (IsModEnabled.Value) {
+        ChatterChatPanel.TextInput.InputField.Ref()?.SetEnabled(false);
+        return true;
+      }
 
-    //  string text =
-    //      talkerType switch {
-    //        Talker.Type.Shout => "/shout",
-    //        Talker.Type.Whisper => "/whisper",
-    //        _ => "/say ",
-    //      };
-
-    //  Color color =
-    //      talkerType switch {
-    //        Talker.Type.Shout => ChatMessageTextShoutColor.Value,
-    //        Talker.Type.Whisper => ChatMessageTextWhisperColor.Value,
-    //        _ => ChatMessageTextSayColor.Value
-    //      };
-
-    //  ChatPanel?.InputField.textComponent.SetColor(color);
-    //  ChatPanel?.InputField.placeholder.GetComponent<Text>()
-    //      .SetText(text)
-    //      .SetColor(color.SetAlpha(0.3f));
-    //}
-
-
-
-    //static void ToggleChatPanel(Chat chat, bool toggle) {
-    //  if (_chatPanel == null || !_chatPanel.Panel) {
-    //    _chatPanel = CreateChatPanel(chat);
-    //  }
-
-    //  ChatPanel?.Panel.SetActive(toggle);
-    //  _isChatPanelVisible = toggle;
-
-    //  if (toggle) {
-    //    ChatPanel?.SetPanelPosition(ChatPanelPosition.Value);
-    //    ChatPanel?.SetPanelSize(ChatPanelSize.Value);
-    //    ChatPanel?.SetContentWidthOffset(ChatContentWidthOffset.Value);
-
-    //    SetChatInputTextDefaultPrefix(ChatPanelDefaultMessageTypeToUse.Value);
-    //  }
-    //}
+      return active;
+    }
 
     //static ChatPanel CreateChatPanel(Chat chat) {
     //  if (!chat) {
@@ -210,42 +189,6 @@ namespace Chatter {
     //  chatPanel.WhisperToggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.Whisper));
     //  chatPanel.MessageHudToggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.HudCenter));
     //  chatPanel.TextToggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.Text));
-    //}
-
-    //internal static void HideChatPanelDelegate(float hideTimer) {
-    //  if (IsModEnabled.Value && _chatPanel?.Panel) {
-    //    bool isVisible = (hideTimer < HideChatPanelDelay.Value || Menu.IsVisible()) && !Hud.IsUserHidden();
-
-    //    if (isVisible == _isChatPanelVisible && _chatPanel.CanvasGroup.isActiveAndEnabled) {
-    //      return;
-    //    }
-
-    //    _isChatPanelVisible = isVisible;
-
-    //    if (_isChatPanelVisible) {
-    //      _chatPanel.CanvasGroup.alpha = 1f;
-    //      _chatPanel.CanvasGroup.blocksRaycasts = true;
-    //    } else {
-    //      _chatPanel.CanvasGroup.alpha = Hud.IsUserHidden() ? 0f : HideChatPanelAlpha.Value;
-    //      _chatPanel.CanvasGroup.blocksRaycasts = false;
-    //      _chatPanel.SetVerticalScrollPosition(0f);
-    //    }
-    //  }
-    //}
-
-    //public static void EnableChatPanelDelegate() {
-    //  if (IsModEnabled.Value && _chatPanel?.InputField) {
-    //    _chatPanel.InputField.enabled = true;
-    //  }
-    //}
-
-    //public static bool DisableChatPanelDelegate(bool active) {
-    //  if (IsModEnabled.Value && _chatPanel?.InputField) {
-    //    _chatPanel.InputField.enabled = false;
-    //    return true;
-    //  }
-
-    //  return active;
     //}
 
     //public static void BindChatConfig(Chat chat, ChatPanel chatPanel) {

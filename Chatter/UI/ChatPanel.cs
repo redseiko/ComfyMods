@@ -122,9 +122,13 @@ namespace Chatter {
       return scrollRect;
     }
 
-    public void OffsetVerticalScrollPosition(float offset) {
+    public void OffsetContentVerticalScrollPosition(float offset) {
       float percent = (offset / (Content.transform as RectTransform).sizeDelta.y);
       ContentScrollRect.verticalNormalizedPosition += percent;
+    }
+
+    public void SetContentVerticalScrollPosition(float position) {
+      ContentScrollRect.verticalNormalizedPosition = position;
     }
 
     //public Toggle SayToggle { get; private set; } = default!;
@@ -137,10 +141,6 @@ namespace Chatter {
     //public void ToggleGrabber(bool toggle) {
     //  _grabberCanvasGroup.alpha = toggle ? 1f : 0f;
     //  _grabberCanvasGroup.blocksRaycasts = toggle;
-    //}
-
-    //public void SetVerticalScrollPosition(float position) {
-    //  ScrollRect.verticalNormalizedPosition = position;
     //}
 
     //GameObject CreateGrabber(Transform parentTransform) {
