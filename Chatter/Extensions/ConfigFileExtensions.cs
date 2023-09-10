@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 using BepInEx.Configuration;
 
-using HarmonyLib;
-
 namespace ComfyLib {
   public static class ConfigFileExtensions {
     static readonly Dictionary<string, int> _sectionToOrderCache = new();
@@ -45,7 +43,8 @@ namespace ComfyLib {
         string description,
         Action<ConfigEntryBase> customDrawer = null,
         bool browsable = true,
-        bool hideDefaultButton = false) {
+        bool hideDefaultButton = false,
+        bool hideSettingName = false) {
       return config.Bind(
           section,
           key,
@@ -57,19 +56,21 @@ namespace ComfyLib {
                 Browsable = true,
                 CustomDrawer = customDrawer,
                 HideDefaultButton = hideDefaultButton,
+                HideSettingName = hideSettingName,
                 Order = GetSettingOrder(section)
               }));
     }
 
     public static StringListConfigEntry BindInOrder(
         this ConfigFile config, string section, string key, string description, string valuesSeparator) {
-      return new StringListConfigEntry(config, section, key, description, valuesSeparator, GetSettingOrder(section));
+      return new StringListConfigEntry(config, section, key, description, valuesSeparator);
     }
 
     internal sealed class ConfigurationManagerAttributes {
       public Action<ConfigEntryBase> CustomDrawer;
       public bool? Browsable;
       public bool? HideDefaultButton;
+      public bool? HideSettingName;
       public int? Order;
     }
   }

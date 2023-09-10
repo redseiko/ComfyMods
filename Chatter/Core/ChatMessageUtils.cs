@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace Chatter {
       };
     }
 
-    public static string GetChatMessageText(ChatMessage message) {
+    public static string GetContentRowBodyText(ChatMessage message) {
       return ChatMessageLayout.Value switch {
         MessageLayoutType.SingleRow =>
             JoinIgnoringEmpty(
@@ -93,21 +94,21 @@ namespace Chatter {
 
     public static bool ShouldShowMessage(ChatMessage message) {
       return message.MessageType switch {
-        //ChatMessageType.Say => ShouldShowText(message.Text, SayTextFilterList.CachedValues),
-        //ChatMessageType.Shout => ShouldShowText(message.Text, ShoutTextFilterList.CachedValues),
-        //ChatMessageType.Whisper => ShouldShowText(message.Text, WhisperTextFilterList.CachedValues),
-        //ChatMessageType.HudCenter => ShouldShowText(message.Text, HudCenterTextFilterList.CachedValues),
-        //ChatMessageType.Text => ShouldShowText(message.Text, OtherTextFilterList.CachedValues),
+        ChatMessageType.Say => ShouldShowText(message.Text, SayTextFilterList.CachedValues),
+        ChatMessageType.Shout => ShouldShowText(message.Text, ShoutTextFilterList.CachedValues),
+        ChatMessageType.Whisper => ShouldShowText(message.Text, WhisperTextFilterList.CachedValues),
+        ChatMessageType.HudCenter => ShouldShowText(message.Text, HudCenterTextFilterList.CachedValues),
+        ChatMessageType.Text => ShouldShowText(message.Text, OtherTextFilterList.CachedValues),
         _ => true
       };
     }
 
-    //static bool ShouldShowText(string text, List<string> filters) {
-    //  if (filters.Count == 0) {
-    //    return true;
-    //  }
+    static bool ShouldShowText(string text, List<string> filters) {
+      if (filters.Count == 0) {
+        return true;
+      }
 
-    //  return !filters.Any(f => text.IndexOf(f, 0, StringComparison.OrdinalIgnoreCase) != -1);
-    //}
+      return !filters.Any(f => text.IndexOf(f, 0, StringComparison.OrdinalIgnoreCase) != -1);
+    }
   }
 }

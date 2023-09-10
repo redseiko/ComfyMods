@@ -69,7 +69,6 @@ namespace Chatter {
             .SetAsFirstSibling();
 
         ChatterChatPanel.PanelDragger.OnEndDragEvent += (_, position) => ChatPanelPosition.Value = position;
-        ChatterChatPanel.PanelDragger.enabled = false;
         ChatterChatPanel.TextInput.InputField.onSubmit.AddListener(_ => Chat.m_instance.SendInput());
 
         ChatterChatPanel.SetChatTextInputDefaultPrefix(ChatPanelDefaultMessageTypeToUse.Value);
@@ -82,8 +81,10 @@ namespace Chatter {
     }
 
     public static void AddChatMessage(ChatMessage message) {
-      MessageHistory.EnqueueItem(message);
-      CreateContentRow(message);
+      if (ChatMessageUtils.ShouldShowMessage(message)) {
+        MessageHistory.EnqueueItem(message);
+        CreateContentRow(message);
+      }
     }
 
     public static void RebuildContentRows() {
@@ -97,14 +98,13 @@ namespace Chatter {
     }
 
     public static void CreateContentRow(ChatMessage message) {
-      if (!ChatterChatPanel?.Content) {
-        return;
+      if (ChatterChatPanel?.Content) {
+        ContentRow row = new(message, ChatterChatPanel.Content.transform);
+        MessageRows.EnqueueItem(row);
+
+        row.Label.text = ChatMessageUtils.GetContentRowBodyText(message);
+        row.Row.SetActive(ChatterChatPanel.IsMessageTypeToggleActive(message.MessageType));
       }
-
-      ContentRow row = new(message, ChatterChatPanel.Content.transform);
-      row.Label.text = ChatMessageUtils.GetMessageText(message);
-
-      MessageRows.EnqueueItem(row);
     }
 
     public static void DestroyContentRow(ContentRow row) {
@@ -115,7 +115,7 @@ namespace Chatter {
 
     public static void ToggleContentRows(bool toggleOn, ChatMessageType messageType) {
       foreach (ContentRow row in MessageRows) {
-        if (row.Message.MessageType == messageType && row.Row) {
+        if (row.Row && row.Message.MessageType == messageType) {
           row.Row.SetActive(toggleOn);
         }
       }

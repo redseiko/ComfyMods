@@ -21,27 +21,18 @@ namespace ComfyLib {
     public event EventHandler<List<string>> ValuesChangedEvent;
 
     public StringListConfigEntry(
-        ConfigFile configFile,
-        string section,
-        string key,
-        string description,
-        string valuesSeparator,
-        int? order = null) {
-      ConfigEntry = configFile.Bind(section, key, string.Empty, CreateConfigDescription(description, order));
+        ConfigFile configFile, string section, string key, string description, string valuesSeparator) {
+      ConfigEntry = configFile.BindInOrder(
+          section,
+          key,
+          defaultValue: string.Empty,
+          description,
+          customDrawer: Drawer,
+          hideDefaultButton: true,
+          hideSettingName: true);
+
       ValuesSeparator = new string[] { valuesSeparator };
       CachedValues = new(Values);
-    }
-
-    ConfigDescription CreateConfigDescription(string description, int? order) {
-      return new(
-          description,
-          acceptableValues: null,
-          new ConfigurationManagerAttributes {
-            CustomDrawer = Drawer,
-            HideDefaultButton = true,
-            HideSettingName = true,
-            Order = order
-          });
     }
 
     readonly List<string> _valuesCache = new();
@@ -191,12 +182,5 @@ namespace ComfyLib {
               padding = new(left: 5, right: 5, top: 5, bottom: 5),
               wordWrap = false
             });
-
-    private sealed class ConfigurationManagerAttributes {
-      public Action<ConfigEntryBase> CustomDrawer;
-      public bool? HideDefaultButton;
-      public bool? HideSettingName;
-      public int? Order;
-    }
   }
 }

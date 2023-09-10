@@ -32,12 +32,12 @@ namespace Chatter {
     public static ConfigEntry<Talker.Type> ChatPanelDefaultMessageTypeToUse { get; private set; }
     public static ConfigEntry<ChatMessageType> ChatPanelContentRowTogglesToEnable { get; private set; }
 
-    //  // Filters
-    //  public static StringListConfigEntry SayTextFilterList { get; private set; }
-    //  public static StringListConfigEntry ShoutTextFilterList { get; private set; }
-    //  public static StringListConfigEntry WhisperTextFilterList { get; private set; }
-    //  public static StringListConfigEntry HudCenterTextFilterList { get; private set; }
-    //  public static StringListConfigEntry OtherTextFilterList { get; private set; }
+    // Filters
+    public static StringListConfigEntry SayTextFilterList { get; private set; }
+    public static StringListConfigEntry ShoutTextFilterList { get; private set; }
+    public static StringListConfigEntry WhisperTextFilterList { get; private set; }
+    public static StringListConfigEntry HudCenterTextFilterList { get; private set; }
+    public static StringListConfigEntry OtherTextFilterList { get; private set; }
 
     public enum MessageLayoutType {
       WithHeaderRow,
@@ -62,8 +62,6 @@ namespace Chatter {
 
     //  // Panel
     //  public static ConfigEntry<float> ChatContentWidthOffset { get; private set; }
-
-
 
     // Colors
     public static ConfigEntry<Color> ChatMessageTextDefaultColor { get; private set; }
@@ -139,13 +137,13 @@ namespace Chatter {
 
       ScrollContentOffsetInterval =
           config.BindInOrder(
-              "CahtPanel.Scrolling",
+              "ChatPanel.Scrolling",
               "scrollContentOffsetInterval",
               defaultValue: 200f,
               "Interval (in pixels) to scroll the ChatPanel content up/down.",
               new AcceptableValueRange<float>(-1000f, 1000f));
 
-      //    BindFilters(config);
+      BindFilters(config);
 
       // Content
       ShowMessageHudCenterMessages ??=
@@ -311,24 +309,24 @@ namespace Chatter {
       //    BindMessageToggleConfig(config);
     }
 
-    //  static void BindFilters(ConfigFile config) {
-    //    // Filters
-    //    SayTextFilterList =
-    //        config.BindInOrder("Filters", "sayTextFilterList", "Filter list for Say message texts.", "\t");
+    static void BindFilters(ConfigFile config) {
+      // Filters
+      SayTextFilterList =
+          config.BindInOrder("Filters", "sayTextFilterList", "Filter list for Say message texts.", "\t");
 
-    //    ShoutTextFilterList =
-    //        config.BindInOrder("Filters", "shoutTextFilterList", "Filter list for Shout message texts.", "\t");
+      ShoutTextFilterList =
+          config.BindInOrder("Filters", "shoutTextFilterList", "Filter list for Shout message texts.", "\t");
 
-    //    WhisperTextFilterList =
-    //        config.BindInOrder("Filters", "whisperTextFilterList", "Filter list for Whipser message texts.", "\t");
+      WhisperTextFilterList =
+          config.BindInOrder("Filters", "whisperTextFilterList", "Filter list for Whipser message texts.", "\t");
 
-    //    HudCenterTextFilterList =
-    //        config.BindInOrder(
-    //            "Filters", "messageHudTextFilterList", "Filter list for MessageHud.Center message texts.", "\t");
+      HudCenterTextFilterList =
+          config.BindInOrder(
+              "Filters", "messageHudTextFilterList", "Filter list for MessageHud.Center message texts.", "\t");
 
-    //    OtherTextFilterList =
-    //        config.BindInOrder("Filters", "otherHudTextFilterList", "Filter list for all other message texts.", "\t");
-    //  }
+      OtherTextFilterList =
+          config.BindInOrder("Filters", "otherHudTextFilterList", "Filter list for all other message texts.", "\t");
+    }
 
     //  public static float ContentRowSpacing {
     //    get {
@@ -346,10 +344,6 @@ namespace Chatter {
     //        _ => ChatPanelContentBodySpacing.Value,
     //      };
     //    }
-    //  }
-
-    //  public static Font MessageFont {
-    //    get => UIResources.GetFont(ChatMessageFont.Value);
     //  }
 
     //  public static void BindChatMessageFont(ConfigFile config) {
@@ -405,8 +399,4 @@ namespace Chatter {
     //            "Style - MessageToggle.Text - text color when toggle is disabled.");
     //  }
   }
-
-  //internal sealed class ConfigurationManagerAttributes {
-  //  public int? Order;
-  //}
 }
