@@ -111,10 +111,10 @@
     <Compile Include="Extensions\UnityExtensions.cs" />
     <Compile Include="Patches\MenuPatch.cs" />
     <Compile Include="Patches\MessageHudPatch.cs" />
-    <Compile Include="UI\Builder\InputFieldCell.cs" />
-    <Compile Include="UI\Builder\ContentRow.cs" />
-    <Compile Include="UI\Builder\ToggleCell.cs" />
-    <Compile Include="UI\Builder\ToggleRow.cs" />
+    <Compile Include="UI\ChatPanel\InputFieldCell.cs" />
+    <Compile Include="UI\ChatPanel\ContentRow.cs" />
+    <Compile Include="UI\ChatPanel\ToggleCell.cs" />
+    <Compile Include="UI\ChatPanel\ToggleRow.cs" />
     <Compile Include="UI\Core\UIBuilder.cs" />
     <Compile Include="UI\Core\UIResources.cs" />
     <Compile Include="Utils\CircularQueue.cs" />

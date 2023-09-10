@@ -1,11 +1,13 @@
-﻿using Fishlabs;
+﻿using ComfyLib;
+
+using Fishlabs;
 
 using TMPro;
 
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ComfyLib {
+namespace Chatter {
   public class InputFieldCell {
     public GameObject Cell { get; private set; }
     public Image Background { get; private set; }

@@ -1,14 +1,23 @@
-﻿using TMPro;
+﻿using ComfyLib;
+
+using TMPro;
 
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ComfyLib {
+namespace Chatter {
   public class ContentRow {
+    public ChatMessage Message { get; private set; }
     public GameObject Row { get; private set; }
     public TextMeshProUGUI Label { get; private set; }
 
-    public ContentRow(Transform parentTransform) {
+    public ContentRow(ChatMessage message, Transform parentTransform) {
+      Message = message;
+      Row = CreateChildRow(parentTransform);
+      Label = CreateChildLabel(Row.transform);
+    }
+
+    GameObject CreateChildRow(Transform parentTransform) {
       GameObject row = new("Message", typeof(RectTransform));
       row.SetParent(parentTransform);
 
@@ -19,7 +28,7 @@ namespace ComfyLib {
           .SetChildControl(width: true, height: true)
           .SetChildForceExpand(width: true, height: false);
 
-      Label = CreateChildLabel(row.transform);
+      return row;
     }
 
     TextMeshProUGUI CreateChildLabel(Transform parentTransform) {

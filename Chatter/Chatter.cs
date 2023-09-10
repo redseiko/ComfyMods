@@ -80,14 +80,6 @@ namespace Chatter {
       ChatterChatPanel.Panel.SetActive(toggleOn);
     }
 
-    public static void AddChatMessage(ChatMessage message) {
-      MessageHistory.EnqueueItem(message);
-
-      if (ChatterChatPanel?.Panel) {
-        CreateContentRow(message, ChatterChatPanel.Content.transform);
-      }
-    }
-
     public static void RebuildMessageRows() {
       MessageRows.ClearItems();
 
@@ -96,22 +88,34 @@ namespace Chatter {
       }
 
       foreach (ChatMessage message in MessageHistory) {
-        if (ChatterChatPanel.IsMessageTypeActive(message.MessageType)) {
-          MessageRows.EnqueueItem(CreateContentRow(message, ChatterChatPanel.Content.transform));
-        }
+        MessageRows.EnqueueItem(CreateContentRow(message, ChatterChatPanel.Content.transform));
+      }
+    }
+
+    public static void AddChatMessage(ChatMessage message) {
+      MessageHistory.EnqueueItem(message);
+
+      if (ChatterChatPanel?.Panel) {
+        MessageRows.EnqueueItem(CreateContentRow(message, ChatterChatPanel.Content.transform));
       }
     }
 
     public static ContentRow CreateContentRow(ChatMessage message, Transform parentTransform) {
-      ContentRow row = new(parentTransform);
+      ContentRow row = new(message, parentTransform);
       row.Label.text = ChatMessageUtils.GetChatMessageText(message);
 
       return row;
     }
 
     public static void DestroyContentRow(ContentRow row) {
-      if (row?.Row) {
-        Destroy(row.Row);
+      Destroy(row.Row);
+    }
+
+    public static void ToggleContentRows(bool toggleOn, ChatMessageType messageType) {
+      foreach (ContentRow row in MessageRows) {
+        if (row.Message.MessageType == messageType) {
+          row.Row.SetActive(toggleOn);
+        }
       }
     }
 
@@ -206,13 +210,6 @@ namespace Chatter {
 
     //  foreach (ContentRow row in MessageRows) {
     //    row.Divider.Ref()?.SetActive(toggle);
-    //  }
-    //}
-
-    //static void ToggleContentRows(bool toggle, ChatMessageType messageType) {
-    //  foreach (ContentRow row in MessageRows.Where(row => row.ChatMessage?.MessageType == messageType)) {
-    //    row.Row.Ref()?.SetActive(toggle);
-    //    row.Divider.Ref()?.SetActive(toggle && ShouldShowDivider());
     //  }
     //}
 

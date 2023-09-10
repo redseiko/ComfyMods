@@ -9,7 +9,7 @@ namespace Chatter {
   static class TerminalPatch {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Terminal.AddString), typeof(string))]
-    static void AddStringFinalPostfix(Terminal __instance, string text) {
+    static void AddStringPostfix(Terminal __instance, string text) {
       if (IsModEnabled.Value && __instance is Chat && !Chatter.IsChatMessageQueued) {
         Chatter.AddChatMessage(
             new() {

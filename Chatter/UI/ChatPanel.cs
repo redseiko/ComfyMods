@@ -34,8 +34,15 @@ namespace Chatter {
 
       MessageTypeToggleRow = new(Panel.transform);
       MessageTypeToggleRow.Row.AddComponent<LayoutElement>()
-          .SetFlexible(width: 1f)
-          .SetPreferred(height: 35f);
+          .SetIgnoreLayout(true);
+      //.SetFlexible(width: 1f)
+      //.SetPreferred(height: 35f);
+      MessageTypeToggleRow.Row.GetComponent<RectTransform>()
+          .SetAnchorMin(Vector2.zero)
+          .SetAnchorMax(Vector2.right)
+          .SetPivot(new(0.5f, 0f))
+          .SetPosition(new(0f, -35f))
+          .SetSizeDelta(new(0f, 35f));
     }
 
     GameObject CreateChildPanel(Transform parentTransform) {

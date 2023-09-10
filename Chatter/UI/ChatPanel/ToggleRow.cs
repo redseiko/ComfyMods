@@ -1,9 +1,9 @@
-﻿using Chatter;
+﻿using ComfyLib;
 
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ComfyLib {
+namespace Chatter {
   public class ToggleRow {
     public GameObject Row { get; private set; }
 

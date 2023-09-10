@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 
-using BepInEx;
-
 using UnityEngine;
 
 using static Chatter.PluginConfig;
