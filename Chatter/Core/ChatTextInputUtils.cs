@@ -8,7 +8,8 @@ namespace Chatter {
   public static class ChatTextInputUtils {
     public static string ChatTextInputDefaultPrefix { get; private set; } = "say ";
 
-    public static void SetChatTextInputDefaultPrefix(ChatPanel chatPanel, Talker.Type talkerType) {
+    // TODO: split this up and merge into Chatter and ChatPanelUtils.
+    public static void SetChatTextInputDefaultPrefix(this ChatPanel chatPanel, Talker.Type talkerType) {
       ChatTextInputDefaultPrefix =
           talkerType switch {
             Talker.Type.Shout => "s ",

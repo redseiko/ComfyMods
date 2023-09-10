@@ -6,6 +6,7 @@ using UnityEngine.UI;
 namespace Chatter {
   public class ToggleRow {
     public GameObject Row { get; private set; }
+    public Image Background { get; private set; }
 
     public ToggleCell SayToggle { get; private set; }
     public ToggleCell ShoutToggle { get; private set; }
@@ -16,6 +17,7 @@ namespace Chatter {
 
     public ToggleRow(Transform parentTransform) {
       Row = CreateChildRow(parentTransform);
+      Background = Row.Image();
 
       SayToggle = CreateChildToggle(Row.transform, "Say");
       ShoutToggle = CreateChildToggle(Row.transform, "Shout");
@@ -30,11 +32,20 @@ namespace Chatter {
       row.SetParent(parentTransform);
 
       row.GetComponent<RectTransform>()
-          .SetSizeDelta(Vector2.zero);
+          .SetAnchorMin(Vector2.zero)
+          .SetAnchorMax(Vector2.right)
+          .SetPivot(new(0.5f, 0f))
+          .SetPosition(new(0f, -35f))
+          .SetSizeDelta(new(0f, 35f));
+
+      row.AddComponent<Image>()
+        .SetType(Image.Type.Filled)
+        .SetColor(Color.clear);
 
       row.AddComponent<HorizontalLayoutGroup>()
           .SetChildControl(width: true, height: true)
           .SetChildForceExpand(width: false, height: false)
+          .SetPadding(left:16, right: 16)
           .SetSpacing(8f)
           .SetChildAlignment(TextAnchor.MiddleRight);
 

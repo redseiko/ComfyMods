@@ -3,6 +3,7 @@
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Chatter {
@@ -19,10 +20,13 @@ namespace Chatter {
       Label = CreateChildLabel(Cell.transform);
 
       Toggle = Cell.AddComponent<Toggle>();
-      Toggle.targetGraphic = Background;
       Toggle.onValueChanged.AddListener(isOn => OnToggleValueChanged(isOn));
+      Toggle
+          .SetNavigationMode(Navigation.Mode.None)
+          .SetTargetGraphic(Background)
+          .SetIsOn(false);
 
-      Toggle.SetIsOn(false);
+      Cell.AddComponent<DummyIgnoreDrag>();
     }
 
     GameObject CreateChildCell(Transform parentTransform) {
@@ -34,9 +38,8 @@ namespace Chatter {
 
       cell.AddComponent<Image>()
           .SetType(Image.Type.Sliced)
-          .SetSprite(UIBuilder.CreateSuperellipse(64, 64, 8))
-          .SetColor(Color.clear)
-          .SetRaycastTarget(true);
+          .SetSprite(UIBuilder.CreateSuperellipse(64, 64, 10))
+          .SetColor(Color.clear);
 
       return cell;
     }

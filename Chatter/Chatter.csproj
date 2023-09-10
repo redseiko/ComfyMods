@@ -115,6 +115,7 @@
     <Compile Include="UI\ChatPanel\ContentRow.cs" />
     <Compile Include="UI\ChatPanel\ToggleCell.cs" />
     <Compile Include="UI\ChatPanel\ToggleRow.cs" />
+    <Compile Include="UI\Components\DummyIgnoreDrag.cs" />
     <Compile Include="UI\Core\UIBuilder.cs" />
     <Compile Include="UI\Core\UIResources.cs" />
     <Compile Include="Utils\CircularQueue.cs" />
