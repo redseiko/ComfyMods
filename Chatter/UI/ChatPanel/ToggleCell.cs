@@ -48,6 +48,7 @@ namespace Chatter {
       TextMeshProUGUI label = UIBuilder.CreateLabel(parentTransform);
 
       label.alignment = TextAlignmentOptions.Center;
+      label.fontSize = 16f;
       label.text = "Toggle";
 
       label.rectTransform

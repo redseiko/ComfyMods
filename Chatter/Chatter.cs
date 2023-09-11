@@ -11,6 +11,7 @@ using UnityEngine.UI;
 
 using static Chatter.PluginConfig;
 using static Chatter.ChatTextInputUtils;
+using TMPro;
 
 namespace Chatter {
   [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
@@ -98,27 +99,47 @@ namespace Chatter {
     }
 
     public static void CreateContentRow(ChatMessage message) {
-      if (ChatterChatPanel?.Content) {
-        ContentRow row = new(message, ChatterChatPanel.Content.transform);
+      if (!ChatterChatPanel?.Content) {
+        return;
+      }
+
+      if (ShouldCreateContentRow(message)) {
+        ContentRow row = new(message, ChatMessageLayout.Value, ChatterChatPanel.Content.transform);
         MessageRows.EnqueueItem(row);
 
-        row.Label.text = ChatMessageUtils.GetContentRowBodyText(message);
+        row.SetupContentRow();
         row.Row.SetActive(ChatterChatPanel.IsMessageTypeToggleActive(message.MessageType));
       }
+
+      MessageRows.LastItem.AddBodyLabel(message);
     }
 
     public static void DestroyContentRow(ContentRow row) {
       if (row.Row) {
         Destroy(row.Row);
       }
+
+      if (row.Divider) {
+        Destroy(row.Divider);
+      }
     }
 
     public static void ToggleContentRows(bool toggleOn, ChatMessageType messageType) {
       foreach (ContentRow row in MessageRows) {
-        if (row.Row && row.Message.MessageType == messageType) {
-          row.Row.SetActive(toggleOn);
+        if (row.Message.MessageType == messageType) {
+          row.Row.Ref()?.SetActive(toggleOn);
+          row.Divider.Ref()?.SetActive(toggleOn);
         }
       }
+    }
+
+    public static bool ShouldCreateContentRow(ChatMessage message) {
+      return ChatMessageLayout.Value == MessageLayoutType.SingleRow
+          || MessageRows.IsEmpty
+          || MessageRows.LastItem == null
+          || MessageRows.LastItem.Message?.MessageType != message.MessageType
+          || MessageRows.LastItem.Message?.SenderId != message.SenderId
+          || MessageRows.LastItem.Message?.Username != message.Username;
     }
 
     public static void HideChatPanelDelegate(float hideTimer) {
@@ -285,21 +306,6 @@ namespace Chatter {
 
     //  TMP_Text text = _chatPanel.CreateChatMessageRowBody(MessageRows.LastItem.Row.transform, GetBodyText(message));
     //  text.color = GetMessageTextColor(message.MessageType);
-    //}
-
-    //static bool ShouldCreateDivider(ChatMessage message) {
-    //  return MessageRows.IsEmpty
-    //      || MessageRows.LastItem?.ChatMessage?.MessageType != message.MessageType
-    //      || MessageRows.LastItem?.ChatMessage?.SenderId != message.SenderId
-    //      || MessageRows.LastItem?.ChatMessage?.Username != message.Username;
-    //}
-
-    //static bool ShouldCreateRowHeader() {
-    //  return ChatMessageLayout.Value == MessageLayoutType.WithHeaderRow;
-    //}
-
-    //static bool ShouldShowDivider() {
-    //  return ShowChatPanelMessageDividers.Value && ChatMessageLayout.Value == MessageLayoutType.WithHeaderRow;
     //}
   }
 }

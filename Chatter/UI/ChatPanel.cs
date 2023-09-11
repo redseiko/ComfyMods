@@ -52,7 +52,7 @@ namespace Chatter {
           .SetChildControl(width: true, height: true)
           .SetChildForceExpand(width: false, height: false)
           .SetPadding(left: 8, right: 8, top: 8, bottom: 8)
-          .SetSpacing(6f);
+          .SetSpacing(10f);
 
       panel.AddComponent<Image>()
           .SetType(Image.Type.Sliced)
@@ -99,6 +99,7 @@ namespace Chatter {
       content.AddComponent<VerticalLayoutGroup>()
           .SetChildControl(width: true, height: true)
           .SetChildForceExpand(width: false, height: false)
+          .SetPadding(left: 8, right: 8)
           .SetSpacing(8f);
 
       content.AddComponent<ContentSizeFitter>()
@@ -116,7 +117,7 @@ namespace Chatter {
       scrollRect.horizontal = false;
       scrollRect.vertical = true;
       scrollRect.movementType = ScrollRect.MovementType.Elastic;
-      scrollRect.scrollSensitivity = 30f;
+      scrollRect.scrollSensitivity = 20f;
 
       return scrollRect;
     }
@@ -133,88 +134,5 @@ namespace Chatter {
     public void ToggleGrabber(bool toggleOn) {
       MessageTypeToggleRow.Row.SetActive(toggleOn);
     }
-
-    //public GameObject CreateMessageDivider(Transform parentTransform) {
-    //  GameObject divider = new("Message.Divider", typeof(RectTransform));
-    //  divider.SetParent(parentTransform, worldPositionStays: false);
-
-    //  divider.AddComponent<Image>()
-    //      .SetSprite(UIBuilder.CreateRect(10, 10, Color.white))
-    //      .SetType(Image.Type.Filled)
-    //      .SetColor(new(1f, 1f, 1f, 0.0625f))
-    //      .SetRaycastTarget(true)
-    //      .SetMaskable(true);
-
-    //  divider.AddComponent<LayoutElement>()
-    //      .SetFlexible(width: 1f)
-    //      .SetPreferred(height: 1f);
-
-    //  return divider;
-    //}
-
-    //public GameObject CreateChatMessageRow(Transform parentTransform) {
-    //  GameObject row = new(RowName, typeof(RectTransform));
-    //  row.SetParent(parentTransform, worldPositionStays: false);
-
-    //  row.AddComponent<VerticalLayoutGroup>()
-    //      .SetChildControl(width: true, height: true)
-    //      .SetChildForceExpand(width: false, height: false)
-    //      .SetPadding(left: 0, right: 0, top: 0, bottom: 0)
-    //      .SetSpacing(PluginConfig.ContentRowBodySpacing);
-
-    //  row.AddComponent<ContentSizeFitter>()
-    //      .SetHorizontalFit(ContentSizeFitter.FitMode.PreferredSize)
-    //      .SetVerticalFit(ContentSizeFitter.FitMode.PreferredSize);
-
-    //  return row;
-    //}
-
-    //public (GameObject header, TMP_Text leftCell, TMP_Text rightCell) CreateChatMessageRowHeader(
-    //    Transform parentTransform, string leftText, string rightText) {
-    //  GameObject header = new(RowHeaderName, typeof(RectTransform));
-    //  header.SetParent(parentTransform, worldPositionStays: false);
-
-    //  header.AddComponent<HorizontalLayoutGroup>()
-    //      .SetChildControl(width: true, height: true)
-    //      .SetChildForceExpand(width: false, height: false)
-    //      .SetPadding(left: 0, right: 0, top: 0, bottom: 0);
-
-    //  TMP_Text leftCell = UIBuilder.CreateLabel(header.transform);
-    //  leftCell.name = HeaderLeftCellName;
-
-    //  leftCell.text = leftText;
-    //  leftCell.alignment = TextAlignmentOptions.Left;
-    //  leftCell.fontSize -= 2f;
-
-    //  leftCell.gameObject.AddComponent<LayoutElement>();
-
-    //  GameObject spacer = new("Header.Spacer", typeof(RectTransform));
-    //  spacer.SetParent(header.transform);
-    //  spacer.AddComponent<LayoutElement>().SetFlexible(width: 1f);
-
-    //  TMP_Text rightCell = UIBuilder.CreateLabel(header.transform);
-    //  rightCell.name = HeaderRightCellName;
-
-    //  rightCell.text = rightText;
-    //  rightCell.alignment = TextAlignmentOptions.Right;
-    //  rightCell.fontSize -= 2f;
-
-    //  rightCell.gameObject.AddComponent<LayoutElement>();
-
-    //  return (header, leftCell, rightCell);
-    //}
-
-    //public TMP_Text CreateChatMessageRowBody(Transform parentTransform, string text) {
-    //  TMP_Text body = UIBuilder.CreateLabel(parentTransform);
-    //  body.name = ContentRowBodyName;
-
-    //  body.text = text;
-    //  body.alignment = TextAlignmentOptions.Left;
-
-    //  body.gameObject.AddComponent<LayoutElement>()
-    //      .SetPreferred(width: _panelRectTransform.sizeDelta.x + _contentWidthOffset);
-
-    //  return body;
-    //}
   }
 }

@@ -26,18 +26,11 @@ namespace Chatter {
 
     // Content
     public static ConfigEntry<bool> ShowMessageHudCenterMessages { get; private set; }
-    //  public static ConfigEntry<bool> ShowChatPanelMessageDividers { get; private set; }
+    public static ConfigEntry<bool> ShowChatPanelMessageDividers { get; private set; }
 
     // Defaults
     public static ConfigEntry<Talker.Type> ChatPanelDefaultMessageTypeToUse { get; private set; }
     public static ConfigEntry<ChatMessageType> ChatPanelContentRowTogglesToEnable { get; private set; }
-
-    // Filters
-    public static StringListConfigEntry SayTextFilterList { get; private set; }
-    public static StringListConfigEntry ShoutTextFilterList { get; private set; }
-    public static StringListConfigEntry WhisperTextFilterList { get; private set; }
-    public static StringListConfigEntry HudCenterTextFilterList { get; private set; }
-    public static StringListConfigEntry OtherTextFilterList { get; private set; }
 
     public enum MessageLayoutType {
       WithHeaderRow,
@@ -146,19 +139,19 @@ namespace Chatter {
       BindFilters(config);
 
       // Content
-      ShowMessageHudCenterMessages ??=
+      ShowMessageHudCenterMessages =
           config.BindInOrder(
-              "Content",
+              "ChatPanel.Content",
               "showMessageHudCenterMessages",
               defaultValue: true,
               "Show messages from the MessageHud that display in the top-center (usually boss messages).");
 
-      //    ShowChatPanelMessageDividers ??=
-      //        config.BindInOrder(
-      //            "Content",
-      //            "showChatPanelMessageDividers",
-      //            defaultValue: true,
-      //            "Show the horizontal dividers between groups of messages.");
+      ShowChatPanelMessageDividers =
+          config.BindInOrder(
+              "ChatPanel.Content",
+              "showChatPanelMessageDividers",
+              defaultValue: true,
+              "Show the horizontal dividers between groups of messages.");
 
       // Defaults
       ChatPanelDefaultMessageTypeToUse =
@@ -170,7 +163,7 @@ namespace Chatter {
 
       ChatPanelContentRowTogglesToEnable =
           config.BindInOrder(
-              "Defaults",
+              "ChatPanel.Defaults",
               "chatPanelContentRowTogglesToEnable",
               defaultValue:
                   ChatMessageType.Say
@@ -188,12 +181,16 @@ namespace Chatter {
               MessageLayoutType.SingleRow,
               "Determines which layout to use when displaying a chat message.");
 
+      ChatMessageLayout.SettingChanged += (_, _) => RebuildContentRows();
+
       ChatMessageShowTimestamp =
           config.BindInOrder(
               "ChatMessage.Layout",
               "chatMessageShowTimestamp",
               defaultValue: true,
               "Show a timestamp for each group of chat messages (except system/default).");
+
+      ChatMessageShowTimestamp.SettingChanged += (_, _) => RebuildContentRows();
 
       //    // Style
       //    ChatPanelBackgroundColor ??=
@@ -308,6 +305,13 @@ namespace Chatter {
 
       //    BindMessageToggleConfig(config);
     }
+
+    // Filters
+    public static StringListConfigEntry SayTextFilterList { get; private set; }
+    public static StringListConfigEntry ShoutTextFilterList { get; private set; }
+    public static StringListConfigEntry WhisperTextFilterList { get; private set; }
+    public static StringListConfigEntry HudCenterTextFilterList { get; private set; }
+    public static StringListConfigEntry OtherTextFilterList { get; private set; }
 
     static void BindFilters(ConfigFile config) {
       // Filters
