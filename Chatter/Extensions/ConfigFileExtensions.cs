@@ -66,6 +66,16 @@ namespace ComfyLib {
       return new StringListConfigEntry(config, section, key, description, valuesSeparator);
     }
 
+    public static void OnSettingChanged<T>(
+        this ConfigEntry<T> configEntry, Action settingChangedHandler) {
+      configEntry.SettingChanged += (_, _) => settingChangedHandler();
+    }
+
+    public static void OnSettingChanged<T>(
+        this ConfigEntry<T> configEntry, Action<T> settingChangedHandler) {
+      configEntry.SettingChanged += (_, _) => settingChangedHandler(configEntry.Value);
+    }
+
     internal sealed class ConfigurationManagerAttributes {
       public Action<ConfigEntryBase> CustomDrawer;
       public bool? Browsable;

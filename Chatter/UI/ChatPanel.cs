@@ -6,6 +6,8 @@ using UnityEngine.UI;
 namespace Chatter {
   public class ChatPanel {
     public GameObject Panel { get; private set; }
+    public RectTransform PanelRectTransform { get; private set; }
+    public Image PanelBackground { get; private set; }
     public CanvasGroup PanelCanvasGroup { get; private set; }
     public RectTransformDragger PanelDragger { get; private set; }
 
@@ -19,6 +21,8 @@ namespace Chatter {
 
     public ChatPanel(Transform parentTransform) {
       Panel = CreateChildPanel(parentTransform);
+      PanelRectTransform = Panel.GetComponent<RectTransform>();
+      PanelBackground = Panel.GetComponent<Image>();
       PanelCanvasGroup = Panel.GetComponent<CanvasGroup>();
       PanelDragger = Panel.GetComponent<RectTransformDragger>();
 
@@ -100,7 +104,7 @@ namespace Chatter {
           .SetChildControl(width: true, height: true)
           .SetChildForceExpand(width: false, height: false)
           .SetPadding(left: 8, right: 8)
-          .SetSpacing(8f);
+          .SetSpacing(10f);
 
       content.AddComponent<ContentSizeFitter>()
           .SetHorizontalFit(ContentSizeFitter.FitMode.Unconstrained)

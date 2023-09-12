@@ -14,6 +14,7 @@ namespace Chatter {
     // Panel
     public static ConfigEntry<Vector2> ChatPanelPosition { get; private set; }
     public static ConfigEntry<Vector2> ChatPanelSizeDelta { get; private set; }
+    public static ConfigEntry<Color> ChatPanelBackgroundColor { get; private set; }
 
     // Behaviour
     public static ConfigEntry<int> HideChatPanelDelay { get; private set; }
@@ -45,7 +46,6 @@ namespace Chatter {
     //  public static ConfigEntry<string> ChatMessageFont { get; private set; }
     //  public static ConfigEntry<int> ChatMessageFontSize { get; private set; }
 
-    //  public static ConfigEntry<Color> ChatPanelBackgroundColor { get; private set; }
     //  public static ConfigEntry<Vector2> ChatPanelRectMaskSoftness { get; private set; }
 
     //  // Spacing
@@ -83,6 +83,8 @@ namespace Chatter {
               new Vector2(-10f, 125f),
               "The Vector2 position of the ChatPanel.");
 
+      ChatPanelPosition.OnSettingChanged(position => ChatterChatPanel?.PanelRectTransform.SetPosition(position));
+
       ChatPanelSizeDelta =
           Config.BindInOrder(
               "ChatPanel",
@@ -90,18 +92,23 @@ namespace Chatter {
               new Vector2(500f, 500f),
               "The size (width, height) of the ChatPanel.");
 
-      ChatPanelPosition.SettingChanged +=
-          (_, _) => (ChatterChatPanel?.Panel.transform as RectTransform).anchoredPosition = ChatPanelPosition.Value;
+      ChatPanelSizeDelta.OnSettingChanged(sizeDelta => ChatterChatPanel?.PanelRectTransform.SetSizeDelta(sizeDelta));
 
-      ChatPanelSizeDelta.SettingChanged +=
-          (_, _) => (ChatterChatPanel?.Panel.transform as RectTransform).sizeDelta = ChatPanelSizeDelta.Value;
+      ChatPanelBackgroundColor =
+          config.BindInOrder(
+              "ChatPanel",
+              "chatPanelBackgroundColor",
+              new Color(0f, 0f, 0f, 0.125f),
+              "The background color for the ChatPanel.");
+
+      ChatPanelBackgroundColor.OnSettingChanged(color => ChatterChatPanel?.PanelBackground.SetColor(color));
 
       // Behaviour
       HideChatPanelDelay =
           config.BindInOrder(
               "ChatPanel.Behaviour",
               "hideChatPanelDelay",
-              defaultValue: 10,
+              defaultValue: 6,
               "Delay (in seconds) before hiding the ChatPanel.",
               new AcceptableValueRange<int>(1, 180));
 
@@ -109,7 +116,7 @@ namespace Chatter {
           config.BindInOrder(
               "ChatPanel.Behaviour",
               "hideChatPanelAlpha",
-              defaultValue: 0.2f,
+              defaultValue: 0.1f,
               "Color alpha (in %) for the ChatPanel when hidden.",
               new AcceptableValueRange<float>(0f, 1f));
 
@@ -178,10 +185,10 @@ namespace Chatter {
           config.BindInOrder(
               "ChatMessage.Layout",
               "chatMessageLayout",
-              MessageLayoutType.SingleRow,
+              MessageLayoutType.WithHeaderRow,
               "Determines which layout to use when displaying a chat message.");
 
-      ChatMessageLayout.SettingChanged += (_, _) => RebuildContentRows();
+      ChatMessageLayout.OnSettingChanged(() => RebuildContentRows());
 
       ChatMessageShowTimestamp =
           config.BindInOrder(
@@ -190,19 +197,7 @@ namespace Chatter {
               defaultValue: true,
               "Show a timestamp for each group of chat messages (except system/default).");
 
-      ChatMessageShowTimestamp.SettingChanged += (_, _) => RebuildContentRows();
-
-      //    // Style
-      //    ChatPanelBackgroundColor ??=
-      //        config.Bind(
-      //            "Style",
-      //            "chatPanelBackgroundColor",
-      //            (Color) new Color32(0, 0, 0, 128),
-      //            "The background color for the ChatPanel.");
-
-      //    ChatPanelRectMaskSoftness ??=
-      //        config.Bind(
-      //            "Style", "chatPanelRectMaskSoftness", new Vector2(20f, 20f), "Softness of the ChatPanel's RectMask2D.");
+      ChatMessageShowTimestamp.OnSettingChanged(() => RebuildContentRows());
 
       //    // Spacing
       //    ChatPanelContentSpacing =
