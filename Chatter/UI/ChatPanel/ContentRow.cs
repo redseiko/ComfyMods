@@ -5,14 +5,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-using static Chatter.PluginConfig;
-
 namespace Chatter {
   public class ContentRow {
     public ChatMessage Message { get; private set; }
     public MessageLayoutType LayoutType { get; private set; }
 
     public GameObject Row { get; private set; }
+    public VerticalLayoutGroup RowLayoutGroup { get; private set; }
 
     public GameObject Divider { get; private set; }
     public GameObject Header { get; private set; }
@@ -28,22 +27,10 @@ namespace Chatter {
       }
 
       Row = CreateChildRow(parentTransform);
+      RowLayoutGroup = Row.GetComponent<VerticalLayoutGroup>();
 
       if (layoutType == MessageLayoutType.WithHeaderRow) {
         (Header, HeaderLeftLabel, HeaderRightLabel) = CreateHeader(Row.transform);
-      }
-    }
-
-    public void SetupContentRow() {
-      if (LayoutType == MessageLayoutType.WithHeaderRow) {
-        Divider.gameObject.SetActive(ShowChatPanelMessageDividers.Value);
-
-        HeaderLeftLabel.text = ChatMessageUtils.GetUsernameText(Message.Username);
-        HeaderLeftLabel.color = ChatMessageUsernameColor.Value;
-
-        HeaderRightLabel.text = ChatMessageUtils.GetTimestampText(Message.Timestamp);
-        HeaderRightLabel.color = ChatMessageTimestampColor.Value;
-        HeaderRightLabel.gameObject.SetActive(ChatMessageShowTimestamp.Value);
       }
     }
 

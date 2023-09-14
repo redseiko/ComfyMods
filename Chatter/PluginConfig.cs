@@ -29,32 +29,18 @@ namespace Chatter {
     public static ConfigEntry<bool> ShowMessageHudCenterMessages { get; private set; }
     public static ConfigEntry<bool> ShowChatPanelMessageDividers { get; private set; }
 
+    // Spacing
+    public static ConfigEntry<float> ChatPanelContentSpacing { get; private set; }
+    public static ConfigEntry<float> ChatPanelContentRowSpacing { get; private set; }
+    public static ConfigEntry<float> ChatPanelContentSingleRowSpacing { get; private set; }
+
     // Defaults
     public static ConfigEntry<Talker.Type> ChatPanelDefaultMessageTypeToUse { get; private set; }
     public static ConfigEntry<ChatMessageType> ChatPanelContentRowTogglesToEnable { get; private set; }
 
-    public enum MessageLayoutType {
-      WithHeaderRow,
-      SingleRow
-    }
-
     // Layout
     public static ConfigEntry<MessageLayoutType> ChatMessageLayout { get; private set; }
     public static ConfigEntry<bool> ChatMessageShowTimestamp { get; private set; }
-
-    //  // Style
-    //  public static ConfigEntry<string> ChatMessageFont { get; private set; }
-    //  public static ConfigEntry<int> ChatMessageFontSize { get; private set; }
-
-    //  public static ConfigEntry<Vector2> ChatPanelRectMaskSoftness { get; private set; }
-
-    //  // Spacing
-    //  public static ConfigEntry<float> ChatPanelContentSpacing { get; private set; }
-    //  public static ConfigEntry<float> ChatPanelContentBodySpacing { get; private set; }
-    //  public static ConfigEntry<float> ChatPanelContentSingleRowSpacing { get; private set; }
-
-    //  // Panel
-    //  public static ConfigEntry<float> ChatContentWidthOffset { get; private set; }
 
     // Colors
     public static ConfigEntry<Color> ChatMessageTextDefaultColor { get; private set; }
@@ -143,8 +129,6 @@ namespace Chatter {
               "Interval (in pixels) to scroll the ChatPanel content up/down.",
               new AcceptableValueRange<float>(-1000f, 1000f));
 
-      BindFilters(config);
-
       // Content
       ShowMessageHudCenterMessages =
           config.BindInOrder(
@@ -160,8 +144,41 @@ namespace Chatter {
               defaultValue: true,
               "Show the horizontal dividers between groups of messages.");
 
-      // Defaults
-      ChatPanelDefaultMessageTypeToUse =
+      ShowChatPanelMessageDividers.OnSettingChanged(toggleOn => ContentRowManager.ToggleMessageDividers(toggleOn));
+
+      // Spacing
+      ChatPanelContentSpacing =
+          config.BindInOrder(
+              "ChatPanel.Spacing",
+              "chatPanelContentSpacing",
+              defaultValue: 10f,
+              "Spacing (px) between `Content.Row` when using 'WithRowHeader` layout.",
+              new AcceptableValueRange<float>(-100, 100));
+
+      ChatPanelContentSpacing.OnSettingChanged(() => ChatterChatPanel?.SetupContentSpacing());
+
+      ChatPanelContentRowSpacing =
+          config.BindInOrder(
+              "ChatPanel.Spacing",
+              "chatPanelContentRowSpacing",
+              defaultValue: 2f,
+              "Spacing (px) between `Content.Row.Body` when using 'WithRowHeader' layout.",
+              new AcceptableValueRange<float>(-100, 100));
+
+      ChatPanelContentRowSpacing.OnSettingChanged(spacing => ContentRowManager.SetupContentRowSpacing(spacing));
+
+      ChatPanelContentSingleRowSpacing =
+          config.BindInOrder(
+              "ChatPanel.Spacing",
+              "chatPanelContentSingleRowSpacing",
+              defaultValue: 10f,
+              "Spacing (in pixels) to use between rows when using 'SingleRow' layout.",
+              new AcceptableValueRange<float>(-100, 100));
+
+      ChatPanelContentSpacing.OnSettingChanged(() => ChatterChatPanel?.SetupContentSpacing());
+
+    // Defaults
+    ChatPanelDefaultMessageTypeToUse =
           config.BindInOrder(
               "ChatPanel.Defaults",
               "chatPanelDefaultMessageTypeToUse",
@@ -188,7 +205,7 @@ namespace Chatter {
               MessageLayoutType.WithHeaderRow,
               "Determines which layout to use when displaying a chat message.");
 
-      ChatMessageLayout.OnSettingChanged(() => RebuildContentRows());
+      ChatMessageLayout.OnSettingChanged(() => ContentRowManager.RebuildContentRows());
 
       ChatMessageShowTimestamp =
           config.BindInOrder(
@@ -197,32 +214,7 @@ namespace Chatter {
               defaultValue: true,
               "Show a timestamp for each group of chat messages (except system/default).");
 
-      ChatMessageShowTimestamp.OnSettingChanged(() => RebuildContentRows());
-
-      //    // Spacing
-      //    ChatPanelContentSpacing =
-      //        config.BindInOrder(
-      //            "Spacing",
-      //            "chatPanelContentSpacing",
-      //            defaultValue: 10f,
-      //            "Spacing (px) between `Content.Row` when using 'WithRowHeader` layout.",
-      //            new AcceptableValueRange<float>(-100, 100));
-
-      //    ChatPanelContentBodySpacing =
-      //        config.BindInOrder(
-      //            "Spacing",
-      //            "chatPanelContentBodySpacing",
-      //            defaultValue: 5f,
-      //            "Spacing (px) between `Content.Row.Body` when using 'WithRowHeader' layout.",
-      //            new AcceptableValueRange<float>(-100, 100));
-
-      //    ChatPanelContentSingleRowSpacing =
-      //        config.BindInOrder(
-      //            "Spacing",
-      //            "chatPanelContentSingleRowSpacing",
-      //            defaultValue: 10f,
-      //            "Spacing (in pixels) to use between rows when using 'SingleRow' layout.",
-      //            new AcceptableValueRange<float>(-100, 100));
+      ChatMessageShowTimestamp.OnSettingChanged(toggleOn => ContentRowManager.ToggleShowTimestamp(toggleOn));
 
       // Colors
       ChatMessageTextDefaultColor =
@@ -232,12 +224,18 @@ namespace Chatter {
               Color.white,
               "Color for default/system chat messages.");
 
+      ChatMessageTextDefaultColor.OnSettingChanged(
+          color => ContentRowManager.SetMessageTextColor(color, ChatMessageType.Text));
+
       ChatMessageTextSayColor =
           config.BindInOrder(
               "ChatMessage.Text.Colors",
               "chatMessageTextSayColor",
               Color.white,
               "Color for 'normal/say' chat messages.");
+
+      ChatMessageTextSayColor.OnSettingChanged(
+          color => ContentRowManager.SetMessageTextColor(color, ChatMessageType.Say));
 
       ChatMessageTextShoutColor =
           config.BindInOrder(
@@ -246,12 +244,18 @@ namespace Chatter {
               Color.yellow,
               "Color for 'shouting' chat messages.");
 
+      ChatMessageTextShoutColor.OnSettingChanged(
+          color => ContentRowManager.SetMessageTextColor(color, ChatMessageType.Shout));
+
       ChatMessageTextWhisperColor =
           config.BindInOrder(
               "ChatMessage.Text.Colors",
               "chatMessageTextWhisperColor",
               new Color(0.502f, 0f, 0.502f, 1f), // <color=purple> #800080
               "Color for 'whisper' chat messages.");
+
+      ChatMessageTextWhisperColor.OnSettingChanged(
+          color => ContentRowManager.SetMessageTextColor(color, ChatMessageType.Whisper));
 
       ChatMessageTextPingColor =
           config.BindInOrder(
@@ -260,19 +264,27 @@ namespace Chatter {
               Color.cyan,
               "Color for 'ping' chat messages.");
 
+      ChatMessageTextPingColor.OnSettingChanged(
+          color => ContentRowManager.SetMessageTextColor(color, ChatMessageType.Ping));
+
       ChatMessageTextMessageHudColor =
           config.BindInOrder(
               "ChatMessage.Text.Colors",
               "chatMessageTextMessageHudColor",
-              new Color(1f, 0.807f, 0f, 1.0f), // <color=orange> #FFA500
+              new Color(1f, 0.807f, 0f, 1.0f),
               "Color for 'MessageHud' chat messages.");
+
+      ChatMessageTextMessageHudColor.OnSettingChanged(
+          color => ContentRowManager.SetMessageTextColor(color, ChatMessageType.HudCenter));
 
       ChatMessageUsernameColor =
           config.BindInOrder(
               "ChatMessage.Text.Colors",
               "chatMessageUsernameColor",
-              new Color(1f, 0.647f, 0f),
+              new Color(1f, 0.647f, 0f), // <color=orange> #FFA500
               "Color for the username shown in chat messages.");
+
+      ChatMessageUsernameColor.OnSettingChanged(color => ContentRowManager.SetUsernameTextColor(color));
 
       ChatMessageTimestampColor =
           config.BindInOrder(
@@ -280,6 +292,8 @@ namespace Chatter {
               "chatMessageTimestampColor",
               (Color) new Color32(244, 246, 247, 255),
               "Color for any timestamp shown in the chat messages.");
+
+      ChatMessageTimestampColor.OnSettingChanged(color => ContentRowManager.SetTimestampTextColor(color));
 
       // Username
       ChatMessageUsernamePrefix =
@@ -295,6 +309,8 @@ namespace Chatter {
               "chatMessageUsernamePostfix",
               defaultValue: string.Empty,
               "If non-empty, adds the text to the end of a ChatMessage username in 'WithheaderRow' mode.");
+
+      BindFilters(config);
 
       //    config.LateBindInOrder(config => BindChatMessageFont(config));
 
@@ -326,24 +342,6 @@ namespace Chatter {
       OtherTextFilterList =
           config.BindInOrder("Filters", "otherHudTextFilterList", "Filter list for all other message texts.", "\t");
     }
-
-    //  public static float ContentRowSpacing {
-    //    get {
-    //      return ChatMessageLayout.Value switch {
-    //        Chatter.MessageLayoutType.SingleRow => ChatPanelContentSingleRowSpacing.Value,
-    //        _ => ChatPanelContentSpacing.Value,
-    //      };
-    //    }
-    //  }
-
-    //  public static float ContentRowBodySpacing {
-    //    get {
-    //      return ChatMessageLayout.Value switch {
-    //        Chatter.MessageLayoutType.SingleRow => ChatPanelContentSingleRowSpacing.Value,
-    //        _ => ChatPanelContentBodySpacing.Value,
-    //      };
-    //    }
-    //  }
 
     //  public static void BindChatMessageFont(ConfigFile config) {
     //    string[] fontNames =

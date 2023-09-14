@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 
+using static Chatter.Chatter;
 using static Chatter.PluginConfig;
 
 namespace Chatter {
@@ -8,19 +9,20 @@ namespace Chatter {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Menu.Show))]
     static void ShowPostfix() {
-      if (IsModEnabled.Value) {
+      if (IsModEnabled.Value && ChatterChatPanel?.Panel) {
         Chat.m_instance.m_hideTimer = 0f;
-        Chatter.EnableChatPanelDelegate();
-        Chatter.ChatterChatPanel?.ToggleGrabber(true);
+
+        ChatterChatPanel.EnableOrDisableChatPanel(true);
+        ChatterChatPanel.ToggleGrabber(true);
       }
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Menu.Hide))]
     static void HidePostfix() {
-      if (IsModEnabled.Value) {
-        Chatter.ChatterChatPanel?.SetContentVerticalScrollPosition(0f);
-        Chatter.ChatterChatPanel?.ToggleGrabber(false);
+      if (IsModEnabled.Value && ChatterChatPanel?.Panel) {
+        ChatterChatPanel.SetContentVerticalScrollPosition(0f);
+        ChatterChatPanel.ToggleGrabber(false);
       }
     }
   }

@@ -6,11 +6,11 @@ using static Chatter.PluginConfig;
 
 namespace Chatter {
   public static class ChatTextInputUtils {
-    public static string ChatTextInputDefaultPrefix { get; private set; } = "say ";
+    public static string ChatTextInputPrefix { get; private set; } = "say ";
 
     // TODO: split this up and merge into Chatter and ChatPanelUtils.
-    public static void SetChatTextInputDefaultPrefix(this ChatPanel chatPanel, Talker.Type talkerType) {
-      ChatTextInputDefaultPrefix =
+    public static void SetChatTextInputPrefix(this ChatPanel chatPanel, Talker.Type talkerType) {
+      ChatTextInputPrefix =
           talkerType switch {
             Talker.Type.Shout => "s ",
             Talker.Type.Whisper => "w ",

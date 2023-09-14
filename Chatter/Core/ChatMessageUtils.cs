@@ -24,7 +24,9 @@ namespace Chatter {
       return ChatMessageLayout.Value switch {
         MessageLayoutType.SingleRow =>
             JoinIgnoringEmpty(
-                GetTimestampText(message.Timestamp), GetUsernameText(message.Username), GetMessageText(message)),
+                ChatMessageShowTimestamp.Value ? GetTimestampText(message.Timestamp) : string.Empty,
+                GetUsernameText(message.Username),
+                GetMessageText(message)),
 
         _ => GetMessageText(message)
       };
@@ -51,10 +53,6 @@ namespace Chatter {
     }
 
     public static string GetTimestampText(DateTime timestamp) {
-      if (!ChatMessageShowTimestamp.Value) {
-        return string.Empty;
-      }
-
       return ChatMessageLayout.Value switch {
         MessageLayoutType.SingleRow =>
             ChatMessageShowTimestamp.Value

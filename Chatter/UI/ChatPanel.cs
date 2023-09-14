@@ -13,6 +13,7 @@ namespace Chatter {
 
     public GameObject ContentViewport { get; private set; }
     public GameObject Content { get; private set; }
+    public VerticalLayoutGroup ContentLayoutGroup { get; private set; }
     public ScrollRect ContentScrollRect { get; private set; }
 
     public InputFieldCell TextInput { get; private set; }
@@ -28,6 +29,7 @@ namespace Chatter {
 
       ContentViewport = CreateChildViewport(Panel.transform);
       Content = CreateChildContent(ContentViewport.transform);
+      ContentLayoutGroup = Content.GetComponent<VerticalLayoutGroup>();
       ContentScrollRect = CreateChildScrollRect(ContentViewport, Content);
 
       TextInput = new(Panel.transform);

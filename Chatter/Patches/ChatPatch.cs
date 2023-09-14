@@ -18,7 +18,7 @@ namespace Chatter {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Chat.Awake))]
     static void AwakePostfix(Chat __instance) {
-      MessageRows.ClearItems();
+      ContentRowManager.MessageRows.ClearItems();
 
       ToggleChatter(__instance, IsModEnabled.Value);
       SetupWorldText(__instance);
@@ -40,7 +40,7 @@ namespace Chatter {
 
     static string PrefixSayDelegate(string value) {
       if (IsModEnabled.Value) {
-        return ChatTextInputUtils.ChatTextInputDefaultPrefix;
+        return ChatTextInputUtils.ChatTextInputPrefix;
       }
 
       return value;
@@ -119,6 +119,31 @@ namespace Chatter {
           .Advance(offset: 3)
           .InsertAndAdvance(Transpilers.EmitDelegate<Func<bool, bool>>(DisableChatPanelDelegate))
           .InstructionEnumeration();
+    }
+
+    static void HideChatPanelDelegate(float hideTimer) {
+      if (IsModEnabled.Value && ChatterChatPanel?.Panel) {
+        bool isVisible = (hideTimer < HideChatPanelDelay.Value || Menu.IsVisible()) && !Hud.IsUserHidden();
+        ChatterChatPanel.ShowOrHideChatPanel(isVisible);
+      }
+    }
+
+    static void EnableChatPanelDelegate() {
+      if (IsModEnabled.Value) {
+        ChatterChatPanel?.EnableOrDisableChatPanel(true);
+      }
+    }
+
+    static bool DisableChatPanelDelegate(bool active) {
+      if (IsModEnabled.Value) {
+        if (!Menu.IsVisible()) {
+          ChatterChatPanel?.EnableOrDisableChatPanel(false);
+        }
+
+        return true;
+      }
+
+      return active;
     }
 
     [HarmonyPostfix]

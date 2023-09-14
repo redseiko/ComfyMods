@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -519,6 +521,13 @@ namespace ComfyLib {
     public static Text SetText(this Text text, string value) {
       text.text = value;
       return text;
+    }
+  }
+
+  public static class TMPTextExtensions {
+    public static T SetColor<T>(this T tmpText, Color color) where T : TMP_Text {
+      tmpText.color = color;
+      return tmpText;
     }
   }
 

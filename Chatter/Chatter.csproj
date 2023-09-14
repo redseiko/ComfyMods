@@ -107,6 +107,9 @@
     <Compile Include="Core\ChatMessage.cs" />
     <Compile Include="Chatter.cs" />
     <Compile Include="Core\ChatMessageUtils.cs" />
+    <Compile Include="Core\ContentRowManager.cs" />
+    <Compile Include="Core\Enums\ChatMessageType.cs" />
+    <Compile Include="Core\Enums\MessageLayoutType.cs" />
     <Compile Include="Core\WorldTextUtils.cs" />
     <Compile Include="Extensions\UnityExtensions.cs" />
     <Compile Include="Patches\MenuPatch.cs" />

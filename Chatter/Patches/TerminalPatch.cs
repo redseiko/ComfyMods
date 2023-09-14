@@ -31,7 +31,7 @@ namespace Chatter {
       [HarmonyPostfix]
       static void SayDelegatePostfix(ref object __result) {
         if (IsModEnabled.Value && (bool) __result == false) {
-          Chatter.ChatterChatPanel?.SetChatTextInputDefaultPrefix(Talker.Type.Normal);
+          Chatter.ChatterChatPanel?.SetChatTextInputPrefix(Talker.Type.Normal);
           __result = true;
         }
       }
@@ -47,7 +47,7 @@ namespace Chatter {
       [HarmonyPostfix]
       static void ShoutDelegatePostfix(ref object __result) {
         if (IsModEnabled.Value && (bool) __result == false) {
-          Chatter.ChatterChatPanel?.SetChatTextInputDefaultPrefix(Talker.Type.Shout);
+          Chatter.ChatterChatPanel?.SetChatTextInputPrefix(Talker.Type.Shout);
           __result = true;
         }
       }
@@ -63,7 +63,7 @@ namespace Chatter {
       [HarmonyPostfix]
       static void WhisperDelegatePostfix(ref object __result) {
         if (IsModEnabled.Value && (bool) __result == false) {
-          Chatter.ChatterChatPanel?.SetChatTextInputDefaultPrefix(Talker.Type.Whisper);
+          Chatter.ChatterChatPanel?.SetChatTextInputPrefix(Talker.Type.Whisper);
           __result = true;
         }
       }
