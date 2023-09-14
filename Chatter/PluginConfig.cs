@@ -318,7 +318,7 @@ namespace Chatter {
               "ChatMessage.WithHeaderRow",
               "chatMessageUsernamePostfix",
               defaultValue: string.Empty,
-              "If non-empty, adds the text to the end of a ChatMessage username in 'WithheaderRow' mode.");
+              "If non-empty, adds the text to the end of a ChatMessage username in 'WithHeaderRow' mode.");
 
       BindFilters(config);
 

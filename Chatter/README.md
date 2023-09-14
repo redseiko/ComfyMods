@@ -6,10 +6,15 @@
 
 ## Instructions
 
-### New Features!
+### Complete rewrite!
 
-  * Set the default chat message type from say to say/shout/whisper!
-  * Set the default content row toggles to enable on start!
+  * Now with full TextMeshPro support!
+  * Configuration options have changed, please adjust back to preference.
+  * Some features are missing and will be added in later updates:
+    * Drag-and-resize chat panel.
+    * Configuration options for text input field, toggle text buttons, world text.
+    * OS font support.
+    * Screenshots need to be updated.
 
 ### Features
 
@@ -22,6 +27,8 @@
   * Move **and** resize the chat panel using the mouse (see below).
   * Change change layouts on the fly between `WithHeaderRow` and `SingleRow` layouts (see below).
   * Chat filters with a dynamic UI.
+  * Set the default chat message type from say to say/shout/whisper!
+  * Set the default content row toggles to enable on start!
 
 ### Move/Resize/Toggle
 

@@ -27,8 +27,9 @@ namespace Chatter {
         row.Row.SetActive(ChatterChatPanel.IsMessageTypeToggleActive(message.MessageType));
       }
 
-      MessageRows.LastItem.AddBodyLabel(message)
-          .font = UIResources.GetFontAssetByName(ChatMessageFontAsset.Value);
+      TMP_Text bodyLabel = MessageRows.LastItem.AddBodyLabel(message);
+      bodyLabel.font = UIResources.GetFontAssetByName(ChatMessageFontAsset.Value);
+      bodyLabel.fontSize = ChatMessageFontSize.Value;
     }
 
     public static bool ShouldCreateContentRow(ChatMessage message) {
@@ -65,10 +66,12 @@ namespace Chatter {
         row.Divider.gameObject.SetActive(ShowChatPanelMessageDividers.Value);
 
         row.HeaderLeftLabel.font = UIResources.GetFontAssetByName(ChatMessageFontAsset.Value);
+        row.HeaderLeftLabel.fontSize = ChatMessageFontSize.Value;
         row.HeaderLeftLabel.text = ChatMessageUtils.GetUsernameText(row.Message.Username);
         row.HeaderLeftLabel.color = ChatMessageUsernameColor.Value;
 
         row.HeaderRightLabel.font = UIResources.GetFontAssetByName(ChatMessageFontAsset.Value);
+        row.HeaderRightLabel.fontSize = ChatMessageFontSize.Value;
         row.HeaderRightLabel.text = ChatMessageUtils.GetTimestampText(row.Message.Timestamp);
         row.HeaderRightLabel.color = ChatMessageTimestampColor.Value;
         row.HeaderRightLabel.gameObject.SetActive(ChatMessageShowTimestamp.Value);
