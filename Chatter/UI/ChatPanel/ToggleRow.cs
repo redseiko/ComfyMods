@@ -35,18 +35,18 @@ namespace Chatter {
           .SetAnchorMin(Vector2.zero)
           .SetAnchorMax(Vector2.right)
           .SetPivot(new(0.5f, 0f))
-          .SetPosition(new(0f, -35f))
+          .SetPosition(new(0f, -40f))
           .SetSizeDelta(new(0f, 35f));
 
       row.AddComponent<Image>()
         .SetType(Image.Type.Filled)
-        .SetColor(Color.clear);
+        .SetColor(new(0f, 0f, 0f, 0.5f));
 
       row.AddComponent<HorizontalLayoutGroup>()
           .SetChildControl(width: true, height: true)
           .SetChildForceExpand(width: false, height: false)
           .SetPadding(left:16, right: 16)
-          .SetSpacing(8f)
+          .SetSpacing(6f)
           .SetChildAlignment(TextAnchor.MiddleRight);
 
       return row;

@@ -1,5 +1,7 @@
 ﻿using ComfyLib;
 
+using TMPro;
+
 using static Chatter.PluginConfig;
 
 namespace Chatter {
@@ -26,11 +28,31 @@ namespace Chatter {
       chatPanel.TextInput.InputField.Ref()?.SetEnabled(isEnabled);
     }
 
-    public static void SetupContentSpacing(this ChatPanel chatPanel) {
+    public static void SetContentSpacing(this ChatPanel chatPanel) {
       if (ChatMessageLayout.Value == MessageLayoutType.WithHeaderRow) {
         chatPanel.ContentLayoutGroup.SetSpacing(ChatPanelContentSpacing.Value);
       } else {
         chatPanel.ContentLayoutGroup.SetSpacing(ChatPanelContentSingleRowSpacing.Value);
+      }
+    }
+
+    public static void SetContentFontAsset(this ChatPanel chatPanel, TMP_FontAsset fontAsset) {
+      if (!chatPanel?.Content || !fontAsset) {
+        return;
+      }
+
+      foreach (TMP_Text tmpText in chatPanel.Content.GetComponentsInChildren<TMP_Text>(includeInactive: true)) {
+        tmpText.font = fontAsset;
+      }
+    }
+
+    public static void SetContentFontSize(this ChatPanel chatPanel, float fontSize) {
+      if (!chatPanel?.Content) {
+        return;
+      }
+
+      foreach (TMP_Text tmpText in chatPanel.Content.GetComponentsInChildren<TMP_Text>(includeInactive: true)) {
+        tmpText.fontSize = fontSize;
       }
     }
 

@@ -3,7 +3,8 @@
 ### 2.0.0
 
   * Split off Changelog section into a new `CHANGELOG.md` file.
-  * Rewrote entire mod.
+  * Rewrote entire mod, top-down to be less hacky and use TMP entirely.
+  * Some features are still missing in the rewrite, to be added later.
 
 ### 1.5.0
 

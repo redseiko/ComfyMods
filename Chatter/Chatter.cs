@@ -4,6 +4,8 @@ using BepInEx;
 
 using ComfyLib;
 
+using Fishlabs;
+
 using HarmonyLib;
 
 using UnityEngine;
@@ -34,17 +36,23 @@ namespace Chatter {
 
     public static bool IsChatMessageQueued { get; set; }
     public static ChatPanel ChatterChatPanel { get; private set; }
+    public static GuiInputField VanillaInputField { get; set; }
 
-    public static void ToggleChatter(Chat chat, bool toggleOn) {
-      ToggleVanillaChat(chat, !toggleOn);
-      ToggleChatPanel(chat, toggleOn);
-      //  TerminalCommands.ToggleCommands(toggle);
-
-      // TODO: conditional restore to vanilla-references cached.
-      chat.m_input = ChatterChatPanel.TextInput.InputField;
+    public static void ToggleChatter(bool toggleOn) {
+      ToggleChatter(Chat.m_instance, toggleOn);
     }
 
-    // TODO: cache the vanilla-references before toggling.
+    public static void ToggleChatter(Chat chat, bool toggleOn) {
+      TerminalCommands.ToggleCommands(toggleOn);
+
+      if (chat) {
+        ToggleVanillaChat(chat, !toggleOn);
+        ToggleChatPanel(chat, toggleOn);
+
+        chat.m_input = toggleOn ? ChatterChatPanel.TextInput.InputField : VanillaInputField;
+      }
+    }
+
     public static void ToggleVanillaChat(Chat chat, bool toggleOn) {
       foreach (Image image in chat.m_chatWindow.GetComponentsInChildren<Image>(includeInactive: true)) {
         image.gameObject.SetActive(toggleOn);
@@ -71,7 +79,7 @@ namespace Chatter {
 
         ChatterChatPanel.SetChatTextInputPrefix(ChatPanelDefaultMessageTypeToUse.Value);
         ChatterChatPanel.SetupContentRowToggles(ChatPanelContentRowTogglesToEnable.Value);
-        ChatterChatPanel.SetupContentSpacing();
+        ChatterChatPanel.SetContentSpacing();
 
         ContentRowManager.RebuildContentRows();
       }

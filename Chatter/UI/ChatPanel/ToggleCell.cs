@@ -3,7 +3,6 @@
 using TMPro;
 
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Chatter {
@@ -38,7 +37,7 @@ namespace Chatter {
 
       cell.AddComponent<Image>()
           .SetType(Image.Type.Sliced)
-          .SetSprite(UIBuilder.CreateSuperellipse(64, 64, 10))
+          .SetSprite(UIBuilder.CreateSuperellipse(100, 100, 15))
           .SetColor(Color.clear);
 
       return cell;
@@ -48,7 +47,7 @@ namespace Chatter {
       TextMeshProUGUI label = UIBuilder.CreateLabel(parentTransform);
 
       label.alignment = TextAlignmentOptions.Center;
-      label.fontSize = 16f;
+      label.fontSize = 14f;
       label.text = "Toggle";
 
       label.rectTransform

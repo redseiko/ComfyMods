@@ -8,6 +8,7 @@ using UnityEngine;
 
 using static Chatter.Chatter;
 using static Chatter.PluginConfig;
+using static MessageHud;
 
 namespace Chatter {
   public static class ContentRowManager {
@@ -26,7 +27,8 @@ namespace Chatter {
         row.Row.SetActive(ChatterChatPanel.IsMessageTypeToggleActive(message.MessageType));
       }
 
-      MessageRows.LastItem.AddBodyLabel(message);
+      MessageRows.LastItem.AddBodyLabel(message)
+          .font = UIResources.GetFontAssetByName(ChatMessageFontAsset.Value);
     }
 
     public static bool ShouldCreateContentRow(ChatMessage message) {
@@ -62,9 +64,11 @@ namespace Chatter {
       if (row.LayoutType == MessageLayoutType.WithHeaderRow) {
         row.Divider.gameObject.SetActive(ShowChatPanelMessageDividers.Value);
 
+        row.HeaderLeftLabel.font = UIResources.GetFontAssetByName(ChatMessageFontAsset.Value);
         row.HeaderLeftLabel.text = ChatMessageUtils.GetUsernameText(row.Message.Username);
         row.HeaderLeftLabel.color = ChatMessageUsernameColor.Value;
 
+        row.HeaderRightLabel.font = UIResources.GetFontAssetByName(ChatMessageFontAsset.Value);
         row.HeaderRightLabel.text = ChatMessageUtils.GetTimestampText(row.Message.Timestamp);
         row.HeaderRightLabel.color = ChatMessageTimestampColor.Value;
         row.HeaderRightLabel.gameObject.SetActive(ChatMessageShowTimestamp.Value);
@@ -84,7 +88,7 @@ namespace Chatter {
       }
     }
 
-    public static void SetupContentRowSpacing(float spacing) {
+    public static void SetContentRowSpacing(float spacing) {
       foreach (ContentRow row in MessageRows) {
         row?.RowLayoutGroup.Ref()?.SetSpacing(spacing);
       }

@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 using BepInEx.Configuration;
 
+using Chatter;
+
+using TMPro;
+
 namespace ComfyLib {
   public static class ConfigFileExtensions {
     static readonly Dictionary<string, int> _sectionToOrderCache = new();

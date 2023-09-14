@@ -9,25 +9,6 @@ using UnityEngine;
 
 namespace Chatter {
   public static class UIResources {
-    static readonly Dictionary<string, Font> _fontCache = new();
-
-    public static Font GetFont(string fontName) {
-      if (_fontCache.TryGetValue(fontName, out Font cachedFont)) {
-        return cachedFont;
-      }
-
-      if (OsFontMap.Value.TryGetValue(fontName, out string osFontPath)) {
-        _fontCache[fontName] = new(osFontPath);
-      } else {
-        foreach (Font font in Resources.FindObjectsOfTypeAll<Font>()) {
-          _fontCache[font.name] = font;
-        }
-      }
-
-      _fontCache.TryGetValue(fontName, out cachedFont);
-      return cachedFont;
-    }
-
     public static readonly Lazy<Dictionary<string, string>> OsFontMap =
         new(() => {
           Dictionary<string, string> map = new();
@@ -38,38 +19,31 @@ namespace Chatter {
           return map;
         });
 
-    public static readonly string AveriaSerifLibre = "AveriaSerifLibre-Bold";
-    public static Font AveriaSerifLibreFont { get => GetFont(AveriaSerifLibre); }
+    public static readonly string ValheimAveriaSansLibreFont = "Valheim-AveriaSansLibre";
+    public static readonly string ValheimNorseFont = "Valheim-Norse";
+    public static readonly string ValheimNorseboldFont = "Valheim-Norsebold";
+    public static readonly string FallbackNotoSansNormal = "Fallback-NotoSansNormal";
+
+    public static TMP_FontAsset ValheimAveriaSansLibreFontAsset {
+      get => UnifiedPopup.instance.bodyText.font;
+    }
 
     static readonly Dictionary<string, TMP_FontAsset> _fontAssetCache = new();
 
-    public static TMP_FontAsset GetFontAssetByFont(Font font) {
-      if (_fontAssetCache.TryGetValue(font.name, out TMP_FontAsset fontAsset)) {
-        return fontAsset;
+    public static TMP_FontAsset GetFontAssetByName(string fontAssetName) {
+      if (!_fontAssetCache.TryGetValue(fontAssetName, out TMP_FontAsset fontAsset)) {
+        fontAsset = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().FirstOrDefault(f => f.name == fontAssetName);
+
+        // TODO: do this less hacky.
+        if (fontAssetName != ValheimNorseFont && fontAssetName != ValheimNorseboldFont) {
+          fontAsset.material.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.175f);
+          fontAsset.material.SetFloat(ShaderUtilities.ID_FaceDilate, 0.175f);
+        }
+
+        _fontAssetCache[fontAssetName] = fontAsset;
       }
-
-      fontAsset = (font == AveriaSerifLibreFont) ? AveriaSerifLibreFontAsset : TMP_FontAsset.CreateFontAsset(font);
-
-      _fontAssetCache[fontAsset.name] = fontAsset;
-      _fontAssetCache[font.name] = fontAsset;
 
       return fontAsset;
-    }
-
-    public static TMP_FontAsset GetFontAssetByName(string fontAssetName) {
-      if (_fontAssetCache.TryGetValue(fontAssetName, out TMP_FontAsset fontAsset)) {
-        return fontAsset;
-      }
-
-      foreach (TMP_FontAsset existingFontAsset in Resources.FindObjectsOfTypeAll<TMP_FontAsset>()) {
-        _fontAssetCache[existingFontAsset.name] = existingFontAsset;
-      }
-
-      return _fontAssetCache[fontAssetName];
-    }
-
-    public static TMP_FontAsset AveriaSerifLibreFontAsset {
-      get => UnifiedPopup.instance.bodyText.font;
     }
   }
 }

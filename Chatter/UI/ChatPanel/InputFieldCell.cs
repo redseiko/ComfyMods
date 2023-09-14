@@ -35,7 +35,7 @@ namespace Chatter {
       cell.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
         .SetSprite(UIBuilder.CreateSuperellipse(128, 128, 10))
-        .SetColor(new(0.1f, 0.1f, 0.1f, 0.5f));
+        .SetColor(new(0.1f, 0.1f, 0.1f, 0.3f));
 
       cell.AddComponent<RectMask2D>();
 

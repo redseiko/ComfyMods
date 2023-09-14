@@ -17,7 +17,7 @@
   * Configure the font colors for every chat message type.
   * Toggle on/off the display of chat messages by type (see below).
   * Use hot-keys (default: `PageUp`, `PageDown`) to scroll through the chat messages.
-  * Chat panel will auto-hide by dimming to 20% (configurable) after 10s (configurable).
+  * Chat panel will auto-hide by dimming to 0% (configurable) after 5s (configurable).
   * Use any color for the chat panel background!
   * Move **and** resize the chat panel using the mouse (see below).
   * Change change layouts on the fly between `WithHeaderRow` and `SingleRow` layouts (see below).

@@ -20,6 +20,7 @@ namespace Chatter {
     static void AwakePostfix(Chat __instance) {
       ContentRowManager.MessageRows.ClearItems();
 
+      VanillaInputField = __instance.m_input;
       ToggleChatter(__instance, IsModEnabled.Value);
       SetupWorldText(__instance);
     }

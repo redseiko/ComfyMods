@@ -1,6 +1,15 @@
-﻿using BepInEx.Configuration;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+using BepInEx.Configuration;
 
 using ComfyLib;
+
+using HarmonyLib;
+
+using TMPro;
 
 using UnityEngine;
 
@@ -49,7 +58,6 @@ namespace Chatter {
     public static ConfigEntry<Color> ChatMessageTextWhisperColor { get; private set; }
     public static ConfigEntry<Color> ChatMessageTextPingColor { get; private set; }
     public static ConfigEntry<Color> ChatMessageTextMessageHudColor { get; private set; }
-
     public static ConfigEntry<Color> ChatMessageUsernameColor { get; private set; }
     public static ConfigEntry<Color> ChatMessageTimestampColor { get; private set; }
 
@@ -61,6 +69,8 @@ namespace Chatter {
       Config = config;
 
       IsModEnabled = config.Bind("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
+
+      IsModEnabled.OnSettingChanged(toggleOn => ToggleChatter(toggleOn));
 
       ChatPanelPosition =
           Config.BindInOrder(
@@ -94,7 +104,7 @@ namespace Chatter {
           config.BindInOrder(
               "ChatPanel.Behaviour",
               "hideChatPanelDelay",
-              defaultValue: 6,
+              defaultValue: 5,
               "Delay (in seconds) before hiding the ChatPanel.",
               new AcceptableValueRange<int>(1, 180));
 
@@ -102,7 +112,7 @@ namespace Chatter {
           config.BindInOrder(
               "ChatPanel.Behaviour",
               "hideChatPanelAlpha",
-              defaultValue: 0.1f,
+              defaultValue: 0f,
               "Color alpha (in %) for the ChatPanel when hidden.",
               new AcceptableValueRange<float>(0f, 1f));
 
@@ -155,7 +165,7 @@ namespace Chatter {
               "Spacing (px) between `Content.Row` when using 'WithRowHeader` layout.",
               new AcceptableValueRange<float>(-100, 100));
 
-      ChatPanelContentSpacing.OnSettingChanged(() => ChatterChatPanel?.SetupContentSpacing());
+      ChatPanelContentSpacing.OnSettingChanged(() => ChatterChatPanel?.SetContentSpacing());
 
       ChatPanelContentRowSpacing =
           config.BindInOrder(
@@ -165,7 +175,7 @@ namespace Chatter {
               "Spacing (px) between `Content.Row.Body` when using 'WithRowHeader' layout.",
               new AcceptableValueRange<float>(-100, 100));
 
-      ChatPanelContentRowSpacing.OnSettingChanged(spacing => ContentRowManager.SetupContentRowSpacing(spacing));
+      ChatPanelContentRowSpacing.OnSettingChanged(spacing => ContentRowManager.SetContentRowSpacing(spacing));
 
       ChatPanelContentSingleRowSpacing =
           config.BindInOrder(
@@ -175,7 +185,7 @@ namespace Chatter {
               "Spacing (in pixels) to use between rows when using 'SingleRow' layout.",
               new AcceptableValueRange<float>(-100, 100));
 
-      ChatPanelContentSingleRowSpacing.OnSettingChanged(() => ChatterChatPanel?.SetupContentSpacing());
+      ChatPanelContentSingleRowSpacing.OnSettingChanged(() => ChatterChatPanel?.SetContentSpacing());
 
     // Defaults
     ChatPanelDefaultMessageTypeToUse =
@@ -298,23 +308,21 @@ namespace Chatter {
       // Username
       ChatMessageUsernamePrefix =
           config.BindInOrder(
-              "ChatMessage.WithHeaderRow.Username",
+              "ChatMessage.WithHeaderRow",
               "chatMessageUsernamePrefix",
               defaultValue: string.Empty,
               "If non-empty, adds the text to the beginning of a ChatMesage username in 'WithHeaderRow' mode.");
 
       ChatMessageUsernamePostfix =
           config.BindInOrder(
-              "ChatMessage.WithHeaderRow.Username",
+              "ChatMessage.WithHeaderRow",
               "chatMessageUsernamePostfix",
               defaultValue: string.Empty,
               "If non-empty, adds the text to the end of a ChatMessage username in 'WithheaderRow' mode.");
 
       BindFilters(config);
 
-      //    config.LateBindInOrder(config => BindChatMessageFont(config));
-
-      //    BindMessageToggleConfig(config);
+      LateBindConfig(BindChatMessageFontConfig);
     }
 
     // Filters
@@ -343,57 +351,55 @@ namespace Chatter {
           config.BindInOrder("Filters", "otherHudTextFilterList", "Filter list for all other message texts.", "\t");
     }
 
-    //  public static void BindChatMessageFont(ConfigFile config) {
-    //    string[] fontNames =
-    //        Resources.FindObjectsOfTypeAll<Font>()
-    //            .Select(f => f.name)
-    //            .OrderBy(f => f)
-    //            .Concat(UIResources.OsFontMap.Value.Keys.OrderBy(f => f))
-    //            .ToArray();
+    // Fonts
+    public static ConfigEntry<string> ChatMessageFontAsset { get; private set; }
+    public static ConfigEntry<float> ChatMessageFontSize { get; private set; }
 
-    //    ChatMessageFont ??=
-    //        config.BindInOrder(
-    //            "Style",
-    //            "chatMessageFont",
-    //            UIResources.AveriaSerifLibre,
-    //            "The font to use for chat messages.",
-    //            new AcceptableValueList<string>(fontNames));
+    public static void BindChatMessageFontConfig(ConfigFile config) {
+      string[] fontNames =
+          Resources.FindObjectsOfTypeAll<TMP_FontAsset>()
+              .Select(f => f.name)
+              .OrderBy(f => f)
+              .Distinct()
+              .ToArray();
 
-    //    ChatMessageFontSize ??=
-    //        config.BindInOrder(
-    //            "Style",
-    //            "chatMessageFontSize",
-    //            18,
-    //            "The font size to use for chat messages.",
-    //            new AcceptableValueRange<int>(8, 64));
-    //  }
+      ChatMessageFontAsset =
+          config.BindInOrder(
+              "ChatMessage.Text.Font",
+              "chatMessageTextFontAsset",
+              "Valheim-AveriaSansLibre",
+              "FontAsset (TMP) to use for ChatMessage text.",
+              new AcceptableValueList<string>(fontNames));
 
-    //  public static ConfigEntry<float> MessageToggleTextFontSize { get; private set; }
-    //  public static ConfigEntry<Color> MessageToggleTextColorEnabled { get; private set; }
-    //  public static ConfigEntry<Color> MessageToggleTextColorDisabled { get; private set; }
+      ChatMessageFontAsset.OnSettingChanged(
+          fontName => ChatterChatPanel?.SetContentFontAsset(UIResources.GetFontAssetByName(fontName)));
 
-    //  public static void BindMessageToggleConfig(ConfigFile config) {
-    //    MessageToggleTextFontSize =
-    //        config.BindInOrder(
-    //            "Style.MessageToggle.Text",
-    //            "textFontSize",
-    //            14f,
-    //            "Style - MessageToggle.Text - text font size.",
-    //            new AcceptableValueRange<float>(2f, 25f));
+      ChatMessageFontSize =
+          config.BindInOrder(
+              "ChatMessage.Text.Font",
+              "chatMessageTextFontSize",
+              16f,
+              "The font size to use for chat messages.",
+              new AcceptableValueRange<float>(6f, 64f));
 
-    //    MessageToggleTextColorEnabled =
-    //        config.BindInOrder(
-    //            "Style.MessageToggle.Text",
-    //            "textColorEnabled",
-    //            Color.white,
-    //            "Style - MessageToggle.Text - text color when toggle is enabled.");
+      ChatMessageFontSize.OnSettingChanged(fontSize => ChatterChatPanel?.SetContentFontSize(fontSize));
+    }
 
-    //    MessageToggleTextColorDisabled =
-    //        config.BindInOrder(
-    //            "Style.MessageToggle.Text",
-    //            "textColorDisabled",
-    //            new Color(0.75f, 0.75f, 0.75f, 1f),
-    //            "Style - MessageToggle.Text - text color when toggle is disabled.");
-    //  }
+    public static void LateBindConfig(Action<ConfigFile> lateBindConfigAction) {
+      _fejdStartupBindConfigQueue.Enqueue(lateBindConfigAction);
+    }
+
+    static readonly Queue<Action<ConfigFile>> _fejdStartupBindConfigQueue = new();
+
+    [HarmonyPatch(typeof(FejdStartup))]
+    static class FejdStartupPatch {
+      [HarmonyPostfix]
+      [HarmonyPatch(nameof(FejdStartup.Awake))]
+      static void AwakePostfix() {
+        while (_fejdStartupBindConfigQueue.Count > 0) {
+          _fejdStartupBindConfigQueue.Dequeue()?.Invoke(Config);
+        }
+      }
+    }
   }
 }
