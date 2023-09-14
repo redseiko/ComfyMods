@@ -175,7 +175,7 @@ namespace Chatter {
               "Spacing (in pixels) to use between rows when using 'SingleRow' layout.",
               new AcceptableValueRange<float>(-100, 100));
 
-      ChatPanelContentSpacing.OnSettingChanged(() => ChatterChatPanel?.SetupContentSpacing());
+      ChatPanelContentSingleRowSpacing.OnSettingChanged(() => ChatterChatPanel?.SetupContentSpacing());
 
     // Defaults
     ChatPanelDefaultMessageTypeToUse =
