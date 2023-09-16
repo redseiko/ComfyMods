@@ -100,6 +100,18 @@ namespace PotteryBarn {
           {"BronzeNails", 80 },
           {"Tar", 10 },
           {"MushroomBlue", 10 }}},
+
+        {"demister_ball", new Dictionary<string, int>() {
+          {"Wisp", 10 },
+          {"MushroomBlue", 5 }}},
+
+        {"dverger_demister", new Dictionary<string, int>() {
+          {"Wisp", 20 },
+          {"MushroomBlue", 8 }}},
+
+        {"dverger_demister_large", new Dictionary<string, int>() {
+          {"Wisp", 50 },
+          {"MushroomBlue", 30 }}}
     };
 
     public static readonly Dictionary<string, Dictionary<string, int>> CultivatorCreatorShopItems =

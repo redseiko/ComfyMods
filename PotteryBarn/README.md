@@ -7,6 +7,16 @@
   * New prefabs (that exist in the game) will be available to build!
   * You might need to pick-up/drop a stone/wood/resource to have the recipe trigger.
 
+### Demister Update
+
+  * Vanilla wisp torches have a range of 10m
+
+| Demister              | Range | Blue Mushrooms | Wisps |
+|-----------------------|-------|----------------|-------|
+| demister_ball         | 12    | 5              | 10    |
+| dvergr_demister       | 15    | 8              | 20    |
+| dvergr_demister_large | 30    | 30             | 50    |
+
 ### Dvergr Piece Update
 
 | Category    | Prefab                            | Crafting Station | Resource           | Resource           | Resource         | Resource |
@@ -108,6 +118,10 @@
   * [Jotunn-v2.12.7](https://valheim.thunderstore.io/package/ValheimModding/Jotunn/)
 
 ## Changelog
+
+### 1.9.0
+
+  * Added demisters to the creatorshop
 
 ### 1.8.0
 
