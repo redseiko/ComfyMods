@@ -20,7 +20,7 @@ namespace PotteryBarn {
   public class PotteryBarn : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.potterybarn";
     public const string PluginName = "PotteryBarn";
-    public const string PluginVersion = "1.9.0";
+    public const string PluginVersion = "1.10.0";
 
     Harmony _harmony;
 
@@ -55,10 +55,13 @@ namespace PotteryBarn {
       _standardPrefabIconSprite = _standardPrefabIconSprite ??= CreateColorSprite(new Color32(34, 132, 73, 64));
       _prefabIconRenderRotation = Quaternion.Euler(0f, -45f, 0f);
 
+      Piece femaleArmorStand = GetExistingPiece("ArmorStand_Female").SetName("ArmorStand_Female");
+      femaleArmorStand.m_comfort = 0;
+
       pieceTable.AddPiece(GetExistingPiece("turf_roof").SetName("turf_roof"));
       pieceTable.AddPiece(GetExistingPiece("turf_roof_top").SetName("turf_roof_top"));
       pieceTable.AddPiece(GetExistingPiece("turf_roof_wall").SetName("turf_roof_wall"));
-      pieceTable.AddPiece(GetExistingPiece("ArmorStand_Female").SetName("ArmorStand_Female"));
+      pieceTable.AddPiece(femaleArmorStand);
       pieceTable.AddPiece(GetExistingPiece("ArmorStand_Male").SetName("ArmorStand_Male"));
 
       pieceTable.AddPiece(

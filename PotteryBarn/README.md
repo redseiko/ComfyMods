@@ -119,6 +119,10 @@
 
 ## Changelog
 
+### 1.10.0
+
+  * Fixed comfort on Female armor stand
+
 ### 1.9.0
 
   * Added demisters to the creatorshop
