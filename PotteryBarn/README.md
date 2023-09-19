@@ -13,7 +13,6 @@
 
 | Demister              | Range | Blue Mushrooms | Wisps |
 |-----------------------|-------|----------------|-------|
-| demister_ball         | 12    | 5              | 10    |
 | dvergr_demister       | 15    | 8              | 20    |
 | dvergr_demister_large | 30    | 30             | 50    |
 
@@ -118,6 +117,10 @@
   * [Jotunn-v2.12.7](https://valheim.thunderstore.io/package/ValheimModding/Jotunn/)
 
 ## Changelog
+
+### 1.10.1
+
+  * Removed demister ball since it is untargetable and cannot be deconstructed by players
 
 ### 1.10.0
 

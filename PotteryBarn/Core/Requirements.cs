@@ -101,10 +101,6 @@ namespace PotteryBarn {
           {"Tar", 10 },
           {"MushroomBlue", 10 }}},
 
-        {"demister_ball", new Dictionary<string, int>() {
-          {"Wisp", 10 },
-          {"MushroomBlue", 5 }}},
-
         {"dverger_demister", new Dictionary<string, int>() {
           {"Wisp", 20 },
           {"MushroomBlue", 8 }}},
