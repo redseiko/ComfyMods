@@ -102,6 +102,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\RouteNearbyManager.cs" />
     <Compile Include="Core\RouteRecord.cs" />
     <Compile Include="Core\RouteManager.cs" />
     <Compile Include="Core\RouteToStats.cs" />

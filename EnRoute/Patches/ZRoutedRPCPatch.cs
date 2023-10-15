@@ -26,7 +26,7 @@ namespace EnRoute {
         return true;
       }
 
-      RouteManager.RouteRPCToNearbyPeers(__instance, rpcData);
+      RouteNearbyManager.RouteRPCToNearbyPeers(__instance, rpcData);
 
       return false;
     }

@@ -11,13 +11,13 @@ namespace EnRoute {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(ZNet.RPC_PlayerList))]
     static void RPC_PlayerListPostfix() {
-      RouteManager.RefreshNearbyPlayers();
+      RouteNearbyManager.RefreshNearbyPlayers();
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(nameof(ZNet.UpdatePlayerList))]
-    static void UpdatePlayerListPostfix(ZNet __instance) {
-      
+    static void UpdatePlayerListPostfix() {
+      RouteManager.RefreshRouteRecords();
     }
 
     [HarmonyPostfix]
