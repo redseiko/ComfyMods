@@ -27,10 +27,17 @@ namespace EnRoute {
 
     static readonly ZPackage _package = new();
 
-    public static void RouteRPCToNearbyPeers(ZRoutedRpc routedRpc, ZRoutedRpc.RoutedRPCData rpcData) {
-      foreach (ZNetPeer netPeer in routedRpc.m_peers) {
-        if (netPeer.IsReady()) {
+    public static void RouteRPC(ZRoutedRpc routedRpc, ZRoutedRpc.RoutedRPCData rpcData) {
+      if (rpcData.m_targetPeerID == ZRoutedRpc.Everybody
+          && EnRoute.NearbyMethodHashCodes.Contains(rpcData.m_methodHash)) {
+        foreach (ZNetPeer netPeer in routedRpc.GetReadyPeers()) {
           RouteRPCToPeer(netPeer, NearbyUserIds, rpcData);
+        }
+      } else {
+        rpcData.SerializeTo(_package);
+
+        foreach (ZNetPeer netPeer in routedRpc.GetReadyPeers()) {
+          netPeer.m_rpc.Invoke("RoutedRPC", _package);
         }
       }
     }
@@ -38,24 +45,19 @@ namespace EnRoute {
     public static void RouteRPCToPeer(ZNetPeer netPeer, HashSet<long> targetPeerIds, ZRoutedRpc.RoutedRPCData rpcData) {
       if (netPeer.m_server) {
         rpcData.m_targetPeerID = netPeer.m_uid;
-        RouteRPCToPeer(netPeer, rpcData);
+        netPeer.m_rpc.Invoke("RoutedRPC", rpcData.SerializeTo(_package));
+
         RouteToStats.LogRouteToServer(rpcData.m_methodHash);
       }
 
       if (targetPeerIds.Count > 0) {
         foreach (long targetPeerId in targetPeerIds) {
           rpcData.m_targetPeerID = targetPeerId;
-          RouteRPCToPeer(netPeer, rpcData);
+          netPeer.m_rpc.Invoke("RoutedRPC", rpcData.SerializeTo(_package));
         }
 
         RouteToStats.LogRouteToNearby(rpcData.m_methodHash, targetPeerIds.Count);
       }
-    }
-
-    static void RouteRPCToPeer(ZNetPeer netPeer, ZRoutedRpc.RoutedRPCData rpcData) {
-      _package.Clear();
-      rpcData.Serialize(_package);
-      netPeer.m_rpc.Invoke("RoutedRPC", _package);
     }
   }
 }

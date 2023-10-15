@@ -20,13 +20,11 @@ namespace EnRoute {
     [HarmonyPrefix]
     [HarmonyPatch(nameof(ZRoutedRpc.RouteRPC))]
     static bool RouteRPCPrefix(ZRoutedRpc __instance, ZRoutedRpc.RoutedRPCData rpcData) {
-      if (__instance.m_server
-          || rpcData.m_targetPeerID != ZRoutedRpc.Everybody
-          || !EnRoute.NearbyMethodHashCodes.Contains(rpcData.m_methodHash)) {
-        return true;
+      if (__instance.m_server) {
+        RouteManager.RouteRPC(__instance, rpcData);
+      } else {
+        RouteNearbyManager.RouteRPC(__instance, rpcData);
       }
-
-      RouteNearbyManager.RouteRPCToNearbyPeers(__instance, rpcData);
 
       return false;
     }

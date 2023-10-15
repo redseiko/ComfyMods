@@ -23,7 +23,11 @@ namespace EnRoute {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(ZNet.Awake))]
     static void AwakePostfix(ZNet __instance) {
-      __instance.StartCoroutine(LogStatsCoroutine());
+      if (ZNet.m_isServer) {
+        // Server logging code goes here.
+      } else {
+        __instance.StartCoroutine(LogStatsCoroutine());
+      }
     }
 
     static IEnumerator LogStatsCoroutine() {
