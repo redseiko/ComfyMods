@@ -4,9 +4,13 @@
 
 ## Changelog
 
+### 1.1.1
+
+  * Hot-fix for server not sending LocationIcons as RouteRecords were created after AddPeer instead of before it.
+
 ### 1.1.0
 
-  * ???
+  * Added server-side routing logic.
 
 ### 1.0.1
 

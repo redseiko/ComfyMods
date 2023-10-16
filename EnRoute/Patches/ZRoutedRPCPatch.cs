@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-
-using HarmonyLib;
+﻿using HarmonyLib;
 
 namespace EnRoute {
   [HarmonyPatch(typeof(ZRoutedRpc))]
   static class ZRoutedRPCPatch {
-    [HarmonyPostfix]
+    [HarmonyPrefix]
     [HarmonyPatch(nameof(ZRoutedRpc.AddPeer))]
-    static void AddPeerPostfix(ZNetPeer peer) {
+    static void AddPeerPrefix(ZNetPeer peer) {
       RouteManager.OnAddPeer(peer);
     }
 
