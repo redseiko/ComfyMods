@@ -2,8 +2,6 @@
 
 namespace EnRoute {
   public static class RouteManager {
-    public const int SectorRange = 2;
-
     public static readonly Dictionary<long, ZNetPeer> NetPeers = new();
     public static readonly Dictionary<long, RouteRecord> NetPeerRouting = new();
 
@@ -37,7 +35,7 @@ namespace EnRoute {
           continue;
         }
 
-        if (Vector2i.Distance(otherRecord.Sector, record.Sector) <= SectorRange) {
+        if (record.Sector.IsSectorInRange(otherRecord.Sector, 2)) {
           record.NearbyUserIds.Add(otherRecord.UserId);
         }
       }

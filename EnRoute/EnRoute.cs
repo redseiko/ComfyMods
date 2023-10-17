@@ -11,7 +11,7 @@ namespace EnRoute {
   public class EnRoute : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.enroute";
     public const string PluginName = "EnRoute";
-    public const string PluginVersion = "1.1.1";
+    public const string PluginVersion = "1.1.2";
 
     Harmony _harmony;
 

@@ -19,7 +19,7 @@ namespace EnRoute {
         }
 
         if (!playerInfo.m_publicPosition
-            || Vector2i.Distance(playerZone, zoneSystem.GetZone(playerInfo.m_position)) <= 2) {
+            || playerZone.IsSectorInRange(zoneSystem.GetZone(playerInfo.m_position), 2)) {
           NearbyUserIds.Add(characterId.UserID);
         }
       }

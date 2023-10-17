@@ -23,5 +23,12 @@ namespace EnRoute {
       rpcData.Serialize(package);
       return package;
     }
+
+    public static bool IsSectorInRange(this Vector2i source, Vector2i target, int range) {
+      return target.x >= source.x - range
+          && target.x <= source.x + range
+          && target.y >= source.y - range
+          && target.y <= source.y + range;
+    }
   }
 }
