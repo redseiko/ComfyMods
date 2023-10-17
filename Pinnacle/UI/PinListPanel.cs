@@ -74,7 +74,7 @@ namespace Pinnacle {
       TargetPins.Clear();
       TargetPins.AddRange(pins.OrderBy(p => p.m_type).ThenBy(p => p.m_name));
 
-      foreach (Minimap.PinData pin in pins.Where(p => p.m_pos.x == 0f)) {
+      foreach (Minimap.PinData pin in pins.Where(p => Mathf.Approximately(p.m_pos.y, 0f))) {
         pin.m_pos.y = Pinnacle.GetHeight(pin.m_pos);
       }
 

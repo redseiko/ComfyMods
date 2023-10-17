@@ -17,7 +17,7 @@ namespace Pinnacle {
   public class Pinnacle : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.pinnacle";
     public const string PluginName = "Pinnacle";
-    public const string PluginVersion = "1.5.2";
+    public const string PluginVersion = "1.5.3";
 
     static ManualLogSource _logger;
     Harmony _harmony;
@@ -156,6 +156,10 @@ namespace Pinnacle {
         return;
       }
 
+      if (Mathf.Approximately(targetPosition.y, 0f)) {
+        targetPosition.y = GetHeight(targetPosition);
+      }
+
       LogInfo($"Teleporting player from {player.transform.position} to {targetPosition}.");
       player.TeleportTo(targetPosition, player.transform.rotation, distantTeleport: true);
 
@@ -165,11 +169,11 @@ namespace Pinnacle {
     public static float GetHeight(Vector3 targetPosition) {
       Heightmap.GetHeight(targetPosition, out float height);
 
-      if (height == 0f) {
+      if (height <= 0f) {
         height = GetHeightmapData(targetPosition).m_baseHeights[0];
       }
 
-      return height;
+      return Mathf.Max(0f, height);
     }
 
     public static HeightmapBuilder.HMBuildData GetHeightmapData(Vector3 targetPosition) {

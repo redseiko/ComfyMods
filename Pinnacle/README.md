@@ -85,6 +85,11 @@
 
 ## Changelog
 
+### 1.5.3
+
+  * Fixed a bug in `PinListPanel.SetTargetPins()` where it was not fetching Heightmap info for pins with Y values == 0.
+  * Modified `Pinnacle.TeleportTo` to fetch Heightmap info when targetPosition.y == 0.
+
 ### 1.5.2
 
   * Removed the `targetPosition.y` override in the `TeleportTo()` helper method as this is now handled by vanilla code.
