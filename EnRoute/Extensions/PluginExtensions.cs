@@ -25,10 +25,10 @@ namespace EnRoute {
     }
 
     public static bool IsSectorInRange(this Vector2i source, Vector2i target, int range) {
-      return target.x >= source.x - range
-          && target.x <= source.x + range
-          && target.y >= source.y - range
-          && target.y <= source.y + range;
+      return target.x + range >= source.x - range
+          && target.x - range <= source.x + range
+          && target.y + range >= source.y - range
+          && target.y - range <= source.y + range;
     }
   }
 }

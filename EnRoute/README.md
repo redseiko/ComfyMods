@@ -4,6 +4,10 @@
 
 ## Changelog
 
+### 1.1.3
+
+  * Change bounding-box check to bounding-box intersection check to really matchin vanilla behaviour.
+
 ### 1.1.2
 
   * Change sector range checks from radius to bounding-box to match vanilla `ZDOMan` behaviour.
