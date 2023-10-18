@@ -4,6 +4,10 @@
 
 ## Changelog
 
+### 1.1.4
+
+  * Fixed `DestroyZDO` RPCs never being routed because of a type where it was only checking `Destroy`.
+
 ### 1.1.3
 
   * Change bounding-box check to bounding-box intersection check to really matchin vanilla behaviour.

@@ -11,7 +11,7 @@ namespace EnRoute {
   public class EnRoute : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.enroute";
     public const string PluginName = "EnRoute";
-    public const string PluginVersion = "1.1.3";
+    public const string PluginVersion = "1.1.4";
 
     Harmony _harmony;
 
@@ -25,7 +25,7 @@ namespace EnRoute {
 
     public static readonly string[] NearbyRPCMethods = {
       "Step",
-      "Destroy"
+      "DestroyZDO"
     };
 
     public static readonly Dictionary<int, string> NearbyRPCMethodByHashCode =
