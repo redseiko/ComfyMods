@@ -4,6 +4,13 @@
 
 ## Changelog
 
+### 1.2.0
+
+  * Removed all client-side logic as `DestroyZDO` routing needs to be server-side due to stale ZDOs.
+  * Removed `DestroyZDO` from nearby-routed methods in preparation for a different way of routing.
+  * Re-write `ZDOMan.HandleDestroyedZDO()` as a prefix patch in preparation for routing to affected clients.
+  * Added a `ZNet.UpdateNetTime()` postfix patch to cache the `ZNet.m_netTime` as long ticks value.
+
 ### 1.1.4
 
   * Fixed `DestroyZDO` RPCs never being routed because of a type where it was only checking `Destroy`.

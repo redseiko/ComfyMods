@@ -11,7 +11,7 @@ namespace EnRoute {
   public class EnRoute : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.enroute";
     public const string PluginName = "EnRoute";
-    public const string PluginVersion = "1.1.4";
+    public const string PluginVersion = "1.2.0";
 
     Harmony _harmony;
 
@@ -25,12 +25,14 @@ namespace EnRoute {
 
     public static readonly string[] NearbyRPCMethods = {
       "Step",
-      "DestroyZDO"
+      // "DestroyZDO"
     };
 
     public static readonly Dictionary<int, string> NearbyRPCMethodByHashCode =
         NearbyRPCMethods.ToDictionary(method => method.GetStableHashCode());
 
     public static readonly HashSet<int> NearbyMethodHashCodes = NearbyRPCMethodByHashCode.Keys.ToHashSet();
+
+    public static long NetTimeTicks = 0L;
   }
 }

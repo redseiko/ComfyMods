@@ -1,8 +1,8 @@
 {
   "name": "EnRoute",
-  "version_number": "1.1.4",
+  "version_number": "1.2.0",
   "author": "ComfyMods",
   "description": "ZRoutedRPC tweaks and optimization.",
-  "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Effectual",
+  "website_url": "https://github.com/redseiko/ComfyMods/tree/main/EnRoute",
   "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2200" ]
 }

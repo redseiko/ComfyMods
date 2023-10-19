@@ -20,11 +20,10 @@ namespace EnRoute {
     static bool RouteRPCPrefix(ZRoutedRpc __instance, ZRoutedRpc.RoutedRPCData rpcData) {
       if (__instance.m_server) {
         RouteManager.RouteRPC(__instance, rpcData);
-      } else {
-        RouteNearbyManager.RouteRPC(__instance, rpcData);
+        return false;
       }
 
-      return false;
+      return true;
     }
   }
 }
