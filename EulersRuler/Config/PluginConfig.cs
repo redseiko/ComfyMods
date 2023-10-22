@@ -8,7 +8,7 @@ using ComfyLib;
 using UnityEngine;
 
 namespace EulersRuler {
-  class PluginConfig {
+  public static class PluginConfig {
     [Flags]
     public enum HoverPiecePanelRow {
       None = 0,
@@ -27,63 +27,67 @@ namespace EulersRuler {
       Quaternion = 4,
     }
 
-    public static ConfigEntry<bool> _isModEnabled;
+    public static ConfigEntry<bool> IsModEnabled { get; private set; }
 
-    public static ConfigEntry<Vector2> _hoverPiecePanelPosition;
-    public static ConfigEntry<HoverPiecePanelRow> _hoverPiecePanelEnabledRows;
-    public static ConfigEntry<int> _hoverPiecePanelFontSize;
-    public static ConfigEntry<bool> _showHoverPieceHealthBar;
+    public static ConfigEntry<Vector2> HoverPiecePanelPosition { get; private set; }
+    public static ConfigEntry<HoverPiecePanelRow> HoverPiecePanelEnabledRows { get; private set; }
+    public static ConfigEntry<int> HoverPiecePanelFontSize { get; private set; }
 
-    public static ConfigEntry<Vector2> _placementGhostPanelPosition;
-    public static ConfigEntry<PlacementGhostPanelRow> _placementGhostPanelEnabledRows;
-    public static ConfigEntry<int> _placementGhostPanelFontSize;
+    public static ConfigEntry<bool> ShowHoverPieceHealthBar { get; private set; }
 
-    public static void CreateConfig(ConfigFile config) {
-      _isModEnabled = config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
+    public static ConfigEntry<Vector2> PlacementGhostPanelPosition { get; private set; }
+    public static ConfigEntry<PlacementGhostPanelRow> PlacementGhostPanelEnabledRows { get; private set; }
+    public static ConfigEntry<int> PlacementGhostPanelFontSize { get; private set; }
 
-      _hoverPiecePanelPosition =
+    public static void BindConfig(ConfigFile config) {
+      IsModEnabled = config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
+
+      HoverPiecePanelPosition =
           config.BindInOrder(
-              "HoverPiecePanel",
+              "HoverPiece.Panel",
               "hoverPiecePanelPosition",
-              new Vector2(0, 225),
+              new Vector2(0f, 150f),
               "Position of the HoverPiece properties panel.");
 
-      _hoverPiecePanelEnabledRows =
+      HoverPiecePanelEnabledRows =
           config.BindInOrder(
-              "HoverPiecePanel",
+              "HoverPiece.Panel",
               "hoverPiecePanelEnabledRows",
               HoverPiecePanelRow.Name | HoverPiecePanelRow.Health | HoverPiecePanelRow.Stability,
               "Which rows to display on the HoverPiece properties panel.");
 
-      _hoverPiecePanelFontSize =
+      HoverPiecePanelFontSize =
           config.BindInOrder(
-              "HoverPiecePanel",
+              "HoverPiece.Panel",
               "hoverPiecePanelFontSize",
               18,
               "Font size for the HoverPiece properties panel.",
               new AcceptableValueRange<int>(6, 32));
 
-      _showHoverPieceHealthBar =
+      ShowHoverPieceHealthBar =
           config.BindInOrder(
-              "HoverPiecePanel", "showHoverPieceHealthBar", true, "Show the vanilla hover piece HealthBar.");
+              "HoverPiece.HealthBar",
+              "showHoverPieceHealthBar",
+              true,
+              "Show the vanilla hover piece HealthBar.");
 
-      _placementGhostPanelPosition =
+      PlacementGhostPanelPosition =
           config.BindInOrder(
-              "PlacementGhostPanel",
+              "PlacementGhost.Panel",
               "placementGhostPanelPosition",
-              new Vector2(100, 0),
+              new Vector2(150f, 0f),
               "Position of the PlacementGhost properties panel.");
 
-      _placementGhostPanelEnabledRows =
+      PlacementGhostPanelEnabledRows =
           config.BindInOrder(
-              "PlacementGhostPanel",
+              "PlacementGhost.Panel",
               "placementGhostPanelEnabledRows",
               (PlacementGhostPanelRow) Enum.GetValues(typeof(PlacementGhostPanelRow)).Cast<int>().Sum(),
               "Which rows to display on the PlacementGhost properties panel.");
 
-      _placementGhostPanelFontSize =
+      PlacementGhostPanelFontSize =
           config.BindInOrder(
-              "PlacementGhostPanel",
+              "PlacementGhost.Panel",
               "placementGhostPanelFontSize",
               18,
               "Font size for the PlacementGhost properties panel.",

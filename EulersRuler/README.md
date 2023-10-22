@@ -1,14 +1,18 @@
 # EulersRuler
 
-  * Shows targeted piece name, health, stability and rotatios while hammer is active
+*Show building piece health, stability and rotation on your HUD!*
+
+![EulersRuler v1.5.0 - Splash](https://imgur.com/TOLdJ8n.png)
+
+## Features
+
+  * Shows targeted piece name, health, stability and rotations while hammer is active
   * Shows name and rotation of build piece currently being placed.
   * Show (or hide) the vanilla piece health bar (colorized to the current piece health).
 
-## Instructions
+## User Interface
 
-### User Interface
-
-This fuctionality is available while the build hammer is active.
+This functionality is available while the build hammer is active.
 
   * Display a panel with the piece name, health, stability and rotation (Euler & Quaternion) of the targeted piece.
     * Panel position can be configured.
@@ -18,7 +22,7 @@ This fuctionality is available while the build hammer is active.
     - Panel position can be configured.
     - Every row can be toggled on/off in configuration.
 
-### Known Conflicts
+## Known Conflicts
 
   * BuildingHealthDisplay
     * Mod functionality is duplicated, disable one or the other.
@@ -29,18 +33,14 @@ This fuctionality is available while the build hammer is active.
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
   * Check out our community driven listing site at: [valheimlist.org](https://valheimlist.org/)
 
-## Installation
-
-### Manual
-
-  * Un-zip `EulersRuler.dll` to your `/Valheim/BepInEx/plugins/` folder.
-
-### Thunderstore (manual install)
-
-  * Go to Settings > Import local mod > Select `EulersRuler_v1.4.0.zip`.
-  * Click "OK/Import local mod" on the pop-up for information.
-
 ## Changelog
+
+### 1.5.0
+
+  * Migrated to `TextMeshPro`.
+  * Some code refactoring and clean-up (more to be done later).
+  * Simplified `HoverPiece.HealthBar` patch logic.
+  * Added a splash image to this `README.md`.
 
 ### 1.4.0
 
