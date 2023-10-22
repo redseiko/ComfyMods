@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ZoneScouter {
+namespace ComfyLib {
   public static class CanvasGroupExtensions {
     public static CanvasGroup SetAlpha(this CanvasGroup canvasGroup, float alpha) {
       canvasGroup.alpha = alpha;
@@ -421,40 +423,50 @@ namespace ZoneScouter {
     }
   }
 
-  public static class TextExtensions {
-    public static Text SetAlignment(this Text text, TextAnchor alignment) {
-      text.alignment = alignment;
-      return text;
+  public static class TextMeshProExtensions {
+    public static T SetAlignment<T>(this T tmpText, TextAlignmentOptions alignment) where T : TMP_Text {
+      tmpText.alignment = alignment;
+      return tmpText;
     }
 
-    public static Text SetColor(this Text text, Color color) {
-      text.color = color;
-      return text;
+    public static T SetColor<T>(this T tmpText, Color color) where T : TMP_Text {
+      tmpText.color = color;
+      return tmpText;
     }
 
-    public static Text SetFont(this Text text, Font font) {
-      text.font = font;
-      return text;
+    public static T SetFont<T>(this T tmpText, TMP_FontAsset font) where T : TMP_Text {
+      tmpText.font = font;
+      return tmpText;
     }
 
-    public static Text SetFontStyle(this Text text, FontStyle fontStyle) {
-      text.fontStyle = fontStyle;
-      return text;
+    public static T SetFontSize<T>(this T tmpText, float fontSize) where T : TMP_Text {
+      tmpText.fontSize = fontSize;
+      return tmpText;
     }
 
-    public static Text SetFontSize(this Text text, int fontSize) {
-      text.fontSize = fontSize;
-      return text;
+    public static T SetFontMaterial<T>(this T tmpText, Material fontMaterial) where T : TMP_Text {
+      tmpText.fontMaterial = fontMaterial;
+      return tmpText;
     }
 
-    public static Text SetSupportRichText(this Text text, bool supportRichText) {
-      text.supportRichText = supportRichText;
-      return text;
+    public static T SetMargin<T>(this T tmpText, Vector4 margin) where T : TMP_Text {
+      tmpText.margin = margin;
+      return tmpText;
     }
 
-    public static Text SetText(this Text text, string value) {
-      text.text = value;
-      return text;
+    public static T SetOverflowMode<T>(this T tmpText, TextOverflowModes overflowMode) where T : TMP_Text {
+      tmpText.overflowMode = overflowMode;
+      return tmpText;
+    }
+
+    public static T SetRichText<T>(this T tmpText, bool richText) where T : TMP_Text {
+      tmpText.richText = richText;
+      return tmpText;
+    }
+
+    public static T SetTextWrappingMode<T>(this T tmpText, TextWrappingModes textWrappingMode) where T : TMP_Text {
+      tmpText.textWrappingMode = textWrappingMode;
+      return tmpText;
     }
   }
 

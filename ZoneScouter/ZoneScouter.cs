@@ -4,6 +4,8 @@ using System.Reflection;
 
 using BepInEx;
 
+using ComfyLib;
+
 using HarmonyLib;
 
 using UnityEngine;
@@ -15,44 +17,40 @@ namespace ZoneScouter {
   public class ZoneScouter : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.zonescouter";
     public const string PluginName = "ZoneScouter";
-    public const string PluginVersion = "1.2.0";
+    public const string PluginVersion = "1.3.0";
 
     Harmony _harmony;
 
-    public void Awake() {
+    void Awake() {
       BindConfig(Config);
 
-      IsModEnabled.OnSettingChanged(ToggleSectorInfoPanel);
-      ShowSectorInfoPanel.OnSettingChanged(ToggleSectorInfoPanel);
-
-      SectorInfoPanelBackgroundColor.OnSettingChanged(color => _sectorInfoPanel?.Panel.Ref()?.Image().SetColor(color));
+      SectorInfoPanelBackgroundColor.OnSettingChanged(color => SectorInfoPanel?.Panel.Ref()?.Image().SetColor(color));
       SectorInfoPanelPosition.OnSettingChanged(
-          position => _sectorInfoPanel?.Panel.Ref()?.RectTransform().SetPosition(position));
+          position => SectorInfoPanel?.Panel.Ref()?.RectTransform().SetPosition(position));
 
-      SectorInfoPanelFontSize.OnSettingChanged(() => _sectorInfoPanel?.SetPanelStyle());
-      PositionValueXTextColor.OnSettingChanged(() => _sectorInfoPanel?.SetPanelStyle());
-      PositionValueYTextColor.OnSettingChanged(() => _sectorInfoPanel?.SetPanelStyle());
-      PositionValueZTextColor.OnSettingChanged(() => _sectorInfoPanel?.SetPanelStyle());
+      SectorInfoPanelFontSize.OnSettingChanged(() => SectorInfoPanel?.SetPanelStyle());
+      PositionValueXTextColor.OnSettingChanged(() => SectorInfoPanel?.SetPanelStyle());
+      PositionValueYTextColor.OnSettingChanged(() => SectorInfoPanel?.SetPanelStyle());
+      PositionValueZTextColor.OnSettingChanged(() => SectorInfoPanel?.SetPanelStyle());
 
       ShowSectorZdoCountGrid.OnSettingChanged(ToggleSectorZdoCountGrid);
       SectorZdoCountGridSize.OnSettingChanged(ToggleSectorZdoCountGrid);
 
-      CellZdoCountBackgroundImageColor.OnSettingChanged(() => _sectorZdoCountGrid?.SetCellStyle());
-      CellZdoCountTextColor.OnSettingChanged(() => _sectorZdoCountGrid?.SetCellStyle());
-      CellZdoCountTextFontSize.OnSettingChanged(() => _sectorZdoCountGrid?.SetCellStyle());
+      CellZdoCountBackgroundImageColor.OnSettingChanged(() => SectorZdoCountGrid?.SetCellStyle());
+      CellZdoCountTextColor.OnSettingChanged(() => SectorZdoCountGrid?.SetCellStyle());
+      CellZdoCountTextFontSize.OnSettingChanged(() => SectorZdoCountGrid?.SetCellStyle());
 
-      CellSectorBackgroundImageColor.OnSettingChanged(() => _sectorZdoCountGrid?.SetCellStyle());
-      CellSectorTextColor.OnSettingChanged(() => _sectorZdoCountGrid?.SetCellStyle());
-      CellSectorTextFontSize.OnSettingChanged(() => _sectorZdoCountGrid?.SetCellStyle());
+      CellSectorBackgroundImageColor.OnSettingChanged(() => SectorZdoCountGrid?.SetCellStyle());
+      CellSectorTextColor.OnSettingChanged(() => SectorZdoCountGrid?.SetCellStyle());
+      CellSectorTextFontSize.OnSettingChanged(() => SectorZdoCountGrid?.SetCellStyle());
 
-      IsModEnabled.OnSettingChanged(SectorBoundaries.ToggleSectorBoundaries);
       ShowSectorBoundaries.OnSettingChanged(SectorBoundaries.ToggleSectorBoundaries);
       SectorBoundaryColor.OnSettingChanged(SectorBoundaries.SetBoundaryColor);
 
       _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
     }
 
-    public void OnDestroy() {
+    void OnDestroy() {
       _harmony?.UnpatchSelf();
     }
 
@@ -69,7 +67,7 @@ namespace ZoneScouter {
           : 0L;
     }
 
-    static SectorInfoPanel _sectorInfoPanel;
+    public static SectorInfoPanel SectorInfoPanel { get; private set; }
     static Coroutine _updateSectorInfoPanelCoroutine;
 
     public static void ToggleSectorInfoPanel() {
@@ -78,15 +76,15 @@ namespace ZoneScouter {
         _updateSectorInfoPanelCoroutine = null;
       }
 
-      if (_sectorInfoPanel?.Panel) {
-        Destroy(_sectorInfoPanel.Panel);
-        _sectorInfoPanel = null;
+      if (SectorInfoPanel?.Panel) {
+        Destroy(SectorInfoPanel.Panel);
+        SectorInfoPanel = null;
       }
 
       if (IsModEnabled.Value && ShowSectorInfoPanel.Value && Hud.m_instance) {
-        _sectorInfoPanel = new(Hud.m_instance.transform);
+        SectorInfoPanel = new(Hud.m_instance.transform);
 
-        _sectorInfoPanel.Panel.RectTransform()
+        SectorInfoPanel.Panel.RectTransform()
             .SetAnchorMin(new(0.5f, 1f))
             .SetAnchorMax(new(0.5f, 1f))
             .SetPivot(new(0.5f, 1f))
@@ -94,9 +92,9 @@ namespace ZoneScouter {
             .SetSizeDelta(new(200f, 200f))
             .SetAsFirstSibling();
 
-        _sectorInfoPanel.PanelDragger.OnEndDragAction = position => SectorInfoPanelPosition.Value = position;
+        SectorInfoPanel.PanelDragger.OnEndDragAction = position => SectorInfoPanelPosition.Value = position;
 
-        _sectorInfoPanel.Panel.SetActive(true);
+        SectorInfoPanel.Panel.SetActive(true);
         _updateSectorInfoPanelCoroutine = Hud.m_instance.StartCoroutine(UpdateSectorInfoPanelCoroutine());
       }
 
@@ -113,14 +111,14 @@ namespace ZoneScouter {
       while (true) {
         yield return waitInterval;
 
-        if (!ZoneSystem.m_instance || !Player.m_localPlayer || !_sectorInfoPanel?.Panel) {
+        if (!ZoneSystem.m_instance || !Player.m_localPlayer || !SectorInfoPanel?.Panel) {
           continue;
         }
 
         uint nextUid = ZDOMan.s_instance.m_nextUid;
 
         if (nextUid != lastNextUid) {
-          _sectorInfoPanel.ZdoManagerNextId.Value.SetText($"{nextUid:D}");
+          SectorInfoPanel.ZdoManagerNextId.Value.SetText($"{nextUid:D}");
           lastNextUid = nextUid;
         }
 
@@ -128,9 +126,9 @@ namespace ZoneScouter {
 
         if (position != lastPosition) {
           lastPosition = position;
-          _sectorInfoPanel.PositionX.Value.SetText($"{position.x:F0}");
-          _sectorInfoPanel.PositionY.Value.SetText($"{position.y:F0}");
-          _sectorInfoPanel.PositionZ.Value.SetText($"{position.z:F0}");
+          SectorInfoPanel.PositionX.Value.SetText($"{position.x:F0}");
+          SectorInfoPanel.PositionY.Value.SetText($"{position.y:F0}");
+          SectorInfoPanel.PositionZ.Value.SetText($"{position.z:F0}");
         }
 
         Vector2i sector = ZoneSystem.m_instance.GetZone(position);
@@ -143,12 +141,12 @@ namespace ZoneScouter {
         lastSector = sector;
         lastZdoCount = zdoCount;
 
-        _sectorInfoPanel.SectorXY.Value.SetText($"{sector.x},{sector.y}");
-        _sectorInfoPanel.SectorZdoCount.Value.SetText($"{zdoCount}");
+        SectorInfoPanel.SectorXY.Value.SetText($"{sector.x},{sector.y}");
+        SectorInfoPanel.SectorZdoCount.Value.SetText($"{zdoCount}");
       }
     }
 
-    static SectorZdoCountGrid _sectorZdoCountGrid;
+    public static SectorZdoCountGrid SectorZdoCountGrid { get; private set; }
     static Coroutine _updateSectorZdoCountGridCoroutine;
 
     public static void ToggleSectorZdoCountGrid() {
@@ -157,30 +155,30 @@ namespace ZoneScouter {
         _updateSectorZdoCountGridCoroutine = null;
       }
 
-      if (_sectorZdoCountGrid?.Grid) {
-        Destroy(_sectorZdoCountGrid.Grid);
-        _sectorZdoCountGrid = null;
+      if (SectorZdoCountGrid?.Grid) {
+        Destroy(SectorZdoCountGrid.Grid);
+        SectorZdoCountGrid = null;
       }
 
-      if (IsModEnabled.Value && ShowSectorInfoPanel.Value && ShowSectorZdoCountGrid.Value && _sectorInfoPanel?.Panel) {
-        _sectorZdoCountGrid = new(_sectorInfoPanel.Panel.transform, SectorZdoCountGridSize.Value);
-        _sectorZdoCountGrid.Grid.SetActive(true);
+      if (IsModEnabled.Value && ShowSectorInfoPanel.Value && ShowSectorZdoCountGrid.Value && SectorInfoPanel?.Panel) {
+        SectorZdoCountGrid = new(SectorInfoPanel.Panel.transform, SectorZdoCountGridSize.Value);
+        SectorZdoCountGrid.Grid.SetActive(true);
 
         _updateSectorZdoCountGridCoroutine = Hud.m_instance.StartCoroutine(UpdateSectorZdoCountGrid());
       }
     }
 
     static IEnumerator UpdateSectorZdoCountGrid() {
-      if (!_sectorZdoCountGrid?.Grid) {
+      if (!SectorZdoCountGrid?.Grid) {
         yield break;
       }
 
       WaitForSeconds waitInterval = new(seconds: 1f);
 
-      int size = _sectorZdoCountGrid.Size;
+      int size = SectorZdoCountGrid.Size;
       int offset = Mathf.FloorToInt(size / 2f);
 
-      while (_sectorZdoCountGrid?.Grid) {
+      while (SectorZdoCountGrid?.Grid) {
         if (!Player.m_localPlayer) {
           yield return waitInterval;
           continue;
@@ -191,7 +189,7 @@ namespace ZoneScouter {
         for (int i = 0; i < size; i++) {
           for (int j = 0; j < size; j++) {
             Vector2i cellSector = new(sector.x + i - offset, sector.y - j + offset);
-            SectorZdoCountCell cell = _sectorZdoCountGrid.Cells[j, i];
+            SectorZdoCountCell cell = SectorZdoCountGrid.Cells[j, i];
 
             cell.ZdoCount.SetText($"{GetSectorZdoCount(cellSector)}");
             cell.Sector.SetText($"{cellSector.x},{cellSector.y}");

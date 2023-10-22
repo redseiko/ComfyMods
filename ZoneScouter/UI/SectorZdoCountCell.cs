@@ -1,27 +1,30 @@
-﻿using UnityEngine;
+﻿using ComfyLib;
+
+using TMPro;
+
+using UnityEngine;
 using UnityEngine.UI;
 
 using static ZoneScouter.PluginConfig;
-using static ZoneScouter.UIBuilder;
 
 namespace ZoneScouter {
   public class SectorZdoCountCell {
     public GameObject Cell { get; private set; }
 
     public Image ZdoCountBackground { get; private set; }
-    public Text ZdoCount { get; private set; }
+    public TMP_Text ZdoCount { get; private set; }
 
     public Image SectorBackground { get; private set; }
-    public Text Sector { get; private set; }
+    public TMP_Text Sector { get; private set; }
 
     public SectorZdoCountCell(Transform parentTransform) {
       Cell = CreateChildCell(parentTransform);
 
       ZdoCountBackground = CreateChildBackground(Cell.transform).Image();
-      ZdoCount = CreateChildLabel(ZdoCountBackground.transform).Text();
+      ZdoCount = CreateChildLabel(ZdoCountBackground.transform);
 
       SectorBackground = CreateChildBackground(Cell.transform).Image();
-      Sector = CreateChildLabel(SectorBackground.transform).Text();
+      Sector = CreateChildLabel(SectorBackground.transform);
 
       SetCellStyle(setPreferredWidth: true);
     }
@@ -35,7 +38,7 @@ namespace ZoneScouter {
 
         ZdoCount.GetComponent<LayoutElement>()
             .SetFlexible(width: 1f)
-            .SetPreferred(width: GetTextPreferredWidth(ZdoCount, "12354"));
+            .SetPreferred(width: ZdoCount.GetPreferredValues("12345").x);
       }
 
       SectorBackground.SetColor(CellSectorBackgroundImageColor.Value);
@@ -46,7 +49,7 @@ namespace ZoneScouter {
 
         Sector.GetComponent<LayoutElement>()
             .SetFlexible(width: 1f)
-            .SetPreferred(width: GetTextPreferredWidth(Sector, "-123,-123"));
+            .SetPreferred(width: Sector.GetPreferredValues("-123,-123").x);
       }
     }
 
@@ -66,7 +69,7 @@ namespace ZoneScouter {
 
       cell.AddComponent<Image>()
           .SetType(Image.Type.Sliced)
-          .SetSprite(CreateRoundedCornerSprite(200, 200, 10))
+          .SetSprite(UIBuilder.CreateRoundedCornerSprite(200, 200, 10))
           .SetColor(new(0f, 0f, 0f, 0.3f));
 
       return cell;
@@ -84,21 +87,20 @@ namespace ZoneScouter {
 
       background.AddComponent<Image>()
           .SetType(Image.Type.Sliced)
-          .SetSprite(CreateRoundedCornerSprite(200, 200, 5))
+          .SetSprite(UIBuilder.CreateRoundedCornerSprite(200, 200, 5))
           .SetColor(Color.clear);
 
       return background;
     }
 
-    GameObject CreateChildLabel(Transform parentTransform) {
-      GameObject label = CreateLabel(parentTransform);
-      label.SetName("Label");
+    TMP_Text CreateChildLabel(Transform parentTransform) {
+      TMP_Text label = UIBuilder.CreateTMPLabel(parentTransform);
+      label.name = "Label";
 
-      label.Text()
-          .SetAlignment(TextAnchor.MiddleCenter)
+      label.SetAlignment(TextAlignmentOptions.Center)
           .SetText("123");
 
-      label.AddComponent<LayoutElement>()
+      label.gameObject.AddComponent<LayoutElement>()
           .SetFlexible(width: 1f);
 
       return label;

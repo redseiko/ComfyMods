@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using ComfyLib;
+
+using UnityEngine;
 using UnityEngine.UI;
 
 using static ZoneScouter.PluginConfig;
-using static ZoneScouter.UIBuilder;
 
 namespace ZoneScouter {
   public class SectorInfoPanel {
@@ -50,6 +51,7 @@ namespace ZoneScouter {
       ZdoManagerNextId.Label.SetText("NextId");
 
       SetPanelStyle();
+      ToggleZDOManagerContent(ShowZDOManagerContent.Value);
 
       PanelDragger = Panel.AddComponent<PanelDragger>();
     }
@@ -94,6 +96,10 @@ namespace ZoneScouter {
       ZdoManagerNextId.Row.Image().SetColor(PositionValueZTextColor.Value.SetAlpha(0.1f));
     }
 
+    public void ToggleZDOManagerContent(bool toggleOn) {
+      ZdoManagerContent.Row?.SetActive(toggleOn);
+    }
+
     GameObject CreatePanel(Transform parentTransform) {
       GameObject panel = new("SectorInfo.Panel", typeof(RectTransform));
       panel.SetParent(parentTransform);
@@ -110,7 +116,7 @@ namespace ZoneScouter {
 
       panel.AddComponent<Image>()
           .SetType(Image.Type.Sliced)
-          .SetSprite(CreateSuperellipse(200, 200, 12))
+          .SetSprite(UIBuilder.CreateSuperellipse(200, 200, 12))
           .SetColor(SectorInfoPanelBackgroundColor.Value);
 
       panel.AddComponent<CanvasGroup>()

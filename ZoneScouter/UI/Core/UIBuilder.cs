@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ZoneScouter {
+namespace ComfyLib {
   public static class UIBuilder {
-    public static GameObject CreateLabel(Transform parentTransform) {
-      GameObject label = new($"{parentTransform.name}.Label", typeof(RectTransform));
-      label.SetParent(parentTransform);
+    public static TMP_Text CreateTMPLabel(Transform parentTransform) {
+      TMP_Text label = UnityEngine.Object.Instantiate(UnifiedPopup.instance.bodyText, parentTransform);
+      label.name = "Label";
 
-      label.AddComponent<Text>()
-          .SetSupportRichText(true)
-          .SetFont(UIResources.AveriaSerifLibre)
-          .SetFontSize(16)
-          .SetAlignment(TextAnchor.MiddleLeft)
-          .SetColor(Color.white);
-
-      label.AddComponent<Outline>()
-          .SetEffectColor(Color.black);
+      label.enableAutoSizing = false;
+      label.fontSize = 16f;
+      label.overflowMode = TextOverflowModes.Overflow;
+      label.textWrappingMode = TextWrappingModes.NoWrap;
+      label.color = Color.white;
+      label.text = string.Empty;
 
       return label;
     }

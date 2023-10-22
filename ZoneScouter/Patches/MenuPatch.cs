@@ -1,4 +1,6 @@
-﻿using HarmonyLib;
+﻿using ComfyLib;
+
+using HarmonyLib;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +9,7 @@ using static ZoneScouter.PluginConfig;
 
 namespace ZoneScouter {
   [HarmonyPatch(typeof(Menu))]
-  public class MenuPatch {
+  static class MenuPatch {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Menu.Start))]
     static void StartPostfix(ref Menu __instance) {

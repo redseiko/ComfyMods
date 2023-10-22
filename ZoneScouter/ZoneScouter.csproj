@@ -106,19 +106,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\ConfigFileExtensions.cs" />
     <Compile Include="Patches\HudPatch.cs" />
     <Compile Include="Patches\MenuPatch.cs" />
-    <Compile Include="PluginConfig.cs" />
+    <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Extensions\PluginExtensions.cs" />
     <Compile Include="Core\SectorBoundaries.cs" />
-    <Compile Include="UI\PanelDragger.cs" />
+    <Compile Include="UI\Components\PanelDragger.cs" />
     <Compile Include="UI\SectorInfoPanel.cs" />
     <Compile Include="UI\SectorZdoCountGrid.cs" />
-    <Compile Include="UI\UIBuilder.cs" />
-    <Compile Include="UI\UIExtensions.cs" />
-    <Compile Include="UI\UIResources.cs" />
+    <Compile Include="UI\Core\UIBuilder.cs" />
+    <Compile Include="UI\Core\UIExtensions.cs" />
+    <Compile Include="UI\Core\UIResources.cs" />
     <Compile Include="UI\SectorZdoCountCell.cs" />
-    <Compile Include="UI\ValueWithLabel.cs" />
+    <Compile Include="UI\Builder\ValueWithLabel.cs" />
     <Compile Include="ZoneScouter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

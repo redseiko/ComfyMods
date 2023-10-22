@@ -5,7 +5,7 @@ using static ZoneScouter.ZoneScouter;
 
 namespace ZoneScouter {
   [HarmonyPatch(typeof(Hud))]
-  public class HudPatch {
+  static class HudPatch {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Hud.Awake))]
     static void AwakePostfix() {

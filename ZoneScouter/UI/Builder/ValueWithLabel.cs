@@ -1,25 +1,28 @@
-﻿using UnityEngine;
+﻿using ComfyLib;
+
+using TMPro;
+
+using UnityEngine;
 using UnityEngine.UI;
 
 using static ZoneScouter.PluginConfig;
-using static ZoneScouter.UIBuilder;
 
 namespace ZoneScouter {
   public class ValueWithLabel {
     public GameObject Row { get; private set; }
-    public Text Value { get; private set; }
-    public Text Label { get; private set; }
+    public TMP_Text Value { get; private set; }
+    public TMP_Text Label { get; private set; }
 
     public ValueWithLabel(Transform parentTransform) {
       Row = CreateChildRow(parentTransform);
-      Value = CreateChildValue(Row.transform).Text();
-      Label = CreateChildLabel(Row.transform).Text();
+      Value = CreateChildValue(Row.transform);
+      Label = CreateChildLabel(Row.transform);
     }
 
     public ValueWithLabel FitValueToText(string longestText) {
       Value.GetOrAddComponent<LayoutElement>()
           .SetFlexible(width: 1f)
-          .SetPreferred(width: GetTextPreferredWidth(Value, longestText));
+          .SetPreferred(width: Value.GetPreferredValues(longestText).x);
 
       return this;
     }
@@ -36,34 +39,34 @@ namespace ZoneScouter {
 
       row.AddComponent<Image>()
           .SetType(Image.Type.Sliced)
-          .SetSprite(CreateRoundedCornerSprite(200, 200, 5))
+          .SetSprite(UIBuilder.CreateRoundedCornerSprite(200, 200, 5))
           .SetColor(new(0f, 0f, 0f, 0.1f));
 
       return row;
     }
 
-    GameObject CreateChildValue(Transform parentTransform) {
-      GameObject value = CreateLabel(parentTransform);
-      value.SetName("Value");
+    TMP_Text CreateChildValue(Transform parentTransform) {
+      TMP_Text label = UIBuilder.CreateTMPLabel(parentTransform);
+      label.name = "Value";
 
-      value.Text()
+      label
           .SetFontSize(SectorInfoPanelFontSize.Value)
-          .SetAlignment(TextAnchor.UpperRight)
+          .SetAlignment(TextAlignmentOptions.TopRight)
           .SetText("0");
 
-      value.AddComponent<LayoutElement>()
+      label.gameObject.AddComponent<LayoutElement>()
           .SetPreferred(width: 50f);
 
-      return value;
+      return label;
     }
 
-    GameObject CreateChildLabel(Transform parentTransform) {
-      GameObject label = CreateLabel(parentTransform);
-      label.SetName("Label");
+    TMP_Text CreateChildLabel(Transform parentTransform) {
+      TMP_Text label = UIBuilder.CreateTMPLabel(parentTransform);
+      label.name = "Label";
 
-      label.Text()
+      label
           .SetFontSize(SectorInfoPanelFontSize.Value)
-          .SetAlignment(TextAnchor.UpperLeft)
+          .SetAlignment(TextAlignmentOptions.TopLeft)
           .SetText("X");
 
       return label;
