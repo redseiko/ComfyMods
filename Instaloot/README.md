@@ -2,9 +2,15 @@
 
 *Instantly instantiating illustrious inhuman inventories.*
 
-## Notes
+## Features
 
-  * This mod replaces the `InstantMonsterDrop` mod and has a hard-coded 0 delay in loot dropping.
+  * Loot from monster deaths drop instantly!
+
+## Compatibility
+
+### [Instant Monster Loot Drop](https://www.nexusmods.com/valheim/mods/164)
+
+  * Instaloot replaces `Instant Monster Loot Drop` entirely; uninstall or disable `Instant Monster Loot Drop`.
 
 ## Changelog
 
