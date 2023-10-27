@@ -123,6 +123,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnRoute", "EnRoute\EnRoute.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Instaloot", "Instaloot\Instaloot.csproj", "{5EDCF6C9-E04D-4948-8DA7-F7973306B970}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configula", "Configula\Configula.csproj", "{FF24FE7D-507C-44CF-BC1A-0E493E13AED4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -333,6 +335,10 @@ Global
 		{5EDCF6C9-E04D-4948-8DA7-F7973306B970}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EDCF6C9-E04D-4948-8DA7-F7973306B970}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5EDCF6C9-E04D-4948-8DA7-F7973306B970}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF24FE7D-507C-44CF-BC1A-0E493E13AED4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF24FE7D-507C-44CF-BC1A-0E493E13AED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF24FE7D-507C-44CF-BC1A-0E493E13AED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF24FE7D-507C-44CF-BC1A-0E493E13AED4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
