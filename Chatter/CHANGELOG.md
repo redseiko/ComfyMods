@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.2.1
+
+  * Fixed a bug where default chat modes could not be toggled properly via chat command.
+
 ### 2.2.0
 
   * Fixed for the `v0.217.22` patch.

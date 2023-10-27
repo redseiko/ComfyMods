@@ -25,7 +25,7 @@ namespace Chatter {
     static class SayDelegatePatch {
       [HarmonyTargetMethod]
       static MethodBase FindSayDelegateMethod() {
-        return AccessTools.Method(AccessTools.Inner(typeof(Terminal), "<>c"), "<InitTerminal>b__7_119");
+        return AccessTools.Method(AccessTools.Inner(typeof(Terminal), "<>c"), "<InitTerminal>b__7_120");
       }
 
       [HarmonyPostfix]
@@ -41,7 +41,7 @@ namespace Chatter {
     static class ShoutDelegatePatch {
       [HarmonyTargetMethod]
       static MethodBase FindShoutDelegateMethod() {
-        return AccessTools.Method(AccessTools.Inner(typeof(Terminal), "<>c"), "<InitTerminal>b__7_120");
+        return AccessTools.Method(AccessTools.Inner(typeof(Terminal), "<>c"), "<InitTerminal>b__7_121");
       }
 
       [HarmonyPostfix]
@@ -57,7 +57,7 @@ namespace Chatter {
     static class WhisperDelegatePatch {
       [HarmonyTargetMethod]
       static MethodBase FindWhisperDelegateMethod() {
-        return AccessTools.Method(AccessTools.Inner(typeof(Terminal), "<>c"), "<InitTerminal>b__7_121");
+        return AccessTools.Method(AccessTools.Inner(typeof(Terminal), "<>c"), "<InitTerminal>b__7_122");
       }
 
       [HarmonyPostfix]
