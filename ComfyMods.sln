@@ -121,6 +121,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterServerPortals", "Bett
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnRoute", "EnRoute\EnRoute.csproj", "{44E4E40A-A5FA-4D01-95D6-7D7050C00080}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Instaloot", "Instaloot\Instaloot.csproj", "{5EDCF6C9-E04D-4948-8DA7-F7973306B970}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -327,6 +329,10 @@ Global
 		{44E4E40A-A5FA-4D01-95D6-7D7050C00080}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44E4E40A-A5FA-4D01-95D6-7D7050C00080}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44E4E40A-A5FA-4D01-95D6-7D7050C00080}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EDCF6C9-E04D-4948-8DA7-F7973306B970}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EDCF6C9-E04D-4948-8DA7-F7973306B970}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EDCF6C9-E04D-4948-8DA7-F7973306B970}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EDCF6C9-E04D-4948-8DA7-F7973306B970}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
