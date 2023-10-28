@@ -42,7 +42,8 @@ namespace Configula {
           (Dictionary<Type, Action<SettingEntryBase>>)
               AccessTools.Property(settingFieldDrawerType, "SettingDrawHandlers").GetValue(null);
       settingDrawHandlers[typeof(float)] = FloatConfigEntry.DrawFloat;
-      settingDrawHandlers[typeof(Vector2)] = VectorConfigEntry.DrawVector2;
+      settingDrawHandlers[typeof(Vector2)] = Vector2ConfigEntry.DrawVector2;
+      settingDrawHandlers[typeof(Vector3)] = Vector3ConfigEntry.DrawVector3;
 
       //ConfigurationManager.ConfigurationManager.RegisterCustomSettingDrawer(typeof(float), FloatConfigEntry.DrawFloat);
 

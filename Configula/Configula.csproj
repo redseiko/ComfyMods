@@ -108,10 +108,12 @@
   <ItemGroup>
     <Compile Include="Configula.cs" />
     <Compile Include="Config\FloatConfigEntry.cs" />
+    <Compile Include="Config\FloatInputField.cs" />
     <Compile Include="Config\GUI\GUIFocus.cs" />
     <Compile Include="Config\GUI\GUIHelper.cs" />
+    <Compile Include="Config\Vector3ConfigEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Config\VectorConfigEntry.cs" />
+    <Compile Include="Config\Vector2ConfigEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="manifest.json" />

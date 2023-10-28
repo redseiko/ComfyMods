@@ -34,7 +34,7 @@ namespace Configula {
       }
 
       GUIHelper.BeginColor(cacheEntry.FieldColor);
-      string textValue = GUILayout.TextField(cacheEntry.FieldText, GUILayout.ExpandWidth(true));
+      string textValue = GUILayout.TextArea(cacheEntry.FieldText, GUILayout.ExpandWidth(true));
       GUIHelper.EndColor();
 
       if (textValue == cacheEntry.FieldText) {
