@@ -111,6 +111,7 @@
     <Compile Include="Config\FloatInputField.cs" />
     <Compile Include="Config\GUI\GUIFocus.cs" />
     <Compile Include="Config\GUI\GUIHelper.cs" />
+    <Compile Include="Config\StringConfigEntry.cs" />
     <Compile Include="Config\Vector3ConfigEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Config\Vector2ConfigEntry.cs" />

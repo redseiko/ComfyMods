@@ -33,21 +33,16 @@ namespace Configula {
 
     static void PatchConfigManager() {
       Assembly assembly = Assembly.GetAssembly(typeof(ConfigurationManager.ConfigurationManager));
-      ZLog.Log($"Assembly: {assembly.FullName}");
-
       Type settingFieldDrawerType = assembly.GetType("ConfigurationManager.SettingFieldDrawer");
-      ZLog.Log($"Type: {settingFieldDrawerType.FullName}");
 
       Dictionary<Type, Action<SettingEntryBase>> settingDrawHandlers =
           (Dictionary<Type, Action<SettingEntryBase>>)
               AccessTools.Property(settingFieldDrawerType, "SettingDrawHandlers").GetValue(null);
+
+      settingDrawHandlers[typeof(string)] = StringConfigEntry.DrawString;
       settingDrawHandlers[typeof(float)] = FloatConfigEntry.DrawFloat;
       settingDrawHandlers[typeof(Vector2)] = Vector2ConfigEntry.DrawVector2;
       settingDrawHandlers[typeof(Vector3)] = Vector3ConfigEntry.DrawVector3;
-
-      //ConfigurationManager.ConfigurationManager.RegisterCustomSettingDrawer(typeof(float), FloatConfigEntry.DrawFloat);
-
-      ZLog.Log($"Handlers: {string.Join("\n", settingDrawHandlers.Select(p => $"{p.Key.FullName} - {p.Value.Method.Name}"))}");
     }
   }
 }
