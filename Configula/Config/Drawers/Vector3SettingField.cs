@@ -5,12 +5,12 @@ using ConfigurationManager;
 using UnityEngine;
 
 namespace Configula {
-  public class Vector3ConfigEntry {
+  public class Vector3SettingField {
     public FloatInputField XInput;
     public FloatInputField YInput;
     public FloatInputField ZInput;
 
-    public Vector3ConfigEntry(Vector3 value) {
+    public Vector3SettingField(Vector3 value) {
       XInput = new("X");
       YInput = new("Y");
       ZInput = new("Z");
@@ -26,12 +26,12 @@ namespace Configula {
       return new(XInput.CurrentValue, YInput.CurrentValue, ZInput.CurrentValue);
     }
 
-    static readonly Dictionary<SettingEntryBase, Vector3ConfigEntry> _vector3ConfigCache = new();
+    static readonly Dictionary<SettingEntryBase, Vector3SettingField> _vector3ConfigCache = new();
 
     public static void DrawVector3(SettingEntryBase configEntry) {
       Vector3 configValue = (Vector3) configEntry.Get();
 
-      if (!_vector3ConfigCache.TryGetValue(configEntry, out Vector3ConfigEntry cacheEntry)) {
+      if (!_vector3ConfigCache.TryGetValue(configEntry, out Vector3SettingField cacheEntry)) {
         cacheEntry = new(configValue);
         _vector3ConfigCache[configEntry] = cacheEntry;
       }

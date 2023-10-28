@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 using BepInEx;
@@ -39,10 +38,10 @@ namespace Configula {
           (Dictionary<Type, Action<SettingEntryBase>>)
               AccessTools.Property(settingFieldDrawerType, "SettingDrawHandlers").GetValue(null);
 
-      settingDrawHandlers[typeof(string)] = StringConfigEntry.DrawString;
-      settingDrawHandlers[typeof(float)] = FloatConfigEntry.DrawFloat;
-      settingDrawHandlers[typeof(Vector2)] = Vector2ConfigEntry.DrawVector2;
-      settingDrawHandlers[typeof(Vector3)] = Vector3ConfigEntry.DrawVector3;
+      settingDrawHandlers[typeof(string)] = StringSettingField.DrawString;
+      settingDrawHandlers[typeof(float)] = FloatSettingField.DrawFloat;
+      settingDrawHandlers[typeof(Vector2)] = Vector2SettingField.DrawVector2;
+      settingDrawHandlers[typeof(Vector3)] = Vector3SettingField.DrawVector3;
     }
   }
 }

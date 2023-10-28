@@ -107,20 +107,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configula.cs" />
-    <Compile Include="Config\FloatConfigEntry.cs" />
-    <Compile Include="Config\FloatInputField.cs" />
+    <Compile Include="Config\Drawers\FloatSettingField.cs" />
+    <Compile Include="Config\Drawers\FloatInputField.cs" />
     <Compile Include="Config\GUI\GUIFocus.cs" />
     <Compile Include="Config\GUI\GUIHelper.cs" />
-    <Compile Include="Config\StringConfigEntry.cs" />
-    <Compile Include="Config\Vector3ConfigEntry.cs" />
+    <Compile Include="Config\Drawers\StringSettingField.cs" />
+    <Compile Include="Config\Drawers\Vector3SettingField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Config\Vector2ConfigEntry.cs" />
+    <Compile Include="Config\Drawers\Vector2SettingField.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="manifest.json" />
     <None Include="README.md" />
     <None Include="icon.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyAssembly" AfterTargets="Build">
     <Copy SourceFiles="$(TargetDir)$(AssemblyName).dll" DestinationFolder="$(PluginOutputPath)" />

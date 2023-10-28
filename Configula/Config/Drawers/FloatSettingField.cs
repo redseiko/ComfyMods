@@ -6,7 +6,7 @@ using ConfigurationManager;
 using UnityEngine;
 
 namespace Configula {
-  public static class FloatConfigEntry {
+  public static class FloatSettingField {
     sealed class FloatConfigCacheEntry {
       public float Value = 0f;
       public string FieldText = string.Empty;
