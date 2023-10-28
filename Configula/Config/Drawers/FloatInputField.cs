@@ -1,9 +1,13 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 using UnityEngine;
 
 namespace Configula {
   public class FloatInputField {
+    public static readonly Lazy<GUIStyle> FloatTextFieldStyle =
+        new(() => new(GUI.skin.textField) { wordWrap = true });
+
     public string FieldLabel;
     public float CurrentValue;
     public string CurrentText;
@@ -26,7 +30,11 @@ namespace Configula {
       GUILayout.Label(FieldLabel, GUILayout.ExpandWidth(false));
 
       GUIHelper.BeginColor(CurrentColor);
-      string textValue = GUILayout.TextArea(CurrentText, GUILayout.MinWidth(75f), GUILayout.ExpandWidth(true));
+
+      string textValue =
+          GUILayout.TextField(
+              CurrentText, FloatTextFieldStyle.Value, GUILayout.MinWidth(75f), GUILayout.ExpandWidth(true));
+
       GUIHelper.EndColor();
 
       if (textValue == CurrentText) {
