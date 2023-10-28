@@ -7,6 +7,46 @@ using UnityEngine;
 
 namespace Configula {
   public static class VectorConfigEntry {
+    public class FloatInputField {
+      public string FieldLabel { get; set; }
+      public float CurrentValue { get; set; } = 0f;
+      public string CurrentText { get; set; } = string.Empty;
+      public Color CurrentColor { get; set; } = GUI.color;
+
+      public FloatInputField(string label) {
+        FieldLabel = label;
+        CurrentColor = GUI.color;
+      }
+
+      public void SetValue(float value) {
+        CurrentValue = value;
+        CurrentText = value.ToString(NumberFormatInfo.InvariantInfo);
+        CurrentColor = GUI.color;
+      }
+
+      public void DrawField() {
+        GUILayout.Label(FieldLabel, GUILayout.ExpandWidth(false));
+
+        GUIHelper.BeginColor(CurrentColor);
+        string textValue = GUILayout.TextField(CurrentText, GUILayout.MaxWidth(100f), GUILayout.ExpandWidth(true));
+        GUIHelper.EndColor();
+
+        if (textValue == CurrentText) {
+          return;
+        }
+
+        if (ShouldParse(textValue)
+            && float.TryParse(textValue, NumberStyles.Any, CultureInfo.InvariantCulture, out float result)) {
+          CurrentValue = result;
+          CurrentColor = GUI.color;
+        } else {
+          CurrentColor = Color.red;
+        }
+
+        CurrentText = textValue;
+      }
+    }
+
     sealed class Vector2ConfigCacheEntry {
       public Vector2 Value = Vector2.zero;
 
@@ -35,10 +75,10 @@ namespace Configula {
       if (GUIFocus.HasChanged() || GUIHelper.IsEnterPressed() || cacheEntry.Value != configValue) {
         cacheEntry.Value = configValue;
 
-        cacheEntry.FieldTextX = configValue.x.ToString("F", NumberFormatInfo.InvariantInfo);
+        cacheEntry.FieldTextX = configValue.x.ToString(NumberFormatInfo.InvariantInfo);
         cacheEntry.FieldColorX = GUI.color;
 
-        cacheEntry.FieldTextY = configValue.y.ToString("F", NumberFormatInfo.InvariantInfo);
+        cacheEntry.FieldTextY = configValue.y.ToString(NumberFormatInfo.InvariantInfo);
         cacheEntry.FieldColorY = GUI.color;
       }
 
@@ -54,29 +94,35 @@ namespace Configula {
       string fieldTextY = GUILayout.TextField(cacheEntry.FieldTextY, GUILayout.ExpandWidth(true));
       GUIHelper.EndColor();
 
-      if (fieldTextX == cacheEntry.FieldTextX && fieldTextY == cacheEntry.FieldTextY) {
+      if (cacheEntry.FieldTextX != fieldTextX) {
+        cacheEntry.FieldTextX = fieldTextX;
+
+        if (ShouldParse(fieldTextX)
+            && float.TryParse(fieldTextX, NumberStyles.Float, CultureInfo.InvariantCulture, out float x)) {
+          Vector2 result = new(x, configValue.y);
+          configEntry.Set(result);
+          cacheEntry.Value = (Vector2) configEntry.Get();
+          cacheEntry.FieldTextX = cacheEntry.Value.x.ToString(NumberFormatInfo.InvariantInfo);
+          cacheEntry.FieldColorX = GUI.color;
+        } else {
+          cacheEntry.FieldColorX = Color.red;
+        }
+      } else if (cacheEntry.FieldTextY != fieldTextY) {
+        cacheEntry.FieldTextY = fieldTextY;
+
+        if (ShouldParse(fieldTextY)
+            && float.TryParse(fieldTextY, NumberStyles.Float, CultureInfo.InvariantCulture, out float y)) {
+          Vector2 result = new(configValue.x, y);
+          configEntry.Set(result);
+          cacheEntry.Value = (Vector2) configEntry.Get();
+          cacheEntry.FieldTextY = cacheEntry.Value.y.ToString(NumberFormatInfo.InvariantInfo);
+          cacheEntry.FieldColorY = GUI.color;
+        } else {
+          cacheEntry.FieldColorY = Color.red;
+        }
+      } else {
         return;
       }
-
-      cacheEntry.FieldTextX = fieldTextX;
-      cacheEntry.FieldTextY = fieldTextY;
-
-      Vector2 result = Vector2.zero;
-
-      bool isValidX =
-          ShouldParse(fieldTextX)
-          && float.TryParse(fieldTextX, NumberStyles.Any, CultureInfo.InvariantCulture, out result.x);
-
-      bool isValidY =
-          ShouldParse(fieldTextY)
-          && float.TryParse(fieldTextY, NumberStyles.Any, CultureInfo.InvariantCulture, out result.y);
-
-      if (isValidX && isValidX) {
-        configEntry.Set(result);
-      }
-
-      cacheEntry.FieldColorX = isValidX ? GUI.color : Color.red;
-      cacheEntry.FieldColorY = isValidY ? GUI.color : Color.red;
     }
 
     static bool ShouldParse(string text) {
