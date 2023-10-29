@@ -13,18 +13,18 @@ namespace Configula {
       public Color FieldColor = Color.clear;
     }
 
-    static readonly Dictionary<SettingEntryBase, FloatConfigCacheEntry> _floatConfigCache = new();
+    static readonly Dictionary<SettingEntryBase, FloatConfigCacheEntry> _floatSettingFieldCache = new();
 
     public static void DrawFloat(SettingEntryBase configEntry) {
       float configValue = (float) configEntry.Get();
 
-      if (!_floatConfigCache.TryGetValue(configEntry, out FloatConfigCacheEntry cacheEntry)) {
+      if (!_floatSettingFieldCache.TryGetValue(configEntry, out FloatConfigCacheEntry cacheEntry)) {
         cacheEntry = new() {
           Value = configValue,
           FieldColor = GUI.color,
         };
 
-        _floatConfigCache[configEntry] = cacheEntry;
+        _floatSettingFieldCache[configEntry] = cacheEntry;
       }
 
       if (GUIFocus.HasChanged() || GUIHelper.IsEnterPressed() || cacheEntry.Value != configValue) {

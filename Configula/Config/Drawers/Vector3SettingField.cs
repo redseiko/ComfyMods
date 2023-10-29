@@ -20,16 +20,16 @@ namespace Configula {
       return new(XInput.CurrentValue, YInput.CurrentValue, ZInput.CurrentValue);
     }
 
-    static readonly Dictionary<SettingEntryBase, Vector3SettingField> _vector3ConfigCache = new();
+    static readonly Dictionary<SettingEntryBase, Vector3SettingField> _vector3SettingFieldCache = new();
 
     public static void DrawVector3(SettingEntryBase configEntry) {
       Vector3 configValue = (Vector3) configEntry.Get();
 
-      if (!_vector3ConfigCache.TryGetValue(configEntry, out Vector3SettingField vector3Field)) {
+      if (!_vector3SettingFieldCache.TryGetValue(configEntry, out Vector3SettingField vector3Field)) {
         vector3Field = new();
         vector3Field.SetValue(configValue);
 
-        _vector3ConfigCache[configEntry] = vector3Field;
+        _vector3SettingFieldCache[configEntry] = vector3Field;
       } else if (GUIFocus.HasChanged() || GUIHelper.IsEnterPressed() || vector3Field.GetValue() != configValue) {
         vector3Field.SetValue(configValue);
       }

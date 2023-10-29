@@ -11,9 +11,13 @@ namespace Configula {
     public readonly ColorFloatInputField BlueInput = new("B");
     public readonly ColorFloatInputField AlphaInput = new("A");
     public readonly HexColorInputField HexInput = new();
-    public bool ShowSliders = false;
+
+    Color _value;
+    bool _showSliders = false;
 
     public void SetValue(Color value) {
+      _value = value;
+
       RedInput.SetValue(value.r);
       GreenInput.SetValue(value.g);
       BlueInput.SetValue(value.b);
@@ -23,6 +27,47 @@ namespace Configula {
 
     public Color GetValue() {
       return new(RedInput.CurrentValue, GreenInput.CurrentValue, BlueInput.CurrentValue, AlphaInput.CurrentValue);
+    }
+
+    public void DrawField() {
+      GUILayout.BeginVertical();
+      GUILayout.BeginHorizontal();
+
+      HexInput.DrawField();
+
+      GUILayout.Space(3f);
+      GUIHelper.BeginColor(_value);
+      GUILayout.Label(string.Empty, GUILayout.ExpandWidth(true));
+
+      if (Event.current.type == EventType.Repaint) {
+        GUI.DrawTexture(GUILayoutUtility.GetLastRect(), _colorTexture);
+      }
+
+      GUIHelper.EndColor();
+      GUILayout.Space(3f);
+
+      if (GUILayout.Button(_showSliders ? "\u2207" : "\u2261", GUILayout.MinWidth(45f), GUILayout.ExpandWidth(false))) {
+        _showSliders = !_showSliders;
+      }
+
+      GUILayout.EndHorizontal();
+
+      if (_showSliders) {
+        GUILayout.Space(4f);
+        GUILayout.BeginHorizontal(GUI.skin.box);
+
+        RedInput.DrawField();
+        GUILayout.Space(3f);
+        GreenInput.DrawField();
+        GUILayout.Space(3f);
+        BlueInput.DrawField();
+        GUILayout.Space(3f);
+        AlphaInput.DrawField();
+
+        GUILayout.EndHorizontal();
+      }
+
+      GUILayout.EndVertical();
     }
 
     static readonly Dictionary<SettingEntryBase, ColorSettingField> _colorSettingFieldCache = new();
@@ -40,48 +85,7 @@ namespace Configula {
         colorField.SetValue(configValue);
       }
 
-      GUILayout.BeginVertical(GUI.skin.box);
-      GUILayout.BeginHorizontal();
-
-      colorField.HexInput.DrawField();
-
-      GUILayout.Space(3f);
-      GUIHelper.BeginColor(configValue);
-      GUILayout.Label(string.Empty, GUILayout.ExpandWidth(true));
-
-      if (Event.current.type == EventType.Repaint) {
-        GUI.DrawTexture(GUILayoutUtility.GetLastRect(), _colorTexture);
-      }
-
-      GUIHelper.EndColor();
-      GUILayout.Space(3f);
-
-      if (GUILayout.Button(
-              colorField.ShowSliders ? "\u2228" : "\u2261",
-              GUILayout.MinWidth(40f),
-              GUILayout.ExpandWidth(false))) {
-        colorField.ShowSliders = !colorField.ShowSliders;
-      }
-
-      GUILayout.EndHorizontal();
-
-      if (colorField.ShowSliders) {
-        GUILayout.Space(4f);
-        GUILayout.BeginHorizontal();
-
-        colorField.RedInput.DrawField();
-        GUILayout.Space(3f);
-        colorField.GreenInput.DrawField();
-        GUILayout.Space(3f);
-        colorField.BlueInput.DrawField();
-        GUILayout.Space(3f);
-        colorField.AlphaInput.DrawField();
-
-        GUILayout.EndHorizontal();
-      }
-
-      GUILayout.EndVertical();
-
+      colorField.DrawField();
       Color value = colorField.GetValue();
 
       if (value == configValue) {
