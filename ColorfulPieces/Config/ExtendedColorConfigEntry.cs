@@ -166,15 +166,26 @@ namespace ComfyLib {
       GUI.skin.button.normal.background = _colorTexture;
       colorIndex = -1;
 
+      GUILayout.BeginVertical();
+      GUILayout.BeginHorizontal();
+
       for (int i = 0; i < _paletteColors.Count; i++) {
         GUIHelper.BeginColor(_paletteColors[i]);
 
-        if (GUILayout.Button(string.Empty, GUILayout.Width(20f))) {
+        if (GUILayout.Button(string.Empty, GUILayout.Width(20f), GUILayout.ExpandWidth(false))) {
           colorIndex = i;
         }
 
         GUIHelper.EndColor();
+
+        if ((i + 1) < _paletteColors.Count && ((i + 1) % 8) == 0) {
+          GUILayout.EndHorizontal();
+          GUILayout.BeginHorizontal();
+        }
       }
+
+      GUILayout.EndHorizontal();
+      GUILayout.EndVertical();
 
       GUI.skin.button.normal.background = original;
       return colorIndex >= 0;
