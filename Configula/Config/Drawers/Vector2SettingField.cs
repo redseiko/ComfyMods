@@ -18,6 +18,11 @@ namespace Configula {
       return new(XInput.CurrentValue, YInput.CurrentValue);
     }
 
+    public void DrawField() {
+      XInput.DrawField();
+      YInput.DrawField();
+    }
+
     static readonly Dictionary<SettingEntryBase, Vector2SettingField> _vector2SettingFieldCache = new();
 
     public static void DrawVector2(SettingEntryBase configEntry) {
@@ -32,8 +37,7 @@ namespace Configula {
         vector2Field.SetValue(configValue);
       }
 
-      vector2Field.XInput.DrawField();
-      vector2Field.YInput.DrawField();
+      vector2Field.DrawField();
 
       Vector2 value = vector2Field.GetValue();
 

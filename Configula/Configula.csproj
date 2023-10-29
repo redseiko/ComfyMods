@@ -116,6 +116,7 @@
     <Compile Include="Config\GUI\GUIHelper.cs" />
     <Compile Include="Config\Drawers\StringSettingField.cs" />
     <Compile Include="Config\Drawers\Vector3SettingField.cs" />
+    <Compile Include="Config\GUI\GUIResources.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Extensions\ConfigFileExtensions.cs" />
     <Compile Include="Patches\ConfigurationManagerPatch.cs" />

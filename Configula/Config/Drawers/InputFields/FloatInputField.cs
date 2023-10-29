@@ -5,9 +5,6 @@ using UnityEngine;
 
 namespace Configula {
   public class FloatInputField {
-    public static readonly Lazy<GUIStyle> FloatTextFieldStyle =
-        new(() => new(GUI.skin.textField) { wordWrap = true });
-
     public string FieldLabel;
     public float CurrentValue;
     public string CurrentText;
@@ -33,7 +30,7 @@ namespace Configula {
 
       string textValue =
           GUILayout.TextField(
-              CurrentText, FloatTextFieldStyle.Value, GUILayout.MinWidth(75f), GUILayout.ExpandWidth(true));
+              CurrentText, GUIResources.WordWrapTextField.Value, GUILayout.MinWidth(75f), GUILayout.ExpandWidth(true));
 
       GUIHelper.EndColor();
 
