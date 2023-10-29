@@ -10,6 +10,8 @@ using HarmonyLib;
 
 using UnityEngine;
 
+using static Configula.PluginConfig;
+
 namespace Configula {
 
   [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
@@ -22,7 +24,9 @@ namespace Configula {
     Harmony _harmony;
 
     void Awake() {
-      PatchConfigManager();
+      BindConfig(Config);
+      BindSettingDrawHandlers();
+
       _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
     }
 
@@ -30,13 +34,8 @@ namespace Configula {
       _harmony?.UnpatchSelf();
     }
 
-    static void PatchConfigManager() {
-      Assembly assembly = Assembly.GetAssembly(typeof(ConfigurationManager.ConfigurationManager));
-      Type settingFieldDrawerType = assembly.GetType("ConfigurationManager.SettingFieldDrawer");
-
-      Dictionary<Type, Action<SettingEntryBase>> settingDrawHandlers =
-          (Dictionary<Type, Action<SettingEntryBase>>)
-              AccessTools.Property(settingFieldDrawerType, "SettingDrawHandlers").GetValue(null);
+    static void BindSettingDrawHandlers() {
+      Dictionary<Type, Action<SettingEntryBase>> settingDrawHandlers = SettingFieldDrawer.SettingDrawHandlers;
 
       settingDrawHandlers[typeof(string)] = StringSettingField.DrawString;
       settingDrawHandlers[typeof(float)] = FloatSettingField.DrawFloat;
