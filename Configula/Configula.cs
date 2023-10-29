@@ -42,6 +42,7 @@ namespace Configula {
       settingDrawHandlers[typeof(float)] = FloatSettingField.DrawFloat;
       settingDrawHandlers[typeof(Vector2)] = Vector2SettingField.DrawVector2;
       settingDrawHandlers[typeof(Vector3)] = Vector3SettingField.DrawVector3;
+      settingDrawHandlers[typeof(Color)] = ColorSettingField.DrawColor;
     }
   }
 }

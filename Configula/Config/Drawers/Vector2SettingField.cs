@@ -6,13 +6,8 @@ using UnityEngine;
 
 namespace Configula {
   public class Vector2SettingField {
-    public FloatInputField XInput;
-    public FloatInputField YInput;
-
-    public Vector2SettingField(Vector2 value) {
-      XInput = new("X");
-      YInput = new("Y");
-    }
+    public readonly FloatInputField XInput = new("X");
+    public readonly FloatInputField YInput = new("Y");
 
     public void SetValue(Vector2 value) {
       XInput.SetValue(value.x);
@@ -23,24 +18,24 @@ namespace Configula {
       return new(XInput.CurrentValue, YInput.CurrentValue);
     }
 
-    static readonly Dictionary<SettingEntryBase, Vector2SettingField> _vector2ConfigCache = new();
+    static readonly Dictionary<SettingEntryBase, Vector2SettingField> _vector2SettingFieldCache = new();
 
     public static void DrawVector2(SettingEntryBase configEntry) {
       Vector2 configValue = (Vector2) configEntry.Get();
 
-      if (!_vector2ConfigCache.TryGetValue(configEntry, out Vector2SettingField cacheEntry)) {
-        cacheEntry = new(configValue);
-        _vector2ConfigCache[configEntry] = cacheEntry;
+      if (!_vector2SettingFieldCache.TryGetValue(configEntry, out Vector2SettingField vector2Field)) {
+        vector2Field = new();
+        vector2Field.SetValue(configValue);
+
+        _vector2SettingFieldCache[configEntry] = vector2Field;
+      } else if (GUIFocus.HasChanged() || GUIHelper.IsEnterPressed() || vector2Field.GetValue() != configValue) {
+        vector2Field.SetValue(configValue);
       }
 
-      if (GUIFocus.HasChanged() || GUIHelper.IsEnterPressed() || cacheEntry.GetValue() != configValue) {
-        cacheEntry.SetValue(configValue);
-      }
+      vector2Field.XInput.DrawField();
+      vector2Field.YInput.DrawField();
 
-      cacheEntry.XInput.DrawField();
-      cacheEntry.YInput.DrawField();
-
-      Vector2 value = cacheEntry.GetValue();
+      Vector2 value = vector2Field.GetValue();
 
       if (value != configValue) {
         configEntry.Set(value);

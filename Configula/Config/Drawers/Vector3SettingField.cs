@@ -6,15 +6,9 @@ using UnityEngine;
 
 namespace Configula {
   public class Vector3SettingField {
-    public FloatInputField XInput;
-    public FloatInputField YInput;
-    public FloatInputField ZInput;
-
-    public Vector3SettingField(Vector3 value) {
-      XInput = new("X");
-      YInput = new("Y");
-      ZInput = new("Z");
-    }
+    public readonly FloatInputField XInput = new("X");
+    public readonly FloatInputField YInput = new("Y");
+    public readonly FloatInputField ZInput = new("Z");
 
     public void SetValue(Vector3 value) {
       XInput.SetValue(value.x);
@@ -31,20 +25,20 @@ namespace Configula {
     public static void DrawVector3(SettingEntryBase configEntry) {
       Vector3 configValue = (Vector3) configEntry.Get();
 
-      if (!_vector3ConfigCache.TryGetValue(configEntry, out Vector3SettingField cacheEntry)) {
-        cacheEntry = new(configValue);
-        _vector3ConfigCache[configEntry] = cacheEntry;
+      if (!_vector3ConfigCache.TryGetValue(configEntry, out Vector3SettingField vector3Field)) {
+        vector3Field = new();
+        vector3Field.SetValue(configValue);
+
+        _vector3ConfigCache[configEntry] = vector3Field;
+      } else if (GUIFocus.HasChanged() || GUIHelper.IsEnterPressed() || vector3Field.GetValue() != configValue) {
+        vector3Field.SetValue(configValue);
       }
 
-      if (GUIFocus.HasChanged() || GUIHelper.IsEnterPressed() || cacheEntry.GetValue() != configValue) {
-        cacheEntry.SetValue(configValue);
-      }
+      vector3Field.XInput.DrawField();
+      vector3Field.YInput.DrawField();
+      vector3Field.ZInput.DrawField();
 
-      cacheEntry.XInput.DrawField();
-      cacheEntry.YInput.DrawField();
-      cacheEntry.ZInput.DrawField();
-
-      Vector3 value = cacheEntry.GetValue();
+      Vector3 value = vector3Field.GetValue();
 
       if (value != configValue) {
         configEntry.Set(value);

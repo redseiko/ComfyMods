@@ -15,6 +15,20 @@ namespace Configula {
       GUI.color = _colorStack.Pop();
     }
 
+    public static Texture2D CreateColorTexture(int width, int height, Color color) {
+      Texture2D texture = new(width, height, TextureFormat.RGBA32, mipChain: false);
+
+      for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+          texture.SetPixel(x, y, color);
+        }
+      }
+
+      texture.Apply();
+
+      return texture;
+    }
+
     public static bool IsEnterPressed() {
       return
           Event.current.isKey
