@@ -34,7 +34,7 @@ Changes to any of the configuration options requires opening and closing the men
 
 ### Thunderstore (manual)
 
-  * Go to Settings > Import local mod > Select `AlaCarte_v1.1.0.zip`.
+  * Go to Settings > Import local mod > Select `AlaCarte_v1.2.0.zip`.
   * Click "OK/Import local mod" on the pop-up for information.
 
 ## Notes
@@ -45,6 +45,11 @@ Changes to any of the configuration options requires opening and closing the men
   * Check out our community driven listing site at: [valheimlist.org](https://valheimlist.org/)
 
 ## Changelog
+
+### 1.2.0
+
+  * Fixed for `v0.217.28` PTB patch.
+  * Updated project references from `unstripped_corlib` to `valheim_server_Data\Managed`.
 
 ### 1.1.0
 

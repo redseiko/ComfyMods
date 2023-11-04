@@ -1,8 +1,8 @@
 {
   "name": "AlaCarte",
-  "version_number": "1.1.0",
+  "version_number": "1.2.0",
   "author": "ComfyMods",
   "description": "Menu enhancement and customization.",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/AlaCarte",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2105" ]
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }
