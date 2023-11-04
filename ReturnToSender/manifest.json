@@ -1,8 +1,8 @@
 {
   "name": "ReturnToSender",
-  "version_number": "1.1.0",
+  "version_number": "1.2.0",
   "author": "ComfyMods",
   "description": "Modify ZDOMan.Update to use the original SendZDOToPeers method.",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/ReturnToSender",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2105" ]
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }

@@ -11,11 +11,11 @@ namespace ReturnToSender {
   public class ReturnToSender : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.returntosender";
     public const string PluginName = "ReturnToSender";
-    public const string PluginVersion = "1.1.0";
+    public const string PluginVersion = "1.2.0";
 
     Harmony _harmony;
 
-    public void Awake() {
+    void Awake() {
       BindConfig(Config);
 
       if (IsModEnabled.Value) {
@@ -23,7 +23,7 @@ namespace ReturnToSender {
       }
     }
 
-    public void OnDestroy() {
+    void OnDestroy() {
       _harmony?.UnpatchSelf();
     }
   }

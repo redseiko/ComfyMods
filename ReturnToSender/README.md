@@ -10,10 +10,15 @@
 
 ### Thunderstore (manual)
 
-  * Go to Settings > Import local mod > Select `ReturnToSender_v1.1.0.zip`.
+  * Go to Settings > Import local mod > Select `ReturnToSender_v1.2.0.zip`.
   * Click "OK/Import local mod" on the pop-up for information.
 
 ## Changelog
+
+### 1.2.0
+
+  * Fixed for `v0.217.28` PTB patch.
+  * Updated project references from `unstripped_corlib` to `valheim_server_Data\Managed`.
 
 ### 1.1.0
 

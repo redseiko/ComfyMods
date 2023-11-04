@@ -13,7 +13,7 @@ namespace ReturnToSender {
           .MatchForward(
               useEnd: false,
               new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZDOMan), nameof(ZDOMan.SendZDOToPeers2))))
-          .SetOperandAndAdvance(AccessTools.Method(typeof(ZDOManPatch), nameof(ZDOManPatch.SendZDOToPeers)))
+          .SetOperandAndAdvance(AccessTools.Method(typeof(ZDOManPatch), nameof(SendZDOToPeers)))
           .InstructionEnumeration();
     }
 
