@@ -18,7 +18,7 @@ namespace BetterZeeLog {
                 new CodeMatch(OpCodes.Ldstr, "Failed to send data "),
                 new CodeMatch(OpCodes.Ldloca_S),
                 new CodeMatch(OpCodes.Constrained),
-                new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(object), nameof(object.ToString))),
+                new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(object), nameof(ToString))),
                 new CodeMatch(OpCodes.Call),
                 new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
             .Advance(offset: 1)
