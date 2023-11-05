@@ -1,8 +1,8 @@
 {
   "name": "BetterServerPortals",
-  "version_number": "1.4.0",
+  "version_number": "1.5.0",
   "author": "ComfyMods",
   "description": "Now you're thinking with portals.",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/master/BetterServerPortals",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2200" ]
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }
