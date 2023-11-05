@@ -74,19 +74,19 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>$(GamePath)\unstripped_corlib\UnityEngine.dll</HintPath>
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(GamePath)\unstripped_corlib\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
-      <HintPath>$(GamePath)\unstripped_corlib\UnityEngine.ImageConversionModule.dll</HintPath>
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>$(GamePath)\unstripped_corlib\UnityEngine.TextRenderingModule.dll</HintPath>
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>$(GamePath)\unstripped_corlib\UnityEngine.UI.dll</HintPath>
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -102,22 +102,34 @@
     <None Include="config\Intermission\tips.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="config\Intermission\anathema copy.jpg" />
     <Content Include="config\Intermission\artis4 .jpg" />
     <Content Include="config\Intermission\artis4 2.jpg" />
     <Content Include="config\Intermission\artis4 3.jpg" />
     <Content Include="config\Intermission\artis4 4.jpg" />
     <Content Include="config\Intermission\Atreus copy.jpg" />
+    <Content Include="config\Intermission\azein copy nov.jpg" />
     <Content Include="config\Intermission\azein copy.jpg" />
     <Content Include="config\Intermission\Dauf copy.jpg" />
     <Content Include="config\Intermission\Dauf2 copy.jpg" />
+    <Content Include="config\Intermission\doodledanz1 nov.jpg" />
+    <Content Include="config\Intermission\doodledanz2 nov.jpg" />
+    <Content Include="config\Intermission\Dorn copy nov.jpg" />
     <Content Include="config\Intermission\Durrwood copy.jpg" />
     <Content Include="config\Intermission\Durrwood2 copy.jpg" />
     <Content Include="config\Intermission\Durrwood3 copy.jpg" />
+    <Content Include="config\Intermission\eilonwy1 nov.jpg" />
+    <Content Include="config\Intermission\eilonwy2nov.jpg" />
+    <Content Include="config\Intermission\eilonwy3nov.jpg" />
+    <Content Include="config\Intermission\eilonwy4 nov.jpg" />
     <Content Include="config\Intermission\Faenor copy.jpg" />
     <Content Include="config\Intermission\Gimle the wide 2 copy.jpg" />
     <Content Include="config\Intermission\Gimle the wide 3 copy.jpg" />
     <Content Include="config\Intermission\Gimle the wide copy.jpg" />
     <Content Include="config\Intermission\Gimle the wide4.jpg" />
+    <Content Include="config\Intermission\iamcomphy nov.jpg" />
+    <Content Include="config\Intermission\ibocain loading screen.jpg" />
+    <Content Include="config\Intermission\Ione nov.jpg" />
     <Content Include="config\Intermission\ione.jpg" />
     <Content Include="config\Intermission\Iriel copy.jpg" />
     <Content Include="config\Intermission\Jimbo.jpg" />
@@ -143,6 +155,9 @@
     <Content Include="config\Intermission\kittykat4.jpg" />
     <Content Include="config\Intermission\kittykat5.jpg" />
     <Content Include="config\Intermission\kittykat6.jpg" />
+    <Content Include="config\Intermission\Knellnar nov.jpg" />
+    <Content Include="config\Intermission\La Luna1 nov.jpg" />
+    <Content Include="config\Intermission\La Luna2 nov.jpg" />
     <Content Include="config\Intermission\lyka.jpg" />
     <Content Include="config\Intermission\lyka2.jpg" />
     <Content Include="config\Intermission\lyka3.jpg" />
@@ -150,6 +165,9 @@
     <Content Include="config\Intermission\lyka5.jpg" />
     <Content Include="config\Intermission\lyka6.jpg" />
     <Content Include="config\Intermission\lyka7.jpg" />
+    <Content Include="config\Intermission\MadMonkeh1 nov.jpg" />
+    <Content Include="config\Intermission\MadMonkeh2 nov.jpg" />
+    <Content Include="config\Intermission\MadMonkeh3 nov.jpg" />
     <Content Include="config\Intermission\Mex copy.jpg" />
     <Content Include="config\Intermission\Mex2 copy.jpg" />
     <Content Include="config\Intermission\Mex3 copy.jpg" />
@@ -170,6 +188,7 @@
     <Content Include="config\Intermission\tomcat copy.jpg" />
     <Content Include="config\Intermission\tomcat2 copy.jpg" />
     <Content Include="config\Intermission\torvi copy.jpg" />
+    <Content Include="config\Intermission\torvi nov.jpg" />
     <Content Include="config\Intermission\ying1.jpg" />
     <Content Include="config\Intermission\ying2.jpg" />
     <Content Include="config\Intermission\ying3.jpg" />

@@ -10,12 +10,12 @@
 
 ### Thunderstore (manual)
 
-  * Go to Settings > Import local mod > Select `ComfyLoadingScreens_v1.2.0.zip`.
+  * Go to Settings > Import local mod > Select `ComfyLoadingScreens_v1.3.0.zip`.
   * Click "OK/Import local mod" on the pop-up for information.
 
 ## Dependencies
 
- * [ComfyMods-Intermission-1.2.0](https://valheim.thunderstore.io/package/ComfyMods/Intermission/)
+ * [ComfyMods-Intermission-1.3.0](https://valheim.thunderstore.io/package/ComfyMods/Intermission/)
 
 ## Notes
 
@@ -24,6 +24,10 @@
   * Check out our community driven listing site at: [valheimlist.org](https://valheimlist.org/)
 
 ## Changelog
+
+### 1.3.0
+
+  * 19 new images added!
 
 ### 1.2.0
 
