@@ -1,8 +1,8 @@
 {
   "name": "Keysential",
-  "version_number": "1.5.0",
+  "version_number": "1.6.0",
   "author": "ComfyMods",
   "description": "Server-side global key manager.",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Keysential",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2200" ]
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }
