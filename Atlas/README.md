@@ -4,6 +4,12 @@
 
 ## Changelog
 
+### 1.9.0
+
+  * Updated for `v0.217.28` PTB patch.
+  * Updated project references from `unstripped_corlib` to `valheim_server_Data\Managed`.
+  * Fixed the `ZDOMan.Load()` transpiler to properly emit an unconditional branch.
+
 ### 1.8.0
 
   * Fixed for the `v0.217.22` patch.

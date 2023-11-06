@@ -28,10 +28,7 @@ namespace Atlas {
               new CodeMatch(OpCodes.Ldarg_1),
               new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(ZPackage), nameof(ZPackage.SetReader))))
           // Insert a branch to the position after ZDO loading when version < 31.
-          .InsertAndAdvance(
-              new CodeInstruction(OpCodes.Ldarg_2),
-              new CodeInstruction(OpCodes.Ldc_I4, 31))
-          .InsertBranchAndAdvance(OpCodes.Blt, destination)
+          .InsertBranchAndAdvance(OpCodes.Br, destination)
           .Start()
           // Add exception handling for duplicate ZDOs saved.
           .MatchForward(
@@ -44,10 +41,11 @@ namespace Atlas {
               new CodeMatch(
                   OpCodes.Callvirt,
                   AccessTools.Method(typeof(Dictionary<ZDOID, ZDO>), nameof(Dictionary<ZDOID, ZDO>.Add))))
+          .ThrowIfInvalid("Could not patch AddObjectsById!")
           .InsertAndAdvance(
               new CodeInstruction(OpCodes.Ldarg_0),
               new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ZDOMan), nameof(ZDOMan.m_objectsByID))),
-              new CodeInstruction(OpCodes.Ldloc_S, Convert.ToByte(10)),
+              new CodeInstruction(OpCodes.Ldloc_S, Convert.ToByte(9)),
               Transpilers.EmitDelegate<Action<Dictionary<ZDOID, ZDO>, ZDO>>(AddObjectsByIdPreDelegate))
           .InstructionEnumeration();
     }
@@ -87,7 +85,7 @@ namespace Atlas {
 
     [HarmonyTranspiler]
     [HarmonyPatch(nameof(ZDOMan.RPC_ZDOData))]
-    static IEnumerable<CodeInstruction> RpcZdoDataTranspiler(IEnumerable<CodeInstruction> instructions) {
+    static IEnumerable<CodeInstruction> RPC_ZDODataTranspiler(IEnumerable<CodeInstruction> instructions) {
       return new CodeMatcher(instructions)
           .MatchForward(
               useEnd: false,
