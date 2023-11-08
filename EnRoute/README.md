@@ -4,6 +4,11 @@
 
 ## Changelog
 
+### 1.3.0
+
+  * Updated for `v0.217.28` patch.
+  * Updated project references from `unstripped_corlib` to `valheim_server_Data\Managed`.
+
 ### 1.2.0
 
   * Removed all client-side logic as `DestroyZDO` routing needs to be server-side due to stale ZDOs.
