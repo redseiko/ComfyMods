@@ -15,7 +15,7 @@ namespace BetterZeeRouter {
   public class BetterZeeRouter : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.betterzeerouter";
     public const string PluginName = "BetterZeeRouter";
-    public const string PluginVersion = "1.5.0";
+    public const string PluginVersion = "1.6.0";
 
     static ManualLogSource _logger;
     Harmony _harmony;
@@ -23,7 +23,7 @@ namespace BetterZeeRouter {
     RoutedRpcManager _routedRpcManager;
     TeleportPlayerHandler _teleportPlayerHandler;
 
-    public void Awake() {
+    void Awake() {
       _logger = Logger;
       BindConfig(Config);
 
@@ -39,7 +39,7 @@ namespace BetterZeeRouter {
       _routedRpcManager.AddHandler(RpcTeleportToHashCode, _teleportPlayerHandler);
     }
 
-    public void OnDestroy() {
+    void OnDestroy() {
       _teleportPlayerHandler?.Dispose();
       _harmony?.UnpatchSelf();
     }
