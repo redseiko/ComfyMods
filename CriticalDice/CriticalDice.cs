@@ -18,7 +18,7 @@ namespace CriticalDice {
   public class CriticalDice : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.criticaldice";
     public const string PluginName = "CriticalDice";
-    public const string PluginVersion = "1.5.0";
+    public const string PluginVersion = "1.6.0";
 
     static readonly int _rpcSayHashCode = "Say".GetStableHashCode();
     static readonly SayHandler _sayHandler = new();

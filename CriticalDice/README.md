@@ -4,6 +4,11 @@
 
 ## Changelog
 
+### 1.6.0
+
+  * Updated for `v0.217.28` patch.
+  * Updated project references from `unstripped_corlib` to `valheim_server_Data\Managed`.
+
 ### 1.5.0
 
   * Updated for `v0.216.8` PTB patch.
