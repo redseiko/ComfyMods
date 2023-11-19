@@ -32,8 +32,8 @@ namespace PutMeDown {
     }
 
     static bool AutoPickupDelegate(bool autoPickup, ItemDrop itemDrop) {
-      if (IsModEnabled.Value) {
-        //
+      if (autoPickup && IsModEnabled.Value && AutoPickupController.ShouldIgnoreItem(itemDrop)) {
+        return false;
       }
 
       return autoPickup;

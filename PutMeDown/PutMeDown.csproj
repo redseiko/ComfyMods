@@ -103,7 +103,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\PluginConfig.cs" />
+    <Compile Include="Config\ToggleStringListConfigEntry.cs" />
+    <Compile Include="Core\AutoPickupController.cs" />
     <Compile Include="Extensions\ConfigFileExtensions.cs" />
+    <Compile Include="Extensions\UnityExtensons.cs" />
     <Compile Include="Patches\PlayerPatch.cs" />
     <Compile Include="PutMeDown.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -113,9 +116,7 @@
     <None Include="README.md" />
     <None Include="icon.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyAssembly" AfterTargets="Build">
     <Copy SourceFiles="$(TargetDir)$(AssemblyName).dll" DestinationFolder="$(PluginOutputPath)" />
