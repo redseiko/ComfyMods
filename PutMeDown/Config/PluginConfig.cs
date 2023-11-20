@@ -25,7 +25,7 @@ namespace PutMeDown {
               "itemsToIgnore",
               "Wood=0,Stone=0",
               "Items to ignore for auto-pickup behaviour.",
-              GetItemDropNames);
+              autoCompleteFunc: GetItemDropNames);
 
       AutoPickupController.SetItemsToIgnore(ItemsToIgnore.ToggledStringValues());
       ItemsToIgnore.SettingChanged += (_, values) => AutoPickupController.SetItemsToIgnore(values);

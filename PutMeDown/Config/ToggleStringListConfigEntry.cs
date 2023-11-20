@@ -11,8 +11,7 @@ namespace ComfyLib {
     public readonly ConfigEntry<string> BaseConfigEntry;
     public event EventHandler<string[]> SettingChanged;
 
-    readonly Func<IEnumerable<string>> _autoCompleteFunc;
-    List<string> _autoCompleteOptions;
+    readonly AutoCompleteLabel _autoCompleteLabel = default;
 
     public ToggleStringListConfigEntry(
         ConfigFile config,
@@ -24,8 +23,9 @@ namespace ComfyLib {
       BaseConfigEntry = config.BindInOrder(section, key, defaultValue, description, Drawer);
       BaseConfigEntry.SettingChanged += (sender, _) => SettingChanged?.Invoke(sender, ToggledStringValues());
 
-      _autoCompleteFunc = autoCompleteFunc;
-      _autoCompleteOptions = default;
+      if (autoCompleteFunc != default) {
+        _autoCompleteLabel = new(autoCompleteFunc);
+      }
     }
 
     static readonly char[] _valueSeparator = { ',' };
@@ -106,28 +106,7 @@ namespace ComfyLib {
 
       GUILayout.EndHorizontal();
 
-      if (_autoCompleteFunc != null) {
-        GUILayout.Space(3f);
-
-        if (string.IsNullOrEmpty(_valueText)) {
-          GUILayout.Label("...", GUILayout.ExpandWidth(true), GUILayout.Height(50f));
-        } else {
-          _autoCompleteOptions ??= new List<string>(_autoCompleteFunc());
-
-          if (_autoCompleteOptions.Count >= 0) {
-            string options =
-                string.Join(
-                    ", ",
-                    _autoCompleteOptions
-                        .Where(option => option.StartsWith(_valueText, StringComparison.InvariantCultureIgnoreCase))
-                        .Take(10));
-
-            GUILayout.Label(options, GUILayout.ExpandWidth(true), GUILayout.Height(50f));
-          } else {
-            GUILayout.Label("...", GUILayout.ExpandWidth(true), GUILayout.Height(50f));
-          }
-        }
-      }
+      _autoCompleteLabel?.DrawLabel(_valueText);
 
       GUILayout.EndVertical();
 
@@ -138,6 +117,63 @@ namespace ComfyLib {
 
       if (hasChanged) {
         configEntry.BoxedValue = string.Join(",", _valuesCache);
+      }
+    }
+
+    public class AutoCompleteLabel {
+      static readonly Lazy<GUIStyle> _labelStyle =
+          new(() => new(GUI.skin.label) {
+            padding = new(1, 1, 1, 1),
+            margin = new(1, 1, 1, 1)
+          });
+
+      readonly Func<IEnumerable<string>> _optionsFunc;
+      List<string> _options;
+      string _value;
+      string _labelText;
+      Vector2 _scrollPosition;
+
+      public AutoCompleteLabel(Func<IEnumerable<string>> optionsFunc) {
+        _optionsFunc = optionsFunc;
+        _options = null;
+        _value = string.Empty;
+        _labelText = string.Empty;
+        _scrollPosition = Vector2.zero;
+      }
+
+      public void DrawLabel(string value) {
+        if (_value != value) {
+          _value = value;
+          _labelText = GetLabelText(value);
+          _scrollPosition = Vector2.zero;
+        }
+
+        if (!string.IsNullOrEmpty(_value)) {
+          _scrollPosition =
+              GUILayout.BeginScrollView(
+                  _scrollPosition, GUI.skin.box, GUILayout.ExpandWidth(true), GUILayout.Height(50f));
+
+          GUILayout.Label(_labelText, _labelStyle.Value);
+          GUILayout.EndScrollView();
+        }
+      }
+
+      string GetLabelText(string value) {
+        if (string.IsNullOrEmpty(value)) {
+          return string.Empty;
+        }
+
+        _options ??= new(_optionsFunc());
+
+        if (_options.Count <= 0) {
+          return string.Empty;
+        }
+
+        return string.Join(
+            ", ",
+            _options
+                .Where(option => option.StartsWith(value, StringComparison.InvariantCultureIgnoreCase))
+                .Take(10));
       }
     }
   }
