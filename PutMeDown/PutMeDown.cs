@@ -34,7 +34,6 @@ namespace PutMeDown {
 
     public static void LogInfo(object o) {
       _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {o}");
-      Chat.m_instance.Ref()?.AddString($"{o}");
     }
   }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using BepInEx.Configuration;
 
+using HarmonyLib;
+
 namespace ComfyLib {
   public static class ConfigFileExtensions {
     static readonly Dictionary<string, int> _sectionToSettingOrder = new();
@@ -58,6 +60,21 @@ namespace ComfyLib {
                 HideDefaultButton = hideDefaultButton,
                 Order = GetSettingOrder(section)
               }));
+    }
+
+    public static void LateBindConfig(this ConfigFile config, Action<ConfigFile> lateBindConfigAction) {
+      _lateBindConfigQueue.Enqueue(() => lateBindConfigAction.Invoke(config));
+    }
+
+    static readonly Queue<Action> _lateBindConfigQueue = new();
+
+    [HarmonyPatch(typeof(FejdStartup), nameof(FejdStartup.Start))]
+    static class LateBindConfigPatch {
+      static void Postfix() {
+        while (_lateBindConfigQueue.Count > 0) {
+          _lateBindConfigQueue.Dequeue()?.Invoke();
+        }
+      }
     }
 
     public static void OnSettingChanged<T>(this ConfigEntry<T> configEntry, Action settingChangedHandler) {

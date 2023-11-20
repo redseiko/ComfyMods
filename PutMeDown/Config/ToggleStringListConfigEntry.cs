@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using BepInEx.Configuration;
 
@@ -10,14 +11,21 @@ namespace ComfyLib {
     public readonly ConfigEntry<string> BaseConfigEntry;
     public event EventHandler<string[]> SettingChanged;
 
+    readonly Func<IEnumerable<string>> _autoCompleteFunc;
+    List<string> _autoCompleteOptions;
+
     public ToggleStringListConfigEntry(
         ConfigFile config,
         string section,
         string key,
         string defaultValue,
-        string description) {
+        string description,
+        Func<IEnumerable<string>> autoCompleteFunc = default) {
       BaseConfigEntry = config.BindInOrder(section, key, defaultValue, description, Drawer);
       BaseConfigEntry.SettingChanged += (sender, _) => SettingChanged?.Invoke(sender, ToggledStringValues());
+
+      _autoCompleteFunc = autoCompleteFunc;
+      _autoCompleteOptions = default;
     }
 
     static readonly char[] _valueSeparator = { ',' };
@@ -49,6 +57,11 @@ namespace ComfyLib {
       _valuesCache.AddRange(
           configEntry.BoxedValue.ToString().Split(_valueSeparator, StringSplitOptions.RemoveEmptyEntries));
 
+      GUILayout.BeginHorizontal();
+      bool toggleOnClicked = GUILayout.Button("Toggle On", GUILayout.ExpandWidth(true));
+      bool toggleOffClicked = GUILayout.Button("Toggle Off", GUILayout.ExpandWidth(true));
+      GUILayout.EndHorizontal();
+
       bool hasChanged = false;
       int removeIndex = -1;
 
@@ -65,6 +78,12 @@ namespace ComfyLib {
         }
 
         GUILayout.EndHorizontal();
+
+        if (toggleOnClicked) {
+          result = true;
+        } else if (toggleOffClicked) {
+          result = false;
+        }
 
         if (result != isToggled) {
           hasChanged = true;
@@ -86,6 +105,29 @@ namespace ComfyLib {
       }
 
       GUILayout.EndHorizontal();
+
+      if (_autoCompleteFunc != null) {
+        GUILayout.Space(3f);
+
+        if (string.IsNullOrEmpty(_valueText)) {
+          GUILayout.Label("...", GUILayout.ExpandWidth(true), GUILayout.Height(50f));
+        } else {
+          _autoCompleteOptions ??= new List<string>(_autoCompleteFunc());
+
+          if (_autoCompleteOptions.Count >= 0) {
+            string options =
+                string.Join(
+                    ", ",
+                    _autoCompleteOptions
+                        .Where(option => option.StartsWith(_valueText, StringComparison.InvariantCultureIgnoreCase))
+                        .Take(10));
+
+            GUILayout.Label(options, GUILayout.ExpandWidth(true), GUILayout.Height(50f));
+          } else {
+            GUILayout.Label("...", GUILayout.ExpandWidth(true), GUILayout.Height(50f));
+          }
+        }
+      }
 
       GUILayout.EndVertical();
 

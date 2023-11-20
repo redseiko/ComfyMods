@@ -8,7 +8,7 @@ namespace PutMeDown {
       _itemsToIgnore.Clear();
       _itemsToIgnore.UnionWith(itemsToIgnore);
 
-      PutMeDown.LogInfo($"Now ignoring items: {string.Join(", ", _itemsToIgnore)}");
+      PutMeDown.LogInfo($"Ignoring {_itemsToIgnore.Count} items: {string.Join(", ", _itemsToIgnore)}");
     }
 
     public static bool ShouldIgnoreItem(ItemDrop itemDrop) {
