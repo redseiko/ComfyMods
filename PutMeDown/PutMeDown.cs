@@ -9,8 +9,6 @@ using ComfyLib;
 
 using HarmonyLib;
 
-using static PutMeDown.PluginConfig;
-
 namespace PutMeDown {
   [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
   public class PutMeDown : BaseUnityPlugin {
@@ -23,7 +21,7 @@ namespace PutMeDown {
 
     void Awake() {
       _logger = Logger;
-      BindConfig(Config);
+      ComfyConfigUtils.BindConfig(Config);
 
       _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
     }

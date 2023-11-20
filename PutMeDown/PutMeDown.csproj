@@ -102,6 +102,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\ComfyConfig.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Config\ToggleStringListConfigEntry.cs" />
     <Compile Include="Core\AutoPickupController.cs" />

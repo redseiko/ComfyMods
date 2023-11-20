@@ -11,12 +11,12 @@ namespace PutMeDown {
 
     public static ToggleStringListConfigEntry ItemsToIgnore { get; private set; }
 
+    [ComfyConfig]
     public static void BindConfig(ConfigFile config) {
       IsModEnabled = config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
-
-      config.LateBindConfig(BindAutoPickupConfig);
     }
 
+    [ComfyConfig(LateBind = true)]
     public static void BindAutoPickupConfig(ConfigFile config) {
       ItemsToIgnore =
           new ToggleStringListConfigEntry(
