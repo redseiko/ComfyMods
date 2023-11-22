@@ -11,7 +11,7 @@ namespace ComfyLib {
     public readonly ConfigEntry<string> BaseConfigEntry;
     public event EventHandler<string[]> SettingChanged;
 
-    readonly AutoCompleteLabel _autoCompleteLabel = default;
+    readonly AutoCompleteBox _autoCompleteLabel = default;
 
     public ToggleStringListConfigEntry(
         ConfigFile config,
@@ -106,7 +106,14 @@ namespace ComfyLib {
 
       GUILayout.EndHorizontal();
 
-      _autoCompleteLabel?.DrawLabel(_valueText);
+      if (_autoCompleteLabel != null) {
+        string result = _autoCompleteLabel.DrawBox(_valueText);
+
+        if (!string.IsNullOrEmpty(result)) {
+          _valuesCache.Add(result + "=1");
+          hasChanged = true;
+        }
+      }
 
       GUILayout.EndVertical();
 
@@ -120,60 +127,60 @@ namespace ComfyLib {
       }
     }
 
-    public class AutoCompleteLabel {
-      static readonly Lazy<GUIStyle> _labelStyle =
-          new(() => new(GUI.skin.label) {
-            padding = new(1, 1, 1, 1),
-            margin = new(1, 1, 1, 1)
-          });
-
+    public class AutoCompleteBox {
       readonly Func<IEnumerable<string>> _optionsFunc;
       List<string> _options;
+
+      readonly List<string> _currentOptions;
       string _value;
-      string _labelText;
       Vector2 _scrollPosition;
 
-      public AutoCompleteLabel(Func<IEnumerable<string>> optionsFunc) {
+      public AutoCompleteBox(Func<IEnumerable<string>> optionsFunc) {
         _optionsFunc = optionsFunc;
         _options = null;
+        _currentOptions = new();
         _value = string.Empty;
-        _labelText = string.Empty;
         _scrollPosition = Vector2.zero;
       }
 
-      public void DrawLabel(string value) {
+      public string DrawBox(string value) {
         if (_value != value) {
           _value = value;
-          _labelText = GetLabelText(value);
+          _currentOptions.Clear();
+
+          if (!string.IsNullOrEmpty(value)) {
+            _options ??= new(_optionsFunc());
+
+            _currentOptions.AddRange(
+                _options.Where(option => option.StartsWith(value, StringComparison.InvariantCultureIgnoreCase)));
+          }
+
           _scrollPosition = Vector2.zero;
         }
 
-        if (!string.IsNullOrEmpty(_value)) {
-          _scrollPosition =
-              GUILayout.BeginScrollView(
-                  _scrollPosition, GUI.skin.box, GUILayout.ExpandWidth(true), GUILayout.Height(75f));
-
-          GUILayout.Label(_labelText, _labelStyle.Value);
-          GUILayout.EndScrollView();
+        if (string.IsNullOrEmpty(_value)) {
+          return string.Empty;
         }
+
+        return DrawCurrentOptions();
       }
 
-      string GetLabelText(string value) {
-        if (string.IsNullOrEmpty(value)) {
-          return string.Empty;
+      string DrawCurrentOptions() {
+        _scrollPosition =
+            GUILayout.BeginScrollView(
+                _scrollPosition, GUI.skin.box, GUILayout.ExpandWidth(true), GUILayout.Height(120f));
+
+        string result = string.Empty;
+
+        foreach (string option in _currentOptions) {
+          if (GUILayout.Button(option, GUILayout.MinWidth(40f))) {
+            result = option;
+          }
         }
 
-        _options ??= new(_optionsFunc());
+        GUILayout.EndScrollView();
 
-        if (_options.Count <= 0) {
-          return string.Empty;
-        }
-
-        return string.Join(
-            ", ",
-            _options
-                .Where(option => option.StartsWith(value, StringComparison.InvariantCultureIgnoreCase))
-                .Take(10));
+        return result;
       }
     }
   }
