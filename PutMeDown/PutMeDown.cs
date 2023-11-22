@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using System;
+﻿using System;
+using System.Globalization;
 using System.Reflection;
 
 using BepInEx;
@@ -8,6 +8,7 @@ using BepInEx.Logging;
 using ComfyLib;
 
 using HarmonyLib;
+using BepInEx.Configuration;
 
 namespace PutMeDown {
   [BepInPlugin(PluginGuid, PluginName, PluginVersion)]

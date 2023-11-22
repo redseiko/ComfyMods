@@ -10,32 +10,17 @@ using HarmonyLib;
 namespace ComfyLib {
   [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
   public class ComfyConfigAttribute : Attribute {
-    public bool LateBind { get; set; }
+    public bool LateBind { get; set; } = false;
   }
 
   public static class ComfyConfigUtils {
-    static readonly Queue<Action> _lateBindConfigQueue = new();
-
-    [HarmonyPatch(typeof(FejdStartup), nameof(FejdStartup.Start))]
-    static class LateBindConfigPatch {
-      static void Postfix() {
-        while (_lateBindConfigQueue.Count > 0) {
-          _lateBindConfigQueue.Dequeue()?.Invoke();
-        }
-      }
-    }
-
     public static void BindConfig(ConfigFile config) {
       BindConfigs(config, Assembly.GetExecutingAssembly());
     }
 
     static void BindConfigs(ConfigFile config, Assembly assembly) {
       foreach ((MethodInfo method, ComfyConfigAttribute comfyConfig) in GetBindConfigMethods(assembly)) {
-        if (comfyConfig.LateBind) {
-          _lateBindConfigQueue.Enqueue(() => method?.Invoke(null, new object[] { config }));
-        } else {
-          method?.Invoke(null, new object[] { config });
-        }
+        ComfyConfigBinder.Bind(config, method, comfyConfig);
       }
     }
 
@@ -46,15 +31,37 @@ namespace ComfyLib {
     }
 
     static IEnumerable<(MethodInfo, ComfyConfigAttribute)> GetBindConfigMethod(MethodInfo method) {
-      ComfyConfigAttribute[] attributes =
-          (ComfyConfigAttribute[]) method.GetCustomAttributes(typeof(ComfyConfigAttribute), inherit: false);
+      ComfyConfigAttribute attribute = method.GetCustomAttribute< ComfyConfigAttribute>(inherit: false);
 
-      if (attributes.Length > 0) {
+      if (attribute != null) {
         ParameterInfo[] parameters = method.GetParameters();
 
-        if (parameters.Length == 1) {
-          yield return (method, attributes[0]);
+        if (parameters.Length == 1 && parameters[0].ParameterType == typeof(ConfigFile)) {
+          yield return (method, attribute);
         }
+      }
+    }
+
+    [HarmonyPatch]
+    static class ComfyConfigBinder {
+      static readonly Queue<Action> _lateBindQueue = new();
+      static bool _startupPatched = false;
+
+      public static void Bind(ConfigFile config, MethodInfo method, ComfyConfigAttribute attribute) {
+        if (!attribute.LateBind || _startupPatched) {
+          method.Invoke(null, new object[] { config });
+        } else {
+          _lateBindQueue.Enqueue(() => method.Invoke(null, new object[] { config }));
+        }
+      }
+
+      [HarmonyPatch(typeof(FejdStartup), nameof(FejdStartup.Start))]
+      static void Postfix() {
+        while (_lateBindQueue.Count > 0) {
+          _lateBindQueue.Dequeue()?.Invoke();
+        }
+
+        _startupPatched = true;
       }
     }
   }

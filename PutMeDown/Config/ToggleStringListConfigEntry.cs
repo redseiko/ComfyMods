@@ -151,7 +151,7 @@ namespace ComfyLib {
         if (!string.IsNullOrEmpty(_value)) {
           _scrollPosition =
               GUILayout.BeginScrollView(
-                  _scrollPosition, GUI.skin.box, GUILayout.ExpandWidth(true), GUILayout.Height(50f));
+                  _scrollPosition, GUI.skin.box, GUILayout.ExpandWidth(true), GUILayout.Height(75f));
 
           GUILayout.Label(_labelText, _labelStyle.Value);
           GUILayout.EndScrollView();
