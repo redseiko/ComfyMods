@@ -8,7 +8,6 @@ using BepInEx.Logging;
 using ComfyLib;
 
 using HarmonyLib;
-using BepInEx.Configuration;
 
 namespace PutMeDown {
   [BepInPlugin(PluginGuid, PluginName, PluginVersion)]

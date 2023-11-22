@@ -4,11 +4,11 @@
 
 ## Instructions
 
-Written instructions to follow.
+Detailed instructions to be added later.
 
 ![Instructions](https://imgur.com/yXKtU8H.png)
 
-### Notes
+## Notes
 
   * See source at: [GitHub/ComfyMods](https://github.com/redseiko/ComfyMods/tree/main/PutMeDown).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
