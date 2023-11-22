@@ -1,33 +1,39 @@
-Don’t use portals that aren’t yours without permission!
-Keep 2 ward radii between your build & someone else’s build. If you can see it, you’re too close!
-Mods come with a readme file which details how to use them - check it out! 
-ZoneScouter Mod has a neat feature to show you sector boundaries
-Resources are respawned regularly by staff - keep looking!
-Sail away from spawn islands for less lag, more resources, & more space
-If you don’t have permission, don’t go near it & don’t touch it!
-Do not touch other people’s graves!
-Do not ward resources!
-Creators design unique events you can run for resources & overleveled gear - Check the events on discord! 
-A number of guilds are available for bonus content & additional rewards
-Comfy Eras typically last a few months - keep an eye on the discord for up-to-date information
-Keep an eye on the list of allowed mods, as these may change throughout the era
-If you can’t find a bee - Ranger’s guild has 4 quests for you to get a bee!
-Check out Merchants Guild on Discord for people buying, selling, & trading!
-Looking for some PvP? The Slayer Guild has many PvP events!
-Died & need a body recovery? Hit up the Slayers! They’ll be happy to help - for free!
-Need some protection whilst you explore? Slayers will gladly come with you & protect you - for free!
-Love building? The Builders Guild loves you! Check them out on discord!
-Taking the hobbits to Isengard? Check out the Hobbit Guild!
-Looking for a great place to build? The Explorers Guild would love to help you! Ask on discord!
-Found a T1 Explorer stash? Check out the Explorer channel & pinned messages in discord to find out what to do!
-Many events are held in Comfy - check out the discord and see what’s happening!
-The Mod Get Off My Lawn (known as GOML) makes your builds & boats indestructible - Check it out!
-There are a lot of unique Creator events that are Hobbit themed - check them out in the Adventure Hub!
-There are a lot of unique rewards that can only be earned through guilds - check them out!
-If you have any issues, open a ticket under Get Support in discord! Our Moderation team love to help!
-Found a huge hole? Put a ticket in and our team can come close it up!
-Rank to the top in the Hobbits to receive your own furnished, high comfort level Hobbit Home.
+Do not use portals that are not yours without permission. 
+Keep 1 ward radius distance between your build and someone else’s build. 
+Mods come with a README file which details how to use them; be sure to read them to see all their features. 
+The ZoneScouter mod has a neat feature which show sector boundaries. Install today on Thunderstore!
+If you're struggling to find resources, ask around and engage with the community. Veterans can help.
+Sail away from starter continents connected to spawn for less lag, more resources and more space.
+If you do not have permission to be in a location that is not explicitly for the public, stay out and do not touch anything.
+Do not touch other people’s graves or property.
+Do not ward or block public resources like crypt doors, burial chambers, etc.
+Do not build Greydwarf spawner farms on starter continents. Sail further out!
+Looking to reduce instances at your base? Purchase the Base Instance Control Package in the Creator Shop!
+Do not build over 7k instances on the starter continents. Help us keep the starter areas lag-free!
+Creator events contain resources & overleveled gear. See the Creator Events channel to browse the events. 
+Not sure what Creator Events have been recently reset? Check the Event Resets channel. 
+Collect 6 differently colored Creator linen capes with the same tag and turn it at the Creator Shop to earn an Odin Cape.
+Comfy Eras last ~3-5 months, but previous Era world files can be found in threads under the Announcements channel.
+Keep an eye on the Modding Announcements channel for Allowed Mods on the server. These may change throughout the era.
+If you can’t find a bee, the Rangers Guild has 4 quests for you to get a bee! Pop in Ranger chat and ask about them.
+Want to run a shop? Or just simply make some gold? The Merchants Guild is all about buying, selling & trading!
+The Slayer Guild has many PvP events! Look out for Tournaments or Thrall Duels in the discord event calendar.
+Died & need a body recovery? Tag @slayer in Slayer chat on Discord. They’ll be happy to help for free!
+Need some protection whilst you explore? Tag @slayer in Slayer chat on Discord. They’ll be happy to protect for free!
+Love building? The Builders Guild would love to see your creativity!
+Interested in a Builder's Guild competition? Check their announcements to see when they are being hosted.
+Looking for the perfect tiny house? The Hobbits Guild rewards you a high comfort Hobbit home with ample storage at top rank.
+Looking for a great place to build? Ping @explorer in the Explorers Guild channel for help scouting a location.
+Found a T1 Explorer stash? Submit it in the Explorer Turn-in thread to earn EXP!
+Exploring the map will help you earn EXP with the Explorers Guild!
+Check out upcoming Comfy Events in the Event Calendar in the top left hand corner of Discord.
+The mod "Get Off My Lawn" (known as GOML) makes your builds & boats indestructible. Install today on Thunderstore!
+LOTR fan? Explore the Hobbit-themed Creator Events located at Adventure Hub connected to Hobbit HQ.
+See every guild's rank graphic pinned in their guild channel!
+Is your game crashing or a mod acting buggy? Open a ticket under #Get-Support in Discord.
+Found a huge hole? Put a ticket in #Get-Support on Discord, and Moderators will patch it up.
 Need food for a Guild Event or Creator Event? Ask in the Hobbit channel for a Hobbit Chef.
 What do the Hobbits do? Adventurous roleplay with cooking, entertaining, exploring, fighting, and more.
-Don't eat blue mushrooms!
-Blue mushrooms are a currency on Comfy, you can get them from creator events.
+Don't eat blue mushrooms! They are currency from Creator Events that can buy you neat items at the Creator Shop.
+Are you a new player? Read the New Player Guide found in the New Player channel. It covers all the essentials!
+Looking to run combat in elite mage gear? The Mages Guild provides the best eitr armor and staves on the server.
