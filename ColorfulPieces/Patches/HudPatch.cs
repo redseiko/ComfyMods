@@ -17,7 +17,7 @@ namespace ColorfulPieces {
 
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Hud.UpdateCrosshair))]
-    static void HudUpdateCrosshairPostfix(ref Hud __instance, ref Player player) {
+    static void UpdateCrosshairPostfix(ref Hud __instance, ref Player player) {
       if (!IsModEnabled.Value || !ShowChangeRemoveColorPrompt.Value || !Player.m_localPlayer.Ref()?.m_hovering) {
         return;
       }

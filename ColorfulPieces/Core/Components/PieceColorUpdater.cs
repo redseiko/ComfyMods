@@ -12,7 +12,7 @@ namespace ColorfulPieces {
     }
 
     IEnumerator UpdatePieceColors() {
-      ZLog.Log($"Starting PieceColorUpdater.UpdatePieceColors coroutine...");
+      ColorfulPieces.LogInfo($"Starting PieceColorUpdater.UpdatePieceColors coroutine...");
       WaitForSeconds waitInterval = new(UpdateColorsWaitInterval.Value);
 
       while (true) {

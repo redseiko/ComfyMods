@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Reflection;
 
 using BepInEx;
@@ -17,7 +20,7 @@ namespace ColorfulPieces {
   public class ColorfulPieces : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.colorfulpieces";
     public const string PluginName = "ColorfulPieces";
-    public const string PluginVersion = "1.13.0";
+    public const string PluginVersion = "1.14.0";
 
     static ManualLogSource _logger;
     Harmony _harmony;
@@ -87,11 +90,18 @@ namespace ColorfulPieces {
 
     static readonly List<Piece> _piecesCache = new();
 
-    public static IEnumerator ChangeColorsInRadiusCoroutine(Vector3 position, float radius) {
+    public static IEnumerator ChangeColorsInRadiusCoroutine(
+        Vector3 position, float radius, IReadOnlyCollection<int> prefabHashCodes) {
       yield return null;
 
       _piecesCache.Clear();
+
       GetAllPiecesInRadius(Player.m_localPlayer.transform.position, radius, _piecesCache);
+      _piecesCache.RemoveAll(piece => !piece || !piece.m_nview || !piece.m_nview.IsValid());
+
+      if (prefabHashCodes.Count() > 0) {
+        _piecesCache.RemoveAll(piece => !prefabHashCodes.Contains(piece.m_nview.m_zdo.m_prefab));
+      }
 
       long changeColorCount = 0L;
 
@@ -106,7 +116,7 @@ namespace ColorfulPieces {
         }
       }
 
-      LogMessage($"Changed color of {changeColorCount} pieces.");
+      LogInfo($"Changed color of {changeColorCount} pieces within {radius} meters.");
       _piecesCache.Clear();
     }
 
@@ -124,11 +134,18 @@ namespace ColorfulPieces {
       wearNTear.m_piece.Ref()?.m_placeEffect?.Create(wearNTear.transform.position, wearNTear.transform.rotation);
     }
 
-    public static IEnumerator ClearColorsInRadiusCoroutine(Vector3 position, float radius) {
+    public static IEnumerator ClearColorsInRadiusCoroutine(
+        Vector3 position, float radius, IReadOnlyCollection<int> prefabHashCodes) {
       yield return null;
 
       _piecesCache.Clear();
+
       GetAllPiecesInRadius(Player.m_localPlayer.transform.position, radius, _piecesCache);
+      _piecesCache.RemoveAll(piece => !piece || !piece.m_nview || !piece.m_nview.IsValid());
+
+      if (prefabHashCodes.Count() > 0) {
+        _piecesCache.RemoveAll(piece => !prefabHashCodes.Contains(piece.m_nview.m_zdo.m_prefab));
+      }
 
       long clearColorCount = 0L;
 
@@ -143,7 +160,7 @@ namespace ColorfulPieces {
         }
       }
 
-      LogMessage($"Cleared colors from {clearColorCount} pieces.");
+      LogInfo($"Cleared colors from {clearColorCount} pieces within {radius} meters.");
     }
 
     public static bool CopyPieceColorAction(ZNetView netView) {
@@ -185,9 +202,14 @@ namespace ColorfulPieces {
       }
     }
 
-    public static void LogMessage(string message) {
-      _logger.LogInfo(message);
-      Chat.m_instance.Ref()?.AddString(message);
+    public static void LogInfo(object obj) {
+      _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
+      Chat.m_instance.Ref()?.AddString(obj.ToString());
+    }
+
+    public static void LogError(object obj) {
+      _logger.LogError($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
+      Chat.m_instance.Ref()?.AddString(obj.ToString());
     }
   }
 }

@@ -21,6 +21,8 @@ namespace ColorfulPieces {
     public static void BindConfig(ConfigFile config) {
       IsModEnabled = config.Bind("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
 
+      IsModEnabled.OnSettingChanged(ComfyCommandUtils.ToggleCommands);
+
       ChangePieceColorShortcut =
           config.Bind(
               "Hotkeys",

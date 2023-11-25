@@ -2,7 +2,6 @@
 
 using UnityEngine;
 
-using static ColorfulPieces.ColorfulPieces;
 using static ColorfulPieces.PluginConstants;
 
 namespace ColorfulPieces {

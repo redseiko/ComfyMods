@@ -17,10 +17,12 @@ namespace ComfyLib {
         throw new ArgumentException("Texture radius must be >= 0 and < width/height.");
       }
 
-      Texture2D texture = new(width, height, TextureFormat.ARGB32, mipChain: false);
-      texture.name =$"w-{width}-h-{height}-rad-{radius}-color-{ColorId(color)}-ocolor-{ColorId(outsideColor)}";
-      texture.wrapMode = TextureWrapMode.Clamp;
-      texture.filterMode = FilterMode.Trilinear;
+      Texture2D texture =
+          new(width, height, TextureFormat.ARGB32, mipChain: false) {
+            name = $"w-{width}-h-{height}-rad-{radius}-color-{ColorId(color)}-ocolor-{ColorId(outsideColor)}",
+            wrapMode = TextureWrapMode.Clamp,
+            filterMode = FilterMode.Trilinear
+          };
 
       Color[] pixels = new Color[width * height];
 

@@ -7,8 +7,8 @@ namespace ColorfulPieces.Patches {
   static class StaticPhysicsPatch {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(StaticPhysics.Awake))]
-    static void StaticPhysicsAwake(ref StaticPhysics __instance) {
-      if (IsModEnabled.Value) {
+    static void Awake(StaticPhysics __instance) {
+      if (IsModEnabled.Value && !__instance.gameObject.TryGetComponent(out PieceColor _)) {
         __instance.gameObject.AddComponent<PieceColor>();
       }
     }

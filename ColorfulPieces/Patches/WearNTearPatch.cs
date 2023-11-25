@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection.Emit;
-
-using HarmonyLib;
+﻿using HarmonyLib;
 
 using UnityEngine;
 
@@ -13,7 +9,7 @@ namespace ColorfulPieces {
   static class WearNTearPatch {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(WearNTear.Awake))]
-    static void WearNTearAwakePostfix(ref WearNTear __instance) {
+    static void AwakePostfix(WearNTear __instance) {
       if (IsModEnabled.Value) {
         __instance.gameObject.AddComponent<PieceColor>();
       }
@@ -21,7 +17,7 @@ namespace ColorfulPieces {
 
     [HarmonyPrefix]
     [HarmonyPatch(nameof(WearNTear.Highlight))]
-    static bool HighlightPrefix(ref WearNTear __instance) {
+    static bool HighlightPrefix(WearNTear __instance) {
       if (IsModEnabled.Value && __instance.TryGetComponent(out PieceColor pieceColor)) {
         Color color = GetSupportColor(__instance.GetSupportColorValue());
         pieceColor.OverrideColors(color, color * 0.4f);

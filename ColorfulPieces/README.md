@@ -22,7 +22,9 @@
   - This prompt can be hidden by disabling the `showChangeRemoveColorPrompt` setting.
   - Prompt font-size can be configured with the `colorPromptFontSize` setting.
 
-### Changing/clearing pieces in a radius
+## Commands
+
+### Changing/Clearing pieces in a radius (legacy)
 
 These two commands still call the same action as the hotkey and so will obey all ward permissions.
 
@@ -34,13 +36,38 @@ These two commands still call the same action as the hotkey and so will obey all
   - `changecolor <radius>` (in console)
   - Changes the color of all pieces in the radius from the player to the currently set target color.
 
+### Clearing piece colors in a radius
+
+    clear-color --radius=<radius> [--prefab=<name1>]
+    clear-color --r=<radius> [--p=<name1>]
+
+  * Clears any colors from pieces within `<radius>` meters from the playerr.
+  * If `--prefab` is specified, only pieces with prefab names matching `<name1>` will be affected.
+  * Specify multiple prefab names with commas: `--prefab=<name1>,<name2>`
+
+### Changing piece colors in a radius
+
+    change-color --radius=<radius> --prefab=<name1>
+    change-color --r=<radius> --p=<name1>
+
+  * Changes the color of pieces within `<radius>` meters from the player to the currently set target color.
+  * If `--prefab` is specified, only pieces with prefab names matching `<name1>` will be affected.
+  * Specify multiple prefab names with commas: `--prefab=<name1>,<name2>`
+
 ## Notes
 
   * See source at: [GitHub/ComfyMods](https://github.com/redseiko/ComfyMods/tree/main/ColorfulPieces).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
-  * Check out our community driven listing site at: [valheimlist.org](https://valheimlist.org/)
 
 ## Changelog
+
+### 1.14.0
+
+  * Updated for `v0.217.31` patch.
+  * Major code clean-up and restructuring.
+  * Converted all commands to ComfyCommand format.
+  * Added new commands `clear-color` and `change-color`.
+  * Color palettes now wrap at 8 colors per row.
 
 ### 1.13.0
 
