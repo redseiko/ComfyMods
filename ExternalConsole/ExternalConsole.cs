@@ -14,7 +14,7 @@ namespace ExternalConsole {
   public class ExternalConsole : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.externalconsole";
     public const string PluginName = "ExternalConsole";
-    public const string PluginVersion = "1.1.0";
+    public const string PluginVersion = "1.2.0";
 
     static ManualLogSource _logger;
     Harmony _harmony;
@@ -32,6 +32,10 @@ namespace ExternalConsole {
 
     public static void LogInfo(object data) {
       _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {data}");
+    }
+
+    public static void LogError(object data) {
+      _logger.LogError($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {data}");
     }
   }
 }

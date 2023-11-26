@@ -15,6 +15,10 @@ namespace ExternalConsole {
             ExternalInputFile.ReadFromFileCoroutine(
                 Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), ExternalInputFilename.Value)));
       }
+
+      if (IsModEnabled.Value) {
+        __instance.StartCoroutine(ExternalNamedPipe.StartExternalNamedPipe("ValheimExternalConsole"));
+      }
     }
   }
 }
