@@ -4,5 +4,5 @@
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Configula",
   "author": "ComfyMods",
   "description": "Bah I want to configure your mods!",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2200" ]
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }
