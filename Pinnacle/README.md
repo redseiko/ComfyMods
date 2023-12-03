@@ -80,10 +80,17 @@
 
   * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/Pinnacle).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
-  * Check out our community driven listing site at: [valheimlist.org](https://valheimlist.org/)
   * Pinnacle icon created by [@jenniely](https://twitter.com/jenniely) (jenniely.com)
 
 ## Changelog
+
+### 1.6.0
+
+  * Updated for `v0.217.31` patch.
+  * Fixed a bug where `Pin.Font` and `Pin.FontSize` was not correctly applied to the `PinMarker.PinName` prefab.
+  * Converted all Terminal commands to `ComfyCommand` format.
+  * Removed temporary debugging `pinnacle-namepindata-clearall` Terminal command.
+  * Pin Import/Export commands now read and write the new `PinData.m_author` field.
 
 ### 1.5.3
 

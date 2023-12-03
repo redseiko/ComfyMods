@@ -11,7 +11,6 @@ using HarmonyLib;
 using TMPro;
 
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Pinnacle {
   public class PluginConfig {
@@ -22,7 +21,12 @@ namespace Pinnacle {
       IsModEnabled = config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
 
       CenterMapLerpDuration =
-          config.BindInOrder("CenterMap", "lerpDuration", 1f, "Duration (in seconds) for the CenterMap lerp.");
+          config.BindInOrder(
+              "CenterMap",
+              "lerpDuration",
+              1f,
+              "Duration (in seconds) for the CenterMap lerp.",
+              new AcceptableValueRange<float>(0f, 3f));
 
       BindPinListPanelConfig(config);
       BindPinEditPanelConfig(config);
@@ -122,7 +126,7 @@ namespace Pinnacle {
     }
   }
 
-  public class MinimapConfig {
+  public static class MinimapConfig {
     public static ConfigEntry<string> PinFont { get; private set; }
     public static ConfigEntry<int> PinFontSize { get; private set; }
 
@@ -144,36 +148,8 @@ namespace Pinnacle {
               "The font size for the Pin text on the Minimap.",
               new AcceptableValueRange<int>(2, 26));
 
-      PinFont.OnSettingChanged(SetMinimapPinFont);
-      PinFontSize.OnSettingChanged(SetMinimapPinFont);
-    }
-
-    public static void SetMinimapPinFont() {
-      SetMinimapPinFont(Minimap.m_instance, UIResources.GetFontAssetByName(PinFont.Value), PinFontSize.Value);
-    }
-
-    static void SetMinimapPinFont(Minimap minimap, TMP_FontAsset fontAsset, int fontSize) {
-      if (!minimap || !fontAsset) {
-        return;
-      }
-
-      foreach (TMP_Text text in minimap.m_nameInput.GetComponentsInChildren<TMP_Text>(includeInactive: true)) {
-        text.font = fontAsset;
-      }
-
-      foreach (TMP_Text text in minimap.m_pinPrefab.GetComponentsInChildren<TMP_Text>(includeInactive: true)) {
-        text.font = fontAsset;
-        text.fontSize = fontSize;
-        text.enableAutoSizing = false;
-        text.richText = true;
-      }
-
-      foreach (TMP_Text text in minimap.m_pinNameRootLarge.GetComponentsInChildren<TMP_Text>(includeInactive: true)) {
-        text.font = fontAsset;
-        text.fontSize = fontSize;
-        text.enableAutoSizing = false;
-        text.richText = true;
-      }
+      PinFont.OnSettingChanged(PinMarkerUtils.SetPinNameFont);
+      PinFontSize.OnSettingChanged(PinMarkerUtils.SetPinNameFontSize);
     }
   }
 }

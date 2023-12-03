@@ -1,10 +1,12 @@
-﻿using BepInEx.Logging;
-
-using HarmonyLib;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+
+using BepInEx.Logging;
+
+using ComfyLib;
+
+using HarmonyLib;
 
 using UnityEngine;
 
@@ -16,9 +18,9 @@ namespace Pinnacle {
     [HarmonyWrapSafe]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Minimap.Start))]
-    static void StartPostfix() {
+    static void StartPostfix(Minimap __instance) {
       if (IsModEnabled.Value) {
-        MinimapConfig.SetMinimapPinFont();
+        PinMarkerUtils.SetupPinNamePrefab(__instance);
 
         Pinnacle.TogglePinEditPanel(pinToEdit: null);
         Pinnacle.TogglePinListPanel(toggleOn: false);

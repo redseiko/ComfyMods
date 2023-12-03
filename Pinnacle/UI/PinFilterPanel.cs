@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using ComfyLib;
+
+using UnityEngine;
 using UnityEngine.UI;
 
 using static Pinnacle.PluginConfig;
