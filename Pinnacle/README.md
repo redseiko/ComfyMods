@@ -4,6 +4,11 @@
 
 ![Pinnacle - At a Glance](https://imgur.com/Wabfnru.png)
 
+## New Feature
+
+  * You can now use a keyboard shortcut for adding a Pin!
+  * Set the shortcut in ConfigurationManager under `Minimap.Actions` > `addPinAtMouseShortcut`.
+
 ## Features
 
 ### PinEditPanel
@@ -83,6 +88,10 @@
   * Pinnacle icon created by [@jenniely](https://twitter.com/jenniely) (jenniely.com)
 
 ## Changelog
+
+### 1.7.0
+
+  * Added a new feature to add a Minimap.Pin using keyboard shortcut.
 
 ### 1.6.0
 

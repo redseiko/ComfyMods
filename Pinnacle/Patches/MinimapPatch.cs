@@ -108,15 +108,21 @@ namespace Pinnacle {
           .MatchForward(
               useEnd: false,
               new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Minimap), nameof(Minimap.InTextInput))))
-          .InsertAndAdvance(Transpilers.EmitDelegate<Action>(InTextInputPreDelegate))
+          .InsertAndAdvance(
+              new CodeInstruction(OpCodes.Ldarg_0),
+              Transpilers.EmitDelegate<Action<Minimap>>(InTextInputPreDelegate))
           .InstructionEnumeration();
     }
 
-    static void InTextInputPreDelegate() {
-      if (IsModEnabled.Value
-          && Minimap.m_instance.m_mode == Minimap.MapMode.Large
-          && PinListPanelToggleShortcut.Value.IsDown()) {
-        Pinnacle.TogglePinListPanel();
+    static void InTextInputPreDelegate(Minimap minimap) {
+      if (IsModEnabled.Value && minimap.m_mode == Minimap.MapMode.Large) {
+        if (PinListPanelToggleShortcut.Value.IsDown()) {
+          Pinnacle.TogglePinListPanel();
+        }
+
+        if (AddPinAtMouseShortcut.Value.IsDown()) {
+          minimap.OnMapDblClick();
+        }
       }
     }
 

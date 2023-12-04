@@ -13,7 +13,7 @@ using TMPro;
 using UnityEngine;
 
 namespace Pinnacle {
-  public class PluginConfig {
+  public static class PluginConfig {
     public static ConfigEntry<bool> IsModEnabled { get; private set; }
     public static ConfigEntry<float> CenterMapLerpDuration { get; private set; }
 
@@ -33,7 +33,7 @@ namespace Pinnacle {
       BindPinFilterPanelConfig(config);
 
       _fejdStartupBindConfigQueue.Clear();
-      _fejdStartupBindConfigQueue.Enqueue(() => MinimapConfig.BindConfig(config));
+      _fejdStartupBindConfigQueue.Enqueue(() => BindMinimapConfig(config));
     }
 
     public static ConfigEntry<KeyboardShortcut> PinListPanelToggleShortcut { get; private set; }
@@ -112,25 +112,12 @@ namespace Pinnacle {
               new AcceptableValueRange<float>(10f, 100f));
     }
 
-    static readonly Queue<Action> _fejdStartupBindConfigQueue = new();
-
-    [HarmonyPatch(typeof(FejdStartup))]
-    static class FejdStartupPatch {
-      [HarmonyPostfix]
-      [HarmonyPatch(nameof(FejdStartup.Awake))]
-      static void AwakePostfix() {
-        while (_fejdStartupBindConfigQueue.Count > 0) {
-          _fejdStartupBindConfigQueue.Dequeue()?.Invoke();
-        }
-      }
-    }
-  }
-
-  public static class MinimapConfig {
     public static ConfigEntry<string> PinFont { get; private set; }
     public static ConfigEntry<int> PinFontSize { get; private set; }
 
-    public static void BindConfig(ConfigFile config) {
+    public static ConfigEntry<KeyboardShortcut> AddPinAtMouseShortcut { get; private set; }
+
+    public static void BindMinimapConfig(ConfigFile config) {
       PinFont =
           config.BindInOrder(
               "Minimap",
@@ -150,6 +137,26 @@ namespace Pinnacle {
 
       PinFont.OnSettingChanged(PinMarkerUtils.SetPinNameFont);
       PinFontSize.OnSettingChanged(PinMarkerUtils.SetPinNameFontSize);
+
+      AddPinAtMouseShortcut =
+          config.BindInOrder(
+              "Minimap.Actions",
+              "addPinAtMouseShortcut",
+              KeyboardShortcut.Empty,
+              "Keyboard shortcut to add a Minimap.Pin at the mouse position.");
+    }
+
+    static readonly Queue<Action> _fejdStartupBindConfigQueue = new();
+
+    [HarmonyPatch(typeof(FejdStartup))]
+    static class FejdStartupPatch {
+      [HarmonyPostfix]
+      [HarmonyPatch(nameof(FejdStartup.Awake))]
+      static void AwakePostfix() {
+        while (_fejdStartupBindConfigQueue.Count > 0) {
+          _fejdStartupBindConfigQueue.Dequeue()?.Invoke();
+        }
+      }
     }
   }
 }

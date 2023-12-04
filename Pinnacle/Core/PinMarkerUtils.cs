@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 
-using ComfyLib;
-
 using TMPro;
 
-using static Pinnacle.MinimapConfig;
+using static Pinnacle.PluginConfig;
 
 namespace Pinnacle {
   public static class PinMarkerUtils {
