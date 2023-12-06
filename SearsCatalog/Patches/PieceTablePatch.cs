@@ -44,12 +44,42 @@ namespace SearsCatalog {
               new CodeMatch(OpCodes.Ldarga_S),
               new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Vector2Int), "get_y")),
               new CodeMatch(OpCodes.Ldc_I4_S))
+          .ThrowIfInvalid("Could not patch PieceTable.GetPiece()!")
           .Advance(offset: 3)
           .InsertAndAdvance(Transpilers.EmitDelegate<Func<int, int>>(GetPieceGetYPostDelegate))
           .InstructionEnumeration();
     }
 
     static int GetPieceGetYPostDelegate(int value) {
+      return IsModEnabled.Value ? SearsCatalog.BuildHudColumns : value;
+    }
+
+    [HarmonyTranspiler]
+    [HarmonyPatch(nameof(PieceTable.GetPieceIndex))]
+    static IEnumerable<CodeInstruction> GetPieceIndexTranspiler(IEnumerable<CodeInstruction> instructions) {
+      return new CodeMatcher(instructions)
+          .MatchForward(
+              useEnd: false,
+              new CodeMatch(OpCodes.Ldc_I4_S, Convert.ToSByte(15)))
+          .ThrowIfInvalid("Could not patch PieceTable.GetPieceIndex()! (Column A)")
+          .Advance(offset: 1)
+          .InsertAndAdvance(Transpilers.EmitDelegate<Func<int, int>>(GetPieceIndexColumnPostDelegate))
+          .MatchForward(
+              useEnd: false,
+              new CodeMatch(OpCodes.Ldc_I4_S, Convert.ToSByte(15)))
+          .ThrowIfInvalid("Could not patch PieceTable.GetPieceIndex()! (Column B)")
+          .Advance(offset: 1)
+          .InsertAndAdvance(Transpilers.EmitDelegate<Func<int, int>>(GetPieceIndexColumnPostDelegate))
+          .MatchForward(
+              useEnd: false,
+              new CodeMatch(OpCodes.Ldc_I4_S, Convert.ToSByte(15)))
+          .ThrowIfInvalid("Could not patch PieceTable.GetPieceIndex()! (Column C)")
+          .Advance(offset: 1)
+          .InsertAndAdvance(Transpilers.EmitDelegate<Func<int, int>>(GetPieceIndexColumnPostDelegate))
+          .InstructionEnumeration();
+    }
+
+    static int GetPieceIndexColumnPostDelegate(int value) {
       return IsModEnabled.Value ? SearsCatalog.BuildHudColumns : value;
     }
 

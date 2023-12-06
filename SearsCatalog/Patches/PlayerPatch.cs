@@ -4,8 +4,6 @@ using System.Reflection.Emit;
 
 using HarmonyLib;
 
-using UnityEngine;
-
 using static SearsCatalog.PluginConfig;
 
 namespace SearsCatalog {
@@ -17,17 +15,17 @@ namespace SearsCatalog {
       return new CodeMatcher(instructions)
           .MatchForward(
               useEnd: false,
-              new CodeMatch(OpCodes.Ldstr, "Mouse ScrollWheel"),
-              new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Input), nameof(Input.GetAxis))),
+              new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZInput), nameof(ZInput.GetMouseScrollWheel))),
               new CodeMatch(OpCodes.Ldc_R4))
-          .Advance(offset: 2)
+          .ThrowIfInvalid("Could not patch Player.UpdateBuildGuiInput()! (PrevCategory)")
+          .Advance(offset: 1)
           .InsertAndAdvance(Transpilers.EmitDelegate<Func<float, float>>(GetAxisDelegate))
           .MatchForward(
               useEnd: false,
-              new CodeMatch(OpCodes.Ldstr, "Mouse ScrollWheel"),
-              new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZInput), nameof(ZInput.GetAxis))),
+              new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZInput), nameof(ZInput.GetMouseScrollWheel))),
               new CodeMatch(OpCodes.Ldc_R4))
-          .Advance(offset: 2)
+          .ThrowIfInvalid("Could not patch Player.UpdateBuildGuiInput()! (NextCategory)")
+          .Advance(offset: 1)
           .InsertAndAdvance(Transpilers.EmitDelegate<Func<float, float>>(GetAxisDelegate))
           .InstructionEnumeration();
     }

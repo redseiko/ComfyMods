@@ -41,17 +41,24 @@ All configuration options (except `isModEnabled`) can be modified in-game and wi
 
 ### Thunderstore (manual)
 
-  * Go to Settings > Import local mod > Select `SearsCatalog_v1.3.0.zip`.
+  * Go to Settings > Import local mod > Select `SearsCatalog_v1.4.0.zip`.
   * Click "OK/Import local mod" on the pop-up for information.
 
 ## Notes
 
-  * This is the *good enough* release with more features/options to be added later.
   * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/SearsCatalog).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
   * SearsCatalog icon created by [@jenniely](https://twitter.com/jenniely) (jenniely.com)
 
 ## Changelog
+
+### 1.4.0
+
+  * Updated for `v0.217.31` patch.
+  * Fixed a bug with mouse scroll-wheel scrolling through category tags instead of the build panel pieces.
+  * Fixed a bug with selecting the correct build piece when using the vanilla 'copy piece' function.
+  * Removed logic related to un-patching deprecated BuildExpansion if detected.
+  * Minor code clean-up.
 
 ### 1.3.0
 

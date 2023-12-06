@@ -34,8 +34,9 @@ namespace SearsCatalog {
     static void SetupPieceSelectionWindow(Hud hud) {
       Transform parentTransform = hud.m_pieceListRoot.parent;
 
-      DefaultControls.Resources resources = new();
-      resources.standard = UIResources.GetSprite("UISprite");
+      DefaultControls.Resources resources = new() {
+        standard = UIResources.GetSprite("UISprite")
+      };
 
       Scrollbar scrollbar = DefaultControls.CreateScrollbar(resources).GetComponent<Scrollbar>();
       scrollbar.transform.SetParent(parentTransform, worldPositionStays: false);

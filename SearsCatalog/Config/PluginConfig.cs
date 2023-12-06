@@ -28,7 +28,7 @@ namespace SearsCatalog {
               "BuildHud.Panel visible rows (vanilla: 6).",
               new AcceptableValueRange<int>(1, 14));
 
-      BuildHudPanelRows.SettingChanged += (_, _) => SearsCatalog.SetupBuildHudPanel();
+      BuildHudPanelRows.OnSettingChanged(SearsCatalog.SetupBuildHudPanel);
 
       BuildHudPanelColumns =
           config.BindInOrder(
@@ -38,41 +38,41 @@ namespace SearsCatalog {
               "BuildHud.Panel visible columns (vanilla: 15).",
               new AcceptableValueRange<int>(1, 26));
 
-      BuildHudPanelColumns.SettingChanged += (_, _) => SearsCatalog.SetupBuildHudPanel();
+      BuildHudPanelColumns.OnSettingChanged(SearsCatalog.SetupBuildHudPanel);
 
       BuildHudPanelPosition =
-          config.BindVector2InOrder(
+          config.BindInOrder(
               "BuildHud.Panel",
               "buildHudPanelPosition",
               Vector2.zero,
               "BuildHud.Panel position relative to center of the screen.");
 
       CategoryRootSizeWidthOffset =
-          config.BindFloatInOrder(
+          config.BindInOrder(
               "BuildHud.Panel.PieceSelection",
               "categoryRootSizeWidthOffset",
               defaultValue: -155f,
               "BuildHud.Panel.CategoryRoot.sizeDelta width offset relative to panel width.");
 
-      CategoryRootSizeWidthOffset.SettingChanged += (_, _) => SearsCatalog.SetupPieceSelectionWindow();
+      CategoryRootSizeWidthOffset.OnSettingChanged(SearsCatalog.SetupPieceSelectionWindow);
 
       TabBorderSizeWidthOffset =
-          config.BindFloatInOrder(
+          config.BindInOrder(
               "BuildHud.Panel.PieceSelection",
               "tabBorderSizeWidthOffset",
               defaultValue: -45f,
               "BuildHud.Panel.PieceSelection.TabBorder.sizeDelta width offset relative to panel width.");
 
-      TabBorderSizeWidthOffset.SettingChanged += (_, _) => SearsCatalog.SetupPieceSelectionWindow();
+      TabBorderSizeWidthOffset.OnSettingChanged(SearsCatalog.SetupPieceSelectionWindow);
 
       InputHelpSizeDeltaOffset =
-          config.BindVector2InOrder(
+          config.BindInOrder(
               "BuildHud.Panel.PieceSelection",
               "inputHelpSizeDeltaOffset",
               defaultValue: new Vector2(-85f, 0f),
               "BuildHud.Panel.PieceSelection.InputHelp.sizeDelta offset relative to panel size.");
 
-      InputHelpSizeDeltaOffset.SettingChanged += (_, _) => SearsCatalog.SetupPieceSelectionWindow();
+      InputHelpSizeDeltaOffset.OnSettingChanged(SearsCatalog.SetupPieceSelectionWindow);
     }
   }
 }

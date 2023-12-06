@@ -1,8 +1,8 @@
 {
   "name": "SearsCatalog",
-  "version_number": "1.3.0",
+  "version_number": "1.4.0",
   "author": "ComfyMods",
   "description": "Resize and reposition the build panel in-game.",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/SearsCatalog",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2105" ]
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }

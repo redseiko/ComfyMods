@@ -13,10 +13,10 @@ using static SearsCatalog.PluginConfig;
 
 namespace SearsCatalog {
   [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
-  public class SearsCatalog : BaseUnityPlugin {
+  public sealed class SearsCatalog : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.searscatalog";
     public const string PluginName = "SearsCatalog";
-    public const string PluginVersion = "1.3.0";
+    public const string PluginVersion = "1.4.0";
 
     public static Harmony HarmonyInstance { get; private set; }
 
