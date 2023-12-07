@@ -29,6 +29,7 @@ namespace Atlas {
               new CodeMatch(OpCodes.Ldarg_0),
               new CodeMatch(
                   OpCodes.Ldfld, AccessTools.Field(typeof(ZoneSystem), nameof(ZoneSystem.m_locationVersion))))
+          .ThrowIfInvalid("Could not patch ZoneSystem.Load()! (locationVersion)")
           .Advance(offset: 1)
           .InsertAndAdvance(
               new CodeInstruction(OpCodes.Ldarg_0),

@@ -10,7 +10,7 @@ namespace Atlas {
   public class Atlas : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.atlas";
     public const string PluginName = "Atlas";
-    public const string PluginVersion = "1.9.0";
+    public const string PluginVersion = "1.10.0";
 
     public static readonly int TimeCreatedHashCode = "timeCreated".GetStableHashCode();
     public static readonly int EpochTimeCreatedHashCode = "epochTimeCreated".GetStableHashCode();

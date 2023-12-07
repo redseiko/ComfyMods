@@ -12,7 +12,7 @@ namespace Atlas {
     static void LoadWorldPostfix(ref ZNet __instance) {
       PluginLogger.LogInfo($"Finished loading world file. ZNet.m_netTime is: {__instance.m_netTime}");
 
-      CreateOrUpdateWorldMetadataZDOs(ZDOMan.s_instance);
+      //CreateOrUpdateWorldMetadataZDOs(ZDOMan.s_instance);
     }
 
     public static readonly int MetadataPrefabHashCode = "_ZoneCtrl".GetStableHashCode();

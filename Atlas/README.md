@@ -4,6 +4,12 @@
 
 ## Changelog
 
+### 1.10.0
+
+  * Updated for `v0.217.31` patch.
+  * Changed the `ZDOMan.Load()` transpiler for duplicate ZDO handling to reuse the `Ldloc_S` instruction.
+  * Temporarily removed call to `CreateOrUpdateWorldMetadataZDOs()` to help debug ZDOExtraData issues.
+
 ### 1.9.0
 
   * Updated for `v0.217.28` PTB patch.

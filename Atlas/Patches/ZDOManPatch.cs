@@ -42,16 +42,22 @@ namespace Atlas {
                   OpCodes.Callvirt,
                   AccessTools.Method(typeof(Dictionary<ZDOID, ZDO>), nameof(Dictionary<ZDOID, ZDO>.Add))))
           .ThrowIfInvalid("Could not patch AddObjectsById!")
+          .SaveInstruction(offset: 2, out CodeInstruction ldLocS9)
           .InsertAndAdvance(
               new CodeInstruction(OpCodes.Ldarg_0),
               new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ZDOMan), nameof(ZDOMan.m_objectsByID))),
-              new CodeInstruction(OpCodes.Ldloc_S, Convert.ToByte(9)),
+              ldLocS9,
               Transpilers.EmitDelegate<Action<Dictionary<ZDOID, ZDO>, ZDO>>(AddObjectsByIdPreDelegate))
           .InstructionEnumeration();
     }
 
     static CodeMatcher SavePosition(this CodeMatcher matcher, out int position) {
       position = matcher.Pos;
+      return matcher;
+    }
+
+    static CodeMatcher SaveInstruction(this CodeMatcher matcher, int offset, out CodeInstruction instruction) {
+      instruction = matcher.InstructionAt(offset);
       return matcher;
     }
 
@@ -165,15 +171,16 @@ namespace Atlas {
 
       PluginLogger.LogInfo($"Connecting {spawned.Count} spawners against {targetsByHash.Count} targets.");
 
+      long sessionId = __instance.m_sessionID;
       int connectedCount = 0;
       int doneCount = 0;
 
       foreach (KeyValuePair<ZDOID, ZDOConnectionHashData> pair in spawned) {
-        if (pair.Key.IsNone() || !__instance.m_objectsByID.TryGetValue(pair.Key, out ZDO zdo)) {
+        if (pair.Key.IsNone() || !__instance.m_objectsByID.TryGetValue(pair.Key, out ZDO zdo) || zdo == null) {
           continue;
         }
 
-        zdo.SetOwner(__instance.m_sessionID);
+        zdo.SetOwner(sessionId);
 
         if (targetsByHash.TryGetValue(pair.Value.m_hash, out ZDOID targetZdoId) && pair.Key != targetZdoId) {
           connectedCount++;
