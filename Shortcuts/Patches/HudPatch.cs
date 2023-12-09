@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection.Emit;
 
 using HarmonyLib;
 
@@ -15,20 +14,19 @@ namespace Shortcuts {
     [HarmonyPatch(nameof(Hud.Update))]
     static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
       return new CodeMatcher(instructions)
-          .MatchForward(
-              useEnd: false,
-              new CodeMatch(OpCodes.Ldc_I4, 0x11C),
-              Shortcuts.InputGetKeyDownMatch)
-          .Advance(offset: 1)
-          .SetInstructionAndAdvance(
-              Transpilers.EmitDelegate<Func<KeyCode, bool>>(_ => ToggleHudShortcut.Value.IsKeyDown()))
-          .MatchForward(
-              useEnd: false,
-              new CodeMatch(OpCodes.Ldc_I4, 0x132),
-              Shortcuts.InputGetKeyMatch)
-          .Advance(offset: 1)
-          .SetInstructionAndAdvance(Transpilers.EmitDelegate<Func<KeyCode, bool>>(_ => true))
+          .MatchGetKeyDown(0x11C)
+          .SetInstructionAndAdvance(Transpilers.EmitDelegate<Func<KeyCode, bool, bool>>(ToggleHudDelegate))
+          .MatchGetKey(0x132)
+          .SetInstructionAndAdvance(Transpilers.EmitDelegate<Func<KeyCode, bool, bool>>(IgnoreKeyDelegate))
           .InstructionEnumeration();
+    }
+
+    static bool ToggleHudDelegate(KeyCode key, bool logWarning) {
+      return ToggleHudShortcut.IsKeyDown();
+    }
+
+    static bool IgnoreKeyDelegate(KeyCode key, bool logWarning) {
+      return true;
     }
   }
 }

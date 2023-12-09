@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection.Emit;
 
 using HarmonyLib;
 
@@ -15,14 +14,13 @@ namespace Shortcuts {
     [HarmonyPatch(nameof(ConnectPanel.Update))]
     static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
       return new CodeMatcher(instructions)
-          .MatchForward(
-              useEnd: false,
-              new CodeMatch(OpCodes.Ldc_I4, 0x11B),
-              new CodeMatch(OpCodes.Call))
-          .Advance(offset: 1)
-          .SetInstructionAndAdvance(
-              Transpilers.EmitDelegate<Func<KeyCode, bool>>(_ => ToggleConnectPanelShortcut.Value.IsKeyDown()))
+          .MatchGetKeyDown(0x11B)
+          .SetInstructionAndAdvance(Transpilers.EmitDelegate<Func<KeyCode, bool, bool>>(ToggleConnectPanelDelegate))
           .InstructionEnumeration();
+    }
+
+    static bool ToggleConnectPanelDelegate(KeyCode key, bool logWarning) {
+      return ToggleConnectPanelShortcut.IsKeyDown();
     }
   }
 }

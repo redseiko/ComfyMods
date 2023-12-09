@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using BepInEx.Configuration;
 
@@ -40,9 +41,10 @@ namespace ComfyLib {
         string key,
         T defaultValue,
         string description,
-        System.Action<ConfigEntryBase> customDrawer = null,
+        Action<ConfigEntryBase> customDrawer = null,
         bool browsable = true,
-        bool hideDefaultButton = false) {
+        bool hideDefaultButton = false,
+        bool hideSettingName = false) {
       return config.Bind(
           section,
           key,
@@ -51,15 +53,33 @@ namespace ComfyLib {
               description,
               null,
               new ConfigurationManagerAttributes {
-                Browsable = true,
+                Browsable = browsable,
                 CustomDrawer = customDrawer,
                 HideDefaultButton = hideDefaultButton,
                 Order = GetSettingOrder(section)
               }));
     }
 
+    public static void OnSettingChanged<T>(this ConfigEntry<T> configEntry, Action settingChangedHandler) {
+      configEntry.SettingChanged += (_, _) => settingChangedHandler();
+    }
+
+    public static void OnSettingChanged<T>(this ConfigEntry<T> configEntry, Action<T> settingChangedHandler) {
+      configEntry.SettingChanged +=
+          (_, eventArgs) =>
+              settingChangedHandler.Invoke((T) ((SettingChangedEventArgs) eventArgs).ChangedSetting.BoxedValue);
+    }
+
+    public static void OnSettingChanged<T>(
+        this ConfigEntry<T> configEntry, Action<ConfigEntry<T>> settingChangedHandler) {
+      configEntry.SettingChanged +=
+          (_, eventArgs) =>
+              settingChangedHandler.Invoke(
+                  (ConfigEntry<T>) ((SettingChangedEventArgs) eventArgs).ChangedSetting.BoxedValue);
+    }
+
     internal sealed class ConfigurationManagerAttributes {
-      public System.Action<ConfigEntryBase> CustomDrawer;
+      public Action<ConfigEntryBase> CustomDrawer;
       public bool? Browsable;
       public bool? HideDefaultButton;
       public int? Order;

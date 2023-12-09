@@ -15,34 +15,32 @@ namespace Shortcuts {
     [HarmonyPatch(nameof(GameCamera.LateUpdate))]
     static IEnumerable<CodeInstruction> LateUpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
       return new CodeMatcher(instructions)
-          .MatchForward(
-              useEnd: false,
-              new CodeMatch(OpCodes.Ldc_I4, 0x124),
-              Shortcuts.InputGetKeyDownMatch)
-          .Advance(offset: 1)
-          .SetInstructionAndAdvance(
-              Transpilers.EmitDelegate<Func<KeyCode, bool>>(_ => TakeScreenshotShortcut.Value.IsKeyDown()))
+          .MatchGetKeyDown(0x124)
+          .SetInstructionAndAdvance(Transpilers.EmitDelegate<Func<KeyCode, bool, bool>>(TakeScreenshotDelegate))
           .InstructionEnumeration();
+    }
+
+    static bool TakeScreenshotDelegate(KeyCode key, bool logWarning) {
+      return TakeScreenshotShortcut.IsKeyDown();
     }
 
     [HarmonyTranspiler]
     [HarmonyPatch(nameof(GameCamera.UpdateMouseCapture))]
     static IEnumerable<CodeInstruction> UpdateMouseCaptureTranspiler(IEnumerable<CodeInstruction> instructions) {
       return new CodeMatcher(instructions)
-          .MatchForward(
-              useEnd: false,
-              new CodeMatch(OpCodes.Ldc_I4, 0x132),
-              Shortcuts.InputGetKeyMatch)
-          .Advance(offset: 1)
-          .SetInstructionAndAdvance(
-              Transpilers.EmitDelegate<Func<KeyCode, bool>>(_ => ToggleMouseCaptureShortcut.Value.IsKeyDown()))
-          .MatchForward(
-              useEnd: false,
-              new CodeMatch(OpCodes.Ldc_I4, 0x11A),
-              Shortcuts.InputGetKeyDownMatch)
-          .Advance(offset: 1)
-          .SetInstructionAndAdvance(Transpilers.EmitDelegate<Func<KeyCode, bool>>(_ => true))
+          .MatchGetKey(0x132)
+          .SetInstructionAndAdvance(Transpilers.EmitDelegate<Func<KeyCode, bool, bool>>(IgnoreKeyDelegate))
+          .MatchGetKeyDown(0x11A)
+          .SetInstructionAndAdvance(Transpilers.EmitDelegate<Func<KeyCode, bool, bool>>(ToggleMouseCaptureDelegate))
           .InstructionEnumeration();
+    }
+
+    static bool ToggleMouseCaptureDelegate(KeyCode key, bool logWarning) {
+      return ToggleMouseCaptureShortcut.IsKeyDown();
+    }
+
+    static bool IgnoreKeyDelegate(KeyCode key, bool logWarning) {
+      return true;
     }
   }
 }

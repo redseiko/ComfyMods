@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection.Emit;
 
 using HarmonyLib;
 
@@ -15,15 +14,13 @@ namespace Shortcuts {
     [HarmonyPatch(nameof(Console.Update))]
     static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
       return new CodeMatcher(instructions)
-          .MatchForward(
-              useEnd: false,
-              new CodeMatch(OpCodes.Ret),
-              new CodeMatch(OpCodes.Ldc_I4, 0x11E),
-              new CodeMatch(OpCodes.Call))
-          .Advance(offset: 2)
-          .SetInstructionAndAdvance(
-              Transpilers.EmitDelegate<Func<KeyCode, bool>>(_ => ToggleConsoleShortcut.Value.IsKeyDown()))
+          .MatchGetKeyDown(0x11E)
+          .SetInstructionAndAdvance(Transpilers.EmitDelegate<Func<KeyCode, bool, bool>>(ToggleConsoleDelgate))
           .InstructionEnumeration();
+    }
+
+    static bool ToggleConsoleDelgate(KeyCode key, bool logWarning) {
+      return ToggleConsoleShortcut.IsKeyDown();
     }
   }
 }

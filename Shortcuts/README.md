@@ -39,16 +39,20 @@
 
 ### Thunderstore (manual)
 
-  * Go to Settings > Import local mod > Select `Shortcuts_v1.4.0.zip`.
+  * Go to Settings > Import local mod > Select `Shortcuts_v1.5.0.zip`.
   * Click "OK/Import local mod" on the pop-up for information.
 
 ## Notes
 
   * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/Shortcuts).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
-  * Check out our community driven listing site at: [valheimlist.org](https://valheimlist.org/)
 
 ## Changelog
+
+### 1.5.0
+
+  * Updated for `v0.217.37` PTB.
+  * Created a new `ShortcutConfigEntry` wrapper to use with rewritten transpiler logic for improved efficiency.
 
 ### 1.4.0
 
