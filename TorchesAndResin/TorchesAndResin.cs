@@ -8,14 +8,10 @@ using static TorchesAndResin.PluginConfig;
 
 namespace TorchesAndResin {
   [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
-  public class TorchesAndResin : BaseUnityPlugin {
+  public sealed class TorchesAndResin : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.torchesandresin";
     public const string PluginName = "TorchesAndResin";
-    public const string PluginVersion = "1.4.0";
-
-    public const float TorchStartingFuel = 10000f;
-
-    public static readonly int FuelHashCode = "fuel".GetStableHashCode();
+    public const string PluginVersion = "1.5.0";
 
     public static readonly string[] EligibleTorchItemNames = {
       "piece_groundtorch_wood", // Standing Wood Torch
@@ -31,7 +27,7 @@ namespace TorchesAndResin {
     void Awake() {
       BindConfig(Config);
 
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginVersion);
+      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
     }
 
     void OnDestroy() {

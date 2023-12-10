@@ -5,15 +5,21 @@
 ## Instructions
 
   * This will set the fuel for several torch and brazier prefabs to 10,000 resin.
-    * Fuel will be set when prefab is placed or on entering the sector as the sole instance owner.
+  * Fuel will be set when prefab is placed or on entering the sector as the sole instance owner.
 
 ### Notes
 
   * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/TorchesAndResin).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
-  * Check out our community driven listing site at: [valheimlist.org](https://valheimlist.org/)
 
 ## Changelog
+
+### 1.5.0
+
+  * Updated for `v0.217.37` PTB.
+  * Fixed a bug where mod was using PluginVersion instead of PluginGuid for HarmonyId.
+  * Simplified `Fireplace` patch logic.
+  * Added new config option `torchStartingFuel` as a range value, defaulting to a minimum value of `10000`.
 
 ### 1.4.0
 

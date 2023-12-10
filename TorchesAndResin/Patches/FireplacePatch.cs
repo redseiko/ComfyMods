@@ -26,23 +26,22 @@ namespace TorchesAndResin {
 
     [HarmonyPrefix]
     [HarmonyPatch(nameof(Fireplace.Awake))]
-    static void AwakePrefix(ref Fireplace __instance) {
-      if (IsModEnabled.Value
-          && Array.IndexOf(EligibleTorchItemNames, Utils.GetPrefabName(__instance.gameObject.name)) >= 0) {
-        __instance.m_startFuel = TorchStartingFuel;
+    static void AwakePrefix(ref Fireplace __instance, ref bool __state) {
+      if (IsModEnabled.Value) {
+        __state = Array.IndexOf(EligibleTorchItemNames, Utils.GetPrefabName(__instance.gameObject.name)) >= 0;
+
+        if (__state) {
+          __instance.m_startFuel = TorchStartingFuel.Value;
+        }
       }
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Fireplace.Awake))]
-    static void AwakePostfix(ref Fireplace __instance) {
-      if (IsModEnabled.Value
-          && __instance.m_nview
-          && __instance.m_nview.IsValid()
-          && __instance.m_nview.IsOwner()
-          && Array.IndexOf(EligibleTorchItemNames, Utils.GetPrefabName(__instance.gameObject.name)) >= 0) {
-        __instance.m_startFuel = TorchStartingFuel;
-        __instance.m_nview.GetZDO().Set(FuelHashCode, TorchStartingFuel);
+    static void AwakePostfix(ref Fireplace __instance, bool __state) {
+      if (IsModEnabled.Value && __state && __instance.m_nview && __instance.m_nview.IsOwner()) {
+        __instance.m_startFuel = TorchStartingFuel.Value;
+        __instance.m_nview.m_zdo.Set(ZDOVars.s_fuel, (float) TorchStartingFuel.Value);
       }
     }
   }
