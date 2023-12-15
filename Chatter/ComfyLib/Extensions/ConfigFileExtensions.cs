@@ -3,20 +3,16 @@ using System.Collections.Generic;
 
 using BepInEx.Configuration;
 
-using Chatter;
-
-using TMPro;
-
 namespace ComfyLib {
   public static class ConfigFileExtensions {
-    static readonly Dictionary<string, int> _sectionToOrderCache = new();
+    static readonly Dictionary<string, int> _sectionToSettingOrder = new();
 
     static int GetSettingOrder(string section) {
-      if (!_sectionToOrderCache.TryGetValue(section, out int order)) {
+      if (!_sectionToSettingOrder.TryGetValue(section, out int order)) {
         order = 0;
       }
 
-      _sectionToOrderCache[section] = order - 1;
+      _sectionToSettingOrder[section] = order - 1;
       return order;
     }
 
@@ -57,34 +53,35 @@ namespace ComfyLib {
               description,
               null,
               new ConfigurationManagerAttributes {
-                Browsable = true,
+                Browsable = browsable,
                 CustomDrawer = customDrawer,
                 HideDefaultButton = hideDefaultButton,
-                HideSettingName = hideSettingName,
                 Order = GetSettingOrder(section)
               }));
     }
 
-    public static StringListConfigEntry BindInOrder(
-        this ConfigFile config, string section, string key, string description, string valuesSeparator) {
-      return new StringListConfigEntry(config, section, key, description, valuesSeparator);
-    }
-
-    public static void OnSettingChanged<T>(
-        this ConfigEntry<T> configEntry, Action settingChangedHandler) {
+    public static void OnSettingChanged<T>(this ConfigEntry<T> configEntry, Action settingChangedHandler) {
       configEntry.SettingChanged += (_, _) => settingChangedHandler();
     }
 
+    public static void OnSettingChanged<T>(this ConfigEntry<T> configEntry, Action<T> settingChangedHandler) {
+      configEntry.SettingChanged +=
+          (_, eventArgs) =>
+              settingChangedHandler.Invoke((T) ((SettingChangedEventArgs) eventArgs).ChangedSetting.BoxedValue);
+    }
+
     public static void OnSettingChanged<T>(
-        this ConfigEntry<T> configEntry, Action<T> settingChangedHandler) {
-      configEntry.SettingChanged += (_, _) => settingChangedHandler(configEntry.Value);
+        this ConfigEntry<T> configEntry, Action<ConfigEntry<T>> settingChangedHandler) {
+      configEntry.SettingChanged +=
+          (_, eventArgs) =>
+              settingChangedHandler.Invoke(
+                  (ConfigEntry<T>) ((SettingChangedEventArgs) eventArgs).ChangedSetting.BoxedValue);
     }
 
     internal sealed class ConfigurationManagerAttributes {
       public Action<ConfigEntryBase> CustomDrawer;
       public bool? Browsable;
       public bool? HideDefaultButton;
-      public bool? HideSettingName;
       public int? Order;
     }
   }

@@ -78,21 +78,29 @@ namespace Chatter {
 
     [HarmonyTranspiler]
     [HarmonyPatch(nameof(Chat.Update))]
-    static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
+    static IEnumerable<CodeInstruction> UpdateTranspiler1(IEnumerable<CodeInstruction> instructions) {
       return new CodeMatcher(instructions)
           .MatchForward(
-              useEnd: true,
+              useEnd: false,
               new CodeMatch(OpCodes.Ldarg_0),
               new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideTimer))),
               new CodeMatch(OpCodes.Ldarg_0),
               new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideDelay))),
               new CodeMatch(OpCodes.Clt),
               new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))))
-          .ThrowIfInvalid("Could not patch HideChatPanelDelegate.")
+          .ThrowIfInvalid("Could not patch Chat.Update()! (HideChatPanel)")
+          .Advance(offset: 6)
           .InsertAndAdvance(
               new CodeInstruction(OpCodes.Ldarg_0),
               new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideTimer))),
               Transpilers.EmitDelegate<Action<float>>(HideChatPanelDelegate))
+          .InstructionEnumeration();
+    }
+
+    [HarmonyTranspiler]
+    [HarmonyPatch(nameof(Chat.Update))]
+    static IEnumerable<CodeInstruction> UpdateTranspiler2(IEnumerable<CodeInstruction> instructions) {
+      return new CodeMatcher(instructions)
           .MatchForward(
               useEnd: false,
               new CodeMatch(OpCodes.Ldarg_0),
@@ -101,14 +109,20 @@ namespace Chatter {
               new CodeMatch(OpCodes.Ldc_I4_1),
               new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))),
               new CodeMatch(OpCodes.Ldarg_0),
-              new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_input))),
               new CodeMatch(
-                  OpCodes.Callvirt,
-                  AccessTools.Method(typeof(GuiInputField), nameof(GuiInputField.ActivateInputField))))
-          .ThrowIfInvalid("Could not patch EnableChatPanelDelegate.")
+                  OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_doubleOpenForVirtualKeyboard))))
+          .ThrowIfInvalid("Could not patch Chat.Update()! (EnableChatPanel)")
           .InsertAndAdvance(Transpilers.EmitDelegate<Action>(EnableChatPanelDelegate))
+          .InstructionEnumeration();
+    }
+
+    [HarmonyTranspiler]
+    [HarmonyPatch(nameof(Chat.Update))]
+    static IEnumerable<CodeInstruction> UpdateTranspiler3(IEnumerable<CodeInstruction> instructions) {
+      return new CodeMatcher(instructions)
           .MatchForward(
               useEnd: false,
+              new CodeMatch(OpCodes.Ldarg_0),
               new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_input))),
               new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(Component), "get_gameObject")),
               new CodeMatch(OpCodes.Ldc_I4_0),
@@ -116,8 +130,8 @@ namespace Chatter {
               new CodeMatch(OpCodes.Ldarg_0),
               new CodeMatch(OpCodes.Ldc_I4_0),
               new CodeMatch(OpCodes.Stfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_focused))))
-          .ThrowIfInvalid("Could not patch DisableChatPanelDelegate.")
-          .Advance(offset: 3)
+          .ThrowIfInvalid("Could not patch Chat.Update()! (DisableChatPanel)")
+          .Advance(offset: 4)
           .InsertAndAdvance(Transpilers.EmitDelegate<Func<bool, bool>>(DisableChatPanelDelegate))
           .InstructionEnumeration();
     }

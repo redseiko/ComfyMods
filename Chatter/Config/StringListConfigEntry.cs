@@ -183,4 +183,11 @@ namespace ComfyLib {
               wordWrap = false
             });
   }
+
+  public static class StringListConfigEntryExtensions {
+    public static StringListConfigEntry BindInOrder(
+        this ConfigFile config, string section, string key, string description, string valuesSeparator) {
+      return new StringListConfigEntry(config, section, key, description, valuesSeparator);
+    }
+  }
 }

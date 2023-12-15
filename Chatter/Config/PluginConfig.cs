@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -70,10 +69,10 @@ namespace Chatter {
 
       IsModEnabled = config.Bind("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
 
-      IsModEnabled.OnSettingChanged(toggleOn => ToggleChatter(toggleOn));
+      IsModEnabled.OnSettingChanged(ToggleChatter);
 
       ChatPanelPosition =
-          Config.BindInOrder(
+          config.BindInOrder(
               "ChatPanel",
               "chatPanelPosition",
               new Vector2(-10f, 125f),
@@ -82,7 +81,7 @@ namespace Chatter {
       ChatPanelPosition.OnSettingChanged(position => ChatterChatPanel?.PanelRectTransform.SetPosition(position));
 
       ChatPanelSizeDelta =
-          Config.BindInOrder(
+          config.BindInOrder(
               "ChatPanel",
               "chatPanelSizeDelta",
               new Vector2(500f, 500f),
@@ -154,7 +153,7 @@ namespace Chatter {
               defaultValue: true,
               "Show the horizontal dividers between groups of messages.");
 
-      ShowChatPanelMessageDividers.OnSettingChanged(toggleOn => ContentRowManager.ToggleMessageDividers(toggleOn));
+      ShowChatPanelMessageDividers.OnSettingChanged(ContentRowManager.ToggleMessageDividers);
 
       // Spacing
       ChatPanelContentSpacing =
@@ -175,7 +174,7 @@ namespace Chatter {
               "Spacing (px) between `Content.Row.Body` when using 'WithRowHeader' layout.",
               new AcceptableValueRange<float>(-100, 100));
 
-      ChatPanelContentRowSpacing.OnSettingChanged(spacing => ContentRowManager.SetContentRowSpacing(spacing));
+      ChatPanelContentRowSpacing.OnSettingChanged(ContentRowManager.SetContentRowSpacing);
 
       ChatPanelContentSingleRowSpacing =
           config.BindInOrder(
@@ -187,8 +186,8 @@ namespace Chatter {
 
       ChatPanelContentSingleRowSpacing.OnSettingChanged(() => ChatterChatPanel?.SetContentSpacing());
 
-    // Defaults
-    ChatPanelDefaultMessageTypeToUse =
+      // Defaults
+      ChatPanelDefaultMessageTypeToUse =
           config.BindInOrder(
               "ChatPanel.Defaults",
               "chatPanelDefaultMessageTypeToUse",
@@ -215,7 +214,7 @@ namespace Chatter {
               MessageLayoutType.WithHeaderRow,
               "Determines which layout to use when displaying a chat message.");
 
-      ChatMessageLayout.OnSettingChanged(() => ContentRowManager.RebuildContentRows());
+      ChatMessageLayout.OnSettingChanged(ContentRowManager.RebuildContentRows);
 
       ChatMessageShowTimestamp =
           config.BindInOrder(
@@ -224,7 +223,7 @@ namespace Chatter {
               defaultValue: true,
               "Show a timestamp for each group of chat messages (except system/default).");
 
-      ChatMessageShowTimestamp.OnSettingChanged(toggleOn => ContentRowManager.ToggleShowTimestamp(toggleOn));
+      ChatMessageShowTimestamp.OnSettingChanged(ContentRowManager.ToggleShowTimestamp);
 
       // Colors
       ChatMessageTextDefaultColor =

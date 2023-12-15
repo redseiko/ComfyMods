@@ -1,8 +1,8 @@
 {
   "name": "Chatter",
-  "version_number": "2.2.1",
+  "version_number": "2.3.0",
   "author": "ComfyMods",
   "description": "An elegant chat for a more civilized age.",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Chatter",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2200" ]
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }

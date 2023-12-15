@@ -18,7 +18,7 @@ namespace Chatter {
   public class Chatter : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.chatter";
     public const string PluginName = "Chatter";
-    public const string PluginVersion = "2.2.1";
+    public const string PluginVersion = "2.3.0";
 
     Harmony _harmony;
 
