@@ -56,9 +56,6 @@ namespace PotteryBarn {
       { "dvergrprops_wood_pole", new Dictionary<string, int>() {
         { "YggdrasilWood", 8 },
         { "Copper", 4 }}},
-      { "dvergrprops_wood_stake", new Dictionary<string, int>() {
-        { "YggdrasilWood", 2 },
-        { "Iron", 1 }}},
       { "dvergrprops_wood_wall", new Dictionary<string, int>() {
         { "YggdrasilWood", 32 },
         { "Copper", 16 }}},
@@ -122,8 +119,6 @@ namespace PotteryBarn {
         { "Wood", 1 }}},
       { "dvergrprops_wood_pole", new Dictionary<string, int>() {
         { "CopperScrap", 1 }}},
-      { "dvergrprops_wood_stake", new Dictionary<string, int>() {
-        { "Wood", 1 }}},
       { "dvergrprops_wood_wall", new Dictionary<string, int>() {
         { "Wood", 2 },
         { "CopperScrap", 1 }}},
@@ -161,7 +156,6 @@ namespace PotteryBarn {
       {"dvergrprops_curtain", "piece_workbench"},
       {"dvergrprops_wood_beam", "piece_workbench"},
       {"dvergrprops_wood_pole", "blackforge"},
-      {"dvergrprops_wood_stake", "blackforge"},
       {"dvergrprops_wood_wall", "blackforge"},
       {"dvergrtown_stair_corner_wood_left", "blackforge"},
       {"dvergrprops_lantern_standing", "blackforge"},
