@@ -43,7 +43,6 @@
 | Building    | dvergrprops_curtain               | Workbench        | 2x Yggdrasil wood  | 4x Blue jute       |                  |          |
 | Building    | dvergrprops_wood_beam             | Workbench        | 12x Yggdrasil wood |                    |                  |          |
 | Building    | dvergrprops_wood_pole             | Black Forge      | 8x Yggdrasil wood  | 4x Copper          |                  |          |
-| Building    | dvergrprops_wood_stake            | Black Forge      | 2x Yggdrasil wood  | 1x Iron            |                  |          |
 | Building    | dvergrprops_wood_wall             | Black Forge      | 32x Yggdrasil Wood | 16x Copper         |                  |          |
 | Building    | dvergrtown_stair_corner_wood_left | Black Forge      | 6x Yggdrasil Wood  | 3x Copper          |                  |          |
 | Building    | dvergrprops_lantern_standing      | Black Forge      | 1x Lantern         |                    |                  |          |
@@ -117,6 +116,10 @@
   * [Jotunn-v2.13.0](https://valheim.thunderstore.io/package/ValheimModding/Jotunn/)
 
 ## Changelog
+
+### 1.11.1
+
+  * Removed prefagb dvergrprops_wood_stake due to missing mesh on broken status.
 
 ### 1.11.0
 
