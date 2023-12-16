@@ -13,22 +13,21 @@ using UnityEngine;
 using static Silence.PluginConfig;
 
 namespace Silence {
-  [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
+  [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
   public class Silence : BaseUnityPlugin {
-    public const string PluginGUID = "redseiko.valheim.silence";
+    public const string PluginGuid = "redseiko.valheim.silence";
     public const string PluginName = "Silence";
-    public const string PluginVersion = "1.5.0";
+    public const string PluginVersion = "1.6.0";
 
-    public static ManualLogSource _logger;
+    static ManualLogSource _logger;
     Harmony _harmony;
 
     void Awake() {
       _logger = Logger;
-
       BindConfig(Config);
 
       if (IsModEnabled.Value) {
-        _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
+        _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
       }
     }
 
@@ -67,9 +66,10 @@ namespace Silence {
         ChatInstance.m_focused = false;
         ChatInstance.m_wasFocused = false;
         ChatInstance.m_input.DeactivateInputField();
+        ChatInstance.m_input.gameObject.SetActive(false);
       }
 
-      ChatInstance.m_output.gameObject.SetActive(isSilenced);
+      ChatInstance.m_chatWindow.gameObject.SetActive(isSilenced);
     }
 
     static void ToggleInWorldTexts(bool isSilenced) {

@@ -22,9 +22,12 @@
 
   * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/Silence).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
-  * Check out our community driven listing site at: [valheimlist.org](https://valheimlist.org/)
 
 ## Changelog
+
+### 1.6.0
+
+  * Fixed for the `v0.217.38` patch.
 
 ### 1.5.0
 
