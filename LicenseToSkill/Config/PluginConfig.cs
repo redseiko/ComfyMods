@@ -1,5 +1,7 @@
 ﻿using BepInEx.Configuration;
 
+using ComfyLib;
+
 namespace LicenseToSkill {
   public class PluginConfig {
     public static ConfigEntry<bool> IsModEnabled { get; private set; }
@@ -26,6 +28,10 @@ namespace LicenseToSkill {
               new ConfigDescription(
                   "Percentage of the skill's current level to lose on death.",
                   new AcceptableValueRange<float>(1f, 5f)));
+
+      IsModEnabled.OnSettingChanged(LicenseToSkill.SetHardDeathCoolDown);
+
+      HardDeathCooldownOverride.OnSettingChanged(LicenseToSkill.SetHardDeathCoolDown);
     }
   }
 }

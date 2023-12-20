@@ -18,7 +18,7 @@
 
 ### Thunderstore (manual install)
 
-  * Go to Settings > Import local mod > Select `LicenseToSkill_v1.2.0.zip`.
+  * Go to Settings > Import local mod > Select `LicenseToSkill_v1.2.1.zip`.
   * Click "OK/Import local mod" on the pop-up for information.
 
 ### Notes
@@ -28,6 +28,11 @@
   * Check out our community driven listing site at: [valheimlist.org](https://valheimlist.org/)
 
 ## Changelog
+
+### 1.2.1
+
+  * Fixed bug where soft death status effect re-appeared on HUD after finishing it's countdown.
+  * Updated assembly references to valheim_Data\Managed from unstripped_corlib.
 
 ### 1.2.0
 
