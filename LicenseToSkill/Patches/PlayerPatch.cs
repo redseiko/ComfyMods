@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
-using UnityEngine;
+
+using static LicenseToSkill.LicenseToSkill;
 using static LicenseToSkill.PluginConfig;
 
 namespace LicenseToSkill {
@@ -12,7 +13,7 @@ namespace LicenseToSkill {
         return;
       }
 
-      __instance.m_hardDeathCooldown = HardDeathCooldownOverride.Value;
+      __instance.m_hardDeathCooldown = GetConfigHardDeathCooldown();
     }
 
     [HarmonyPostfix]
@@ -22,7 +23,7 @@ namespace LicenseToSkill {
         return;
       }
 
-      __result = __instance.m_timeSinceDeath > (HardDeathCooldownOverride.Value * 60f);
+      __result = __instance.m_timeSinceDeath > GetConfigHardDeathCooldown();
     }
   }
 }

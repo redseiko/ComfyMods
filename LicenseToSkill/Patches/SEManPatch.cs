@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 
+using static LicenseToSkill.LicenseToSkill;
 using static LicenseToSkill.PluginConfig;
 
 namespace LicenseToSkill {
@@ -16,7 +17,7 @@ namespace LicenseToSkill {
         return;
       }
 
-      __result.m_ttl = HardDeathCooldownOverride.Value * 60f;
+      __result.m_ttl = GetConfigHardDeathCooldown();
     }
   }
 }

@@ -36,7 +36,7 @@ namespace LicenseToSkill {
       UpdateHardDeathCooldownTimer();
 
       if (IsModEnabled.Value) {
-        Player.m_localPlayer.m_hardDeathCooldown = HardDeathCooldownOverride.Value;
+        Player.m_localPlayer.m_hardDeathCooldown = GetConfigHardDeathCooldown();
         return;
       }
 
@@ -54,7 +54,11 @@ namespace LicenseToSkill {
         return;
       }
 
-      hardDeathCooldown.m_ttl = HardDeathCooldownOverride.Value * 60f - Player.m_localPlayer.m_timeSinceDeath;
+      hardDeathCooldown.m_ttl = GetConfigHardDeathCooldown() - Player.m_localPlayer.m_timeSinceDeath;
+    }
+
+    public static float GetConfigHardDeathCooldown() {
+      return HardDeathCooldownOverride.Value * 60f;
     }
   }
 }

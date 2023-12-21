@@ -32,6 +32,7 @@
 ### 1.2.1
 
   * Fixed bug where soft death status effect re-appeared on HUD after finishing it's countdown.
+  * Fixed bug where hard death encountered after 10 minutes regardless of UI/mod enabled.
   * Updated assembly references to valheim_Data\Managed from unstripped_corlib.
 
 ### 1.2.0
