@@ -14,7 +14,7 @@ namespace PutMeDown {
   public class PutMeDown : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.putmedown";
     public const string PluginName = "PutMeDown";
-    public const string PluginVersion = "1.0.0";
+    public const string PluginVersion = "1.1.0";
 
     static ManualLogSource _logger;
     Harmony _harmony;

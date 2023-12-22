@@ -15,6 +15,10 @@ Detailed instructions to be added later.
 
 ## Changelog
 
+### 1.1.0
+
+  * Modified `ToggleStringListConfigEntry` to use a `SearchOption` display/value pair for searching.
+
 ### 1.0.0
 
   * Initial release.

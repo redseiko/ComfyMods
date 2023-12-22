@@ -19,7 +19,7 @@ namespace ComfyLib {
         string key,
         string defaultValue,
         string description,
-        Func<IEnumerable<string>> autoCompleteFunc = default) {
+        Func<IEnumerable<SearchOption>> autoCompleteFunc = default) {
       BaseConfigEntry = config.BindInOrder(section, key, defaultValue, description, Drawer);
       BaseConfigEntry.SettingChanged += (sender, _) => SettingChanged?.Invoke(sender, ToggledStringValues());
 
@@ -127,16 +127,28 @@ namespace ComfyLib {
       }
     }
 
-    public class AutoCompleteBox {
-      readonly Func<IEnumerable<string>> _optionsFunc;
-      List<string> _options;
+    public sealed class SearchOption {
+      public string OptionValue = string.Empty;
+      public string DisplayValue = string.Empty;
 
-      readonly List<string> _currentOptions;
+      public SearchOption(string optionValue) : this(optionValue, optionValue) { }
+
+      public SearchOption(string optionValue, string displayValue) {
+        OptionValue = optionValue;
+        DisplayValue = displayValue;
+      }
+    }
+
+    public sealed class AutoCompleteBox {
+      readonly Func<IEnumerable<SearchOption>> _searchOptionsFunc;
+      List<SearchOption> _options;
+
+      readonly List<SearchOption> _currentOptions;
       string _value;
       Vector2 _scrollPosition;
 
-      public AutoCompleteBox(Func<IEnumerable<string>> optionsFunc) {
-        _optionsFunc = optionsFunc;
+      public AutoCompleteBox(Func<IEnumerable<SearchOption>> searchOptionsFunc) {
+        _searchOptionsFunc = searchOptionsFunc;
         _options = null;
         _currentOptions = new();
         _value = string.Empty;
@@ -149,10 +161,13 @@ namespace ComfyLib {
           _currentOptions.Clear();
 
           if (!string.IsNullOrEmpty(value)) {
-            _options ??= new(_optionsFunc());
+            _options ??= new(_searchOptionsFunc());
 
             _currentOptions.AddRange(
-                _options.Where(option => option.StartsWith(value, StringComparison.InvariantCultureIgnoreCase)));
+                _options.Where(
+                    option =>
+                        option.DisplayValue.IndexOf(value, StringComparison.InvariantCultureIgnoreCase) >= 0
+                        || option.OptionValue.StartsWith(value, StringComparison.InvariantCultureIgnoreCase)));
           }
 
           _scrollPosition = Vector2.zero;
@@ -172,9 +187,9 @@ namespace ComfyLib {
 
         string result = string.Empty;
 
-        foreach (string option in _currentOptions) {
-          if (GUILayout.Button(option, GUILayout.MinWidth(40f))) {
-            result = option;
+        foreach (SearchOption option in _currentOptions) {
+          if (GUILayout.Button(option.DisplayValue, GUILayout.MinWidth(40f))) {
+            result = option.OptionValue;
           }
         }
 

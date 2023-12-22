@@ -25,13 +25,13 @@ namespace PutMeDown {
               "itemsToIgnore",
               "Wood=0,Stone=0",
               "Items to ignore for auto-pickup behaviour.",
-              autoCompleteFunc: GetItemDropNames);
+              autoCompleteFunc: GetItemDropSerachOptions);
 
       AutoPickupController.SetItemsToIgnore(ItemsToIgnore.ToggledStringValues());
       ItemsToIgnore.SettingChanged += (_, values) => AutoPickupController.SetItemsToIgnore(values);
     }
 
-    public static IEnumerable<string> GetItemDropNames() {
+    public static IEnumerable<ToggleStringListConfigEntry.SearchOption> GetItemDropSerachOptions() {
       return ObjectDB.m_instance.m_items
           .Where(
               item =>
@@ -39,7 +39,12 @@ namespace PutMeDown {
                   && itemDrop.m_autoPickup
                   && itemDrop.m_itemData.m_shared.m_icons.Length > 0
                   && !string.IsNullOrEmpty(itemDrop.m_itemData.m_shared.m_description))
-          .Select(item => item.name);
+          .Select(
+              item =>
+                  new ToggleStringListConfigEntry.SearchOption(
+                      item.name,
+                      Localization.m_instance.Localize(item.GetComponent<ItemDrop>().m_itemData.m_shared.m_name)
+                          + $" ({item.name})"));
     }
   }
 }
