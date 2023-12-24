@@ -89,6 +89,11 @@
 
 ## Changelog
 
+### 1.8.0
+
+  * Using new tweening library: [TinyTween](https://gist.github.com/FronkonGames/ae3d0d613ac4ea6738e288c0a490c020).
+  * Converted several UI animations/transitions to use TinyTween.
+
 ### 1.7.0
 
   * Added a new feature to add a Minimap.Pin using keyboard shortcut.

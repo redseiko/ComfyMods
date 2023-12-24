@@ -20,7 +20,7 @@ namespace Pinnacle {
 
     public PinListRow(Transform parentTransform) {
       Row = CreateChildRow(parentTransform);
-      Row.Button().onClick.AddListener(() => Pinnacle.CenterMapOnOrTeleportTo(_targetPin));
+      Row.Button().onClick.AddListener(OnRowClicked);
 
       PinIcon = CreateChildPinIcon(Row.transform).Image();
       PinName = CreateChildPinName(Row.transform);
@@ -33,6 +33,10 @@ namespace Pinnacle {
       PositionY.color = new(0.565f, 0.792f, 0.976f);
       PositionZ = CreateChildPinPositionValue(Row.transform);
       PositionZ.color = new(0.647f, 0.839f, 0.655f);
+    }
+
+    void OnRowClicked() {
+      Pinnacle.CenterMapOnOrTeleportTo(_targetPin);
     }
 
     public PinListRow SetRowContent(Minimap.PinData pin) {

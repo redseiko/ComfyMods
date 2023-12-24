@@ -110,6 +110,7 @@
   <ItemGroup>
     <Compile Include="ComfyLib\Commands\ComfyCommand.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
+    <Compile Include="ComfyLib\External\TinyTween.cs" />
     <Compile Include="Core\CenterMapHelper.cs" />
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="Core\Commands\ExportPinsCommand.cs" />

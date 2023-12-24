@@ -1,6 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
+using FronkonGames.TinyTween;
 
 using TMPro;
 
@@ -15,6 +16,8 @@ namespace Pinnacle {
     public const long DefaultSharedPinOwnerId = long.MaxValue;
 
     public GameObject Panel { get; private set; }
+    public CanvasGroup PanelCanvasGroup { get; private set; }
+
     public LabelValueRow PinName { get; private set; }
 
     public LabelRow PinIconSelectorLabelRow { get; private set; }
@@ -36,10 +39,11 @@ namespace Pinnacle {
     // HasFocus.
     readonly List<GameObject> Selectables = new();
 
-    Coroutine _setActiveCoroutine;
+    Tween<float> _togglePanelTween;
 
     public PinEditPanel(Transform parentTransform) {
       Panel = CreatePanel(parentTransform);
+      PanelCanvasGroup = Panel.GetComponent<CanvasGroup>();
 
       PinName = new(Panel.transform);
       PinName.Label.SetText("Name");
@@ -108,34 +112,19 @@ namespace Pinnacle {
       SetPanelStyle();
     }
 
-    public void SetActive(bool toggle) {
-      if (_setActiveCoroutine != null) {
-        Minimap.m_instance.StopCoroutine(_setActiveCoroutine);
-      }
+    public void SetActive(bool toggleOn) {
+      _togglePanelTween?.Stop(false);
 
-      _setActiveCoroutine =
-          Minimap.m_instance.StartCoroutine(
-              LerpCanvasGroupAlpha(
-                  Panel.GetComponent<CanvasGroup>(), toggle ? 1f : 0f, PinEditPanelToggleLerpDuration.Value));
-    }
+      PanelCanvasGroup.blocksRaycasts = toggleOn;
 
-    static IEnumerator LerpCanvasGroupAlpha(CanvasGroup canvasGroup, float targetAlpha, float lerpDuration) {
-      float timeElapsed = 0f;
-      float sourceAlpha = canvasGroup.alpha;
-
-      canvasGroup.SetBlocksRaycasts(targetAlpha > 0f);
-
-      while (timeElapsed < lerpDuration) {
-        float t = timeElapsed / lerpDuration;
-        t = t * t * (3f - (2f * t));
-
-        canvasGroup.SetAlpha(Mathf.Lerp(sourceAlpha, targetAlpha, t));
-        timeElapsed += Time.deltaTime;
-
-        yield return null;
-      }
-
-      canvasGroup.SetAlpha(targetAlpha);
+      _togglePanelTween =
+          TweenFloat.Create()
+              .Origin(PanelCanvasGroup.alpha)
+              .Destination(toggleOn ? 1f : 0f)
+              .Duration(PinEditPanelToggleLerpDuration.Value)
+              .Easing(Ease.Cubic)
+              .OnUpdate(tween => PanelCanvasGroup.alpha = tween.Value)
+              .Start();
     }
 
     public void SetPanelStyle() {
