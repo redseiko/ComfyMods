@@ -106,16 +106,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComfySigns.cs" />
-    <Compile Include="Config\ExtendedColorConfigEntry.cs" />
-    <Compile Include="Config\GUI\GUIBuilder.cs" />
-    <Compile Include="Config\GUI\GUIFocus.cs" />
-    <Compile Include="Config\GUI\GUIHelper.cs" />
-    <Compile Include="Extensions\ConfigFileExtensions.cs" />
-    <Compile Include="Extensions\UnityExtensions.cs" />
+    <Compile Include="ComfyLib\Config\ExtendedColorConfigEntry.cs" />
+    <Compile Include="ComfyLib\Config\GUI\GUIBuilder.cs" />
+    <Compile Include="ComfyLib\Config\GUI\GUIFocus.cs" />
+    <Compile Include="ComfyLib\Config\GUI\GUIHelper.cs" />
+    <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
+    <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="Patches\SignPatch.cs" />
     <Compile Include="Patches\TextInputPatch.cs" />
     <Compile Include="Patches\ZNetScenePatch.cs" />
-    <Compile Include="PluginConfig.cs" />
+    <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Components\TextInputPanelDragger.cs" />
     <Compile Include="UI\Components\VertexColorCycler.cs" />

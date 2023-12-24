@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text.RegularExpressions;
 
 using BepInEx;
@@ -19,7 +18,7 @@ namespace ComfySigns {
   public class ComfySigns : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.comfysigns";
     public const string PluginName = "ComfySigns";
-    public const string PluginVersion = "1.5.0";
+    public const string PluginVersion = "1.6.0";
 
     Harmony _harmony;
 
@@ -78,11 +77,11 @@ namespace ComfySigns {
               <= SignEffectMaximumRenderDistance.Value;
     }
 
-    public static readonly EventHandler OnSignConfigChanged = (_, _) => {
+    public static void OnSignConfigChanged() {
       SetupSignPrefabs(ZNetScene.s_instance);
-    };
+    }
 
-    public static readonly EventHandler OnSignTextTagsConfigChanged = (_, _) => {
+    public static void OnSignTextTagsConfigChanged() {
       foreach (Sign sign in Resources.FindObjectsOfTypeAll<Sign>()) {
         if (sign && sign.m_nview && sign.m_nview.IsValid() && sign.m_textWidget) {
           if (SignTextIgnoreSizeTags.Value) {
@@ -92,15 +91,15 @@ namespace ComfySigns {
           }
         }
       }
-    };
+    }
 
-    public static readonly EventHandler OnSignEffectConfigChanged = (_, _) => {
+    public static void OnSignEffectConfigChanged() {
       foreach (Sign sign in Resources.FindObjectsOfTypeAll<Sign>()) {
         if (sign && sign.m_nview && sign.m_nview.IsValid() && sign.m_textWidget) {
           ProcessSignEffect(sign);
         }
       }
-    };
+    }
 
     public static void SetupSignPrefabs(ZNetScene netScene) {
       if (!netScene) {
@@ -128,8 +127,14 @@ namespace ComfySigns {
     }
 
     public static void SetupSignFont(Sign sign, TMP_FontAsset fontAsset, Color color) {
-      sign.m_textWidget.font = fontAsset;
-      sign.m_textWidget.fontSharedMaterial = fontAsset.material;
+      if (!sign.m_textWidget.font == fontAsset) {
+        sign.m_textWidget.font = fontAsset;
+      }
+
+      if (sign.m_textWidget.fontSharedMaterial != fontAsset.material) {
+        sign.m_textWidget.fontSharedMaterial = fontAsset.material;
+      }
+
       sign.m_textWidget.color = color;
     }
 

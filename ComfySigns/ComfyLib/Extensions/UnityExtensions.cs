@@ -4,6 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace ComfyLib {
+  public static class ComponentExtensions {
+    public static bool TryGetComponentInParent<T>(this Component source, out T component) where T : Component {
+      component = source.GetComponentInParent<T>();
+      return component;
+    }
+  }
+
   public static class GameObjectExtensions {
     public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component {
       if (!gameObject.TryGetComponent(out T component)) {

@@ -38,9 +38,7 @@ namespace ComfySigns {
               true,
               "Hide 'The character with Unicode value ... was not found...' log warnings.");
 
-      SuppressUnicodeNotFoundWarning.SettingChanged +=
-          (_, _) => TMP_Settings.instance.m_warningsDisabled = SuppressUnicodeNotFoundWarning.Value;
-
+      SuppressUnicodeNotFoundWarning.OnSettingChanged(value => TMP_Settings.instance.m_warningsDisabled = value);
       TMP_Settings.instance.m_warningsDisabled = SuppressUnicodeNotFoundWarning.Value;
     }
 
@@ -64,7 +62,7 @@ namespace ComfySigns {
               "Sign.m_textWidget.fontAsset (TMP) default value.",
               new AcceptableValueList<string>(fontNames));
 
-      SignDefaultTextFontAsset.SettingChanged += ComfySigns.OnSignConfigChanged;
+      SignDefaultTextFontAsset.OnSettingChanged(ComfySigns.OnSignConfigChanged);
 
       SignDefaultTextFontColor =
           new(config,
@@ -73,7 +71,7 @@ namespace ComfySigns {
               Color.white,
               "Sign.m_textWidget.color default value.");
 
-      SignDefaultTextFontColor.ConfigEntry.SettingChanged += ComfySigns.OnSignConfigChanged;
+      SignDefaultTextFontColor.ConfigEntry.OnSettingChanged(ComfySigns.OnSignConfigChanged);
 
       SignTextIgnoreSizeTags =
           config.Bind(
@@ -82,7 +80,7 @@ namespace ComfySigns {
               false,
               "if set, ignore any and all <size> tags in sign text when rendered locally.");
 
-      SignTextIgnoreSizeTags.SettingChanged += ComfySigns.OnSignTextTagsConfigChanged;
+      SignTextIgnoreSizeTags.OnSettingChanged(ComfySigns.OnSignTextTagsConfigChanged);
     }
 
     public static ConfigEntry<float> SignEffectMaximumRenderDistance { get; private set; }
@@ -97,7 +95,7 @@ namespace ComfySigns {
               "Maximum distance that signs can be from player to render sign effects.",
               new AcceptableValueRange<float>(0f, 128f));
 
-      SignEffectMaximumRenderDistance.SettingChanged += ComfySigns.OnSignEffectConfigChanged;
+      SignEffectMaximumRenderDistance.OnSettingChanged(ComfySigns.OnSignEffectConfigChanged);
 
       SignEffectEnablePartyEffect =
           config.BindInOrder(
@@ -106,7 +104,7 @@ namespace ComfySigns {
               false,
               "Enables the 'Party' Sign effect for signs using the party tag.");
 
-      SignEffectEnablePartyEffect.SettingChanged += ComfySigns.OnSignEffectConfigChanged;
+      SignEffectEnablePartyEffect.OnSettingChanged(ComfySigns.OnSignEffectConfigChanged);
     }
 
     static readonly Queue<Action> _fejdStartupBindConfigQueue = new();

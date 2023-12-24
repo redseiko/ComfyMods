@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Reflection;
 
+using ComfyLib;
+
 using HarmonyLib;
+
+using UnityEngine;
 
 using static ComfySigns.PluginConfig;
 
@@ -13,6 +17,10 @@ namespace ComfySigns {
     static void AwakePostfix(ref Sign __instance) {
       if (IsModEnabled.Value) {
         __instance.m_characterLimit = 999;
+
+        if (__instance.m_textWidget.TryGetComponentInParent(out Canvas canvas)) {
+          canvas.transform.localPosition = new(0f, 0f, 0.10f);
+        }
       }
     }
 

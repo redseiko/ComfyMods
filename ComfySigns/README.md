@@ -31,6 +31,11 @@
 
 ## Changelog
 
+### 1.6.0
+
+  * Updated for the `v0.217.38` patch.
+  * Fixed sign text flickering at certain angles.
+
 ### 1.5.0
 
   * Fixed for the `v0.217.24` patch.
