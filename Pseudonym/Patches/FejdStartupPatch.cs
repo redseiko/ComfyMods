@@ -28,7 +28,7 @@ namespace Pseudonym {
 
       _newCharacterPanelTopicText =
           __instance.m_newCharacterPanel.transform.Find("Topic").GetComponent<TextMeshProUGUI>();
-      _topicText = Localization.m_instance.textMeshStrings[_newCharacterPanelTopicText];
+      _topicText = _newCharacterPanelTopicText.text;
 
       _onNewCharacterDoneEvent = __instance.m_csNewCharacterDone.onClick;
 
@@ -69,7 +69,7 @@ namespace Pseudonym {
         fejdStartup.m_newCharacterError.SetActive(false);
         fejdStartup.m_selectCharacterPanel.SetActive(false);
 
-        Localization.m_instance.textMeshStrings[_newCharacterPanelTopicText] = $"Edit Character: {profile.GetName()}";
+        _newCharacterPanelTopicText.text = $"Edit Character: {profile.GetName()}";
 
         fejdStartup.m_csNewCharacterDone.onClick = new();
         fejdStartup.m_csNewCharacterDone.onClick.AddListener(() => OnEditCharacterDone(fejdStartup));
@@ -143,7 +143,8 @@ namespace Pseudonym {
 
       _editingPlayerProfile = null;
 
-      Localization.m_instance.textMeshStrings[_newCharacterPanelTopicText] = _topicText;
+      _newCharacterPanelTopicText.text = _topicText;
+
       fejdStartup.m_csNewCharacterDone.onClick = _onNewCharacterDoneEvent;
       fejdStartup.m_csNewCharacterName.text = string.Empty;
       fejdStartup.m_csNewCharacterName.characterLimit = _characterLimit;

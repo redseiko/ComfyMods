@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using System;
+﻿using System;
+using System.Globalization;
 using System.Reflection;
 
 using BepInEx;
@@ -14,7 +14,7 @@ namespace Pseudonym {
   public class Pseudonym : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.pseudonym";
     public const string PluginName = "Pseudonym";
-    public const string PluginVersion = "1.1.0";
+    public const string PluginVersion = "1.2.0";
 
     static ManualLogSource _logger;
     Harmony _harmony;
