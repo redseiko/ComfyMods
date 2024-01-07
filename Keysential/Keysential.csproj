@@ -101,19 +101,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComfyLib\Commands\ComfyCommand.cs" />
     <Compile Include="Components\VendorKeyManager.cs" />
     <Compile Include="Core\Commands\StartKeyManagerCommand.cs" />
     <Compile Include="Core\Commands\StartVendorKeyManagerCommand.cs" />
     <Compile Include="Core\Commands\StopKeyManagerCommand.cs" />
     <Compile Include="Core\GlobalKeysManager.cs" />
+    <Compile Include="Core\KeyManagerUtils.cs" />
     <Compile Include="Core\KeyManager\DistanceKeyManager.cs" />
-    <Compile Include="Extensions\ConfigFileExtensions.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
+    <Compile Include="ComfyLib\Extensions\StringExtensions.cs" />
     <Compile Include="Keysential.cs" />
     <Compile Include="Patches\TerminalPatch.cs" />
     <Compile Include="Patches\ZoneSystemPatch.cs" />
     <Compile Include="Config\PluginConfig.cs" />
-    <Compile Include="Extensions\PluginExtensions.cs" />
+    <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

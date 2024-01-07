@@ -1,11 +1,10 @@
-﻿using System;
-
-using ComfyLib;
+﻿using ComfyLib;
 
 using UnityEngine;
 
 namespace Keysential {
   public static class StartVendorKeyManagerCommand {
+    [ComfyCommand]
     public static Terminal.ConsoleCommand Register() {
       return new Terminal.ConsoleCommand(
           "startvendorkeymanager",
@@ -22,7 +21,7 @@ namespace Keysential {
       string managerId = args[1];
 
       if (!args[2].TryParseVector(out Vector3 position)) {
-        Keysential.LogError($"Could nor parse Vector3 position arg: {args[2]}");
+        Keysential.LogError($"Could not parse Vector3 position arg: {args[2]}");
         return false;
       }
 

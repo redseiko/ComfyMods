@@ -4,6 +4,12 @@
 
 ## Changelog
 
+### 1.7.0
+
+  * Updated for `v0.217.38` patch.
+  * Converted commands to `ComfyCommand` format.
+  * Add support for loading/saving KeyManager commands to run at start-up.
+
 ### 1.6.0
 
   * Updated for `v0.217.28` PTB patch.

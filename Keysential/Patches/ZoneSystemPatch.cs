@@ -38,6 +38,8 @@ namespace Keysential {
         Keysential.LogInfo($"Adding VendorKeyManager component to ZoneSystem...");
         __instance.gameObject.AddComponent<VendorKeyManager>();
       }
+
+      KeyManagerUtils.RunStartUpKeyManagers();
     }
 
     static string LogGlobalKeys(ZoneSystem zoneSystem) {

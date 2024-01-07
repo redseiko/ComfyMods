@@ -1,9 +1,12 @@
-﻿namespace Keysential {
+﻿using ComfyLib;
+
+namespace Keysential {
   public static class StopKeyManagerCommand {
+    [ComfyCommand]
     public static Terminal.ConsoleCommand Register() {
       return new Terminal.ConsoleCommand(
           "stopkeymanager",
-          "stopkeymanager <id: id1>",
+          "stopkeymanager <id: id1> [remove: true/false]",
           args => Run(args));
     }
 
@@ -11,6 +14,10 @@
       if (args.Length < 2) {
         Keysential.LogError($"Not enough args for stopkeymanager command.");
         return false;
+      }
+
+      if (args.Length >= 3 && bool.TryParse(args[2], out bool removeFromStartup) && removeFromStartup) {
+        KeyManagerUtils.RemoveStartUpKeyManager(args[1]);
       }
 
       return GlobalKeysManager.StopKeyManager(args[1]);

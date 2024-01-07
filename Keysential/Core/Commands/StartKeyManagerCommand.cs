@@ -4,10 +4,11 @@ using UnityEngine;
 
 namespace Keysential {
   public static class StartKeyManagerCommand {
+    [ComfyCommand]
     public static Terminal.ConsoleCommand Register() {
       return new Terminal.ConsoleCommand(
           "startkeymanager",
-          "startkeymanager <id: id1> <position: x,y,z> <distance: 8f> <keys: key1,key2>",
+          "startkeymanager <id: id1> <position: x,y,z> <distance: 8f> <keys: key1,key2> [add: true/false]",
           args => Run(args));
     }
 
@@ -36,11 +37,18 @@ namespace Keysential {
         return false;
       }
 
-      return GlobalKeysManager.StartKeyManager(
-          managerId,
-          position,
-          distance,
-          DistanceKeyManager.DistanceXZProximityCoroutine(managerId, position, distance, keys));
+      bool result =
+          GlobalKeysManager.StartKeyManager(
+              managerId,
+              position,
+              distance,
+              DistanceKeyManager.DistanceXZProximityCoroutine(managerId, position, distance, keys));
+
+      if (result && args.Length >= 6 && bool.TryParse(args[5], out bool addToStartUp) && addToStartUp) {
+        KeyManagerUtils.AddStartUpKeyManager($"startkeymanager {args[1]} {args[2]} {args[3]} {args[4]}");
+      }
+
+      return result;
     }
   }
 }

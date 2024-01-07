@@ -14,7 +14,7 @@ namespace Keysential {
   public class Keysential : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.keysential";
     public const string PluginName = "Keysential";
-    public const string PluginVersion = "1.6.0";
+    public const string PluginVersion = "1.7.0";
 
     static ManualLogSource _logger;
     Harmony _harmony;
