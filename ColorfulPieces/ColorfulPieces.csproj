@@ -99,8 +99,11 @@
     <Compile Include="ColorfulPieces.cs" />
     <Compile Include="ComfyLib\Commands\ComfyArgs.cs" />
     <Compile Include="ComfyLib\Commands\ComfyCommand.cs" />
+    <Compile Include="ComfyLib\Extensions\UIExtensions.cs" />
+    <Compile Include="ComfyLib\UI\ColorPicker.cs" />
     <Compile Include="Core\Commands\ChangeColorCommand.cs" />
     <Compile Include="Core\Commands\ClearColorCommand.cs" />
+    <Compile Include="Core\Commands\ColorPickerCommand.cs" />
     <Compile Include="Core\Components\PieceColor.cs" />
     <Compile Include="Core\Components\PieceColorRenderer.cs" />
     <Compile Include="Core\Components\PieceColorUpdater.cs" />
@@ -126,7 +129,9 @@
     <None Include="README.md" />
     <None Include="icon.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ComfyLib\UI\Core\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyAssembly" AfterTargets="Build">
     <Copy SourceFiles="$(TargetDir)$(AssemblyName).dll" DestinationFolder="$(PluginOutputPath)" />
