@@ -12,6 +12,11 @@
 
   - Panel can be repositioned by dragging it with the mouse.
 
+#### CopyPositionButton
+
+  - Click on the `Copy` button to copy your current position (as XYZ) to clipboard.
+  - Hold `LeftShift` and click on the `Copy` button to copy your current position (as XZY) to clipboard.
+
 ### SectorZdoCountGrid
 
   - Disabled by default, toggle it on/off in ConfigurationManager.
@@ -43,27 +48,3 @@
   * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/ZoneScouter).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
   * Check out our community driven listing site at: [valheimlist.org](https://valheimlist.org/)
-
-## Changelog
-
-### 1.3.0
-
-  * Updated all `UI.Text` references to use `TextMeshPro`.
-  * Added new config option `showZDOManagerContent` to toggle `NextId` row in the `SectorInfoPanel`, default to off.
-
-### 1.2.0
-
-  * Fixed for `v0.216.9` patch.
-
-### 1.1.0
-
-  * Added a new row `ZdoManager.NextId` to the `SectorInfoPanel`.
-  * Minor code clean-up.
-
-### 1.0.1
-
-  * Fixed grid display of sectors corresponding to NESW movement. Blah math.
-
-### 1.0.0
-
-  * Initial release.

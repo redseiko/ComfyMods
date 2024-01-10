@@ -42,8 +42,8 @@ namespace ZoneScouter {
     public static void BindConfig(ConfigFile config) {
       IsModEnabled = config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
 
-      IsModEnabled.OnSettingChanged(() => ZoneScouter.ToggleSectorInfoPanel());
-      IsModEnabled.OnSettingChanged(() => SectorBoundaries.ToggleSectorBoundaries());
+      IsModEnabled.OnSettingChanged(ZoneScouter.ToggleSectorInfoPanel);
+      IsModEnabled.OnSettingChanged(SectorBoundaries.ToggleSectorBoundaries);
 
       ShowSectorInfoPanel =
           config.BindInOrder(
@@ -52,7 +52,7 @@ namespace ZoneScouter {
               true,
               "Show the SectorInfoPanel on the Hud.");
 
-      ShowSectorInfoPanel.OnSettingChanged(() => ZoneScouter.ToggleSectorInfoPanel());
+      ShowSectorInfoPanel.OnSettingChanged(ZoneScouter.ToggleSectorInfoPanel);
 
       SectorInfoPanelPosition =
           config.BindInOrder(
@@ -61,12 +61,18 @@ namespace ZoneScouter {
               new Vector2(0f, -25f),
               "SectorInfoPanel position (relative to pivot/anchors).");
 
+      SectorInfoPanelPosition.OnSettingChanged(
+          position => ZoneScouter.SectorInfoPanel?.Panel.Ref()?.RectTransform().SetPosition(position));
+
       SectorInfoPanelBackgroundColor =
           config.BindInOrder(
               "SectorInfoPanel",
               "sectorInfoPanelBackgroundColor",
               new Color(0f, 0f, 0f, 0.9f),
               "SectorInfoPanel background color.");
+
+      SectorInfoPanelBackgroundColor.OnSettingChanged(
+          color => ZoneScouter.SectorInfoPanel?.Panel.Ref()?.Image().SetColor(color));
 
       SectorInfoPanelFontSize =
           config.BindInOrder(
@@ -76,12 +82,16 @@ namespace ZoneScouter {
               "SectorInfoPanel font size.",
               new AcceptableValueRange<int>(2, 64));
 
+      SectorInfoPanelFontSize.OnSettingChanged(SetSectorInfoPanelStyle);
+
       PositionValueXTextColor =
           config.BindInOrder(
               "SectorInfoPanel.PositionRow",
               "positionValueXTextColor",
               new Color(1f, 0.878f, 0.51f),
               "SectorInfoPanel.PositionRow.X value text color.");
+
+      PositionValueXTextColor.OnSettingChanged(SetSectorInfoPanelStyle);
 
       PositionValueYTextColor =
           config.BindInOrder(
@@ -90,12 +100,16 @@ namespace ZoneScouter {
               new Color(0.565f, 0.792f, 0.976f),
               "SectorInfoPanel.PositionRow.Y value text color.");
 
+      PositionValueYTextColor.OnSettingChanged(SetSectorInfoPanelStyle);
+
       PositionValueZTextColor =
           config.BindInOrder(
               "SectorInfoPanel.PositionRow",
               "positionValueZTextColor",
               new Color(0.647f, 0.839f, 0.655f),
               "SectorInfoPanel.PositionRow.Z value text color.");
+
+      PositionValueZTextColor.OnSettingChanged(SetSectorInfoPanelStyle);
 
       ShowZDOManagerContent =
           config.BindInOrder(
@@ -114,6 +128,8 @@ namespace ZoneScouter {
               false,
               "Show the SectorZdoCount grid in the SectorInfo panel.");
 
+      ShowSectorZdoCountGrid.OnSettingChanged(ZoneScouter.ToggleSectorZdoCountGrid);
+
       SectorZdoCountGridSize =
           config.BindInOrder(
               "SectorZdoCountGrid",
@@ -121,12 +137,16 @@ namespace ZoneScouter {
               GridSize.ThreeByThree,
               "Size of the SectorZdoCount grid.");
 
+      SectorZdoCountGridSize.OnSettingChanged(ZoneScouter.ToggleSectorZdoCountGrid);
+
       CellZdoCountBackgroundImageColor =
           config.BindInOrder(
               "SectorZdoCountGrid",
               "cellZdoCountBackgroundImageColor",
               Color.clear,
               "SectorZdoCountCell.ZdoCount.Background.Image color.");
+
+      CellZdoCountBackgroundImageColor.OnSettingChanged(SetSectorZDOCountGridCellStyle);
 
       CellZdoCountTextFontSize =
           config.BindInOrder(
@@ -136,6 +156,8 @@ namespace ZoneScouter {
               "SectorZdoCountCell.ZdoCount.Text font size.",
               new AcceptableValueRange<int>(2, 64));
 
+      CellZdoCountTextFontSize.OnSettingChanged(SetSectorZDOCountGridCellStyle);
+
       CellZdoCountTextColor =
           config.BindInOrder(
               "SectorZdoCountGrid",
@@ -143,12 +165,16 @@ namespace ZoneScouter {
               Color.white,
               "SectorZdoCountCell.ZdoCount.Text color.");
 
+      CellZdoCountTextColor.OnSettingChanged(SetSectorZDOCountGridCellStyle);
+
       CellSectorBackgroundImageColor =
           config.BindInOrder(
               "SectorZdoCountGrid",
               "cellSectorBackgroundImageColor",
               new Color(0.5f, 0.5f, 0.5f, 0.5f),
               "SectorZdoCountCell.Sector.Background.Image color.");
+
+      CellSectorBackgroundImageColor.OnSettingChanged(SetSectorZDOCountGridCellStyle);
 
       CellSectorTextFontSize =
           config.BindInOrder(
@@ -158,12 +184,16 @@ namespace ZoneScouter {
               "SectorZdoCountCell.Sector.Text font size.",
               new AcceptableValueRange<int>(2, 64));
 
+      CellSectorTextFontSize.OnSettingChanged(SetSectorZDOCountGridCellStyle);
+
       CellSectorTextColor =
           config.BindInOrder(
               "SectorZdoCountGrid",
               "cellSectorTextColor",
               new Color(0.9f, 0.9f, 0.9f, 1f),
               "SectorZdoCountCell.Sector.Text color.");
+
+      CellSectorTextColor.OnSettingChanged(SetSectorZDOCountGridCellStyle);
 
       ShowSectorBoundaries =
           config.BindInOrder(
@@ -172,12 +202,24 @@ namespace ZoneScouter {
               false,
               "Shows sector boundaries using semi-transparent walls at each boundary.");
 
+      ShowSectorBoundaries.OnSettingChanged(SectorBoundaries.ToggleSectorBoundaries);
+
       SectorBoundaryColor =
           config.BindInOrder(
               "SectorBoundary",
               "sectorBoundaryColor",
               new Color(1f, 0f, 1f, 1f),
               "Color to use for the sector boundary walls.");
+
+      SectorBoundaryColor.OnSettingChanged(SectorBoundaries.SetBoundaryColor);
+
+      static void SetSectorInfoPanelStyle() {
+        ZoneScouter.SectorInfoPanel?.SetPanelStyle();
+      }
+
+      static void SetSectorZDOCountGridCellStyle() {
+        ZoneScouter.SectorZdoCountGrid?.SetCellStyle();
+      }
     }
   }
 }

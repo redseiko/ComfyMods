@@ -23,5 +23,21 @@ namespace ZoneScouter {
         }
       }
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(Menu.Show))]
+    static void ShowPostfix() {
+      if (IsModEnabled.Value) {
+        ZoneScouter.SectorInfoPanel?.ToggleCopyButtons(true);
+      }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(Menu.Hide))]
+    static void HidePostfix() {
+      if (IsModEnabled.Value) {
+        ZoneScouter.SectorInfoPanel?.ToggleCopyButtons(false);
+      }
+    }
   }
 }

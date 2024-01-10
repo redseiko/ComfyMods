@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using static ZoneScouter.PluginConfig;
 
 namespace ZoneScouter {
-  public class ValueWithLabel {
+  public sealed class ValueWithLabel {
     public GameObject Row { get; private set; }
     public TMP_Text Value { get; private set; }
     public TMP_Text Label { get; private set; }

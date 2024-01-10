@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using static ZoneScouter.PluginConfig;
 
 namespace ZoneScouter {
-  public class SectorZdoCountCell {
+  public sealed class SectorZdoCountCell {
     public GameObject Cell { get; private set; }
 
     public Image ZdoCountBackground { get; private set; }

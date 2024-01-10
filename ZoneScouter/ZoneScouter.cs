@@ -14,38 +14,15 @@ using static ZoneScouter.PluginConfig;
 
 namespace ZoneScouter {
   [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
-  public class ZoneScouter : BaseUnityPlugin {
+  public sealed class ZoneScouter : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.zonescouter";
     public const string PluginName = "ZoneScouter";
-    public const string PluginVersion = "1.3.0";
+    public const string PluginVersion = "1.4.0";
 
     Harmony _harmony;
 
     void Awake() {
       BindConfig(Config);
-
-      SectorInfoPanelBackgroundColor.OnSettingChanged(color => SectorInfoPanel?.Panel.Ref()?.Image().SetColor(color));
-      SectorInfoPanelPosition.OnSettingChanged(
-          position => SectorInfoPanel?.Panel.Ref()?.RectTransform().SetPosition(position));
-
-      SectorInfoPanelFontSize.OnSettingChanged(() => SectorInfoPanel?.SetPanelStyle());
-      PositionValueXTextColor.OnSettingChanged(() => SectorInfoPanel?.SetPanelStyle());
-      PositionValueYTextColor.OnSettingChanged(() => SectorInfoPanel?.SetPanelStyle());
-      PositionValueZTextColor.OnSettingChanged(() => SectorInfoPanel?.SetPanelStyle());
-
-      ShowSectorZdoCountGrid.OnSettingChanged(ToggleSectorZdoCountGrid);
-      SectorZdoCountGridSize.OnSettingChanged(ToggleSectorZdoCountGrid);
-
-      CellZdoCountBackgroundImageColor.OnSettingChanged(() => SectorZdoCountGrid?.SetCellStyle());
-      CellZdoCountTextColor.OnSettingChanged(() => SectorZdoCountGrid?.SetCellStyle());
-      CellZdoCountTextFontSize.OnSettingChanged(() => SectorZdoCountGrid?.SetCellStyle());
-
-      CellSectorBackgroundImageColor.OnSettingChanged(() => SectorZdoCountGrid?.SetCellStyle());
-      CellSectorTextColor.OnSettingChanged(() => SectorZdoCountGrid?.SetCellStyle());
-      CellSectorTextFontSize.OnSettingChanged(() => SectorZdoCountGrid?.SetCellStyle());
-
-      ShowSectorBoundaries.OnSettingChanged(SectorBoundaries.ToggleSectorBoundaries);
-      SectorBoundaryColor.OnSettingChanged(SectorBoundaries.SetBoundaryColor);
 
       _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
     }

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using static ZoneScouter.PluginConfig;
 
 namespace ZoneScouter {
-  public class SectorZdoCountGrid {
+  public sealed class SectorZdoCountGrid {
     public GameObject Grid { get; private set; }
 
     public int Size { get; private set; } = 0;

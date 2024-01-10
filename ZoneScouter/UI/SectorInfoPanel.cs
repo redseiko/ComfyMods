@@ -6,13 +6,15 @@ using UnityEngine.UI;
 using static ZoneScouter.PluginConfig;
 
 namespace ZoneScouter {
-  public class SectorInfoPanel {
+  public sealed class SectorInfoPanel {
     public GameObject Panel { get; private set; }
 
     public ContentRow PositionContent { get; private set; }
     public ValueWithLabel PositionX { get; private set; }
     public ValueWithLabel PositionY { get; private set; }
     public ValueWithLabel PositionZ { get; private set; }
+
+    public ButtonCell CopyPositionButton { get; private set; }
 
     public ContentRow SectorContent { get; private set; }
     public ValueWithLabel SectorXY { get; private set; }
@@ -37,6 +39,8 @@ namespace ZoneScouter {
       PositionZ = new(PositionContent.Row.transform);
       PositionZ.Label.SetText("Z");
 
+      CreateCopyPositionButton();
+
       SectorContent = new(Panel.transform);
 
       SectorXY = new(SectorContent.Row.transform);
@@ -51,9 +55,41 @@ namespace ZoneScouter {
       ZdoManagerNextId.Label.SetText("NextId");
 
       SetPanelStyle();
+
       ToggleZDOManagerContent(ShowZDOManagerContent.Value);
 
       PanelDragger = Panel.AddComponent<PanelDragger>();
+    }
+
+    void CreateCopyPositionButton() {
+      CopyPositionButton = new(PositionContent.Row.transform);
+
+      CopyPositionButton.Cell.AddComponent<LayoutElement>()
+          .SetIgnoreLayout(true);
+
+      CopyPositionButton.Cell.GetComponent<RectTransform>()
+          .SetAnchorMin(new(1f, 0.5f))
+          .SetAnchorMax(new(1f, 0.5f))
+          .SetPivot(new(0f, 0.5f))
+          .SetPosition(new(10f, 0f))
+          .SetSizeDelta(new(80f, 0f));
+
+      CopyPositionButton.Label.text = "Copy";
+      CopyPositionButton.Button.onClick.AddListener(CopyPositionToClipboard);
+    }
+
+    void CopyPositionToClipboard() {
+      string text =
+          ZInput.instance.Input_GetKey(KeyCode.LeftShift, false)
+              ? $"Position (XZY): {PositionX.Value.text} {PositionZ.Value.text} {PositionY.Value.text}"
+              : $"Position (XYZ): {PositionX.Value.text} {PositionY.Value.text} {PositionZ.Value.text}";
+
+      GUIUtility.systemCopyBuffer = text;
+      Chat.instance.AddString($"Copied to clipboard: {text}");
+    }
+
+    public void ToggleCopyButtons(bool toggleOn) {
+      CopyPositionButton.Cell.gameObject.SetActive(toggleOn);
     }
 
     public void SetPanelStyle() {
@@ -125,7 +161,7 @@ namespace ZoneScouter {
       return panel;
     }
 
-    public class ContentRow {
+    public sealed class ContentRow {
       public GameObject Row { get; private set; }
 
       public ContentRow(Transform parentTransform) {
