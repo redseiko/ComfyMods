@@ -1,4 +1,6 @@
-﻿using HarmonyLib;
+﻿using ComfyLib;
+
+using HarmonyLib;
 
 using static ColorfulLights.PluginConfig;
 

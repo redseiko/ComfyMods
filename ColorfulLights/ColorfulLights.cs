@@ -11,22 +11,22 @@ using static ColorfulLights.PluginConfig;
 
 namespace ColorfulLights {
   [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
-  public class ColorfulLights : BaseUnityPlugin {
+  public sealed class ColorfulLights : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.colorfullights";
     public const string PluginName = "ColorfulLights";
-    public const string PluginVersion = "1.10.0";
+    public const string PluginVersion = "1.11.0";
 
     public static readonly int FirePlaceColorHashCode = "FireplaceColor".GetStableHashCode();
     public static readonly int FireplaceColorAlphaHashCode = "FireplaceColorAlpha".GetStableHashCode();
     public static readonly int LightLastColoredByHashCode = "LightLastColoredBy".GetStableHashCode();
     public static readonly int LightLastColoredByHostHashCode = "LightLastColoredByHost".GetStableHashCode();
 
-    public static ManualLogSource PluginLogger { get; private set; }
+    static ManualLogSource _logger;
 
     Harmony _harmony;
 
     void Awake() {
-      PluginLogger = Logger;
+      _logger = Logger;
       BindConfig(Config);
 
       _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
@@ -42,12 +42,12 @@ namespace ColorfulLights {
       }
 
       if (!targetFireplace.m_nview || !targetFireplace.m_nview.IsValid()) {
-        PluginLogger.LogWarning("Fireplace does not have a valid ZNetView.");
+        _logger.LogWarning("Fireplace does not have a valid ZNetView.");
         return false;
       }
 
       if (!PrivateArea.CheckAccess(targetFireplace.transform.position, radius: 0f, flash: true, wardCheck: false)) {
-        PluginLogger.LogWarning("Fireplace is within private area with no access.");
+        _logger.LogWarning("Fireplace is within private area with no access.");
         return false;
       }
 

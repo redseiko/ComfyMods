@@ -8,7 +8,7 @@ using static ColorfulLights.ColorfulLights;
 using static ColorfulLights.PluginConfig;
 
 namespace ColorfulLights {
-  public class FireplaceColor : MonoBehaviour {
+  public sealed class FireplaceColor : MonoBehaviour {
     public static long TotalCount { get; private set; } = 0L;
     public static long CurrentCount { get; private set; } = 0L;
 

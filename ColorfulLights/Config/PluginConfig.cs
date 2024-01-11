@@ -5,7 +5,7 @@ using ComfyLib;
 using UnityEngine;
 
 namespace ColorfulLights {
-  public class PluginConfig {
+  public static class PluginConfig {
     public static ConfigEntry<bool> IsModEnabled { get; private set; }
     public static ConfigEntry<KeyboardShortcut> ChangeColorActionShortcut { get; private set; }
 
