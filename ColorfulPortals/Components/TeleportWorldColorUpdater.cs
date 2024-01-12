@@ -6,7 +6,7 @@ using static ColorfulPortals.PluginConfig;
 using static ColorfulPortals.TeleportWorldColor;
 
 namespace ColorfulPortals {
-  public class TeleportWorldColorUpdater : MonoBehaviour {
+  public sealed class TeleportWorldColorUpdater : MonoBehaviour {
     void Awake() {
       StartCoroutine(UpdateTeleportWorldColors());
     }

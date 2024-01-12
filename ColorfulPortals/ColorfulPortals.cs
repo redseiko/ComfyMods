@@ -13,10 +13,10 @@ using static ColorfulPortals.PluginConfig;
 
 namespace ColorfulPortals {
   [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
-  public class ColorfulPortals : BaseUnityPlugin {
+  public sealed class ColorfulPortals : BaseUnityPlugin {
     public const string PluginGUID = "redseiko.valheim.colorfulportals";
     public const string PluginName = "ColorfulPortals";
-    public const string PluginVersion = "1.7.0";
+    public const string PluginVersion = "1.8.0";
 
     static ManualLogSource _logger;
     Harmony _harmony;

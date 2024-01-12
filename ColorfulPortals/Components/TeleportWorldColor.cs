@@ -7,7 +7,7 @@ using UnityEngine;
 using static ColorfulPortals.ColorfulPortals;
 
 namespace ColorfulPortals {
-  public class TeleportWorldColor : MonoBehaviour {
+  public sealed class TeleportWorldColor : MonoBehaviour {
     public static readonly List<TeleportWorldColor> TeleportWorldColorCache = new();
 
     TeleportWorld _teleportWorld;

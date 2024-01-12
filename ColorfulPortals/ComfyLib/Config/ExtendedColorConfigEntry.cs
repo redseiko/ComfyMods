@@ -7,7 +7,7 @@ using BepInEx.Configuration;
 using UnityEngine;
 
 namespace ComfyLib {
-  public class ExtendedColorConfigEntry {
+  public sealed class ExtendedColorConfigEntry {
     static readonly Texture2D _colorTexture = GUIBuilder.CreateColorTexture(10, 10, Color.white);
 
     public ConfigEntry<Color> ConfigEntry { get; }
@@ -127,7 +127,7 @@ namespace ComfyLib {
     }
   }
 
-  public class ColorPalette {
+  public sealed class ColorPalette {
     static readonly char[] _partSeparator = { ',' };
     static readonly string _partJoiner = ",";
     static readonly Texture2D _colorTexture = GUIBuilder.CreateColorTexture(10, 10, Color.white);
@@ -229,7 +229,7 @@ namespace ComfyLib {
     }
   }
 
-  public class ColorFloatTextField {
+  public sealed class ColorFloatTextField {
     public string Label { get; set; }
     public float CurrentValue { get; private set; }
 
@@ -298,7 +298,7 @@ namespace ComfyLib {
     }
   }
 
-  public class HexColorTextField {
+  public sealed class HexColorTextField {
     public Color CurrentValue { get; private set; }
     public string CurrentText { get; private set; }
 
