@@ -10,6 +10,7 @@ namespace RemoteWork {
 
       if (AccessUtils.HasAccess(steamId)) {
         AccessLogger.Log("OK", steamId, command);
+        CommandUtils.RunCommand(rpc, command);
       } else {
         AccessLogger.Log("NOAUTH", steamId, command);
       }
