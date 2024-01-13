@@ -18,7 +18,7 @@ namespace RemoteWork {
     }
 
     public static bool HasAccess(string steamId) {
-      return ZNet.m_instance.m_adminList.Contains(steamId) || _accessList.Contains(steamId);
+      return AccessList.Contains(steamId) || ZNet.m_instance.m_adminList.Contains(steamId);
     }
   }
 }

@@ -52,7 +52,7 @@ namespace RemoteWork {
 
       package.Clear();
       package.Write(RemotePrintHashCode);
-      package.Write(message);
+      package.Write($"[RemoteWork] {message}");
 
       rpc.SendPackage(package);
     }
