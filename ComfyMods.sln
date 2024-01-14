@@ -129,6 +129,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoldMyMead", "HoldMyMead\Ho
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteWork", "RemoteWork\RemoteWork.csproj", "{692AEBF9-87FA-40FC-9BF8-13CD6F2CFFCE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transporter", "Transporter\Transporter.csproj", "{B4166AD3-FF7B-4EA5-81F6-4EE47AE56A5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -351,6 +353,10 @@ Global
 		{692AEBF9-87FA-40FC-9BF8-13CD6F2CFFCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{692AEBF9-87FA-40FC-9BF8-13CD6F2CFFCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{692AEBF9-87FA-40FC-9BF8-13CD6F2CFFCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4166AD3-FF7B-4EA5-81F6-4EE47AE56A5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4166AD3-FF7B-4EA5-81F6-4EE47AE56A5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4166AD3-FF7B-4EA5-81F6-4EE47AE56A5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4166AD3-FF7B-4EA5-81F6-4EE47AE56A5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
