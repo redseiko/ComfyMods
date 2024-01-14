@@ -2,6 +2,28 @@
 
 namespace Transporter {
   public static class PlayerUtils {
+    public static readonly Dictionary<long, ZDO> PlayerZDOsByPlayerId = new();
+
+    public static void RefreshPlayerIdMapping() {
+      Dictionary<ZDOID, ZDO> zdosById = ZDOMan.s_instance.m_objectsByID;
+      PlayerZDOsByPlayerId.Clear();
+
+      foreach (ZNetPeer netPeer in ZNet.m_instance.m_peers) {
+        if (netPeer.m_characterID == ZDOID.None
+            || !zdosById.TryGetValue(netPeer.m_characterID, out ZDO playerZDO)
+            || !ZDOExtraData.GetLong(playerZDO.m_uid, ZDOVars.s_playerID, out long playerId)
+            || playerId == 0L) {
+          continue;
+        }
+
+        PlayerZDOsByPlayerId[playerId] = playerZDO;
+      }
+    }
+
+    public static bool TryGetPlayerZDO(long playerId, out ZDO playerZDO) {
+      return PlayerZDOsByPlayerId.TryGetValue(playerId, out playerZDO);
+    }
+
     public static List<ZDO> GetPlayerZDOs(List<long> playerIds) {
       Dictionary<ZDOID, ZDO> zdosById = ZDOMan.s_instance.m_objectsByID;
       HashSet<long> ids = new(playerIds);

@@ -2,15 +2,13 @@
 
 using ComfyLib;
 
-using UnityEngine;
-
 namespace Transporter {
-  public static class TeleportPlayerCommand {
+  public static class CancelTeleportPlayerCommand {
     [ComfyCommand]
     public static IEnumerable<Terminal.ConsoleCommand> Register() {
       yield return new Terminal.ConsoleCommand(
-          "teleport-player",
-          "(Transporter) teleport-player",
+          "cancel-teleport-player",
+          "(Transporter) cancel-teleport-player",
           args => Run(new ComfyArgs(args)));
     }
 
@@ -20,15 +18,10 @@ namespace Transporter {
         return false;
       }
 
-      if (!comfyArgs.TryGetValue("destination", "d", out Vector3 destination)) {
-        Transporter.LogError($"Missing or invalid arg: --destination");
-        return false;
+      foreach (long playerId in playerIds) {
+        TeleportManager.CancelTeleportPlayer(playerId);
       }
 
-      foreach (long playerId in playerIds) {
-        TeleportManager.TeleportPlayer(playerId, destination);
-      }
-      
       return true;
     }
   }

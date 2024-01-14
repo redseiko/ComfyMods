@@ -106,9 +106,12 @@
     <Compile Include="ComfyLib\Commands\ComfyCommand.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Core\AccessUtils.cs" />
+    <Compile Include="Core\Commands\CancelTeleportPlayerCommand.cs" />
     <Compile Include="Core\Commands\TeleportPlayerCommand.cs" />
     <Compile Include="Core\PlayerUtils.cs" />
+    <Compile Include="Core\TeleportManager.cs" />
     <Compile Include="Patches\TerminalPatch.cs" />
+    <Compile Include="Patches\ZNetPatch.cs" />
     <Compile Include="Transporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
