@@ -34,6 +34,8 @@ namespace ZoneScouter {
     public static ConfigEntry<bool> ShowSectorBoundaries { get; private set; }
     public static ConfigEntry<Color> SectorBoundaryColor { get; private set; }
 
+    public static ConfigEntry<KeyboardShortcut> ToggleSectorBoundariesShortcut { get; private set; }
+
     public enum GridSize {
       ThreeByThree = 3,
       FiveByFive = 5
@@ -212,6 +214,13 @@ namespace ZoneScouter {
               "Color to use for the sector boundary walls.");
 
       SectorBoundaryColor.OnSettingChanged(SectorBoundaries.SetBoundaryColor);
+
+      ToggleSectorBoundariesShortcut =
+          config.BindInOrder(
+              "SectorBoundary",
+              "toggleSectorBoundariesShortcut",
+              new KeyboardShortcut(KeyCode.None),
+              "Shortcut to toggle on/off sector boundaries.");
 
       static void SetSectorInfoPanelStyle() {
         ZoneScouter.SectorInfoPanel?.SetPanelStyle();

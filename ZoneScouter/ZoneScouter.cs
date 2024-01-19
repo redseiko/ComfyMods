@@ -17,7 +17,7 @@ namespace ZoneScouter {
   public sealed class ZoneScouter : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.zonescouter";
     public const string PluginName = "ZoneScouter";
-    public const string PluginVersion = "1.4.0";
+    public const string PluginVersion = "1.5.0";
 
     Harmony _harmony;
 

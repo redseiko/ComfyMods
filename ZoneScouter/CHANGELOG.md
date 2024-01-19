@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.5.0
+
+  * Added new config option `toggleSectorBoundariesShortcut` to use to toggle sector boundaries (default: un-set).
+
 ### 1.4.0
 
   * Updated for `v0.217.38` patch.

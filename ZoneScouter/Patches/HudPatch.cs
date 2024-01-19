@@ -14,5 +14,13 @@ namespace ZoneScouter {
         SectorBoundaries.ToggleSectorBoundaries();
       }
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(Hud.Update))]
+    static void UpdatePostfix() {
+      if (IsModEnabled.Value && ToggleSectorBoundariesShortcut.Value.IsDown()) {
+        ShowSectorBoundaries.Value = !ShowSectorBoundaries.Value;
+      }
+    }
   }
 }
