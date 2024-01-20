@@ -29,6 +29,7 @@ namespace Chatter {
       chat.m_worldTextBase = WorldTextUtils.CreateWorldTextTemplate(chat.m_worldTextBase.transform.parent);
       chat.m_worldTextBase.SetActive(false);
     }
+
     [HarmonyTranspiler]
     [HarmonyPatch(nameof(Chat.InputText))]
     static IEnumerable<CodeInstruction> InputTextTranspiler(IEnumerable<CodeInstruction> instructions) {

@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.4.0
+
+  * Added compatibility with [Groups](https://valheim.thunderstore.io/package/Smoothbrain/Groups/).
+
 ### 2.3.0
 
   * Fixed for the `v0.217.38` patch.

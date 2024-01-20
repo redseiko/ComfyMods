@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Chatter {
-  public class ContentRow {
+  public sealed class ContentRow {
     public ChatMessage Message { get; private set; }
     public MessageLayoutType LayoutType { get; private set; }
 

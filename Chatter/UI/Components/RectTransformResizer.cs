@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Chatter {
-  public class RectTransformResizer : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
+  public sealed class RectTransformResizer : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
     [field: SerializeField]
     public RectTransform TargetRectTransform { get; private set; }
 

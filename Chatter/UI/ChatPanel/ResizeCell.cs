@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Chatter {
-  public class ResizeCell {
+  public sealed class ResizeCell {
     public GameObject Cell { get; private set; }
     public Image Background { get; private set; }
     public TMP_Text Label { get; private set; }

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Chatter {
-  public class ToggleCell {
+  public sealed class ToggleCell {
     public GameObject Cell { get; private set; }
     public Image Background { get; private set; }
     public TextMeshProUGUI Label { get; private set; }

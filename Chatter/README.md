@@ -11,7 +11,7 @@
   * Now with full TextMeshPro support!
   * Configuration options have changed, please adjust back to preference.
   * Some features are missing and will be added in later updates:
-    * Configuration options for text input field, toggle text buttons, world text.
+    * Configuration options for text input field.
     * OS font support.
     * Screenshots need to be updated.
 

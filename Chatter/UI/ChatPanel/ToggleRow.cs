@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Chatter {
-  public class ToggleRow {
+  public sealed class ToggleRow {
     public GameObject Row { get; private set; }
     public Image Background { get; private set; }
 

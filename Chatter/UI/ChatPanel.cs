@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Chatter {
-  public class ChatPanel {
+  public sealed class ChatPanel {
     public GameObject Panel { get; private set; }
     public RectTransform PanelRectTransform { get; private set; }
     public Image PanelBackground { get; private set; }

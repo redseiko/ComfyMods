@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Chatter {
-  public class InputFieldCell {
+  public sealed class InputFieldCell {
     public GameObject Cell { get; private set; }
     public Image Background { get; private set; }
 
@@ -43,7 +43,7 @@ namespace Chatter {
     }
 
     GuiInputField CreateChildInputField(Transform parentTransform) {
-      GameObject row = new("InputField", typeof(RectTransform));
+      GameObject row = new("Text Area", typeof(RectTransform));
       row.SetParent(parentTransform);
 
       row.GetComponent<RectTransform>()
@@ -85,7 +85,7 @@ namespace Chatter {
       placeholder.color = new(1f, 1f, 1f, 0.3f);
       placeholder.text = "...";
 
-      GuiInputField inputField = row.AddComponent<GuiInputField>();
+      GuiInputField inputField = parentTransform.gameObject.AddComponent<GuiInputField>();
       inputField.textViewport = row.GetComponent<RectTransform>();
       inputField.textComponent = label;
       inputField.placeholder = placeholder;
