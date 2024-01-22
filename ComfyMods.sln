@@ -63,6 +63,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartyRock", "PartyRock\Part
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComfyValheimModPack", "ComfyValheimModPack", "{58A0BE10-0BF1-4E8B-BE5E-0F0370AC8D7B}"
 	ProjectSection(SolutionItems) = preProject
+		ComfyValheimModPack\CHANGELOG.md = ComfyValheimModPack\CHANGELOG.md
 		ComfyValheimModPack\icon.png = ComfyValheimModPack\icon.png
 		ComfyValheimModPack\manifest.json = ComfyValheimModPack\manifest.json
 		ComfyValheimModPack\README.md = ComfyValheimModPack\README.md
