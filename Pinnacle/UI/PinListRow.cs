@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Pinnacle {
-  public class PinListRow {
+  public sealed class PinListRow {
     public GameObject Row { get; private set; }
 
     public Image PinIcon { get; private set; }
@@ -20,7 +20,7 @@ namespace Pinnacle {
 
     public PinListRow(Transform parentTransform) {
       Row = CreateChildRow(parentTransform);
-      Row.Button().onClick.AddListener(() => Pinnacle.CenterMapOnOrTeleportTo(_targetPin));
+      Row.Button().onClick.AddListener(OnRowClick);
 
       PinIcon = CreateChildPinIcon(Row.transform).Image();
       PinName = CreateChildPinName(Row.transform);
@@ -33,6 +33,10 @@ namespace Pinnacle {
       PositionY.color = new(0.565f, 0.792f, 0.976f);
       PositionZ = CreateChildPinPositionValue(Row.transform);
       PositionZ.color = new(0.647f, 0.839f, 0.655f);
+    }
+
+    void OnRowClick() {
+      Pinnacle.CenterMapOnOrTeleportTo(_targetPin);
     }
 
     public PinListRow SetRowContent(Minimap.PinData pin) {
@@ -60,6 +64,12 @@ namespace Pinnacle {
       return pin.m_name;
     }
 
+    public void TogglePinPosition(bool toggleOn) {
+      PositionX.gameObject.SetActive(toggleOn);
+      PositionY.gameObject.SetActive(toggleOn);
+      PositionZ.gameObject.SetActive(toggleOn);
+    }
+
     GameObject CreateChildRow(Transform parentTransform) {
       GameObject row = new("PinList.Row", typeof(RectTransform));
       row.SetParent(parentTransform);
@@ -68,8 +78,8 @@ namespace Pinnacle {
           .SetChildControl(width: true, height: true)
           .SetChildForceExpand(width: false, height: false)
           .SetChildAlignment(TextAnchor.MiddleCenter)
-          .SetPadding(left: 5, right: 10, top: 5, bottom: 5)
-          .SetSpacing(5f);
+          .SetPadding(left: 5, right: 10, top: 4, bottom: 4)
+          .SetSpacing(2.5f);
 
       row.AddComponent<Image>()
           .SetType(Image.Type.Sliced)
@@ -106,6 +116,11 @@ namespace Pinnacle {
       TMP_Text name = UIBuilder.CreateTMPLabel(parentTransform);
       name.SetName("Pin.Name");
 
+      name.alignment = TextAlignmentOptions.Left;
+      name.textWrappingMode = TextWrappingModes.NoWrap;
+      name.overflowMode = TextOverflowModes.Ellipsis;
+      name.fontSize = 16f;
+
       return name;
     }
 
@@ -114,7 +129,10 @@ namespace Pinnacle {
       value.SetName("Pin.Position.Value");
 
       value.alignment = TextAlignmentOptions.Right;
-      value.text = "-12345";
+      value.text = "-99999";
+      value.textWrappingMode = TextWrappingModes.NoWrap;
+      value.overflowMode = TextOverflowModes.Ellipsis;
+      value.fontSize = 14f;
 
       value.gameObject.AddComponent<LayoutElement>()
           .SetPreferred(width: value.GetPreferredValues().x);

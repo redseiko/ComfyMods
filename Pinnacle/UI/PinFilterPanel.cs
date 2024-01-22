@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using static Pinnacle.PluginConfig;
 
 namespace Pinnacle {
-  public class PinFilterPanel {
+  public sealed class PinFilterPanel {
     public GameObject Panel { get; private set; }
     public PanelDragger PanelDragger { get; private set; }
 
@@ -25,13 +25,18 @@ namespace Pinnacle {
           .SetConstraintCount(2)
           .SetStartAxis(GridLayoutGroup.Axis.Vertical);
 
-      PinIconSelector.OnPinIconClicked += (_, pinType) => Minimap.m_instance.ToggleIconFilter(pinType);
+      PinIconSelector.OnPinIconClicked += ProcessOnPinIconClicked;
 
       SetPanelStyle();
     }
 
+    void ProcessOnPinIconClicked(object sender, Minimap.PinType pinType) {
+      Minimap.m_instance.Ref()?.ToggleIconFilter(pinType);
+    }
+
     public void SetPanelStyle() {
-      PinIconSelector.GridLayoutGroup.SetCellSize(new(PinFilterPanelGridIconSize.Value, PinFilterPanelGridIconSize.Value));
+      PinIconSelector.GridLayoutGroup.SetCellSize(
+          new(PinFilterPanelGridIconSize.Value, PinFilterPanelGridIconSize.Value));
     }
 
     public void UpdatePinIconFilters() {

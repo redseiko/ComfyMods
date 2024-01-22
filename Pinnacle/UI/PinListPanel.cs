@@ -7,8 +7,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+using static Pinnacle.PluginConfig;
+
 namespace Pinnacle {
-  public class PinListPanel {
+  public sealed class PinListPanel {
     public GameObject Panel { get; private set; }
 
     public ValueCell PinNameFilter { get; private set; }
@@ -35,7 +37,6 @@ namespace Pinnacle {
 
       PinNameFilter = new(Panel.transform);
       PinNameFilter.Cell.LayoutElement().SetFlexible(width: 1f).SetPreferred(height: 30f);
-      // PinNameFilter.Cell.GetComponent<HorizontalLayoutGroup>().SetPadding(left: 8, right: 8, top: 5, bottom: 5);
       PinNameFilter.InputField.onValueChanged.AddListener(SetTargetPins);
 
       Viewport = CreateChildViewport(Panel.transform);
@@ -124,6 +125,7 @@ namespace Pinnacle {
 
       for (int i = 0; i < Mathf.Min(TargetPins.Count, _visibleRows); i++) {
         row = new(Content.transform);
+        row.TogglePinPosition(PinListPanelShowPinPosition.Value);
         row.SetRowContent(TargetPins[i]);
         _rowCache.Add(row);
       }
@@ -267,22 +269,19 @@ namespace Pinnacle {
           .SetAnchorMin(Vector2.right)
           .SetAnchorMax(Vector2.right)
           .SetPivot(Vector2.right)
-          .SetSizeDelta(new(40f, 40f))
+          .SetSizeDelta(new(42.5f, 42.5f))
           .SetPosition(new(15f, -15f));
 
       resizer.AddComponent<Image>()
           .SetType(Image.Type.Sliced)
-          .SetSprite(UIBuilder.CreateRoundedCornerSprite(128, 128, 12))
-          .SetColor(new(0.565f, 0.792f, 0.976f, 0.849f));
-
-      resizer.AddComponent<Shadow>()
-          .SetEffectDistance(new(2f, -2f));
+          .SetSprite(UIResources.GetSprite("button"))
+          .SetColor(new(1f, 1f, 1f, 0.95f));
 
       resizer.AddComponent<CanvasGroup>()
           .SetAlpha(0f);
 
       TMP_Text icon = UIBuilder.CreateTMPLabel(resizer.transform);
-      icon.SetName("Resizer.Icon");
+      icon.SetName("Icon");
 
       icon.gameObject.AddComponent<LayoutElement>()
           .SetIgnoreLayout(true);
@@ -295,7 +294,7 @@ namespace Pinnacle {
 
       icon.alignment = TextAlignmentOptions.Center;
       icon.fontSize = 24f;
-      icon.text = "\u21C6\u21C5";
+      icon.text = "<rotate=-45>\u2194</rotate>";
 
       return resizer;
     }

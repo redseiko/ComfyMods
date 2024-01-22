@@ -11,7 +11,7 @@ using UnityEngine.UI;
 using static Pinnacle.PluginConfig;
 
 namespace Pinnacle {
-  public class PinEditPanel {
+  public sealed class PinEditPanel {
     public const long DefaultSharedPinOwnerId = long.MaxValue;
 
     public GameObject Panel { get; private set; }

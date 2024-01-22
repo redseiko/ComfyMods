@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Pinnacle {
-  public class PinIconSelector {
+  public sealed class PinIconSelector {
     public event EventHandler<Minimap.PinType> OnPinIconClicked;
 
     public GameObject Grid { get; private set; }

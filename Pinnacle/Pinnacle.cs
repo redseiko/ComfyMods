@@ -16,10 +16,10 @@ using static Pinnacle.PluginConfig;
 
 namespace Pinnacle {
   [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
-  public class Pinnacle : BaseUnityPlugin {
+  public sealed class Pinnacle : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.pinnacle";
     public const string PluginName = "Pinnacle";
-    public const string PluginVersion = "1.7.0";
+    public const string PluginVersion = "1.8.0";
 
     static ManualLogSource _logger;
     Harmony _harmony;
@@ -145,7 +145,7 @@ namespace Pinnacle {
           && targetPin != null) {
         TeleportTo(targetPin.m_pos);
       } else {
-        TogglePinEditPanel(null); // TODO: make this an option to show PinEditPanel map on RowClick
+        TogglePinEditPanel(PinListPanelEditPinOnRowClick.Value ? targetPin : default);
         CenterMapHelper.CenterMapOnPosition(targetPin.m_pos);
       }
     }

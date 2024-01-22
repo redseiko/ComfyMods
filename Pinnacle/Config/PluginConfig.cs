@@ -43,6 +43,8 @@ namespace Pinnacle {
     public static ConfigEntry<Vector2> PinListPanelSizeDelta { get; private set; }
     public static ConfigEntry<Color> PinListPanelBackgroundColor { get; private set; }
 
+    public static ConfigEntry<bool> PinListPanelEditPinOnRowClick { get; private set; }
+
     public static void BindPinListPanelConfig(ConfigFile config) {
       PinListPanelToggleShortcut =
           config.BindInOrder(
@@ -53,10 +55,10 @@ namespace Pinnacle {
 
       PinListPanelShowPinPosition =
           config.BindInOrder(
-              "PinListPanel",
+              "PinListPanel.Columns",
               "pinListPanelShowPinPosition",
               true,
-              "Show the Pin.Position columns in the PineListPanel.");
+              "Show the Pin.Position columns in the PinListPanel.");
 
       PinListPanelPosition =
           config.BindInOrder(
@@ -78,6 +80,13 @@ namespace Pinnacle {
               "pinListPanelBackgroundColor",
               new Color(0f, 0f, 0f, 0.9f),
               "The value for the PinListPanel.Panel background color.");
+
+      PinListPanelEditPinOnRowClick =
+          config.BindInOrder(
+              "PinListPanel.Behaviour",
+              "pinListPanelEditPinOnRowClick",
+              true,
+              "If set, will show the PinEditPanel when a row is selected in the PinListPanel.");
     }
 
     public static ConfigEntry<float> PinEditPanelToggleLerpDuration { get; private set; }
