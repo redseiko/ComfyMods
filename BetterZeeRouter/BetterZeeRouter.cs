@@ -12,10 +12,10 @@ using static BetterZeeRouter.RpcHashCodes;
 
 namespace BetterZeeRouter {
   [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
-  public class BetterZeeRouter : BaseUnityPlugin {
+  public sealed class BetterZeeRouter : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.betterzeerouter";
     public const string PluginName = "BetterZeeRouter";
-    public const string PluginVersion = "1.6.0";
+    public const string PluginVersion = "1.7.0";
 
     static ManualLogSource _logger;
     Harmony _harmony;

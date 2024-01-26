@@ -1,4 +1,8 @@
-﻿namespace BetterZeeRouter {
+﻿using UnityEngine;
+
+using static BetterZeeRouter.PluginConfig;
+
+namespace BetterZeeRouter {
   public sealed class SetTargetHandler : RpcMethodHandler {
     static readonly int _playerHashCode = "Player".GetStableHashCode();
 
@@ -8,11 +12,16 @@
       routedRpcData.m_parameters.SetPos(0);
 
       if (targetZdoid == ZDOID.None
-          || !ZDOMan.s_instance.m_objectsByID.TryGetValue(targetZdoid, out ZDO targetZdo)) {
+          || !ZDOMan.s_instance.m_objectsByID.TryGetValue(targetZdoid, out ZDO targetZDO)) {
         return true;
       }
 
-      if (targetZdo.m_prefab == _playerHashCode || targetZdo.GetBool(ZDOVars.s_tamed)) {
+      if (SetTargetHandlerShouldCheckDistance.Value
+          && Utils.DistanceXZ(Vector3.zero, targetZDO.m_position) > SetTargetHandlerDistanceCheckRange.Value) {
+        return true;
+      }
+
+      if (targetZDO.m_prefab == _playerHashCode || targetZDO.GetBool(ZDOVars.s_tamed)) {
         routedRpcData.m_parameters.Clear();
         routedRpcData.m_parameters.Write(ZDOID.None);
         routedRpcData.m_parameters.m_writer.Flush();
