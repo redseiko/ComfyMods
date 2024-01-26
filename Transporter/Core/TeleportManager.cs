@@ -18,12 +18,13 @@ namespace Transporter {
     public static readonly Dictionary<long, TeleportRequest> PendingTeleports = new();
 
     public static void TeleportPlayer(long playerId, Vector3 destination) {
+      Transporter.LogInfo($"Pending teleport requested for Player (PID: {playerId}) to {destination:F0}.");
       PendingTeleports[playerId] = new(playerId, destination);
     }
 
     public static bool CancelTeleportPlayer(long playerId) {
       if (PendingTeleports.Remove(playerId)) {
-        Transporter.LogInfo($"Cancelling pending teleport for Player ({playerId}).");
+        Transporter.LogInfo($"Cancelling pending teleport for Player (PID: {playerId}).");
         return true;
       }
 
@@ -33,17 +34,26 @@ namespace Transporter {
     static readonly List<TeleportRequest> _requests = new();
 
     public static void ProcessPendingTeleports() {
-      if (PendingTeleports.Count <= 0) {
+      int count = PendingTeleports.Count;
+
+      if (count <= 0) {
         return;
       }
 
       _requests.Clear();
       _requests.AddRange(PendingTeleports.Values);
 
+      int processed = 0;
+
       foreach (TeleportRequest request in _requests) {
         if (ProcessTeleport(request)) {
           PendingTeleports.Remove(request.PlayerId);
+          processed++;
         }
+      }
+
+      if (processed > 0) {
+        Transporter.LogInfo($"Processed {processed}/{count} pending teleports.");
       }
 
       _requests.Clear();
@@ -58,8 +68,9 @@ namespace Transporter {
       return false;
     }
 
-    public static void Teleport(ZDO playerZDO, Vector3 destination) {
-      Transporter.LogInfo($"Teleporting player ({playerZDO.m_uid}) from {playerZDO.m_position:F0} to {destination:F0}");
+    public static void Teleport(long playerId, ZDO playerZDO, Vector3 destination) {
+      Transporter.LogInfo(
+          $"Teleporting Player ({playerId}) ({playerZDO.m_uid}) from {playerZDO.m_position:F0} to {destination:F0}");
 
       ZRoutedRpc.s_instance.InvokeRoutedRPC(
           playerZDO.GetOwner(), playerZDO.m_uid, "RPC_TeleportTo", destination, Quaternion.identity, true);
@@ -73,7 +84,7 @@ namespace Transporter {
         yield return null;
       }
 
-      Teleport(playerZDO, destination);
+      Teleport(playerId, playerZDO, destination);
 
       endTime = Time.time + 8f;
       
