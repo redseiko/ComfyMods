@@ -17,12 +17,33 @@ namespace Transporter {
 
     public static readonly Dictionary<long, TeleportRequest> PendingTeleports = new();
 
+    public static void RequestTeleport(ZRpc rpc, long playerId, Vector3 destination) {
+      string steamId = rpc.m_socket.GetHostName();
+      bool hasAccess = AccessUtils.HasAccess(steamId);
+
+      AccessUtils.LogAccess($"RequestTeleport,{hasAccess},{steamId},{playerId},\"{destination:F0}\"");
+
+      if (AccessUtils.HasAccess(steamId)) {
+        Transporter.LogInfo(
+            $"RPC RequestTeleport from ({steamId}) for PlayerId ({playerId}) to {destination:F0} allowed.");
+
+        PendingTeleports[playerId] = new(playerId, destination);
+      } else {
+        Transporter.LogError(
+            $"RPC RequestTeleport from ({steamId}) for PlayerId ({playerId}) to {destination:F0} denied.");
+      }
+    }
+
     public static void TeleportPlayer(long playerId, Vector3 destination) {
+      AccessUtils.LogAccess($"TeleportPlayer,{playerId},\"{destination:F0}\"");
       Transporter.LogInfo($"Pending teleport requested for Player (PID: {playerId}) to {destination:F0}.");
+
       PendingTeleports[playerId] = new(playerId, destination);
     }
 
     public static bool CancelTeleportPlayer(long playerId) {
+      AccessUtils.LogAccess($"CancelTeleportPlayer,{playerId}");
+
       if (PendingTeleports.Remove(playerId)) {
         Transporter.LogInfo($"Cancelling pending teleport for Player (PID: {playerId}).");
         return true;

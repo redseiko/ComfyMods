@@ -2,6 +2,8 @@
 using System.Globalization;
 using System.IO;
 
+using UnityEngine;
+
 using static Transporter.PluginConfig;
 
 namespace Transporter {
@@ -12,6 +14,10 @@ namespace Transporter {
             "Transporter access list. One SteamId per line.");
 
     public static bool HasAccess(string steamId) {
+      if (string.IsNullOrWhiteSpace(steamId)) {
+        return false;
+      }
+
       return AccessList.Contains(steamId) || ZNet.m_instance.m_adminList.Contains(steamId);
     }
 
@@ -21,6 +27,12 @@ namespace Transporter {
     public static void LogAccess(object obj) {
       AccessLogWriter.WriteLine($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
       AccessLogWriter.Flush();
+    }
+
+    public static void RegisterRPCs(ZNetPeer netPeer) {
+      if (HasAccess(netPeer.m_socket.GetHostName())) {
+        netPeer.m_rpc.Register<long, Vector3>("RequestTeleport", TeleportManager.RequestTeleport);
+      }
     }
   }
 }
