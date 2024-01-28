@@ -101,14 +101,42 @@ namespace PotteryBarn {
           {"Tar", 10 },
           {"MushroomBlue", 10 }}},
 
-        {"dverger_demister", new Dictionary<string, int>() {
+       {"dvergrtown_wood_support", new Dictionary<string, int>() {
+          {"YggdrasilWood", 20 },
+          {"MushroomBlue", 3 }}},
+
+       {"dvergrprops_chair", new Dictionary<string, int>() {
+          {"YggdrasilWood", 4 },
+          {"Copper", 1 },
+          {"MushroomBlue", 1 }}},
+
+       {"dvergrprops_bed", new Dictionary<string, int>() {
+          {"YggdrasilWood", 8 },
+          {"Copper", 1 },
+          {"WolfPelt", 2 },
+          {"LoxPelt", 1 },
+          {"MushroomBlue", 1 }}},
+
+       {"dverger_demister", new Dictionary<string, int>() {
           {"Wisp", 20 },
           {"MushroomBlue", 8 }}},
 
-        {"dverger_demister_large", new Dictionary<string, int>() {
+       {"dverger_demister_large", new Dictionary<string, int>() {
           {"Wisp", 50 },
           {"MushroomBlue", 30 }}}
     };
+
+    public static readonly Dictionary<string, Dictionary<string, int>> MiscPrefabs =
+      new() {
+        { "portal", new() {
+          { "Stone", 30 },
+          { "SurtlingCore", 2},
+          { "GreydwarfEye", 10} }},
+        { "CastleKit_brazier", new() {
+          { "Bronze", 5 },
+          { "Coal", 2},
+          { "WolfClaw", 3} }}
+      };
 
     public static readonly Dictionary<string, Dictionary<string, int>> CultivatorCreatorShopItems =
         new() {
@@ -149,6 +177,9 @@ namespace PotteryBarn {
     //};
 
     public static readonly Dictionary<string, string> craftingStationRequirements = new() {
+      {"dvergrtown_wood_support", "blackforge" },
+      {"dvergrprops_chair", "blackforge" },
+      {"dvergrprops_bed", "blackforge" },
       {"goblin_banner", "piece_workbench" },
       {"goblin_fence", "piece_workbench" },
       {"goblin_pole", "piece_workbench" },
@@ -161,6 +192,7 @@ namespace PotteryBarn {
       {"goblin_woodwall_1m", "piece_workbench" },
       {"goblin_woodwall_2m", "piece_workbench" },
       {"goblin_woodwall_2m_ribs", "piece_workbench" },
+      {"portal", "piece_stonecutter" },
       {"Skull1", "piece_workbench" },
       {"Skull2", "piece_workbench" },
       {"StatueCorgi", "piece_stonecutter" },

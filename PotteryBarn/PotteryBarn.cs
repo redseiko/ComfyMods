@@ -20,13 +20,14 @@ namespace PotteryBarn {
   public class PotteryBarn : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.potterybarn";
     public const string PluginName = "PotteryBarn";
-    public const string PluginVersion = "1.11.1";
+    public const string PluginVersion = "1.12.0";
 
     Harmony _harmony;
 
     static Piece.PieceCategory _hammerCreatorShopCategory;
     static Piece.PieceCategory _hammerBuildingCategory;
     static Piece.PieceCategory _cultivatorCreatorShopCategory;
+    static Piece.PieceCategory _hammerMiscCategory;
     static Sprite _standardPrefabIconSprite;
     static Quaternion _prefabIconRenderRotation;
 
@@ -54,6 +55,7 @@ namespace PotteryBarn {
     static void AddHammerPieces(PieceTable pieceTable) {
       _hammerCreatorShopCategory = PieceManager.Instance.AddPieceCategory("_HammerPieceTable", "CreatorShop");
       _hammerBuildingCategory = PieceManager.Instance.AddPieceCategory("_HammerPieceTable", "Building");
+      _hammerMiscCategory = PieceManager.Instance.AddPieceCategory("_HammerPieceTable", "Misc.");
 
       _standardPrefabIconSprite = _standardPrefabIconSprite ??= CreateColorSprite(new Color32(34, 132, 73, 64));
       _prefabIconRenderRotation = Quaternion.Euler(0f, -45f, 0f);
@@ -85,6 +87,18 @@ namespace PotteryBarn {
             .SetCraftingStation(GetCraftingStation(Requirements.craftingStationRequirements, entry.Key))
             .SetCanBeRemoved(true)
             .SetTargetNonPlayerBuilt(false);
+      }
+
+      foreach (
+          KeyValuePair<string, Dictionary<string, int>> entry in
+              Requirements.MiscPrefabs.OrderBy(o => o.Key).ToList()) {
+
+        GetOrAddPieceComponent(entry.Key, pieceTable)
+            .SetResources(CreateRequirements(entry.Value))
+            .SetCategory(_hammerMiscCategory)
+            .SetCraftingStation(GetCraftingStation(Requirements.craftingStationRequirements, entry.Key))
+            .SetCanBeRemoved(true)
+            .SetTargetNonPlayerBuilt(true);
       }
 
       foreach (
