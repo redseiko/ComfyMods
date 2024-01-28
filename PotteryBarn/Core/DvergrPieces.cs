@@ -67,6 +67,13 @@ namespace PotteryBarn {
       { "dvergrprops_hooknchain", new Dictionary<string, int>() {
         { "Iron", 5 },
         { "Copper", 10 }}},
+      { "dvergrprops_hooknchain", new Dictionary<string, int>() {
+        { "Iron", 5 },
+        { "Copper", 10 }}},
+      { "dvergrprops_hooknchain", new Dictionary<string, int>() {
+        { "Iron", 5 },
+        { "Copper", 10 }}},
+
     };
 
     public static readonly Dictionary<string, Dictionary<string, int>> DvergrPrefabDefaultDrops = new() {
