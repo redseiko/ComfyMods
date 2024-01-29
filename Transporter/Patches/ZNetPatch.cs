@@ -7,6 +7,8 @@ using HarmonyLib;
 namespace Transporter {
   [HarmonyPatch(typeof(ZNet))]
   static class ZNetPatch {
+    [HarmonyTranspiler]
+    [HarmonyPatch(nameof(ZNet.RPC_PeerInfo))]
     static IEnumerable<CodeInstruction> RPC_PeerInfoTranspiler(IEnumerable<CodeInstruction> instructions) {
       return new CodeMatcher(instructions)
             .MatchForward(

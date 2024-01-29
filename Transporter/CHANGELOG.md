@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.2.1
+
+  * Fix missing Harmony annotations on `RPC_PeerInfoTranspiler`.
+
 ### 1.2.0
 
   * Added new RPC `RequestTeleport` to enable client-side teleport player requests with access control and logging.
