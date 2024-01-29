@@ -32,6 +32,7 @@ namespace Transporter {
     public static void RegisterRPCs(ZNetPeer netPeer) {
       if (HasAccess(netPeer.m_socket.GetHostName())) {
         netPeer.m_rpc.Register<long, Vector3>("RequestTeleport", TeleportManager.RequestTeleport);
+        netPeer.m_rpc.Register<ZDOID, Vector3>("RequestTeleportByZDOID", TeleportManager.RequestTeleportByZDOID);
       }
     }
   }

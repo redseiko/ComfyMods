@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.3.0
+
+  * Added a second RPC `RequestTeleportByZDOID` to handle a teleport player request using a player's ZDOID.
+
 ### 1.2.1
 
   * Fix missing Harmony annotations on `RPC_PeerInfoTranspiler`.

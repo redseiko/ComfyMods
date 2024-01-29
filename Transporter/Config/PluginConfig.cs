@@ -17,7 +17,7 @@ namespace Transporter {
           config.Bind(
               "Access",
               "accessLogFilename",
-              "transport-access-log.txt",
+              "transporter-access-log.txt",
               "Textfile filename for logging all access to Transporter.");
     }
   }

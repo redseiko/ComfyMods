@@ -24,6 +24,17 @@ namespace Transporter {
       return PlayerZDOsByPlayerId.TryGetValue(playerId, out playerZDO);
     }
 
+    public static bool TryGetPlayerId(ZDOID playerZDOID, out long playerId) {
+      if (ZDOMan.s_instance.m_objectsByID.TryGetValue(playerZDOID, out ZDO playerZDO)
+          && ZDOExtraData.GetLong(playerZDO.m_uid, ZDOVars.s_playerID, out playerId)
+          && playerId != 0L) {
+        return true;
+      }
+
+      playerId = default;
+      return false;
+    }
+
     public static List<ZDO> GetPlayerZDOs(List<long> playerIds) {
       Dictionary<ZDOID, ZDO> zdosById = ZDOMan.s_instance.m_objectsByID;
       HashSet<long> ids = new(playerIds);

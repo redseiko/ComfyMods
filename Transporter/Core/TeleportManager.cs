@@ -21,7 +21,7 @@ namespace Transporter {
       string steamId = rpc.m_socket.GetHostName();
       bool hasAccess = AccessUtils.HasAccess(steamId);
 
-      AccessUtils.LogAccess($"RequestTeleport,{hasAccess},{steamId},{playerId},\"{destination:F0}\"");
+      AccessUtils.LogAccess($"RequestTeleportPlayerId,{hasAccess},{steamId},{playerId},\"{destination:F0}\"");
 
       if (AccessUtils.HasAccess(steamId)) {
         Transporter.LogInfo(
@@ -34,9 +34,33 @@ namespace Transporter {
       }
     }
 
+    public static void RequestTeleportByZDOID(ZRpc rpc, ZDOID playerZDOID, Vector3 destination) {
+      string steamId = rpc.m_socket.GetHostName();
+      bool hasAccess = AccessUtils.HasAccess(steamId);
+
+      AccessUtils.LogAccess($"RequestTeleportByZDOID,{hasAccess},{steamId},{playerZDOID},\"{destination:F0}\"");
+
+      if (AccessUtils.HasAccess(steamId)) {
+        if (PlayerUtils.TryGetPlayerId(playerZDOID, out long playerId)) {
+          Transporter.LogInfo(
+              $"RPC RequestTeleport from ({steamId}) for PlayerZDOID ({playerZDOID}) PlayerId ({playerId}) to "
+                  + $"{destination:F0} allowed.");
+
+          PendingTeleports[playerId] = new(playerId, destination);
+        } else {
+          Transporter.LogError(
+              $"RPC RequestTeleport from ({steamId}) for PlayerZDOID ({playerZDOID}) to {destination:F0} failed to "
+                  + $"find matching PlayerId.");
+        }
+      } else {
+        Transporter.LogError(
+            $"RPC RequestTeleport from ({steamId}) for PlayerZDOID ({playerZDOID}) to {destination:F0} denied.");
+      }
+    }
+
     public static void TeleportPlayer(long playerId, Vector3 destination) {
       AccessUtils.LogAccess($"TeleportPlayer,{playerId},\"{destination:F0}\"");
-      Transporter.LogInfo($"Pending teleport requested for Player (PID: {playerId}) to {destination:F0}.");
+      Transporter.LogInfo($"Pending teleport requested for PlayerId ({playerId}) to {destination:F0}.");
 
       PendingTeleports[playerId] = new(playerId, destination);
     }
@@ -45,7 +69,7 @@ namespace Transporter {
       AccessUtils.LogAccess($"CancelTeleportPlayer,{playerId}");
 
       if (PendingTeleports.Remove(playerId)) {
-        Transporter.LogInfo($"Cancelling pending teleport for Player (PID: {playerId}).");
+        Transporter.LogInfo($"Cancelling pending teleport for PlayerId ({playerId}).");
         return true;
       }
 
