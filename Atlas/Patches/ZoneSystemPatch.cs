@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection.Emit;
 
 using HarmonyLib;
@@ -33,7 +32,7 @@ namespace Atlas {
           .Advance(offset: 1)
           .InsertAndAdvance(
               new CodeInstruction(OpCodes.Ldarg_0),
-              Transpilers.EmitDelegate<Func<int, ZoneSystem, int>>(CheckLocationVersionDelegate))
+              Transpilers.EmitDelegate(CheckLocationVersionDelegate))
           .InstructionEnumeration();
     }
 

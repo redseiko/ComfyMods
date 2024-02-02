@@ -1,32 +1,32 @@
-﻿using System.Collections.Generic;
+﻿namespace Atlas;
+
+using System.Collections.Generic;
 using System.Reflection;
 
 using BepInEx;
 
 using HarmonyLib;
 
-namespace Atlas {
-  [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
-  public class Atlas : BaseUnityPlugin {
-    public const string PluginGUID = "redseiko.valheim.atlas";
-    public const string PluginName = "Atlas";
-    public const string PluginVersion = "1.10.0";
+[BepInPlugin(PluginGUID, PluginName, PluginVersion)]
+public sealed class Atlas : BaseUnityPlugin {
+  public const string PluginGUID = "redseiko.valheim.atlas";
+  public const string PluginName = "Atlas";
+  public const string PluginVersion = "1.11.0";
 
-    public static readonly int TimeCreatedHashCode = "timeCreated".GetStableHashCode();
-    public static readonly int EpochTimeCreatedHashCode = "epochTimeCreated".GetStableHashCode();
-    public static readonly KeyValuePair<int, int> OriginalUidHashPair = ZDO.GetHashZDOID("originalUid");
+  public static readonly int TimeCreatedHashCode = "timeCreated".GetStableHashCode();
+  public static readonly int EpochTimeCreatedHashCode = "epochTimeCreated".GetStableHashCode();
+  public static readonly KeyValuePair<int, int> OriginalUidHashPair = ZDO.GetHashZDOID("originalUid");
 
-    Harmony _harmony;
+  Harmony _harmony;
 
-    void Awake() {
-      PluginLogger.BindLogger(Logger);
-      PluginConfig.BindConfig(Config);
+  void Awake() {
+    PluginLogger.BindLogger(Logger);
+    PluginConfig.BindConfig(Config);
 
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
-    }
+    _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
+  }
 
-    void OnDestroy() {
-      _harmony?.UnpatchSelf();
-    }
+  void OnDestroy() {
+    _harmony?.UnpatchSelf();
   }
 }

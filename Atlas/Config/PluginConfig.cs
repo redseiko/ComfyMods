@@ -1,26 +1,28 @@
-﻿using BepInEx.Configuration;
+﻿namespace Atlas;
 
-namespace Atlas {
-  public static class PluginConfig {
-    public static ConfigEntry<bool> IgnoreGenerateLocationsIfNeeded { get; private set; }
-    public static ConfigEntry<bool> IgnoreLocationVersion { get; private set; }
+using BepInEx.Configuration;
 
-    public static ConfigFile BindConfig(ConfigFile config) {
-      IgnoreGenerateLocationsIfNeeded =
-          config.Bind(
-              "ZoneSystem",
-              "ignoreGenerateLocationsIfNeeded",
-              false,
-              "If set, ignores any calls to ZoneSystem.GenerateLocationsIfNeeded().");
+using ComfyLib;
 
-      IgnoreLocationVersion =
-          config.Bind(
-              "ZoneSystem",
-              "ignoreLocationVersion",
-              false,
-              "If set, ignores the ZoneSystem.m_locationVersion check in ZoneSystem.Load().");
+public static class PluginConfig {
+  public static ConfigEntry<bool> IgnoreGenerateLocationsIfNeeded { get; private set; }
+  public static ConfigEntry<bool> IgnoreLocationVersion { get; private set; }
 
-      return config;
-    }
+  public static ConfigFile BindConfig(ConfigFile config) {
+    IgnoreGenerateLocationsIfNeeded =
+        config.BindInOrder(
+            "ZoneSystem",
+            "ignoreGenerateLocationsIfNeeded",
+            false,
+            "If set, ignores any calls to ZoneSystem.GenerateLocationsIfNeeded().");
+
+    IgnoreLocationVersion =
+        config.BindInOrder(
+            "ZoneSystem",
+            "ignoreLocationVersion",
+            false,
+            "If set, ignores the ZoneSystem.m_locationVersion check in ZoneSystem.Load().");
+
+    return config;
   }
 }
