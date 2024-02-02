@@ -11,7 +11,7 @@
     <AssemblyName>Enhuddlement</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <LangVersion>9</LangVersion>
+    <LangVersion>10</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -97,18 +97,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\EnemyHudUpdater.cs" />
-    <Compile Include="Extensions\ConfigFileExtensions.cs" />
+    <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="Enhuddlement.cs" />
-    <Compile Include="MeshEffects\VerticalGradient.cs" />
     <Compile Include="Patches\EnemyHudPatch.cs" />
     <Compile Include="Patches\FejdStartupPatch.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Extensions\PluginExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\Core\UIExtensions.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="manifest.json" />
+    <None Include="CHANGELOG.md" />
     <None Include="README.md" />
     <None Include="icon.png" />
   </ItemGroup>
@@ -135,7 +135,7 @@
   </Target>
   <Target Name="MakeThunderstorePackage" AfterTargets="GetAssemblyVersion">
     <ItemGroup>
-      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; README.md; manifest.json; icon.png" />
+      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; README.md; CHANGELOG.md; manifest.json; icon.png" />
     </ItemGroup>
     <MakeDir Directories="$(PackageDir)" />
     <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageDir)" />

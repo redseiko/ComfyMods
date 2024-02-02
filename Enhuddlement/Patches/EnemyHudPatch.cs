@@ -57,7 +57,7 @@ namespace Enhuddlement {
     }
 
     static void SetupBossHud(EnemyHud.HudData hudData) {
-      SetupName(hudData, BossHudNameTextFontSize.Value, BossHudNameTextColor.Value);
+      SetupName(hudData, BossHudNameTextFontSize.Value, BossHudNameTextColorTop.Value);
 
       SetupHud(
           hudData,
@@ -67,6 +67,8 @@ namespace Enhuddlement {
           BossHudHealthBarHeight.Value);
 
       hudData.m_healthFast.SetColor(BossHudHealthBarColor.Value);
+
+      SetupNameGradient(hudData, BossHudNameTextColorTop.Value, BossHudNameTextColorBottom.Value);
     }
 
     static void SetupEnemyHud(EnemyHud.HudData hudData) {
@@ -101,6 +103,18 @@ namespace Enhuddlement {
           .SetPivot(new(0.5f, 0f))
           .SetPosition(new(0f, 8f))
           .SetSizeDelta(new(hudData.m_name.preferredWidth, hudData.m_name.preferredHeight));
+    }
+
+    static void SetupNameGradient(EnemyHud.HudData hudData, Color topColor, Color bottomColor) {
+      hudData.m_name.enableVertexGradient = true;
+
+      hudData.m_name.colorGradient =
+          new VertexGradient() {
+            topLeft = topColor,
+            topRight = topColor,
+            bottomLeft = bottomColor,
+            bottomRight = bottomColor,
+          };
     }
 
     static void SetupHud(
@@ -165,7 +179,7 @@ namespace Enhuddlement {
     }
 
     static void SetupLevel(EnemyHud.HudData hudData, Transform healthTransform) {
-      if (hudData.m_character.m_level > (hudData.m_character.IsBoss() ? 1 : 3)) {
+      if (!EnemyLevelUseVanillaStar.Value || hudData.m_character.m_level > (hudData.m_character.IsBoss() ? 1 : 3)) {
         CreateEnemyLevelText(hudData, healthTransform);
 
         hudData.m_level2.Ref()?.gameObject.SetActive(false);

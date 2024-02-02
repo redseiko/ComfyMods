@@ -113,7 +113,8 @@ namespace Enhuddlement {
     public static ConfigEntry<Vector3> BossHudPositionOffset { get; private set; }
 
     public static ConfigEntry<int> BossHudNameTextFontSize { get; private set; }
-    public static ConfigEntry<Color> BossHudNameTextColor { get; private set; }
+    public static ConfigEntry<Color> BossHudNameTextColorTop { get; private set; }
+    public static ConfigEntry<Color> BossHudNameTextColorBottom { get; private set; }
 
     public static ConfigEntry<int> BossHudHealthTextFontSize { get; private set; }
     public static ConfigEntry<Color> BossHudHealthTextFontColor { get; private set; }
@@ -142,12 +143,19 @@ namespace Enhuddlement {
               "BossHud.Name text font size (vanilla: 32).",
               new AcceptableValueRange<int>(0, 64));
 
-      BossHudNameTextColor =
+      BossHudNameTextColorTop =
           config.BindInOrder(
               "BossHud.Name",
-              "nameTextColor",
-              Color.white,
-              "BossHud.Name text color.");
+              "nameTextColorTop",
+              Color.red,
+              "BossHud.Name text top-color for vertical gradient.");
+
+      BossHudNameTextColorBottom =
+          config.BindInOrder(
+              "BossHud.Name",
+              "nameTextColorBottom",
+              Color.black,
+              "BossHud.Name text bottom color for vertical gradient.");
 
       BossHudHealthTextFontSize =
           config.BindInOrder(
@@ -305,6 +313,7 @@ namespace Enhuddlement {
     }
 
     public static ConfigEntry<bool> EnemyLevelShowByName { get; private set; }
+    public static ConfigEntry<bool> EnemyLevelUseVanillaStar { get; private set; }
     public static ConfigEntry<string> EnemyLevelStarSymbol { get; private set; }
     public static ConfigEntry<int> EnemyLevelStarCutoff { get; private set; }
     public static ConfigEntry<int> EnemyLevelTextMinFontSize { get; private set; }
@@ -317,13 +326,20 @@ namespace Enhuddlement {
               false,
               "If true, shows the enemy level after the name, otherwise below healthbar.");
 
+      EnemyLevelUseVanillaStar =
+          config.BindInOrder(
+              "EnemyLevel",
+              "enemyLevelUseVanillaStar",
+              false,
+              "If true, uses the vanilla 'star' image for 1* and 2* monsters.");
+
       EnemyLevelStarSymbol =
           config.BindInOrder(
               "EnemyLevel",
               "enemyLevelStarSymbol",
               "\u2605",
               "Symbol to use for 'star' for enemy levels above vanilla 2*.",
-              new AcceptableValueList<string>("\u2605", "\u272a", "\u2735", "\u272d", "\u272b"));
+              new AcceptableValueList<string>("\u2605", "\u2606", "\u2734", "\u2733", "\u2756", "\u2716"));
 
       EnemyLevelStarCutoff =
           config.BindInOrder(

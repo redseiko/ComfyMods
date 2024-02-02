@@ -1,8 +1,8 @@
 {
   "name": "Enhuddlement",
-  "version_number": "1.2.1",
+  "version_number": "1.3.1",
   "author": "ComfyMods",
   "description": "EnemyHud enhancement and customization.",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Enhuddlement",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2200" ]
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }
