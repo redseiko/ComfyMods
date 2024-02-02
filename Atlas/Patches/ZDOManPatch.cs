@@ -97,7 +97,6 @@ static class ZDOManPatch {
     PluginLogger.LogInfo($"Finished loading ZDO.timeCreated, time: {stopwatch.Elapsed}");
   }
 
-  [HarmonyEmitIL] // TODO: REMOVE ME
   [HarmonyTranspiler]
   [HarmonyPatch(nameof(ZDOMan.RPC_ZDOData))]
   static IEnumerable<CodeInstruction> RPC_ZDODataTranspiler(IEnumerable<CodeInstruction> instructions) {
