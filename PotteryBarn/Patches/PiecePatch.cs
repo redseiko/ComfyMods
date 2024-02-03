@@ -17,6 +17,10 @@ namespace PotteryBarn {
       // Should not need to check against cultivator creator shop items here because they do not pass the
       // Player.CanRemovePiece check.
       if (Requirements.HammerCreatorShopItems.Keys.Contains(__instance.m_description)) {
+        if (__instance.TryGetComponent(out Container container)) {
+          DropContainerContents(container);
+        }
+
         if (__instance.IsCreator()) {
           IsDropTableDisabled = true;
           return true;
@@ -71,6 +75,10 @@ namespace PotteryBarn {
           }
         }
       }
+    }
+
+    static void DropContainerContents(Container container) {
+      container.DropAllItems();
     }
   }
 }

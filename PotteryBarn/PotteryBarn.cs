@@ -55,7 +55,7 @@ namespace PotteryBarn {
     static void AddHammerPieces(PieceTable pieceTable) {
       _hammerCreatorShopCategory = PieceManager.Instance.AddPieceCategory("_HammerPieceTable", "CreatorShop");
       _hammerBuildingCategory = PieceManager.Instance.AddPieceCategory("_HammerPieceTable", "Building");
-      _hammerMiscCategory = PieceManager.Instance.AddPieceCategory("_HammerPieceTable", "Misc.");
+      _hammerMiscCategory = PieceManager.Instance.AddPieceCategory("_HammerPieceTable", "Misc");
 
       _standardPrefabIconSprite = _standardPrefabIconSprite ??= CreateColorSprite(new Color32(34, 132, 73, 64));
       _prefabIconRenderRotation = Quaternion.Euler(0f, -45f, 0f);
