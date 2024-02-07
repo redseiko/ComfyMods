@@ -12,6 +12,8 @@ public interface IPieceColorRenderer {
 }
 
 public sealed class DefaultPieceColorRenderer : IPieceColorRenderer {
+  public static DefaultPieceColorRenderer Instance { get; } = new();
+
   readonly MaterialPropertyBlock _propertyBlock = new();
 
   public void SetColors(List<Renderer> renderers, Color color, Color emissionColor) {
@@ -33,6 +35,8 @@ public sealed class DefaultPieceColorRenderer : IPieceColorRenderer {
 }
 
 public sealed class GuardStonePieceColorRenderer : IPieceColorRenderer {
+  public static GuardStonePieceColorRenderer Instance { get; } = new();
+
   readonly MaterialPropertyBlock _propertyBlock = new();
 
   public void SetColors(List<Renderer> renderers, Color color, Color emissionColor) {
@@ -54,6 +58,8 @@ public sealed class GuardStonePieceColorRenderer : IPieceColorRenderer {
 }
 
 public sealed class PortalWoodPieceColorRenderer : IPieceColorRenderer {
+  public static PortalWoodPieceColorRenderer Instance { get; } = new();
+
   readonly MaterialPropertyBlock _propertyBlock = new();
 
   public void SetColors(List<Renderer> renderers, Color color, Color emissionColor) {

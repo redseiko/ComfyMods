@@ -11,6 +11,9 @@ public static class PluginConstants {
   public static readonly int PieceLastColoredByHashCode = "PieceLastColoredBy".GetStableHashCode();
   public static readonly int PieceLastColoredByHostHashCode = "PieceLastColoredByHost".GetStableHashCode();
 
+  public static readonly int GuardStoneHashCode = "guard_stone".GetStableHashCode();
+  public static readonly int PortalWoodHashCode = "portal_wood".GetStableHashCode();
+
   public static readonly Vector3 NoColorVector3 = new(-1f, -1f, -1f);
   public static readonly float NoEmissionColorFactor = -1f;
 

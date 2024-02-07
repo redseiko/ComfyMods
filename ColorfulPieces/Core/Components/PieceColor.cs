@@ -9,7 +9,7 @@ using UnityEngine;
 using static PluginConstants;
 
 public sealed class PieceColor : MonoBehaviour {
-  public static readonly Dictionary<string, int> RendererCountCache = new();
+  public static readonly Dictionary<int, int> RendererCountCache = new();
   public static readonly List<PieceColor> PieceColorCache = new();
 
   public Color TargetColor { get; set; } = Color.clear;
@@ -43,16 +43,19 @@ public sealed class PieceColor : MonoBehaviour {
     PieceColorCache.Add(this);
     _cacheIndex = PieceColorCache.Count - 1;
 
-    CacheRenderers();
-    _pieceColorRenderer = GetPieceColorRenderer(gameObject.name);
+    int prefab = _netView.m_zdo.m_prefab;
+    CacheRenderers(prefab);
+    _pieceColorRenderer = GetPieceColorRenderer(prefab);
   }
 
-  static IPieceColorRenderer GetPieceColorRenderer(string prefabName) {
-    return prefabName switch {
-      "guard_stone(Clone)" => new GuardStonePieceColorRenderer(),
-      "portal_wood(Clone)" => new PortalWoodPieceColorRenderer(),
-      _ => new DefaultPieceColorRenderer(),
-    };
+  static IPieceColorRenderer GetPieceColorRenderer(int prefabHash) {
+    if (prefabHash == GuardStoneHashCode) {
+      return GuardStonePieceColorRenderer.Instance;
+    } else if (prefabHash == PortalWoodHashCode) {
+      return PortalWoodPieceColorRenderer.Instance;
+    }
+
+    return DefaultPieceColorRenderer.Instance;
   }
 
   void OnDestroy() {
@@ -65,8 +68,8 @@ public sealed class PieceColor : MonoBehaviour {
     _renderers.Clear();
   }
 
-  void CacheRenderers() {
-    if (RendererCountCache.TryGetValue(gameObject.name, out int count)) {
+  void CacheRenderers(int prefabHash) {
+    if (RendererCountCache.TryGetValue(prefabHash, out int count)) {
       _renderers.Capacity = count;
     }
 
@@ -74,7 +77,7 @@ public sealed class PieceColor : MonoBehaviour {
     _renderers.AddRange(gameObject.GetComponentsInChildren<SkinnedMeshRenderer>(true));
 
     if (_renderers.Count != count) {
-      RendererCountCache[gameObject.name] = _renderers.Count;
+      RendererCountCache[prefabHash] = _renderers.Count;
       _renderers.Capacity = _renderers.Count;
     }
   }

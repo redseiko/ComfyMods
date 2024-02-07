@@ -5,6 +5,7 @@
   * Updated for the `v0.217.38` patch.
   * Moved changelog into `CHANGELOG.md`.
   * Bumped up `<LangVersion>` to C# 10.
+  * Minor performance improvement by switching to singleton `PieceColorRenderer`.
 
 ### 1.14.0
 
