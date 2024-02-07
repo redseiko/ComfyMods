@@ -1,16 +1,16 @@
-﻿using HarmonyLib;
+﻿namespace AlaCarte;
 
-using static AlaCarte.PluginConfig;
+using HarmonyLib;
 
-namespace AlaCarte {
-  [HarmonyPatch(typeof(Game))]
-  static class GamePatch {
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Game.Pause))]
-    static void PausePostfix() {
-      if (IsModEnabled.Value && DisableGamePauseOnMenu.Value) {
-        Game.m_pause = false;
-      }
+using static PluginConfig;
+
+[HarmonyPatch(typeof(Game))]
+static class GamePatch {
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Game.Pause))]
+  static void PausePostfix() {
+    if (IsModEnabled.Value && DisableGamePauseOnMenu.Value) {
+      Game.m_pause = false;
     }
   }
 }

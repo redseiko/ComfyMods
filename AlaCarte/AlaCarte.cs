@@ -1,30 +1,30 @@
-﻿using System.Reflection;
+﻿namespace AlaCarte; 
+
+using System.Reflection;
 
 using BepInEx;
 
 using HarmonyLib;
 
-using static AlaCarte.PluginConfig;
+using static PluginConfig;
 
-namespace AlaCarte {
-  [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
-  public class AlaCarte : BaseUnityPlugin {
-    public const string PluginGuid = "redseiko.valheim.alacarte";
-    public const string PluginName = "AlaCarte";
-    public const string PluginVersion = "1.2.0";
+[BepInPlugin(PluginGuid, PluginName, PluginVersion)]
+public sealed class AlaCarte : BaseUnityPlugin {
+  public const string PluginGuid = "redseiko.valheim.alacarte";
+  public const string PluginName = "AlaCarte";
+  public const string PluginVersion = "1.3.0";
 
-    Harmony _harmony;
+  Harmony _harmony;
 
-    void Awake() {
-      BindConfig(Config);
+  void Awake() {
+    BindConfig(Config);
 
-      if (IsModEnabled.Value) {
-        _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
-      }
+    if (IsModEnabled.Value) {
+      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
     }
+  }
 
-    void OnDestroy() {
-      _harmony?.UnpatchSelf();
-    }
+  void OnDestroy() {
+    _harmony?.UnpatchSelf();
   }
 }

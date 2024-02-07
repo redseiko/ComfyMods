@@ -1,33 +1,28 @@
-﻿using System;
+﻿namespace ComfyLib; 
+
+using System;
 
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace ComfyLib {
-  public class PanelDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
-    Vector2 _lastMousePosition;
+public sealed class PanelDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
+  Vector2 _lastMousePosition;
 
-    public RectTransform TargetRectTransform;
-    public event EventHandler<Vector3> OnPanelEndDrag;
+  public RectTransform TargetRectTransform;
+  public event EventHandler<Vector3> OnPanelEndDrag;
 
-    public void OnBeginDrag(PointerEventData eventData) {
-      _lastMousePosition = eventData.position;
-    }
+  public void OnBeginDrag(PointerEventData eventData) {
+    _lastMousePosition = eventData.position;
+  }
 
-    public void OnDrag(PointerEventData eventData) {
-      Vector2 difference = eventData.position - _lastMousePosition;
+  public void OnDrag(PointerEventData eventData) {
+    Vector2 difference = eventData.position - _lastMousePosition;
+    TargetRectTransform.position += new Vector3(difference.x, difference.y, TargetRectTransform.position.z);
 
-      if (TargetRectTransform) {
-        TargetRectTransform.position += new Vector3(difference.x, difference.y, TargetRectTransform.position.z);
-      }
+    _lastMousePosition = eventData.position;
+  }
 
-      _lastMousePosition = eventData.position;
-    }
-
-    public void OnEndDrag(PointerEventData eventData) {
-      if (TargetRectTransform) {
-        OnPanelEndDrag?.Invoke(this, TargetRectTransform.anchoredPosition);
-      }
-    }
+  public void OnEndDrag(PointerEventData eventData) {
+    OnPanelEndDrag?.Invoke(this, TargetRectTransform.anchoredPosition);
   }
 }
