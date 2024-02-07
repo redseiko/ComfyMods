@@ -3,13 +3,10 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
-using ComfyLib;
-
 using HarmonyLib;
 
 using UnityEngine;
 
-using static ColorfulPieces;
 using static PluginConfig;
 
 [HarmonyPatch(typeof(Player))]
@@ -32,15 +29,15 @@ static class PlayerPatch {
   static void UpdateHoverPostDelegate(bool takeInput) {
     if (takeInput && IsModEnabled.Value && Player.m_localPlayer.TryGetHovering(out GameObject hovering)) {
       if (ChangePieceColorShortcut.Value.IsDown()) {
-        OnChangePieceColorShortcut(hovering);
+        ShortcutUtils.OnChangePieceColorShortcut(hovering);
       }
 
       if (ClearPieceColorShortcut.Value.IsDown()) {
-        OnClearPieceColorShortcut(hovering);
+        ShortcutUtils.OnClearPieceColorShortcut(hovering);
       }
 
       if (CopyPieceColorShortcut.Value.IsDown()) {
-        OnCopyPieceColorShortcut(hovering);
+        ShortcutUtils.OnCopyPieceColorShortcut(hovering);
       }
     }
   }
@@ -48,27 +45,5 @@ static class PlayerPatch {
   static bool TryGetHovering(this Player player, out GameObject hovering) {
     hovering = player ? player.m_hovering : default;
     return hovering;
-  }
-
-  static bool OnChangePieceColorShortcut(GameObject hovering) {
-    if (hovering.TryGetComponentInParent(out WearNTear changeTarget)) {
-      ChangePieceColorAction(changeTarget);
-      return true;
-    }
-
-    return false;
-  }
-
-  static bool OnClearPieceColorShortcut(GameObject hovering) {
-    if (hovering.TryGetComponent(out WearNTear clearTarget)) {
-      ClearPieceColorAction(clearTarget);
-      return true;
-    }
-
-    return false;
-  }
-
-  static bool OnCopyPieceColorShortcut(GameObject hovering) {
-    return hovering.TryGetComponentInParent(out WearNTear copyTarget) && CopyPieceColorAction(copyTarget.m_nview);
   }
 }

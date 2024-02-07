@@ -23,7 +23,7 @@ using static PluginConstants;
 public sealed class ColorfulPieces : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.colorfulpieces";
   public const string PluginName = "ColorfulPieces";
-  public const string PluginVersion = "1.15.0";
+  public const string PluginVersion = "1.15.1";
 
   static ManualLogSource _logger;
   Harmony _harmony;

@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.15.1
+
+  * Fixed a bug with `ClearPieceColorShortcut` not working.
+
 ### 1.15.0
 
   * Updated for the `v0.217.38` patch.

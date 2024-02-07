@@ -109,6 +109,7 @@
     <Compile Include="ComfyLib\Config\GUI\GUIBuilder.cs" />
     <Compile Include="ComfyLib\Config\GUI\GUIFocus.cs" />
     <Compile Include="ComfyLib\Config\GUI\GUIHelper.cs" />
+    <Compile Include="Core\ShortcutUtils.cs" />
     <Compile Include="Patches\HudPatch.cs" />
     <Compile Include="Patches\PlayerPatch.cs" />
     <Compile Include="Patches\StaticPhysicsPatch.cs" />
