@@ -1,33 +1,33 @@
-﻿using UnityEngine;
+﻿namespace ComfyLib;
 
-namespace ComfyLib {
-  // Copied from: https://github.com/fuqunaga/RapidGUI/blob/master/Runtime/Component/Utilities/FocusChecker.cs
-  public static class GUIFocus {
-    static int _lastFrameCount;
-    static int _lastHotControl;
-    static int _lastKeyboardControl;
-    static bool _hasChanged;
+using UnityEngine;
 
-    public static bool HasChanged() {
-      int frameCount = Time.frameCount;
+// Copied from: https://github.com/fuqunaga/RapidGUI/blob/master/Runtime/Component/Utilities/FocusChecker.cs
+public static class GUIFocus {
+  static int _lastFrameCount;
+  static int _lastHotControl;
+  static int _lastKeyboardControl;
+  static bool _hasChanged;
 
-      if (_lastFrameCount == frameCount) {
-        return _hasChanged;
-      }
+  public static bool HasChanged() {
+    int frameCount = Time.frameCount;
 
-      _lastFrameCount = frameCount;
-
-      int hotControl = GUIUtility.hotControl;
-      int keyboardControl = GUIUtility.keyboardControl;
-
-      _hasChanged = (hotControl != _lastHotControl) || (keyboardControl != _lastKeyboardControl);
-
-      if (_hasChanged) {
-        _lastHotControl = hotControl;
-        _lastKeyboardControl = keyboardControl;
-      }
-
+    if (_lastFrameCount == frameCount) {
       return _hasChanged;
     }
+
+    _lastFrameCount = frameCount;
+
+    int hotControl = GUIUtility.hotControl;
+    int keyboardControl = GUIUtility.keyboardControl;
+
+    _hasChanged = (hotControl != _lastHotControl) || (keyboardControl != _lastKeyboardControl);
+
+    if (_hasChanged) {
+      _lastHotControl = hotControl;
+      _lastKeyboardControl = keyboardControl;
+    }
+
+    return _hasChanged;
   }
 }

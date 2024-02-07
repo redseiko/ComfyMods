@@ -1,8 +1,8 @@
 ﻿{
   "name": "ColorfulPieces",
-  "version_number": "1.14.0",
+  "version_number": "1.15.0",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/ColorfulPieces",
   "author": "ComfyMods",
-  "description": "Color any building piece made with the hammer using RGB and HTML color codes.",
+  "description": "Color any building piece made with the hammer using RGB/HTML colors!",
   "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }

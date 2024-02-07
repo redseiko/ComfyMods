@@ -1,16 +1,16 @@
-﻿using HarmonyLib;
+﻿namespace ColorfulPieces;
 
-using static ColorfulPieces.PluginConfig;
+using HarmonyLib;
 
-namespace ColorfulPieces {
-  [HarmonyPatch(typeof(Game))]
-  static class GamePatch {
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Game.Start))]
-    static void StartPostfix(Game __instance) {
-      if (IsModEnabled.Value) {
-        __instance.gameObject.AddComponent<PieceColorUpdater>();
-      }
+using static PluginConfig;
+
+[HarmonyPatch(typeof(Game))]
+static class GamePatch {
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Game.Start))]
+  static void StartPostfix(Game __instance) {
+    if (IsModEnabled.Value) {
+      __instance.gameObject.AddComponent<PieceColorUpdater>();
     }
   }
 }

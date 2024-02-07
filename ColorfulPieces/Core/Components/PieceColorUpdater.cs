@@ -1,39 +1,38 @@
-﻿using System.Collections;
+﻿namespace ColorfulPieces;
+
+using System.Collections;
 
 using UnityEngine;
 
-using static ColorfulPieces.PieceColor;
-using static ColorfulPieces.PluginConfig;
+using static PieceColor;
+using static PluginConfig;
 
-namespace ColorfulPieces {
-  public class PieceColorUpdater : MonoBehaviour {
-    void Awake() {
-      StartCoroutine(UpdatePieceColors());
-    }
+public sealed class PieceColorUpdater : MonoBehaviour {
+  void Awake() {
+    StartCoroutine(UpdatePieceColors());
+  }
 
-    IEnumerator UpdatePieceColors() {
-      ColorfulPieces.LogInfo($"Starting PieceColorUpdater.UpdatePieceColors coroutine...");
-      WaitForSeconds waitInterval = new(UpdateColorsWaitInterval.Value);
+  IEnumerator UpdatePieceColors() {
+    WaitForSeconds waitInterval = new(UpdateColorsWaitInterval.Value);
 
-      while (true) {
-        int frameLimit = UpdateColorsFrameLimit.Value;
-        int index = 0;
+    while (true) {
+      int frameLimit = UpdateColorsFrameLimit.Value;
+      int index = 0;
 
-        while (index < PieceColorCache.Count) {
-          int processed = 0;
+      while (index < PieceColorCache.Count) {
+        int processed = 0;
 
-          while (processed < frameLimit && PieceColorCache.Count > 0 && index < PieceColorCache.Count) {
-            PieceColorCache[index].UpdateColors();
+        while (processed < frameLimit && PieceColorCache.Count > 0 && index < PieceColorCache.Count) {
+          PieceColorCache[index].UpdateColors();
 
-            index++;
-            processed++;
-          }
-
-          yield return null;
+          index++;
+          processed++;
         }
 
-        yield return waitInterval;
+        yield return null;
       }
+
+      yield return waitInterval;
     }
   }
 }

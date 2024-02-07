@@ -1,24 +1,24 @@
-﻿using ComfyLib;
+﻿namespace ColorfulPieces;
+
+using ComfyLib;
 
 using HarmonyLib;
 
-using static ColorfulPieces.PluginConfig;
+using static PluginConfig;
 
-namespace ColorfulPieces {
-  [HarmonyPatch(typeof(Terminal))]
-  static class TerminalPatch {
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(Terminal.InitTerminal))]
-    static void InitTerminalPrefix(ref bool __state) {
-      __state = Terminal.m_terminalInitialized;
-    }
+[HarmonyPatch(typeof(Terminal))]
+static class TerminalPatch {
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(Terminal.InitTerminal))]
+  static void InitTerminalPrefix(ref bool __state) {
+    __state = Terminal.m_terminalInitialized;
+  }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Terminal.InitTerminal))]
-    static void InitTerminalPostfix(bool __state) {
-      if (!__state) {
-        ComfyCommandUtils.ToggleCommands(IsModEnabled.Value);
-      }
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Terminal.InitTerminal))]
+  static void InitTerminalPostfix(bool __state) {
+    if (!__state) {
+      ComfyCommandUtils.ToggleCommands(IsModEnabled.Value);
     }
   }
 }
