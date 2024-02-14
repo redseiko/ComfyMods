@@ -11,8 +11,9 @@
     <AssemblyName>PutMeDown</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <LangVersion>9</LangVersion>
+    <LangVersion>10</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -102,18 +103,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\ComfyConfig.cs" />
+    <Compile Include="ComfyLib\Config\ComfyConfig.cs" />
     <Compile Include="Config\PluginConfig.cs" />
-    <Compile Include="Config\ToggleStringListConfigEntry.cs" />
+    <Compile Include="ComfyLib\Config\ToggleStringListConfigEntry.cs" />
     <Compile Include="Core\AutoPickupController.cs" />
-    <Compile Include="Extensions\ConfigFileExtensions.cs" />
-    <Compile Include="Extensions\UnityExtensons.cs" />
+    <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
+    <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="Patches\PlayerPatch.cs" />
     <Compile Include="PutMeDown.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="manifest.json" />
+    <None Include="CHANGELOG.md" />
     <None Include="README.md" />
     <None Include="icon.png" />
   </ItemGroup>
@@ -140,7 +142,7 @@
   </Target>
   <Target Name="MakeThunderstorePackage" AfterTargets="GetAssemblyVersion">
     <ItemGroup>
-      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; README.md; manifest.json; icon.png" />
+      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; README.md; CHANGELOG.md; manifest.json; icon.png" />
     </ItemGroup>
     <MakeDir Directories="$(PackageDir)" />
     <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageDir)" />
