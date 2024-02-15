@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.3.2
+
+  * Fixed `EnemyHud` not positioned correctly when using Render-scale values not at 100%.
+
 ### 1.3.1
 
   * Actually include the `CHANGELOG.md` in the Thunderstore archive.

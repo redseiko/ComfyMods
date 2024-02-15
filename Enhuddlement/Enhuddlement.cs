@@ -11,7 +11,7 @@ namespace Enhuddlement {
   public class Enhuddlement : BaseUnityPlugin {
     public const string PluginGuid = "redseiko.valheim.enhuddlement";
     public const string PluginName = "Enhuddlement";
-    public const string PluginVersion = "1.3.1";
+    public const string PluginVersion = "1.3.2";
 
     public static Harmony HarmonyInstance { get; private set; }
 

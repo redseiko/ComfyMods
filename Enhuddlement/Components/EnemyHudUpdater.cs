@@ -117,7 +117,7 @@ namespace Enhuddlement {
             position = character.GetTopPoint() + EnemyHudPositionOffset.Value;
           }
 
-          Vector3 point = camera.WorldToScreenPoint(position);
+          Vector3 point = camera.WorldToScreenPointScaled(position);
 
           if (point.x < 0f || point.x > Screen.width || point.y < 0f || point.y > Screen.height || point.z > 0f) {
             hudData.m_gui.transform.position = point;
