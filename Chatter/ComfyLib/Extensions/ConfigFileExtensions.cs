@@ -66,16 +66,14 @@ namespace ComfyLib {
 
     public static void OnSettingChanged<T>(this ConfigEntry<T> configEntry, Action<T> settingChangedHandler) {
       configEntry.SettingChanged +=
-          (_, eventArgs) =>
-              settingChangedHandler.Invoke((T) ((SettingChangedEventArgs) eventArgs).ChangedSetting.BoxedValue);
+          (_, eventArgs) => settingChangedHandler((T) ((SettingChangedEventArgs) eventArgs).ChangedSetting.BoxedValue);
     }
 
     public static void OnSettingChanged<T>(
         this ConfigEntry<T> configEntry, Action<ConfigEntry<T>> settingChangedHandler) {
       configEntry.SettingChanged +=
           (_, eventArgs) =>
-              settingChangedHandler.Invoke(
-                  (ConfigEntry<T>) ((SettingChangedEventArgs) eventArgs).ChangedSetting.BoxedValue);
+              settingChangedHandler((ConfigEntry<T>) ((SettingChangedEventArgs) eventArgs).ChangedSetting.BoxedValue);
     }
 
     internal sealed class ConfigurationManagerAttributes {

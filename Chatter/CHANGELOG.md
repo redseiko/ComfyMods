@@ -1,5 +1,12 @@
 ## Changelog
 
+### 2.5.0
+
+  * Bumped up `<LangVersion>` to C# 10.
+  * Added new config option `filterInWorldShoutText` (default: false) that will also apply shout filters to in-world
+    shout message texts. 
+  * Fixed a bug where the `ChatPanel` would pop-up/display if the message was filtered.
+
 ### 2.4.0
 
   * Added compatibility with [Groups](https://valheim.thunderstore.io/package/Smoothbrain/Groups/).

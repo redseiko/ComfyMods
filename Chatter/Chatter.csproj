@@ -11,8 +11,9 @@
     <AssemblyName>Chatter</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <LangVersion>9</LangVersion>
+    <LangVersion>10</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -102,6 +103,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComfyLib\Extensions\StringExtensions.cs" />
     <Compile Include="Core\ChatPanelUtils.cs" />
     <Compile Include="Core\ChatTextInputUtils.cs" />
     <Compile Include="Core\ChatMessage.cs" />
@@ -111,7 +113,7 @@
     <Compile Include="Core\Enums\ChatMessageType.cs" />
     <Compile Include="Core\Enums\MessageLayoutType.cs" />
     <Compile Include="Core\WorldTextUtils.cs" />
-    <Compile Include="Extensions\UnityExtensions.cs" />
+    <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="Patches\MenuPatch.cs" />
     <Compile Include="Patches\MessageHudPatch.cs" />
     <Compile Include="UI\ChatPanel\InputFieldCell.cs" />
@@ -122,10 +124,9 @@
     <Compile Include="UI\Components\DummyIgnoreDrag.cs" />
     <Compile Include="UI\Core\UIBuilder.cs" />
     <Compile Include="UI\Core\UIResources.cs" />
-    <Compile Include="Utils\CircularQueue.cs" />
+    <Compile Include="ComfyLib\Utils\CircularQueue.cs" />
     <Compile Include="Config\StringListConfigEntry.cs" />
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
-    <Compile Include="Extensions\PluginExtensions.cs" />
     <Compile Include="UI\Core\UIExtensions.cs" />
     <Compile Include="Patches\ChatPatch.cs" />
     <Compile Include="Patches\TerminalPatch.cs" />

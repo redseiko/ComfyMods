@@ -66,5 +66,4 @@
 
   * See source at: [GitHub/ComfyMods](https://github.com/redseiko/ComfyMods/tree/main/Chatter).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
-  * Check out our community driven listing site at: [valheimlist.org](https://valheimlist.org/)
   * Chatter icon created by [@jenniely](https://twitter.com/jenniely) (jenniely.com)
