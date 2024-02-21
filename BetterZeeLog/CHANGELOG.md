@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.8.0
+
+  * Added a `Projectile.FixedUpdate()` transpiler patch to handle zero `m_vel` passed to `Quaternion.LookRotation()`.
+    * This should reduce the amount of "Look rotation viewing vector is zero" Unity log spam.
+    * Can be toggled using the `checkProjectFixedUpdatedZeroVelocity` config option (restart required).
+
 ### 1.7.0
 
   * Updated for the `v0.217.38` patch.

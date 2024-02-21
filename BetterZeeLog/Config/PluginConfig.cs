@@ -8,6 +8,7 @@ public static class PluginConfig {
   public static ConfigEntry<bool> IsModEnabled { get; private set; }
   public static ConfigEntry<bool> RemoveStackTraceForNonErrorLogType { get; private set; }
   public static ConfigEntry<bool> RemoveFailedToSendDataLogging { get; private set; }
+  public static ConfigEntry<bool> CheckProjectFixedUpdateZeroVelocity { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
     IsModEnabled =
@@ -26,5 +27,12 @@ public static class PluginConfig {
             "removeFailedToSendDataLogging",
             true,
             "Removes (NOPs out) 'Failed to send data' logging in ZSteamSocket (restart required).");
+
+    CheckProjectFixedUpdateZeroVelocity =
+        config.BindInOrder(
+            "Quaternion.LookRotation",
+            "checkProjectFixedUpdatedZeroVelocity",
+            true,
+            "Checks for zero `m_vel` in `Projectile.FixedUpdate()` (restart required).");
   }
 }
