@@ -1,74 +1,46 @@
-﻿using System.Collections.Generic;
+﻿namespace Configula;
+
+using System.Collections.Generic;
 using System.Globalization;
 
 using ConfigurationManager;
 
 using UnityEngine;
 
-namespace Configula {
-  public static class FloatSettingField {
-    sealed class FloatConfigCacheEntry {
-      public float Value = 0f;
-      public string FieldText = string.Empty;
-      public Color FieldColor = Color.clear;
+public sealed class FloatSettingField {
+  public readonly FloatInputField ValueInput = new(string.Empty);
+
+  public void SetValue(float value) {
+    ValueInput.SetValue(value);
+  }
+
+  public float GetValue() {
+    return ValueInput.CurrentValue;
+  }
+
+  public void DrawField() {
+    ValueInput.DrawField();
+  }
+
+  static readonly Dictionary<SettingEntryBase, FloatSettingField> _floatSettingFieldCache = new();
+
+  public static void DrawFloat(SettingEntryBase configEntry) {
+    float configValue = (float) configEntry.Get();
+
+    if (!_floatSettingFieldCache.TryGetValue(configEntry, out FloatSettingField floatField)) {
+      floatField = new();
+      floatField.SetValue(configValue);
+
+      _floatSettingFieldCache[configEntry] = floatField;
+    } else if (GUIFocus.HasChanged() || GUIHelper.IsEnterPressed() || floatField.GetValue() != configValue) {
+      floatField.SetValue(configValue);
     }
 
-    static readonly Dictionary<SettingEntryBase, FloatConfigCacheEntry> _floatSettingFieldCache = new();
+    floatField.DrawField();
+    float value = floatField.GetValue();
 
-    public static void DrawFloat(SettingEntryBase configEntry) {
-      float configValue = (float) configEntry.Get();
-
-      if (!_floatSettingFieldCache.TryGetValue(configEntry, out FloatConfigCacheEntry cacheEntry)) {
-        cacheEntry = new() {
-          Value = configValue,
-          FieldColor = GUI.color,
-        };
-
-        _floatSettingFieldCache[configEntry] = cacheEntry;
-      }
-
-      if (GUIFocus.HasChanged() || GUIHelper.IsEnterPressed() || cacheEntry.Value != configValue) {
-        cacheEntry.Value = configValue;
-        cacheEntry.FieldText = configValue.ToString(NumberFormatInfo.InvariantInfo);
-        cacheEntry.FieldColor = GUI.color;
-      }
-
-      GUIHelper.BeginColor(cacheEntry.FieldColor);
-      string textValue = GUILayout.TextArea(cacheEntry.FieldText, GUILayout.ExpandWidth(true));
-      GUIHelper.EndColor();
-
-      if (textValue == cacheEntry.FieldText) {
-        return;
-      }
-
-      cacheEntry.FieldText = textValue;
-
-      if (ShouldParse(textValue)
-          && float.TryParse(textValue, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out float result)) {
-        configEntry.Set(result);
-        cacheEntry.Value = (float) configEntry.Get();
-        cacheEntry.FieldText = cacheEntry.Value.ToString(NumberFormatInfo.InvariantInfo);
-
-        if (cacheEntry.FieldText == textValue) {
-          cacheEntry.FieldColor = GUI.color;
-        } else {
-          cacheEntry.FieldColor = Color.yellow;
-          cacheEntry.FieldText = textValue;
-        }
-      } else {
-        cacheEntry.FieldColor = Color.red;
-      }
-    }
-
-    static bool ShouldParse(string text) {
-      if (text == null || text.Length <= 0) {
-        return false;
-      }
-
-      return text[text.Length - 1] switch {
-        'e' or 'E' or '+' or '-' or '.' or ',' => false,
-        _ => true,
-      };
+    if (value != configValue) {
+      configEntry.Set(value);
     }
   }
 }
