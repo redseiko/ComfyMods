@@ -1,0 +1,170 @@
+﻿namespace ReportCard;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using ComfyLib;
+
+using TMPro;
+
+using UnityEngine;
+using UnityEngine.UI;
+
+public sealed class PlayerStatsPanel {
+  public GameObject Panel { get; private set; }
+  public TMP_Text Title { get; private set; }
+  public ListView StatsListView { get; private set; }
+  public ButtonCell CloseButton { get; private set; }
+
+  public PlayerStatsPanel(Transform parentTransform) {
+    Panel = CreatePanel(parentTransform);
+    Title = CreateTitle(Panel.transform);
+    StatsListView = CreateStatsList(Panel.transform);
+
+    CloseButton = CreateCloseButton(Panel.transform);
+    CloseButton.Button.onClick.AddListener(HidePanel);
+  }
+
+  public List<TMP_Text> StatLabels { get; } = new();
+
+  public void UpdateStatsList(PlayerProfile profile) {
+    List<KeyValuePair<PlayerStatType, float>> stats = profile.m_playerStats.m_stats.ToList();
+
+    for (int i = StatLabels.Count; i < stats.Count; i++) {
+      TMP_Text label = CreateStatLabel(StatsListView.Content.transform);
+      StatLabels.Add(label);
+    }
+
+    for (int i = 0; i < stats.Count; i++) {
+      KeyValuePair<PlayerStatType, float> pair = stats[i];
+      TMP_Text label = StatLabels[i];
+
+      label.SetText(
+          $"<align=left><color=#FFD600>{pair.Key}</color><line-height=0>\n"
+              + $"<align=right>{GetFormattedValue(pair)}<line-height=1em>");
+    }
+  }
+
+  static string GetFormattedValue(KeyValuePair<PlayerStatType, float> pair) {
+    switch (pair.Key) {
+      case PlayerStatType.TimeInBase:
+      case PlayerStatType.TimeOutOfBase:
+        return GetFormattedValue(TimeSpan.FromSeconds(pair.Value));
+
+      case PlayerStatType.DistanceTraveled:
+      case PlayerStatType.DistanceWalk:
+      case PlayerStatType.DistanceRun:
+      case PlayerStatType.DistanceSail:
+      case PlayerStatType.DistanceAir:
+        return $"{pair.Value:N2} m";
+
+      default:
+        return $"{pair.Value}";
+    }
+  }
+
+  static string GetFormattedValue(TimeSpan duration) {
+    if (duration.TotalHours < 1d) {
+      return $"{duration.Minutes:D2}m {duration.Seconds:D2}s";
+    } else if (duration.TotalDays < 1d) {
+      return $"{duration.Hours:D2}h {duration.Minutes:D2}m {duration.Seconds:D2}s";
+    } else {
+      return $"{duration.Days}d {duration.Hours:D2}h {duration.Minutes:D2}m {duration.Seconds:D2}s";
+    }
+  }
+
+  static TMP_Text CreateStatLabel(Transform parentTransform) {
+    TMP_Text label = UIBuilder.CreateTMPLabel(parentTransform);
+    label.name = "StatLabel";
+
+    label.rectTransform
+        .SetAnchorMin(Vector2.zero)
+        .SetAnchorMax(Vector2.right)
+        .SetPivot(Vector2.zero)
+        .SetPosition(Vector2.zero)
+        .SetSizeDelta(Vector2.zero);
+
+    label
+        .SetFontSize(18f)
+        .SetAlignment(TextAlignmentOptions.Left);
+
+    label.gameObject.AddComponent<LayoutElement>()
+        .SetFlexible(width: 1f)
+        .SetPreferred(height: 30f);
+
+    return label;
+  }
+
+  public void ShowPanel() {
+    Panel.gameObject.SetActive(true);
+  }
+
+  public void HidePanel() {
+    Panel.gameObject.SetActive(false);
+  }
+
+  static GameObject CreatePanel(Transform parentTransform) {
+    GameObject panel = UIBuilder.CreatePanel(parentTransform);
+    panel.name = "PlayerStatsPanel";
+
+    panel.GetComponent<RectTransform>()
+        .SetAnchorMin(new(1f, 0.5f))
+        .SetAnchorMax(new(1f, 0.5f))
+        .SetPivot(new(1f, 0.5f))
+        .SetPosition(new(-25f, 0f))
+        .SetSizeDelta(new(400f, 600f));
+
+    return panel;
+  }
+
+  static TMP_Text CreateTitle(Transform parentTransform) {
+    TMP_Text title = UIBuilder.CreateTMPHeaderLabel(parentTransform);
+    title.name = "Title";
+
+    title
+        .SetAlignment(TextAlignmentOptions.Top)
+        .SetText("Stats");
+
+    title.rectTransform
+        .SetAnchorMin(Vector2.up)
+        .SetAnchorMax(Vector2.one)
+        .SetPivot(new(0.5f, 1f))
+        .SetPosition(new(0f, -15f))
+        .SetSizeDelta(new(0f, 40f));
+
+    return title;
+  }
+
+  static ListView CreateStatsList(Transform parentTransform) {
+    ListView playerList = new(parentTransform);
+    playerList.View.name = "StatsList";
+
+    playerList.View.GetComponent<RectTransform>()
+        .SetAnchorMin(Vector2.zero)
+        .SetAnchorMax(Vector2.one)
+        .SetPivot(Vector2.up)
+        .SetPosition(new(20f, -60f))
+        .SetSizeDelta(new(-40f, -135f));
+
+    playerList.ContentLayoutGroup.SetPadding(left: 10, right: 20);
+
+    return playerList;
+  }
+
+  static ButtonCell CreateCloseButton(Transform parentTransform) {
+    ButtonCell closeButton = new(parentTransform);
+    closeButton.Button.name = "CloseButton";
+
+    closeButton.Cell.GetComponent<RectTransform>()
+        .SetAnchorMin(Vector2.right)
+        .SetAnchorMax(Vector2.right)
+        .SetPivot(Vector2.right)
+        .SetPosition(new(-20f, 20f))
+        .SetSizeDelta(new(100f, 40f));
+
+    closeButton.Label.text = "Close";
+
+    return closeButton;
+  }
+}

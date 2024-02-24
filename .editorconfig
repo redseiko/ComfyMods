@@ -10,6 +10,9 @@ dotnet_diagnostic.IDE0051.severity = none
 # IDE0060: Remove unused parameter
 dotnet_diagnostic.IDE0060.severity = none
 
+# IDE0066: Use 'switch' expression
+dotnet_diagnostic.IDE0066.severity = none
+
 [*.{cs,vb,json,csproj}]
 
 end_of_line = lf
