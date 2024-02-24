@@ -134,6 +134,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transporter", "Transporter\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scenic", "Scenic\Scenic.csproj", "{95C8D063-19E8-40B7-A28E-CF885F8DAC6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportCard", "ReportCard\ReportCard.csproj", "{1FC9C6DA-195E-43D3-869B-A6526767BCC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -364,6 +366,10 @@ Global
 		{95C8D063-19E8-40B7-A28E-CF885F8DAC6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95C8D063-19E8-40B7-A28E-CF885F8DAC6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95C8D063-19E8-40B7-A28E-CF885F8DAC6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FC9C6DA-195E-43D3-869B-A6526767BCC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FC9C6DA-195E-43D3-869B-A6526767BCC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FC9C6DA-195E-43D3-869B-A6526767BCC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FC9C6DA-195E-43D3-869B-A6526767BCC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
