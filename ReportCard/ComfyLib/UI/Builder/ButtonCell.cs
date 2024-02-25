@@ -64,7 +64,7 @@ public sealed class ButtonCell {
               disabledSprite = UIResources.GetSprite("button_disabled"),
               highlightedSprite = UIResources.GetSprite("button_highlight"),
               pressedSprite = UIResources.GetSprite("button_pressed"),
-              selectedSprite = UIResources.GetSprite("button_selected")
+              selectedSprite = UIResources.GetSprite("button_highlight")
             });
 
     return button;

@@ -57,7 +57,7 @@ public sealed class PlayerStatsPanel {
       case PlayerStatType.DistanceRun:
       case PlayerStatType.DistanceSail:
       case PlayerStatType.DistanceAir:
-        return $"{pair.Value:N2} m";
+        return $"{pair.Value:N2}";
 
       default:
         return $"{pair.Value}";
@@ -65,13 +65,9 @@ public sealed class PlayerStatsPanel {
   }
 
   static string GetFormattedValue(TimeSpan duration) {
-    if (duration.TotalHours < 1d) {
-      return $"{duration.Minutes:D2}m {duration.Seconds:D2}s";
-    } else if (duration.TotalDays < 1d) {
-      return $"{duration.Hours:D2}h {duration.Minutes:D2}m {duration.Seconds:D2}s";
-    } else {
-      return $"{duration.Days}d {duration.Hours:D2}h {duration.Minutes:D2}m {duration.Seconds:D2}s";
-    }
+    return duration.Days >= 1
+        ? $"{duration.Days}d {duration.Hours:D2}:{duration.Minutes:D2}:{duration.Seconds:D2}"
+        : $"{duration.Hours:D2}:{duration.Minutes:D2}:{duration.Seconds:D2}";
   }
 
   static TMP_Text CreateStatLabel(Transform parentTransform) {
@@ -109,10 +105,6 @@ public sealed class PlayerStatsPanel {
     panel.name = "PlayerStatsPanel";
 
     panel.GetComponent<RectTransform>()
-        .SetAnchorMin(new(1f, 0.5f))
-        .SetAnchorMax(new(1f, 0.5f))
-        .SetPivot(new(1f, 0.5f))
-        .SetPosition(new(-25f, 0f))
         .SetSizeDelta(new(400f, 600f));
 
     return panel;
@@ -161,9 +153,11 @@ public sealed class PlayerStatsPanel {
         .SetAnchorMax(Vector2.right)
         .SetPivot(Vector2.right)
         .SetPosition(new(-20f, 20f))
-        .SetSizeDelta(new(100f, 40f));
+        .SetSizeDelta(new(100f, 42.5f));
 
-    closeButton.Label.text = "Close";
+    closeButton.Label
+        .SetFontSize(18f)
+        .SetText("Close");
 
     return closeButton;
   }

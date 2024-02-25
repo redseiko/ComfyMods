@@ -10,7 +10,7 @@ static class FejdStartupPatch {
   [HarmonyPatch(nameof(FejdStartup.SetupGui))]
   static void SetupGuiPostfix(FejdStartup __instance) {
     if (IsModEnabled.Value) {
-      PlayerStatsController.SetupPlayerStatsPanel(__instance.m_characterSelectScreen.transform);
+      PlayerStatsController.CreateStatsPanel(__instance);
     }
   }
 
@@ -18,7 +18,7 @@ static class FejdStartupPatch {
   [HarmonyPatch(nameof(FejdStartup.SetupCharacterPreview))]
   static void SetupCharacterPreview(PlayerProfile profile) {
     if (IsModEnabled.Value) {
-      PlayerStatsController.UpdatePlayerStatsPanel(profile);
+      PlayerStatsController.UpdateStatsPanel(profile);
     }
   }
 }

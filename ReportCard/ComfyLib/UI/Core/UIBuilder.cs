@@ -51,6 +51,7 @@ public static class UIBuilder {
     panel.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
         .SetSprite(UIResources.GetSprite("woodpanel_trophys"))
+        .SetMaterial(UIResources.GetMaterial("litpanel"))
         .SetColor(Color.white);
 
     return panel;
