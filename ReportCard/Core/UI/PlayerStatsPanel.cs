@@ -100,6 +100,10 @@ public sealed class PlayerStatsPanel {
     Panel.gameObject.SetActive(false);
   }
 
+  public void TogglePanel() {
+    Panel.gameObject.SetActive(!Panel.gameObject.activeSelf);
+  }
+
   static GameObject CreatePanel(Transform parentTransform) {
     GameObject panel = UIBuilder.CreatePanel(parentTransform);
     panel.name = "PlayerStatsPanel";

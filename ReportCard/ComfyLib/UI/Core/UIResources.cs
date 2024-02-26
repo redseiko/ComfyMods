@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using UnityEngine;
 
@@ -27,15 +26,5 @@ public static class UIResources {
     }
 
     return cachedMaterial;
-  }
-
-  public static T FirstByNameOrThrow<T>(this T[] unityObjects, string name) where T : UnityEngine.Object {
-    foreach (T unityObject in unityObjects) {
-      if (unityObject.name == name) {
-        return unityObject;
-      }
-    }
-
-    throw new InvalidOperationException($"Could not find Unity object of type {typeof(T)} with name: {name}");
   }
 }

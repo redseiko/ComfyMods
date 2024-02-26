@@ -11,7 +11,7 @@ static class SkillsDialogPatch {
   static void AwakePostfix(SkillsDialog __instance) {
     if (IsModEnabled.Value) {
       PlayerStatsController.CreateStatsPanel(__instance);
-      PlayerStatsController.CreateStatsButton(__instance.transform.Find("SkillsFrame"));
+      PlayerStatsController.CreateStatsButton(__instance);
     }
   }
 

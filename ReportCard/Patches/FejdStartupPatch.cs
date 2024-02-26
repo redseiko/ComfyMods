@@ -11,6 +11,15 @@ static class FejdStartupPatch {
   static void SetupGuiPostfix(FejdStartup __instance) {
     if (IsModEnabled.Value) {
       PlayerStatsController.CreateStatsPanel(__instance);
+      PlayerStatsController.CreateStatsButton(__instance);
+    }
+  }
+
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(FejdStartup.ShowCharacterSelection))]
+  static void ShowCharacterSelectionPostfix() {
+    if (IsModEnabled.Value && OpenStatsPanelOnCharacterSelect.Value) {
+      PlayerStatsController.ShowStatsPanel();
     }
   }
 
