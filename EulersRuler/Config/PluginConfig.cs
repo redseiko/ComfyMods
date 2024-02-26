@@ -1,7 +1,6 @@
 ﻿namespace EulersRuler;
 
 using System;
-using System.Linq;
 
 using BepInEx.Configuration;
 
@@ -18,6 +17,7 @@ public static class PluginConfig {
     Stability = 4,
     Euler = 8,
     Quaternion = 16,
+    PieceName = 32,
   }
 
   [Flags]
@@ -26,6 +26,7 @@ public static class PluginConfig {
     Name = 1,
     Euler = 2,
     Quaternion = 4,
+    PieceName = 32,
   }
 
   public static ConfigEntry<bool> IsModEnabled { get; private set; }
@@ -91,7 +92,7 @@ public static class PluginConfig {
         config.BindInOrder(
             "PlacementGhost.Panel",
             "placementGhostPanelEnabledRows",
-            (PlacementGhostPanelRow) Enum.GetValues(typeof(PlacementGhostPanelRow)).Cast<int>().Sum(),
+            PlacementGhostPanelRow.Name | PlacementGhostPanelRow.Euler | PlacementGhostPanelRow.Quaternion,
             "Which rows to display on the PlacementGhost properties panel.");
 
     PlacementGhostPanelFontSize =

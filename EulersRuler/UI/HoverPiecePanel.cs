@@ -62,19 +62,24 @@ public static class HoverPiecePanel {
 
     _hoverPiecePanel.SetActive(true);
 
-    UpdateHoverPieceNameRow(piece, enabledRows.HasFlag(HoverPiecePanelRow.Name));
+    UpdateHoverPieceNameRow(
+        piece, enabledRows.HasFlag(HoverPiecePanelRow.Name), enabledRows.HasFlag(HoverPiecePanelRow.PieceName));
     UpdateHoverPieceHealthRow(wearNTear, enabledRows.HasFlag(HoverPiecePanelRow.Health));
     UpdateHoverPieceStabilityRow(wearNTear, enabledRows.HasFlag(HoverPiecePanelRow.Stability));
     UpdateHoverPieceEulerRow(wearNTear, enabledRows.HasFlag(HoverPiecePanelRow.Euler));
     UpdateHoverPieceQuaternionRow(wearNTear, enabledRows.HasFlag(HoverPiecePanelRow.Quaternion));
   }
 
-  static void UpdateHoverPieceNameRow(Piece piece, bool isRowEnabled) {
+  static void UpdateHoverPieceNameRow(Piece piece, bool isRowEnabled, bool isPieceNameEnabled) {
     _pieceNameTextLabel.gameObject.SetActive(isRowEnabled);
     _pieceNameTextValue.gameObject.SetActive(isRowEnabled);
 
     if (isRowEnabled) {
       _pieceNameTextValue.text = $"<color=#FFCA28>{Localization.instance.Localize(piece.m_name)}</color>";
+
+      if (isPieceNameEnabled) {
+        _pieceNameTextValue.text += $" (<color=#FFCA28>{Utils.GetPrefabName(piece.gameObject)}</color>)";
+      }
     }
   }
 

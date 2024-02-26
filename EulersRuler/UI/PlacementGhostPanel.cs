@@ -56,17 +56,23 @@ public static class PlacementGhostPanel {
 
     _placementGhostPanel.SetActive(true);
 
-    UpdatePlacementGhostNameRow(piece, enabledRows.HasFlag(PlacementGhostPanelRow.Name));
+    UpdatePlacementGhostNameRow(
+        piece, enabledRows.HasFlag(PlacementGhostPanelRow.Name), enabledRows.HasFlag(PlacementGhostPanelRow.PieceName));
+
     UpdatePlacementGhostEulerRow(placementGhost, enabledRows.HasFlag(PlacementGhostPanelRow.Euler));
     UpdatePlacementGhostQuaternionRow(placementGhost, enabledRows.HasFlag(PlacementGhostPanelRow.Quaternion));
   }
 
-  static void UpdatePlacementGhostNameRow(Piece piece, bool isRowEnabled) {
+  static void UpdatePlacementGhostNameRow(Piece piece, bool isRowEnabled, bool isPieceNameEnabled) {
     _placementGhostNameTextLabel.gameObject.SetActive(isRowEnabled);
     _placementGhostNameTextValue.gameObject.SetActive(isRowEnabled);
 
     if (isRowEnabled) {
       _placementGhostNameTextValue.text = $"<color=#FFCA28>{Localization.instance.Localize(piece.m_name)}</color>";
+
+      if (isPieceNameEnabled) {
+        _placementGhostNameTextValue.text += $" (<color=#FFCA28>{Utils.GetPrefabName(piece.gameObject)}</color>)";
+      }
     }
   }
 

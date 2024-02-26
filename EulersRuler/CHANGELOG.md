@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.7.0
+
+  * Added a new enum `PieceName` to the `hoverPiecePanelEnabledRows` and `placementGhostPanelEnabledRows`.
+  * When enabled, property panels will show the target Piece's `GameObject.name` next to the localized `Piece.m_name`.
+
 ### 1.6.0
 
   * Updated for the `v0.217.38` patch
