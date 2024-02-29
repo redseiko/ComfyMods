@@ -136,6 +136,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scenic", "Scenic\Scenic.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportCard", "ReportCard\ReportCard.csproj", "{1FC9C6DA-195E-43D3-869B-A6526767BCC4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volumetry", "Volumetry\Volumetry.csproj", "{3E0DEB95-F6D6-4EAA-8154-F9C6E58C775C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -370,6 +372,10 @@ Global
 		{1FC9C6DA-195E-43D3-869B-A6526767BCC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FC9C6DA-195E-43D3-869B-A6526767BCC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FC9C6DA-195E-43D3-869B-A6526767BCC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E0DEB95-F6D6-4EAA-8154-F9C6E58C775C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E0DEB95-F6D6-4EAA-8154-F9C6E58C775C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E0DEB95-F6D6-4EAA-8154-F9C6E58C775C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E0DEB95-F6D6-4EAA-8154-F9C6E58C775C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

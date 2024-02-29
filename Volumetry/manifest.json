@@ -1,0 +1,8 @@
+{
+  "name": "Volumetry",
+  "version_number": "0.1.0",
+  "author": "ComfyMods",
+  "description": "Control and customization of audio volumes.",
+  "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Volumetry",
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
+}
