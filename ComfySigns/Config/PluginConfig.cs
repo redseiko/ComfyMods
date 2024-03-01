@@ -1,123 +1,110 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace ComfySigns;
+
 using System.Linq;
 
 using BepInEx.Configuration;
 
 using ComfyLib;
 
-using HarmonyLib;
-
 using TMPro;
 
 using UnityEngine;
 
-namespace ComfySigns {
-  public static class PluginConfig {
-    public static ConfigEntry<bool> IsModEnabled { get; private set; }
-    public static ConfigEntry<bool> UseFallbackFonts { get; private set; }
+public static class PluginConfig {
+  public static ConfigFile CurrentConfig { get; private set; }
 
-    public static void BindConfig(ConfigFile config) {
-      IsModEnabled = config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
+  public static ConfigEntry<bool> IsModEnabled { get; private set; }
+  public static ConfigEntry<bool> UseFallbackFonts { get; private set; }
 
-      UseFallbackFonts =
-          config.BindInOrder("Fonts", "useFallbackFonts", true, "Use fallback fonts to support additional characters.");
+  [ComfyConfig]
+  public static void BindConfig(ConfigFile config) {
+    CurrentConfig = config;
 
-      _fejdStartupBindConfigQueue.Enqueue(() => BindLoggingConfig(config));
-      _fejdStartupBindConfigQueue.Enqueue(() => BindSignConfig(config));
-      _fejdStartupBindConfigQueue.Enqueue(() => BindSignEffectConfig(config));
-    }
+    IsModEnabled = config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
 
-    public static ConfigEntry<bool> SuppressUnicodeNotFoundWarning { get; private set; }
+    UseFallbackFonts =
+        config.BindInOrder("Fonts", "useFallbackFonts", true, "Use fallback fonts to support additional characters.");
+  }
 
-    public static void BindLoggingConfig(ConfigFile config) {
-      SuppressUnicodeNotFoundWarning =
-          config.BindInOrder(
-              "Logging",
-              "suppressUnicodeNotFoundWarning",
-              true,
-              "Hide 'The character with Unicode value ... was not found...' log warnings.");
+  public static ConfigEntry<bool> SuppressUnicodeNotFoundWarning { get; private set; }
 
-      SuppressUnicodeNotFoundWarning.OnSettingChanged(value => TMP_Settings.instance.m_warningsDisabled = value);
-      TMP_Settings.instance.m_warningsDisabled = SuppressUnicodeNotFoundWarning.Value;
-    }
+  [ComfyConfig(typeof(FejdStartup), nameof(FejdStartup.Awake))]
+  public static void BindLoggingConfig(ConfigFile config) {
+    SuppressUnicodeNotFoundWarning =
+        config.BindInOrder(
+            "Logging",
+            "suppressUnicodeNotFoundWarning",
+            true,
+            "Hide 'The character with Unicode value ... was not found...' log warnings.");
 
-    public static ConfigEntry<string> SignDefaultTextFontAsset { get; private set; }
-    public static ExtendedColorConfigEntry SignDefaultTextFontColor { get; private set; }
+    SuppressUnicodeNotFoundWarning.OnSettingChanged(static value => TMP_Settings.instance.m_warningsDisabled = value);
+    TMP_Settings.instance.m_warningsDisabled = SuppressUnicodeNotFoundWarning.Value;
+  }
 
-    public static ConfigEntry<bool> SignTextIgnoreSizeTags { get; private set; }
+  public static ConfigEntry<string> SignDefaultTextFontAsset { get; private set; }
+  public static ExtendedColorConfigEntry SignDefaultTextFontColor { get; private set; }
 
-    public static void BindSignConfig(ConfigFile config) {
-      string[] fontNames =
-          Resources.FindObjectsOfTypeAll<TMP_FontAsset>()
-              .Select(f => f.name)
-              .Concat(Resources.FindObjectsOfTypeAll<Font>().Select(f => f.name))
-              .ToArray();
+  public static ConfigEntry<bool> SignTextIgnoreSizeTags { get; private set; }
 
-      SignDefaultTextFontAsset =
-          config.BindInOrder(
-              "Sign.Text",
-              "defaultTextFontAsset",
-              "Valheim-Norse",
-              "Sign.m_textWidget.fontAsset (TMP) default value.",
-              new AcceptableValueList<string>(fontNames));
+  [ComfyConfig(typeof(FejdStartup), nameof(FejdStartup.Awake))]
+  public static void BindSignConfig(ConfigFile config) {
+    string[] fontNames =
+        Resources.FindObjectsOfTypeAll<TMP_FontAsset>()
+            .Select(f => f.name)
+            .Concat(Resources.FindObjectsOfTypeAll<Font>().Select(f => f.name))
+            .ToArray();
 
-      SignDefaultTextFontAsset.OnSettingChanged(ComfySigns.OnSignConfigChanged);
+    SignDefaultTextFontAsset =
+        config.BindInOrder(
+            "Sign.Text",
+            "defaultTextFontAsset",
+            "Valheim-Norse",
+            "Sign.m_textWidget.fontAsset (TMP) default value.",
+            new AcceptableValueList<string>(fontNames));
 
-      SignDefaultTextFontColor =
-          new(config,
-              "Sign.Text",
-              "defaultTextFontColor",
-              Color.white,
-              "Sign.m_textWidget.color default value.");
+    SignDefaultTextFontAsset.OnSettingChanged(SignUtils.OnSignConfigChanged);
 
-      SignDefaultTextFontColor.ConfigEntry.OnSettingChanged(ComfySigns.OnSignConfigChanged);
+    SignDefaultTextFontColor =
+        new(config,
+            "Sign.Text",
+            "defaultTextFontColor",
+            Color.white,
+            "Sign.m_textWidget.color default value.");
 
-      SignTextIgnoreSizeTags =
-          config.Bind(
-              "Sign.Text.Tags",
-              "ignoreSizeTags",
-              false,
-              "if set, ignore any and all <size> tags in sign text when rendered locally.");
+    SignDefaultTextFontColor.ConfigEntry.OnSettingChanged(SignUtils.OnSignConfigChanged);
 
-      SignTextIgnoreSizeTags.OnSettingChanged(ComfySigns.OnSignTextTagsConfigChanged);
-    }
+    SignTextIgnoreSizeTags =
+        config.Bind(
+            "Sign.Text.Tags",
+            "ignoreSizeTags",
+            false,
+            "if set, ignore any and all <size> tags in sign text when rendered locally.");
 
-    public static ConfigEntry<float> SignEffectMaximumRenderDistance { get; private set; }
-    public static ConfigEntry<bool> SignEffectEnablePartyEffect{ get; private set; }
+    SignTextIgnoreSizeTags.OnSettingChanged(SignUtils.OnSignTextTagsConfigChanged);
+  }
 
-    public static void BindSignEffectConfig(ConfigFile config) {
-      SignEffectMaximumRenderDistance =
-          config.BindInOrder(
-              "SignEffect",
-              "maximumRenderDistance",
-              64f,
-              "Maximum distance that signs can be from player to render sign effects.",
-              new AcceptableValueRange<float>(0f, 128f));
+  public static ConfigEntry<float> SignEffectMaximumRenderDistance { get; private set; }
+  public static ConfigEntry<bool> SignEffectEnablePartyEffect { get; private set; }
 
-      SignEffectMaximumRenderDistance.OnSettingChanged(ComfySigns.OnSignEffectConfigChanged);
+  [ComfyConfig(typeof(FejdStartup), nameof(FejdStartup.Awake))]
+  public static void BindSignEffectConfig(ConfigFile config) {
+    SignEffectMaximumRenderDistance =
+        config.BindInOrder(
+            "SignEffect",
+            "maximumRenderDistance",
+            64f,
+            "Maximum distance that signs can be from player to render sign effects.",
+            new AcceptableValueRange<float>(0f, 128f));
 
-      SignEffectEnablePartyEffect =
-          config.BindInOrder(
-              "SignEffect.Party",
-              "enablePartyEffect",
-              false,
-              "Enables the 'Party' Sign effect for signs using the party tag.");
+    SignEffectMaximumRenderDistance.OnSettingChanged(SignUtils.OnSignEffectConfigChanged);
 
-      SignEffectEnablePartyEffect.OnSettingChanged(ComfySigns.OnSignEffectConfigChanged);
-    }
+    SignEffectEnablePartyEffect =
+        config.BindInOrder(
+            "SignEffect.Party",
+            "enablePartyEffect",
+            false,
+            "Enables the 'Party' Sign effect for signs using the party tag.");
 
-    static readonly Queue<Action> _fejdStartupBindConfigQueue = new();
-
-    [HarmonyPatch(typeof(FejdStartup))]
-    static class FejdStartupPatch {
-      [HarmonyPostfix]
-      [HarmonyPatch(nameof(FejdStartup.Awake))]
-      static void AwakePostfix() {
-        while (_fejdStartupBindConfigQueue.Count > 0) {
-          _fejdStartupBindConfigQueue.Dequeue()?.Invoke();
-        }
-      }
-    }
+    SignEffectEnablePartyEffect.OnSettingChanged(SignUtils.OnSignEffectConfigChanged);
   }
 }
