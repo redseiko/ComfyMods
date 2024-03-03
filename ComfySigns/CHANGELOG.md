@@ -4,6 +4,10 @@
 
   * Bumped up `<LangVersion>` to C# 10.
   * Moved changelog into `CHANGELOG.md`.
+  * Migrated to new prototype `ComfyConfig` framework.
+  * Removed `ExtendedColorConfigEntry` config drawer as functionality is now in `Configula` mod.
+  * Added new config option:
+    * `[Sign.Text.Render] maximumRenderDistance` - Maximum distance that signs can be from player to render sign text.
 
 ### 1.6.0
 

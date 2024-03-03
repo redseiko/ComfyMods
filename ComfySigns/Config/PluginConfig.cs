@@ -42,8 +42,9 @@ public static class PluginConfig {
   }
 
   public static ConfigEntry<string> SignDefaultTextFontAsset { get; private set; }
-  public static ExtendedColorConfigEntry SignDefaultTextFontColor { get; private set; }
+  public static ConfigEntry<Color> SignDefaultTextFontColor { get; private set; }
 
+  public static ConfigEntry<float> SignTextMaximumRenderDistance { get; private set; }
   public static ConfigEntry<bool> SignTextIgnoreSizeTags { get; private set; }
 
   [ComfyConfig(typeof(FejdStartup), nameof(FejdStartup.Awake))]
@@ -65,13 +66,21 @@ public static class PluginConfig {
     SignDefaultTextFontAsset.OnSettingChanged(SignUtils.OnSignConfigChanged);
 
     SignDefaultTextFontColor =
-        new(config,
+        config.BindInOrder(
             "Sign.Text",
             "defaultTextFontColor",
             Color.white,
             "Sign.m_textWidget.color default value.");
 
-    SignDefaultTextFontColor.ConfigEntry.OnSettingChanged(SignUtils.OnSignConfigChanged);
+    SignDefaultTextFontColor.OnSettingChanged(SignUtils.OnSignConfigChanged);
+
+    SignTextMaximumRenderDistance =
+        config.BindInOrder(
+            "Sign.Text.Render",
+            "maximumRenderDistance",
+            192f,
+            "Maximum distance that signs can be from player to render sign text.",
+            new AcceptableValueRange<float>(0f, 192f));
 
     SignTextIgnoreSizeTags =
         config.Bind(

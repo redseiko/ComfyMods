@@ -72,15 +72,13 @@ public static class SignUtils {
   }
 
   public static void ProcessSignEffect(Sign sign) {
-    if (HasSignEffect(sign.m_textWidget, "party") && ShouldRenderSignEffect(sign)) {
+    if (sign.m_textWidget.enabled && HasSignEffect(sign.m_textWidget, "party") && ShouldRenderSignEffect(sign)) {
       if (!sign.m_textWidget.gameObject.TryGetComponent(out VertexColorCycler _)) {
         sign.m_textWidget.gameObject.AddComponent<VertexColorCycler>();
       }
-    } else {
-      if (sign.m_textWidget.gameObject.TryGetComponent(out VertexColorCycler colorCycler)) {
-        UnityEngine.Object.Destroy(colorCycler);
-        sign.m_textWidget.ForceMeshUpdate(ignoreActiveState: true);
-      }
+    } else if (sign.m_textWidget.gameObject.TryGetComponent(out VertexColorCycler colorCycler)) {
+      UnityEngine.Object.Destroy(colorCycler);
+      sign.m_textWidget.ForceMeshUpdate(ignoreActiveState: true);
     }
   }
 
@@ -125,6 +123,13 @@ public static class SignUtils {
         SetupSignFont(sign, fontAsset, fontColor);
       }
     }
+  }
+
+  public static bool ShouldRenderSignText(Sign sign) {
+    return
+        Player.m_localPlayer
+        && Vector3.Distance(sign.transform.position, Player.m_localPlayer.transform.position)
+            <= SignTextMaximumRenderDistance.Value;
   }
 
   public static bool ShouldRenderSignEffect(Sign sign) {

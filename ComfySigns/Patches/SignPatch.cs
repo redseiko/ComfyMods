@@ -36,8 +36,9 @@ static class SignPatch {
 
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Sign.UpdateText))]
-  static void UpdateTextPostfix(ref Sign __instance) {
+  static void UpdateTextPostfix(Sign __instance) {
     if (IsModEnabled.Value) {
+      __instance.m_textWidget.enabled = SignUtils.ShouldRenderSignText(__instance);
       SignUtils.ProcessSignEffect(__instance);
     }
   }

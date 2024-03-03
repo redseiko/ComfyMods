@@ -108,10 +108,6 @@
   <ItemGroup>
     <Compile Include="ComfyLib\Config\ComfyConfig.cs" />
     <Compile Include="ComfySigns.cs" />
-    <Compile Include="ComfyLib\Config\ExtendedColorConfigEntry.cs" />
-    <Compile Include="ComfyLib\Config\GUI\GUIBuilder.cs" />
-    <Compile Include="ComfyLib\Config\GUI\GUIFocus.cs" />
-    <Compile Include="ComfyLib\Config\GUI\GUIHelper.cs" />
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="Core\SignUtils.cs" />
