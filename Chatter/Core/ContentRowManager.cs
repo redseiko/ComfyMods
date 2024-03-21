@@ -8,24 +8,23 @@ using TMPro;
 
 using UnityEngine;
 
-using static Chatter;
 using static PluginConfig;
 
 public static class ContentRowManager {
   public static CircularQueue<ContentRow> MessageRows { get; } = new(capacity: 50, DestroyContentRow);
 
   public static void CreateContentRow(ChatMessage message) {
-    if (!ChatterChatPanel?.Content) {
+    if (!ChatPanelController.ChatPanel?.Content) {
       return;
     }
 
     if (ShouldCreateContentRow(message)) {
-      ContentRow row = new(message, ChatMessageLayout.Value, ChatterChatPanel.Content.transform);
+      ContentRow row = new(message, ChatMessageLayout.Value, ChatPanelController.ChatPanel.Content.transform);
       MessageRows.EnqueueItem(row);
 
       SetupContentRow(row);
 
-      bool isMessageTypeActive = ChatterChatPanel.IsMessageTypeToggleActive(message.MessageType);
+      bool isMessageTypeActive = ChatPanelController.ChatPanel.IsMessageTypeToggleActive(message.MessageType);
       row.Divider.Ref()?.SetActive(isMessageTypeActive && ShowChatPanelMessageDividers.Value);
       row.Row.SetActive(isMessageTypeActive);
     }
@@ -57,7 +56,7 @@ public static class ContentRowManager {
   public static void RebuildContentRows() {
     MessageRows.ClearItems();
 
-    if (ChatterChatPanel?.Panel) {
+    if (ChatPanelController.ChatPanel?.Panel) {
       foreach (ChatMessage message in ChatMessageUtils.MessageHistory) {
         CreateContentRow(message);
       }

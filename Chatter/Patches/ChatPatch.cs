@@ -9,7 +9,6 @@ using HarmonyLib;
 
 using UnityEngine;
 
-using static Chatter;
 using static PluginConfig;
 
 [HarmonyPatch(typeof(Chat))]
@@ -18,9 +17,9 @@ static class ChatPatch {
   [HarmonyPatch(nameof(Chat.Awake))]
   static void AwakePostfix(Chat __instance) {
     ContentRowManager.MessageRows.ClearItems();
-
-    VanillaInputField = __instance.m_input;
-    ToggleChatter(__instance, IsModEnabled.Value);
+    ChatPanelController.
+        VanillaInputField = __instance.m_input;
+    ChatPanelController.ToggleChatter(__instance, IsModEnabled.Value);
     SetupWorldText(__instance);
   }
 
@@ -148,22 +147,22 @@ static class ChatPatch {
   }
 
   static void HideChatPanelDelegate(float hideTimer) {
-    if (IsModEnabled.Value && ChatterChatPanel?.Panel) {
+    if (IsModEnabled.Value && ChatPanelController.ChatPanel?.Panel) {
       bool isVisible = (hideTimer < HideChatPanelDelay.Value || Menu.IsVisible()) && !Hud.IsUserHidden();
-      ChatterChatPanel.ShowOrHideChatPanel(isVisible);
+      ChatPanelController.ChatPanel.ShowOrHideChatPanel(isVisible);
     }
   }
 
   static void EnableChatPanelDelegate() {
     if (IsModEnabled.Value) {
-      ChatterChatPanel?.EnableOrDisableChatPanel(true);
+      ChatPanelController.ChatPanel?.EnableOrDisableChatPanel(true);
     }
   }
 
   static bool DisableChatPanelDelegate(bool active) {
     if (IsModEnabled.Value) {
       if (!Menu.IsVisible()) {
-        ChatterChatPanel?.EnableOrDisableChatPanel(false);
+        ChatPanelController.ChatPanel?.EnableOrDisableChatPanel(false);
       }
 
       return true;
@@ -175,17 +174,17 @@ static class ChatPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Chat.Update))]
   static void UpdatePostfix(ref Chat __instance) {
-    if (!IsModEnabled.Value || !ChatterChatPanel?.Panel) {
+    if (!IsModEnabled.Value || !ChatPanelController.ChatPanel?.Panel) {
       return;
     }
 
-    if (ScrollContentUpShortcut.Value.IsDown() && ChatterChatPanel.Panel.activeInHierarchy) {
-      ChatterChatPanel.OffsetContentVerticalScrollPosition(ScrollContentOffsetInterval.Value);
+    if (ScrollContentUpShortcut.Value.IsDown() && ChatPanelController.ChatPanel.Panel.activeInHierarchy) {
+      ChatPanelController.ChatPanel.OffsetContentVerticalScrollPosition(ScrollContentOffsetInterval.Value);
       __instance.m_hideTimer = 0f;
     }
 
     if (ScrollContentDownShortcut.Value.IsDown()) {
-      ChatterChatPanel.OffsetContentVerticalScrollPosition(-ScrollContentOffsetInterval.Value);
+      ChatPanelController.ChatPanel.OffsetContentVerticalScrollPosition(-ScrollContentOffsetInterval.Value);
       __instance.m_hideTimer = 0f;
     }
   }
@@ -205,15 +204,15 @@ static class ChatPatch {
   [HarmonyPatch(nameof(Chat.SendInput))]
   static void SendInputPostfix() {
     if (IsModEnabled.Value) {
-      ChatterChatPanel?.SetContentVerticalScrollPosition(0f);
+      ChatPanelController.ChatPanel?.SetContentVerticalScrollPosition(0f);
     }
   }
 
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Chat.HasFocus))]
   static void HasFocusPostfix(ref Chat __instance, ref bool __result) {
-    if (IsModEnabled.Value && ChatterChatPanel?.Panel) {
-      __result = ChatterChatPanel.Panel.activeInHierarchy && __instance.m_input.isFocused;
+    if (IsModEnabled.Value && ChatPanelController.ChatPanel?.Panel) {
+      __result = ChatPanelController.ChatPanel.Panel.activeInHierarchy && __instance.m_input.isFocused;
     }
   }
 

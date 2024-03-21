@@ -1,6 +1,6 @@
 ﻿using ComfyLib;
 
-using Fishlabs;
+using GUIFramework;
 
 using TMPro;
 

@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.6.0
+
+  * Fixed for the `v0.217.43` PTB patch.
+
 ### 2.5.0
 
   * Bumped up `<LangVersion>` to C# 10.

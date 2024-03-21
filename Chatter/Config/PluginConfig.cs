@@ -14,8 +14,6 @@ using TMPro;
 
 using UnityEngine;
 
-using static Chatter;
-
 public static class PluginConfig {
   public static ConfigFile Config { get; private set; }
   public static ConfigEntry<bool> IsModEnabled { get; private set; }
@@ -70,7 +68,7 @@ public static class PluginConfig {
 
     IsModEnabled = config.Bind("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
 
-    IsModEnabled.OnSettingChanged(ToggleChatter);
+    IsModEnabled.OnSettingChanged(ChatPanelController.ToggleChatter);
 
     ChatPanelPosition =
         config.BindInOrder(
@@ -79,7 +77,8 @@ public static class PluginConfig {
             new Vector2(-10f, 125f),
             "The Vector2 position of the ChatPanel.");
 
-    ChatPanelPosition.OnSettingChanged(static position => ChatterChatPanel?.PanelRectTransform.SetPosition(position));
+    ChatPanelPosition.OnSettingChanged(
+        position => ChatPanelController.ChatPanel?.PanelRectTransform.SetPosition(position));
 
     ChatPanelSizeDelta =
         config.BindInOrder(
@@ -89,7 +88,7 @@ public static class PluginConfig {
             "The size (width, height) of the ChatPanel.");
 
     ChatPanelSizeDelta.OnSettingChanged(
-        static sizeDelta => ChatterChatPanel?.PanelRectTransform.SetSizeDelta(sizeDelta));
+        sizeDelta => ChatPanelController.ChatPanel?.PanelRectTransform.SetSizeDelta(sizeDelta));
 
     ChatPanelBackgroundColor =
         config.BindInOrder(
@@ -98,7 +97,7 @@ public static class PluginConfig {
             new Color(0f, 0f, 0f, 0.125f),
             "The background color for the ChatPanel.");
 
-    ChatPanelBackgroundColor.OnSettingChanged(static color => ChatterChatPanel?.PanelBackground.SetColor(color));
+    ChatPanelBackgroundColor.OnSettingChanged(color => ChatPanelController.ChatPanel?.PanelBackground.SetColor(color));
 
     // Behaviour
     HideChatPanelDelay =
@@ -166,7 +165,7 @@ public static class PluginConfig {
             "Spacing (px) between `Content.Row` when using 'WithRowHeader` layout.",
             new AcceptableValueRange<float>(-100, 100));
 
-    ChatPanelContentSpacing.OnSettingChanged(static () => ChatterChatPanel?.SetContentSpacing());
+    ChatPanelContentSpacing.OnSettingChanged(() => ChatPanelController.ChatPanel?.SetContentSpacing());
 
     ChatPanelContentRowSpacing =
         config.BindInOrder(
@@ -186,7 +185,7 @@ public static class PluginConfig {
             "Spacing (in pixels) to use between rows when using 'SingleRow' layout.",
             new AcceptableValueRange<float>(-100, 100));
 
-    ChatPanelContentSingleRowSpacing.OnSettingChanged(static () => ChatterChatPanel?.SetContentSpacing());
+    ChatPanelContentSingleRowSpacing.OnSettingChanged(() => ChatPanelController.ChatPanel?.SetContentSpacing());
 
     // Defaults
     ChatPanelDefaultMessageTypeToUse =
@@ -382,7 +381,7 @@ public static class PluginConfig {
             new AcceptableValueList<string>(fontNames));
 
     ChatMessageFontAsset.OnSettingChanged(
-        static fontName => ChatterChatPanel?.SetContentFontAsset(UIResources.GetFontAssetByName(fontName)));
+        fontName => ChatPanelController.ChatPanel?.SetContentFontAsset(UIResources.GetFontAssetByName(fontName)));
 
     ChatMessageFontSize =
         config.BindInOrder(
@@ -392,7 +391,7 @@ public static class PluginConfig {
             "The font size to use for chat messages.",
             new AcceptableValueRange<float>(6f, 64f));
 
-    ChatMessageFontSize.OnSettingChanged(static fontSize => ChatterChatPanel?.SetContentFontSize(fontSize));
+    ChatMessageFontSize.OnSettingChanged(fontSize => ChatPanelController.ChatPanel?.SetContentFontSize(fontSize));
   }
 
   public static void LateBindConfig(Action<ConfigFile> lateBindConfigAction) {

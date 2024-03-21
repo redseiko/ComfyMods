@@ -32,7 +32,7 @@ static class TerminalPatch {
     [HarmonyPostfix]
     static void SayDelegatePostfix(ref object __result) {
       if (IsModEnabled.Value && (bool) __result == false) {
-        Chatter.ChatterChatPanel?.SetChatTextInputPrefix(Talker.Type.Normal);
+        ChatPanelController.ChatPanel?.SetChatTextInputPrefix(Talker.Type.Normal);
         __result = true;
       }
     }
@@ -48,7 +48,7 @@ static class TerminalPatch {
     [HarmonyPostfix]
     static void ShoutDelegatePostfix(ref object __result) {
       if (IsModEnabled.Value && (bool) __result == false) {
-        Chatter.ChatterChatPanel?.SetChatTextInputPrefix(Talker.Type.Shout);
+        ChatPanelController.ChatPanel?.SetChatTextInputPrefix(Talker.Type.Shout);
         __result = true;
       }
     }
@@ -64,7 +64,7 @@ static class TerminalPatch {
     [HarmonyPostfix]
     static void WhisperDelegatePostfix(ref object __result) {
       if (IsModEnabled.Value && (bool) __result == false) {
-        Chatter.ChatterChatPanel?.SetChatTextInputPrefix(Talker.Type.Whisper);
+        ChatPanelController.ChatPanel?.SetChatTextInputPrefix(Talker.Type.Whisper);
         __result = true;
       }
     }
