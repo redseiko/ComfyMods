@@ -1,8 +1,8 @@
 {
-    "name": "Shortcuts",
-    "version_number": "1.5.0",
-    "author": "ComfyMods",
-    "description": "Re-assign more keyboard shortcuts that are hard-coded/unconfigurable in vanilla.",
-    "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Shortcuts",
-    "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
+  "name": "Shortcuts",
+  "version_number": "1.6.0",
+  "author": "ComfyMods",
+  "description": "Re-assign more keyboard shortcuts that are hard-coded/unconfigurable in vanilla.",
+  "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Shortcuts",
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }

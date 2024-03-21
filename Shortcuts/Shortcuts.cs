@@ -1,30 +1,30 @@
-﻿using System.Reflection;
+﻿namespace Shortcuts;
+
+using System.Reflection;
 
 using BepInEx;
 
 using HarmonyLib;
 
-using static Shortcuts.PluginConfig;
+using static PluginConfig;
 
-namespace Shortcuts {
-  [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
-  public sealed class Shortcuts : BaseUnityPlugin {
-    public const string PluginGUID = "redseiko.valheim.shortcuts";
-    public const string PluginName = "Shortcuts";
-    public const string PluginVersion = "1.5.0";
+[BepInPlugin(PluginGUID, PluginName, PluginVersion)]
+public sealed class Shortcuts : BaseUnityPlugin {
+  public const string PluginGUID = "redseiko.valheim.shortcuts";
+  public const string PluginName = "Shortcuts";
+  public const string PluginVersion = "1.6.0";
 
-    Harmony _harmony;
+  Harmony _harmony;
 
-    void Awake() {
-      BindConfig(Config);
+  void Awake() {
+    BindConfig(Config);
 
-      if (IsModEnabled.Value) {
-        _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
-      }
+    if (IsModEnabled.Value) {
+      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
     }
+  }
 
-    void OnDestroy() {
-      _harmony?.UnpatchSelf();
-    }
+  void OnDestroy() {
+    _harmony?.UnpatchSelf();
   }
 }

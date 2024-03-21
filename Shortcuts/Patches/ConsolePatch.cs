@@ -1,26 +1,23 @@
-﻿using System;
+﻿namespace Shortcuts;
+
 using System.Collections.Generic;
 
 using HarmonyLib;
 
-using UnityEngine;
+using static PluginConfig;
 
-using static Shortcuts.PluginConfig;
+[HarmonyPatch(typeof(Console))]
+static class ConsolePatch {
+  [HarmonyTranspiler]
+  [HarmonyPatch(nameof(Console.Update))]
+  static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
+    return new CodeMatcher(instructions)
+        .MatchGetButtonDown("Console")
+        .SetInstructionAndAdvance(Transpilers.EmitDelegate(ToggleConsoleDelgate))
+        .InstructionEnumeration();
+  }
 
-namespace Shortcuts {
-  [HarmonyPatch(typeof(Console))]
-  static class ConsolePatch {
-    [HarmonyTranspiler]
-    [HarmonyPatch(nameof(Console.Update))]
-    static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
-      return new CodeMatcher(instructions)
-          .MatchGetKeyDown(0x11E)
-          .SetInstructionAndAdvance(Transpilers.EmitDelegate<Func<KeyCode, bool, bool>>(ToggleConsoleDelgate))
-          .InstructionEnumeration();
-    }
-
-    static bool ToggleConsoleDelgate(KeyCode key, bool logWarning) {
-      return ToggleConsoleShortcut.IsKeyDown();
-    }
+  static bool ToggleConsoleDelgate(string name) {
+    return ToggleConsoleShortcut.IsKeyDown();
   }
 }
