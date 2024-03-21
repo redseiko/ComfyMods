@@ -1,12 +1,14 @@
-﻿using BepInEx.Configuration;
+﻿namespace Pseudonym;
 
-namespace Pseudonym {
-  public static class PluginConfig {
-    public static ConfigEntry<bool> IsModEnabled { get; private set; }
+using BepInEx.Configuration;
 
-    public static void BindConfig(ConfigFile config) {
-      IsModEnabled =
-          config.Bind("_Global", "isModEnabled", true, "Globally enable or disable this mod (restart required).");
-    }
+using ComfyLib;
+
+public static class PluginConfig {
+  public static ConfigEntry<bool> IsModEnabled { get; private set; }
+
+  public static void BindConfig(ConfigFile config) {
+    IsModEnabled =
+        config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod (restart required).");
   }
 }
