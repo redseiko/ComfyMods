@@ -17,7 +17,7 @@ public sealed class TextInputPanelDragger : MonoBehaviour, IBeginDragHandler, ID
 
   public void OnDrag(PointerEventData eventData) {
     Vector2 difference = eventData.position - _lastMousePosition;
-    _rectTransform.position += new Vector3(difference.x, difference.y, _rectTransform.position.z);
+    _rectTransform.position += new Vector3(difference.x, difference.y, 0f);
     _lastMousePosition = eventData.position;
   }
 

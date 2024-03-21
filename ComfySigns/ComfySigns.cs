@@ -12,7 +12,7 @@ using HarmonyLib;
 public sealed class ComfySigns : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.comfysigns";
   public const string PluginName = "ComfySigns";
-  public const string PluginVersion = "1.7.0";
+  public const string PluginVersion = "1.8.0";
 
   Harmony _harmony;
 
