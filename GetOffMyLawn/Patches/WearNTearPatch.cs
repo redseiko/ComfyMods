@@ -1,41 +1,40 @@
-﻿using HarmonyLib;
+﻿namespace GetOffMyLawn;
 
-using static GetOffMyLawn.GetOffMyLawn;
-using static GetOffMyLawn.PluginConfig;
+using HarmonyLib;
 
-namespace GetOffMyLawn {
-  [HarmonyPatch(typeof(WearNTear))]
-  public class WearNTearPatch {
-    static readonly long PieceHealthDamageThreshold = 100_000L;
+using static PluginConfig;
 
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(WearNTear.ApplyDamage))]
-    static bool ApplyDamagePrefix(ref WearNTear __instance, ref bool __result, ref float damage) {
-      if (!IsModEnabled.Value || !EnablePieceHealthDamageThreshold.Value) {
-        return true;
-      }
+[HarmonyPatch(typeof(WearNTear))]
+static class WearNTearPatch {
+  public static readonly long PieceHealthDamageThreshold = 100_000L;
 
-      float health = __instance.m_nview.m_zdo.GetFloat(HealthHashCode, __instance.m_health);
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(WearNTear.ApplyDamage))]
+  static bool ApplyDamagePrefix(ref WearNTear __instance, ref bool __result, ref float damage) {
+    if (!IsModEnabled.Value || !EnablePieceHealthDamageThreshold.Value) {
+      return true;
+    }
 
-      if (health <= 0f) {
-        __result = false;
-        return false;
-      } else if (health >= PieceHealthDamageThreshold) {
-        __result = false;
-        return false;
-      }
+    float health = __instance.m_nview.m_zdo.GetFloat(ZDOVars.s_health, __instance.m_health);
 
-      health -= damage;
-      __instance.m_nview.m_zdo.Set(HealthHashCode, health);
-
-      if (health <= 0f) {
-        __instance.Destroy();
-      } else {
-        __instance.m_nview.InvokeRPC(ZNetView.Everybody, "WNTHealthChanged", health);
-      }
-
-      __result = true;
+    if (health <= 0f) {
+      __result = false;
+      return false;
+    } else if (health >= PieceHealthDamageThreshold) {
+      __result = false;
       return false;
     }
+
+    health -= damage;
+    __instance.m_nview.m_zdo.Set(ZDOVars.s_health, health);
+
+    if (health <= 0f) {
+      __instance.Destroy();
+    } else {
+      __instance.m_nview.InvokeRPC(ZNetView.Everybody, "WNTHealthChanged", health);
+    }
+
+    __result = true;
+    return false;
   }
 }

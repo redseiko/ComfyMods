@@ -1,33 +1,41 @@
-﻿using System.Reflection;
+﻿namespace GetOffMyLawn;
+
+using System;
+using System.Globalization;
+using System.Reflection;
 
 using BepInEx;
 using BepInEx.Logging;
 
 using HarmonyLib;
 
-using static GetOffMyLawn.PluginConfig;
+using static PluginConfig;
 
-namespace GetOffMyLawn {
-  [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
-  public class GetOffMyLawn : BaseUnityPlugin {
-    public const string PluginGUID = "redseiko.valheim.getoffmylawn";
-    public const string PluginName = "GetOffMyLawn";
-    public const string PluginVersion = "1.6.0";
+[BepInPlugin(PluginGUID, PluginName, PluginVersion)]
+public sealed class GetOffMyLawn : BaseUnityPlugin {
+  public const string PluginGUID = "redseiko.valheim.getoffmylawn";
+  public const string PluginName = "GetOffMyLawn";
+  public const string PluginVersion = "1.7.0";
 
-    public static ManualLogSource PluginLogger { get; private set; }
-    Harmony _harmony;
+  static ManualLogSource _logger;
+  Harmony _harmony;
 
-    void Awake() {
-      PluginLogger = Logger;
-      BindConfig(Config);
+  void Awake() {
+    _logger = Logger;
+    BindConfig(Config);
 
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
-    }
+    _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
+  }
 
-    void OnDestroy() {
-      _harmony?.UnpatchSelf();
-    }
+  void OnDestroy() {
+    _harmony?.UnpatchSelf();
+  }
 
-    public static readonly int HealthHashCode = "health".GetStableHashCode();
+  public static void LogInfo(object obj) {
+    _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
+  }
+
+  public static void LogWarning(object obj) {
+    _logger.LogWarning($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
   }
 }

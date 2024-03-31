@@ -1,16 +1,16 @@
-﻿using HarmonyLib;
+﻿namespace GetOffMyLawn;
 
-using static GetOffMyLawn.PluginConfig;
+using HarmonyLib;
 
-namespace GetOffMyLawn {
-  [HarmonyPatch(typeof(MonsterAI))]
-  static class MonsterAIPatch {
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(MonsterAI.UpdateTarget))]
-    static void UpdateTargetPrefix(ref MonsterAI __instance) {
-      if (IsModEnabled.Value) {
-        __instance.m_attackPlayerObjects = false;
-      }
+using static PluginConfig;
+
+[HarmonyPatch(typeof(MonsterAI))]
+static class MonsterAIPatch {
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(MonsterAI.UpdateTarget))]
+  static void UpdateTargetPrefix(ref MonsterAI __instance) {
+    if (IsModEnabled.Value) {
+      __instance.m_attackPlayerObjects = false;
     }
   }
 }

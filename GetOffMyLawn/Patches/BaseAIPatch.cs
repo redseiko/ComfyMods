@@ -1,44 +1,47 @@
-﻿using HarmonyLib;
+﻿namespace GetOffMyLawn;
+
+using HarmonyLib;
 
 using UnityEngine;
 
-using static GetOffMyLawn.PluginConfig;
+using static PluginConfig;
 
-namespace GetOffMyLawn {
-  [HarmonyPatch(typeof(BaseAI))]
-  static class BaseAIPatch {
-    static readonly string[] TargetRayMask = {
-      "Default", "static_solid", "Default_small", "vehicle",
-    };
+[HarmonyPatch(typeof(BaseAI))]
+static class BaseAIPatch {
+  public static int TargetRayMask = 0;
 
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(BaseAI.Awake))]
-    static void AwakePostfix(ref BaseAI __instance) {
-      if (IsModEnabled.Value) {
-        BaseAI.m_monsterTargetRayMask = LayerMask.GetMask(TargetRayMask);
-      }
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(BaseAI.Awake))]
+  static void AwakePostfix() {
+    if (IsModEnabled.Value && TargetRayMask == 0) {
+      TargetRayMask = LayerMask.GetMask(new string[] { "Default", "static_solid", "Default_small", "vehicle" });
+
+      GetOffMyLawn.LogInfo(
+          $"Modifying BaseAI.m_monsterTargetRayMask from: {BaseAI.m_monsterTargetRayMask} to {TargetRayMask}.");
+
+      BaseAI.m_monsterTargetRayMask = TargetRayMask;
     }
+  }
 
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(BaseAI.FindRandomStaticTarget))]
-    static bool FindRandomStaticTargetPrefix(ref StaticTarget __result) {
-      if (!IsModEnabled.Value) {
-        return true;
-      }
-
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(BaseAI.FindRandomStaticTarget))]
+  static bool FindRandomStaticTargetPrefix(ref StaticTarget __result) {
+    if (IsModEnabled.Value) {
       __result = null;
       return false;
     }
 
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(BaseAI.FindClosestStaticPriorityTarget))]
-    static bool FindClosestStaticPriorityTargetPrefix(ref StaticTarget __result) {
-      if (!IsModEnabled.Value) {
-        return true;
-      }
+    return true;
+  }
 
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(BaseAI.FindClosestStaticPriorityTarget))]
+  static bool FindClosestStaticPriorityTargetPrefix(ref StaticTarget __result) {
+    if (IsModEnabled.Value) {
       __result = null;
       return false;
     }
+
+    return true;
   }
 }

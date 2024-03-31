@@ -48,72 +48,14 @@
 
 ### Recommended Mods to Use
 
-  * [ConfigurationManager](https://valheim.thunderstore.io/package/Azumatt/Official_BepInEx_ConfigurationManager/)﻿.
+  * [ConfigurationManager](https://thunderstore.io/c/valheim/p/Azumatt/Official_BepInEx_ConfigurationManager/)﻿.
     * Press F1 and navigate to the GetOffMyLawn section to change the health value.
-  * [EulersRuler](https://valheim.thunderstore.io/package/ComfyMods/EulersRuler/)﻿
+  * [Configula](https://thunderstore.io/c/valheim/p/ComfyMods/Configula/)
+    * Modifies the ConfigurationManager for more user-friendly input.
+  * [EulersRuler](https://thunderstore.io/c/valheim/p/ComfyMods/EulersRuler/)﻿
     * See piece health, stability and other information while building.
-
-## Installation
-
-### Manual
-
-  * Un-zip `GetOffMyLawn.dll` to your `/Valheim/BepInEx/plugins/` folder.
-
-### Thunderstore (manual)
-
-  * Go to Settings > Import local mod > Select `GetOffMyLawn_v1.6.0.zip`.
-  * Click "Import local mod" on the pop-up for information.
 
 ### Notes
 
   * See source at: [GitHub/ComfyMods](https://github.com/redseiko/ComfyMods/tree/main/GetOffMyLawn).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
-  * Check out our community driven listing site at: [valheimlist.org](https://valheimlist.org/)
-
-## Changelog
-
-### 1.6.0
-
-  * Updated for `v0.216.5` PTB patch.
-
-### 1.5.0
-
-  * Modified TargetPieceHealth config setting to use FloatConfigEntry with custom text-to-float parsing/validation.
-  * Removed the ApplyDamageCount logging since it's no longer needed info.
-  * Minor code clean up.
-
-### 1.4.1
-
-  * Repairs with negative damage should now take effect. Vanilla repair previously overwrote negative repair values.
-
-### 1.4.0
-
-  * Moved all configuration code into new `PluginConfig` class.
-  * Moved all Harmony-patching code into their own patch classes.
-  * **Increased the default `PieceHealth` value to `1E+17`.**
-  * Added `manifest.json` and updated this `README.md`.
-  * Modified the project file to automatically create a versioned Thunderstore package.
-
-### 1.3.1
-
-  * Destroy carts & boats with the Hammer like regular build pieces.
-
-### 1.2.1
-
-  * Actually check the `enablePieceHealthDamageThreshold` config value for the WearNTear.ApplyDamage() patch.
-
-### 1.2.0
-
-  * Added new optimization/configuration option `enablePieceHealthDamageThreshold`.
-    * Pieces with health that exceed 100K **will not** execute `WearNTear.ApplyDamage()` meaning they will not
-      take any piece damage. Subsequently, they **will not** send a `WNTHealthChanged` message to the server.
-    * This reduces the overall send and receive rates for every player on the server as they will no longer receive
-      the message used only for syncing the visual condition of pieces across clients.
-
-### 1.0.1
-
-  * Added null-checks for Piece and Piece.ZNetView references in the ward-interaction method.
-
-### 1.0.0
-
-  * Updated for Hearth & Home.
