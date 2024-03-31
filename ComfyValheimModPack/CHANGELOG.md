@@ -1,5 +1,10 @@
 ## Changelog
 
+### 2.17.0
+
+  * Added `ComfyMods-Configula-1.1.0`.
+  * Updated all dependencies to latest version.
+
 ### 2.16.0
 
   * Updated for the `v0.217.38` patch.
