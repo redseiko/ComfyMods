@@ -13,6 +13,32 @@ using UnityEngine;
 
 [HarmonyPatch(typeof(ZDOMan))]
 static class ZDOManPatch {
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(ZDOMan.Load))]
+  static void LoadPostfix(ZDOMan __instance) {
+    int timeCreatedMissing = 0;
+    int originalUidMissing = 0;
+
+    foreach (ZDO zdo in __instance.m_objectsByID.Values) {
+      if (!zdo.TryGetLong(Atlas.TimeCreatedHashCode, out _)) {
+        ZDOExtraData.Set(zdo.m_uid, Atlas.TimeCreatedHashCode, 0L);
+        ZDOExtraData.Set(zdo.m_uid, Atlas.EpochTimeCreatedHashCode, 0L);
+
+        timeCreatedMissing++;
+      }
+
+      if (!zdo.TryGetZDOID(Atlas.OriginalUidHashPair, out _)) {
+        ZDOExtraData.Set(zdo.m_uid, Atlas.OriginalUidHashPair.Key, 0L);
+        ZDOExtraData.Set(zdo.m_uid, Atlas.OriginalUidHashPair.Value, 0U);
+
+        originalUidMissing++;
+      }
+    }
+
+    PluginLogger.LogInfo($"Found {timeCreatedMissing} ZDOs missing TimeCreated long value, now set to 0.");
+    PluginLogger.LogInfo($"Found {originalUidMissing} ZDOs missing OriginalUid ZDOID value, now set to None.");
+  }
+
   [HarmonyTranspiler]
   [HarmonyPatch(nameof(ZDOMan.Load))]
   static IEnumerable<CodeInstruction> LoadTranspiler(
