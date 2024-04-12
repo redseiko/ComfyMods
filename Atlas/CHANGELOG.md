@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.12.0
+
+  * Fixed for the `v0.217.46` patch.
+  * Removed several patches and simplified time-created stamping.
+
 ### 1.11.0
 
   * Moved changelog into `CHANGELOG.md`.

@@ -23,12 +23,11 @@ static class ZoneSystemPatch {
   [HarmonyPatch(nameof(ZoneSystem.Load))]
   static IEnumerable<CodeInstruction> LoadTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: false,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldloc_3),
             new CodeMatch(OpCodes.Ldarg_0),
-            new CodeMatch(
-                OpCodes.Ldfld, AccessTools.Field(typeof(ZoneSystem), nameof(ZoneSystem.m_locationVersion))))
+            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(ZoneSystem), nameof(ZoneSystem.m_locationVersion))))
         .ThrowIfInvalid("Could not patch ZoneSystem.Load()! (locationVersion)")
         .Advance(offset: 1)
         .InsertAndAdvance(

@@ -60,9 +60,6 @@
     <Reference Include="assembly_guiutils_publicized">
       <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\assembly_guiutils_publicized.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_steamworks_publicized">
-      <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\assembly_steamworks_publicized.dll</HintPath>
-    </Reference>
     <Reference Include="assembly_utils_publicized">
       <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
     </Reference>
@@ -71,6 +68,9 @@
     </Reference>
     <Reference Include="BepInEx">
       <HintPath>$(GamePath)\BepInEx\core\BepInEx.dll</HintPath>
+    </Reference>
+    <Reference Include="com.rlabrecque.steamworks.net_publicized.dll">
+      <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\com.rlabrecque.steamworks.net_publicized.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -98,11 +98,10 @@
     <Compile Include="ComfyLib\Commands\ComfyCommand.cs" />
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\StringExtensions.cs" />
+    <Compile Include="ComfyLib\Extensions\ZDOExtensions.cs" />
     <Compile Include="Core\Commands\SetWorldTimeCommand.cs" />
     <Compile Include="Patches\TerminalPatch.cs" />
-    <Compile Include="Patches\ZDOExtraDataPatch.cs" />
     <Compile Include="Patches\ZDOManPatch.cs" />
-    <Compile Include="Patches\ZNetPatch.cs" />
     <Compile Include="Patches\ZoneSystemPatch.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Logger\PluginLogger.cs" />
