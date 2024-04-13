@@ -13,30 +13,22 @@ using UnityEngine;
 
 [HarmonyPatch(typeof(ZDOMan))]
 static class ZDOManPatch {
+  public static int MissingTimeCreatedCount = 0;
+
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(ZDOMan.FilterZDO))]
+  static void FilterZDOPostfix(ZDO zdo) {
+    if (!zdo.TryGetLong(Atlas.TimeCreatedHashCode, out _)) {
+      ZDOExtraData.Set(zdo.m_uid, Atlas.TimeCreatedHashCode, TimeSpan.TicksPerSecond);
+      ZDOExtraData.Set(zdo.m_uid, Atlas.EpochTimeCreatedHashCode, 1L);
+      MissingTimeCreatedCount++;
+    }
+  }
+
   [HarmonyPostfix]
   [HarmonyPatch(nameof(ZDOMan.Load))]
   static void LoadPostfix(ZDOMan __instance) {
-    int timeCreatedMissing = 0;
-    int originalUidMissing = 0;
-
-    foreach (ZDO zdo in __instance.m_objectsByID.Values) {
-      if (!zdo.TryGetLong(Atlas.TimeCreatedHashCode, out _)) {
-        ZDOExtraData.Set(zdo.m_uid, Atlas.TimeCreatedHashCode, 0L);
-        ZDOExtraData.Set(zdo.m_uid, Atlas.EpochTimeCreatedHashCode, 0L);
-
-        timeCreatedMissing++;
-      }
-
-      if (!zdo.TryGetZDOID(Atlas.OriginalUidHashPair, out _)) {
-        ZDOExtraData.Set(zdo.m_uid, Atlas.OriginalUidHashPair.Key, 0L);
-        ZDOExtraData.Set(zdo.m_uid, Atlas.OriginalUidHashPair.Value, 0U);
-
-        originalUidMissing++;
-      }
-    }
-
-    PluginLogger.LogInfo($"Found {timeCreatedMissing} ZDOs missing TimeCreated long value, now set to 0.");
-    PluginLogger.LogInfo($"Found {originalUidMissing} ZDOs missing OriginalUid ZDOID value, now set to None.");
+    PluginLogger.LogInfo($"Found {MissingTimeCreatedCount} ZDOs missing TimeCreated long value, set value to 1.");
   }
 
   [HarmonyTranspiler]
@@ -115,7 +107,6 @@ static class ZDOManPatch {
   [HarmonyPatch(nameof(ZDOMan.ConnectSpawners))]
   static bool ConnectSpawnersPrefix(ref ZDOMan __instance) {
     PluginLogger.LogInfo($"Starting ConnectSpawners with caching.");
-    Stopwatch stopwatch = Stopwatch.StartNew();
 
     Dictionary<ZDOID, ZDOConnectionHashData> spawned = new();
     Dictionary<int, ZDOID> targetsByHash = new();
@@ -153,8 +144,7 @@ static class ZDOManPatch {
       }
     }
 
-    stopwatch.Stop();
-    PluginLogger.LogInfo($"Connected {connectedCount} spawners ({doneCount} 'done'), time: {stopwatch.Elapsed}");
+    PluginLogger.LogInfo($"Connected {connectedCount} spawners ({doneCount} 'done').");
 
     return false;
   }
