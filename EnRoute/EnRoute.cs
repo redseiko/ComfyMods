@@ -1,9 +1,12 @@
 ﻿namespace EnRoute;
 
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 
 using BepInEx;
+using BepInEx.Logging;
 
 using HarmonyLib;
 
@@ -15,9 +18,12 @@ public sealed class EnRoute : BaseUnityPlugin {
   public const string PluginName = "EnRoute";
   public const string PluginVersion = "1.4.0";
 
+  static ManualLogSource _logger;
   Harmony _harmony;
 
   void Awake() {
+    _logger = Logger;
+
     BindConfig(Config);
     SetupNearbyRPCMethods();
 
@@ -38,10 +44,16 @@ public sealed class EnRoute : BaseUnityPlugin {
 
     NearbyRPCMethodHashCodes.Clear();
     NearbyRPCMethodHashCodes.UnionWith(NearbyRPCMethodByHashCode.Keys);
+
+    LogInfo($"NearbyRPCMethods set to: {string.Join(", ", NearbyRPCMethodByHashCode.Values)}");
   }
 
   public static readonly Dictionary<int, string> NearbyRPCMethodByHashCode = new();
   public static readonly HashSet<int> NearbyRPCMethodHashCodes = new();
 
   public static long NetTimeTicks = 0L;
+
+  public static void LogInfo(object obj) {
+    _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
+  }
 }

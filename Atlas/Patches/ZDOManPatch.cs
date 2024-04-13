@@ -61,7 +61,6 @@ static class ZDOManPatch {
     objectsById[uid] = zdo;
   }
 
-  [HarmonyEmitIL]
   [HarmonyTranspiler]
   [HarmonyPatch(nameof(ZDOMan.RPC_ZDOData))]
   static IEnumerable<CodeInstruction> RPC_ZDODataTranspiler(IEnumerable<CodeInstruction> instructions) {
