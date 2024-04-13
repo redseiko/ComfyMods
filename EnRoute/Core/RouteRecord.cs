@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
+﻿namespace EnRoute;
 
-namespace EnRoute {
-  public class RouteRecord {
-    public readonly ZNetPeer NetPeer;
-    public readonly long UserId;
-    public readonly HashSet<long> NearbyUserIds = new();
-    public Vector2i Sector = Vector2i.zero;
+using System.Collections.Generic;
 
-    public RouteRecord(ZNetPeer netPeer) {
-      NetPeer = netPeer;
-      UserId = netPeer.m_uid;
-    }
+public class RouteRecord {
+  public readonly ZNetPeer NetPeer;
+  public readonly long UserId;
+  public readonly HashSet<long> NearbyUserIds = new();
+  public Vector2i Sector = Vector2i.zero;
+
+  public RouteRecord(ZNetPeer netPeer) {
+    NetPeer = netPeer;
+    UserId = netPeer.m_uid;
   }
-} 
+}

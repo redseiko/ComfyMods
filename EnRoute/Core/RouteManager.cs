@@ -1,86 +1,126 @@
-﻿using System.Collections.Generic;
+﻿namespace EnRoute;
 
-namespace EnRoute {
-  public static class RouteManager {
-    public static readonly Dictionary<long, ZNetPeer> NetPeers = new();
-    public static readonly Dictionary<long, RouteRecord> NetPeerRouting = new();
+using System;
+using System.Collections.Generic;
 
-    public static void OnAddPeer(ZNetPeer netPeer) {
-      NetPeers[netPeer.m_uid] = netPeer;
-      NetPeerRouting[netPeer.m_uid] = new(netPeer);
+public static class RouteManager {
+  public static readonly int RoutedRPCHashCode = "RoutedRPC".GetStableHashCode();
+
+  public static readonly Dictionary<long, ZNetPeer> NetPeers = new();
+  public static readonly Dictionary<long, RouteRecord> NetPeerRouting = new();
+
+  public static void OnAddPeer(ZNetPeer netPeer) {
+    NetPeers[netPeer.m_uid] = netPeer;
+    NetPeerRouting[netPeer.m_uid] = new(netPeer);
+  }
+
+  public static void OnRemovePeer(ZNetPeer netPeer) {
+    NetPeers.Remove(netPeer.m_uid);
+    NetPeerRouting.Remove(netPeer.m_uid);
+  }
+
+  public static void RefreshRouteRecords() {
+    ZoneSystem zoneSystem = ZoneSystem.instance;
+
+    foreach (RouteRecord record in NetPeerRouting.Values) {
+      record.Sector = zoneSystem.GetZone(record.NetPeer.m_refPos);
     }
 
-    public static void OnRemovePeer(ZNetPeer netPeer) {
-      NetPeers.Remove(netPeer.m_uid);
-      NetPeerRouting.Remove(netPeer.m_uid);
+    foreach (RouteRecord record in NetPeerRouting.Values) {
+      RefreshRouteRecord(record);
     }
+  }
 
-    public static void RefreshRouteRecords() {
-      ZoneSystem zoneSystem = ZoneSystem.instance;
+  public static void RefreshRouteRecord(RouteRecord record) {
+    record.NearbyUserIds.Clear();
 
-      foreach (RouteRecord record in NetPeerRouting.Values) {
-        record.Sector = zoneSystem.GetZone(record.NetPeer.m_refPos);
+    foreach (RouteRecord otherRecord in NetPeerRouting.Values) {
+      if (otherRecord.UserId == record.UserId) {
+        continue;
       }
 
-      foreach (RouteRecord record in NetPeerRouting.Values) {
-        RefreshRouteRecord(record);
+      if (record.Sector.IsSectorInRange(otherRecord.Sector, 2)) {
+        record.NearbyUserIds.Add(otherRecord.UserId);
       }
     }
+  }
 
-    public static void RefreshRouteRecord(RouteRecord record) {
-      record.NearbyUserIds.Clear();
+  static readonly ZPackage _package = new();
 
-      foreach (RouteRecord otherRecord in NetPeerRouting.Values) {
-        if (otherRecord.UserId == record.UserId) {
-          continue;
-        }
+  public static void RouteRPC(ZRoutedRpc routedRpc, ZRoutedRpc.RoutedRPCData rpcData) {
+    if (rpcData.m_targetPeerID == ZRoutedRpc.Everybody) {
+      RouteRPCToEverybody(routedRpc, rpcData);
+    } else if (TryGetPeer(rpcData.m_targetPeerID, out ZNetPeer netPeer)) {
+      SerializeRoutedRPCInvoke(rpcData, RoutedRPCHashCode, _package);
+      SendPackage(netPeer.m_rpc, _package);
+    }
+  }
 
-        if (record.Sector.IsSectorInRange(otherRecord.Sector, 2)) {
-          record.NearbyUserIds.Add(otherRecord.UserId);
-        }
-      }
+  static void RouteRPCToEverybody(ZRoutedRpc routedRpc, ZRoutedRpc.RoutedRPCData rpcData) {
+    if (EnRoute.NearbyRPCMethodHashCodes.Contains(rpcData.m_methodHash)
+        && NetPeerRouting.TryGetValue(rpcData.m_senderPeerID, out RouteRecord record)) {
+      RouteToNearby(routedRpc, rpcData, record);
+    } else {
+      RouteToPeers(routedRpc, rpcData, rpcData.m_senderPeerID);
+    }
+  }
+
+  static void RouteToNearby(ZRoutedRpc routedRpc, ZRoutedRpc.RoutedRPCData rpcData, RouteRecord record) {
+    if (record.NearbyUserIds.Count <= 0) {
+      return;
     }
 
-    static readonly ZPackage _package = new();
+    SerializeRoutedRPCInvoke(rpcData, RoutedRPCHashCode, _package);
 
-    public static void RouteRPC(ZRoutedRpc routedRpc, ZRoutedRpc.RoutedRPCData rpcData) {
-      if (rpcData.m_targetPeerID == ZRoutedRpc.Everybody) {
-        RouteRPCToEverybody(routedRpc, rpcData);
-      } else if (TryGetPeer(rpcData.m_targetPeerID, out ZNetPeer netPeer)) {
-        netPeer.m_rpc.Invoke("RoutedRPC", rpcData.SerializeTo(_package));
+    foreach (long peerId in record.NearbyUserIds) {
+      if (TryGetPeer(peerId, out ZNetPeer netPeer)) {
+        SendPackage(netPeer.m_rpc, _package);
       }
     }
+  }
 
-    static void RouteRPCToEverybody(ZRoutedRpc routedRpc, ZRoutedRpc.RoutedRPCData rpcData) {
-      if (EnRoute.NearbyMethodHashCodes.Contains(rpcData.m_methodHash)
-          && NetPeerRouting.TryGetValue(rpcData.m_senderPeerID, out RouteRecord record)) {
-        if (record.NearbyUserIds.Count <= 0) {
-          return;
-        }
+  static void RouteToPeers(ZRoutedRpc routedRpc, ZRoutedRpc.RoutedRPCData rpcData, long senderPeerId) {
+    SerializeRoutedRPCInvoke(rpcData, RoutedRPCHashCode, _package);
 
-        rpcData.SerializeTo(_package);
-
-        foreach (long peerId in record.NearbyUserIds) {
-          if (TryGetPeer(peerId, out ZNetPeer netPeer)) {
-            netPeer.m_rpc.Invoke("RoutedRPC", _package);
-          }
-        }
-      } else {
-        rpcData.SerializeTo(_package);
-
-        foreach (ZNetPeer netPeer in routedRpc.GetNonSenderReadyPeers(rpcData.m_senderPeerID)) {
-          netPeer.m_rpc.Invoke("RoutedRPC", _package);
-        }
+    foreach (ZNetPeer netPeer in routedRpc.m_peers) {
+      if (netPeer.m_uid != senderPeerId && netPeer.IsReady()) {
+        SendPackage(netPeer.m_rpc, _package);
       }
     }
+  }
 
-    static bool TryGetPeer(long targetPeerId, out ZNetPeer netPeer) {
-      if (NetPeers.TryGetValue(targetPeerId, out netPeer) && netPeer != null && netPeer.IsReady()) {
-        return true;
-      }
+  static void SerializeRoutedRPCInvoke(ZRoutedRpc.RoutedRPCData rpcData, int methodhash, ZPackage package) {
+    package.Clear();
 
-      netPeer = default;
-      return false;
+    package.Write(0);
+    package.Write(0);
+
+    int size = package.Size();
+    rpcData.WriteToPackage(package);
+
+    long position = package.m_stream.Position;
+    package.m_stream.Position = 0;
+
+    package.Write(methodhash);
+    package.Write(package.Size() - size);
+
+    package.m_stream.Position = position;
+  }
+
+  static void SendPackage(ZRpc rpc, ZPackage package) {
+    if (rpc.m_socket.IsConnected()) {
+      rpc.m_sentPackages++;
+      rpc.m_sentData += package.Size();
+      rpc.m_socket.Send(package);
     }
+  }
+
+  static bool TryGetPeer(long targetPeerId, out ZNetPeer netPeer) {
+    if (NetPeers.TryGetValue(targetPeerId, out netPeer) && netPeer != null && netPeer.IsReady()) {
+      return true;
+    }
+
+    netPeer = default;
+    return false;
   }
 }
