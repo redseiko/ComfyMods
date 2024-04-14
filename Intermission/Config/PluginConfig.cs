@@ -11,6 +11,10 @@ using UnityEngine;
 public static class PluginConfig {
   public static ConfigEntry<bool> IsModEnabled { get; private set; }
 
+  public static ConfigEntry<bool> SceneLoaderUseLoadingImages { get; private set; }
+  public static ConfigEntry<bool> SceneLoaderShowProgressText { get; private set; }
+  public static ConfigEntry<bool> SceneLoaderCenterProgressIndicator { get; private set; }
+
   public static ConfigEntry<Color> LoadingImageBaseColor { get; private set; }
 
   public static ConfigEntry<bool> LoadingImageUseScaleLerp { get; private set; }
@@ -28,6 +32,27 @@ public static class PluginConfig {
     IsModEnabled =
         config.BindInOrder(
             "_Global", "isModEnabled", true, "Globally enable or disable this mod (restart required).");
+
+    SceneLoaderUseLoadingImages =
+        config.BindInOrder(
+            "SceneLoader",
+            "useLoadingImages",
+            true,
+            "If set, will use custom loading images on the initial SceneLoader scene.");
+
+    SceneLoaderShowProgressText =
+        config.BindInOrder(
+            "SceneLoader",
+            "showProgressText",
+            true,
+            "If set, will show loading progress text on the initial SceneLoader scene.");
+
+    SceneLoaderCenterProgressIndicator =
+        config.BindInOrder(
+            "SceneLoader",
+            "centerProgressIndicator",
+            true,
+            "If set, will center the loading progress indicator (instead of being on the lower-right).");
 
     // LoadingImage.Image
     LoadingImageBaseColor =

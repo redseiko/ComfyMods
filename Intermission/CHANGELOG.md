@@ -1,5 +1,14 @@
 ## Changelog
 
+### 1.5.0
+
+  * Updated for the `v0.217.46` patch.
+  * Added new `SceneLoader` patch for custom loading images and progress indicator.
+  * Added new config options to control new feature:
+    * `SceneLoader.useLoadingImages`
+    * `SceneLoader.showProgressText`
+    * `SceneLoader.centerProgressIndicator`
+
 ### 1.4.0
 
   * Updated for the `v0.217.38` patch.

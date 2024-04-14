@@ -40,11 +40,12 @@ static class HudPatch {
 
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Hud.UpdateBlackScreen))]
-  static void UpdateBlackScreenPostfix(ref Hud __instance) {
+  static void UpdateBlackScreenPostfix(Hud __instance) {
     if (!_loadingScreenState && __instance.m_loadingScreen.gameObject.activeInHierarchy) {
       HudUtils.SetLoadingImage(__instance.m_loadingImage);
       HudUtils.SetLoadingTip(__instance.m_loadingTip);
-      ImageScaleUtils.ScaleLerpLoadingImage(__instance.m_loadingImage);
+
+      __instance.ScaleLerpLoadingImage(__instance.m_loadingImage);
     }
   }
 }

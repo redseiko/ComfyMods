@@ -30,15 +30,15 @@ public static class ImageScaleUtils {
     transform.localScale = endScale;
   }
 
-  public static void ScaleLerpLoadingImage(Image loadingImage) {
+  public static void ScaleLerpLoadingImage(this MonoBehaviour component, Image loadingImage) {
     if (_scaleLerpCoroutine != null) {
-      Hud.m_instance.Ref()?.StopCoroutine(_scaleLerpCoroutine);
+      component.StopCoroutine(_scaleLerpCoroutine);
       _scaleLerpCoroutine = null;
     }
 
     if (LoadingImageUseScaleLerp.Value && loadingImage) {
       _scaleLerpCoroutine =
-          Hud.m_instance.Ref()?.StartCoroutine(
+          component.StartCoroutine(
               ScaleLerp(
                   loadingImage.transform,
                   Vector3.one,

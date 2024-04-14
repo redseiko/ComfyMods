@@ -112,6 +112,7 @@
     <Compile Include="Patches\FejdStartupPatch.cs" />
     <Compile Include="Patches\HudPatch.cs" />
     <Compile Include="Config\PluginConfig.cs" />
+    <Compile Include="Patches\SceneLoaderPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
   </ItemGroup>
