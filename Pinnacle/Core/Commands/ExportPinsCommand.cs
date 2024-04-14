@@ -1,22 +1,32 @@
-﻿using System.Collections.Generic;
+﻿namespace Pinnacle;
+
+using System.Collections.Generic;
 
 using ComfyLib;
 
-using static Pinnacle.PinImportExport;
+public static class ExportPinsCommand {
+  [ComfyCommand]
+  public static IEnumerable<Terminal.ConsoleCommand> Register() {
+    return new Terminal.ConsoleCommand[] {
+      new Terminal.ConsoleCommand(
+        "pinnacle-exportpins-binary",
+        "<filename> [name-filter-regex] -- export pins to a file in binary format.",
+        ExportPinsToBinaryFile),
 
-namespace Pinnacle {
-  public static class ExportPinsCommand {
-    [ComfyCommand]
-    public static IEnumerable<Terminal.ConsoleCommand> Register() {
-      yield return new Terminal.ConsoleCommand(
-          "pinnacle-exportpins-binary",
-          "<filename> [name-filter-regex] -- export pins to a file in binary format.",
-          args => ExportPinsToFile(args, PinFileFormat.Binary));
+      new Terminal.ConsoleCommand(
+        "pinnacle-exportpins-text",
+        "<filename> [name-filter-regex] -- export pins to a file in plain text format.",
+        ExportPinsToTextFile),
+    };
+  }
 
-      yield return new Terminal.ConsoleCommand(
-          "pinnacle-exportpins-text",
-          "<filename> [name-filter-regex] -- export pins to a file in plain text format.",
-          args => ExportPinsToFile(args, PinFileFormat.PlainText));
-    }
+  public static object ExportPinsToBinaryFile(Terminal.ConsoleEventArgs args) {
+    PinImportExport.ExportPinsToFile(args, PinImportExport.PinFileFormat.Binary);
+    return true;
+  }
+
+  public static object ExportPinsToTextFile(Terminal.ConsoleEventArgs args) {
+    PinImportExport.ExportPinsToFile(args, PinImportExport.PinFileFormat.PlainText);
+    return true;
   }
 }

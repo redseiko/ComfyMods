@@ -1,24 +1,24 @@
-﻿using System.Collections.Generic;
+﻿namespace Pinnacle;
 
 using ComfyLib;
 
-namespace Pinnacle {
-  public static class RemoveAllPinsCommand {
-    [ComfyCommand]
-    public static IEnumerable<Terminal.ConsoleCommand> Register() {
-      yield return new Terminal.ConsoleCommand(
-          "pinnacle-removeallpins",
-          "Pinnacle: removes ALL pins.",
-          args => RemoveAllPins(args));
+public static class RemoveAllPinsCommand {
+  [ComfyCommand]
+  public static Terminal.ConsoleCommand Register() {
+    return new Terminal.ConsoleCommand(
+        "pinnacle-remove-all-pins",
+        "(Pinnacle) Removes ALL pins.",
+        Run);
+  }
+
+  public static object Run(Terminal.ConsoleEventArgs args) {
+    if (Minimap.m_instance) {
+      return false;
     }
 
-    static void RemoveAllPins(Terminal.ConsoleEventArgs args) {
-      if (Minimap.m_instance) {
-        return;
-      }
+    int count = Minimap.m_instance.m_pins.RemoveAll(pin => pin.m_save);
+    args.Context.AddString($"Removed {count} pins.");
 
-      int count = Minimap.m_instance.m_pins.RemoveAll(pin => pin.m_save);
-      args.Context.AddString($"Removed {count} pins.");
-    }
+    return true;
   }
 }

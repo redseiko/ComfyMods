@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
+﻿namespace Pinnacle;
 
 using ComfyLib;
 
-using static Pinnacle.PinImportExport;
+using static PinImportExport;
 
-namespace Pinnacle {
-  public static class ImportPinsCommand {
-    [ComfyCommand]
-    public static IEnumerable<Terminal.ConsoleCommand> Register() {
-      yield return new Terminal.ConsoleCommand(
-          "pinnacle-importpins-binary",
-          "<filename> [name-filter-regex] -- import pins in binary format from file.",
-          args => ImportPinsFromBinaryFile(args));
-    }
+public static class ImportPinsCommand {
+  [ComfyCommand]
+  public static Terminal.ConsoleCommand Register() {
+    return new Terminal.ConsoleCommand(
+        "pinnacle-importpins-binary",
+        "<filename> [name-filter-regex] -- import pins in binary format from file.",
+        ImportPinsFromBinaryFile);
   }
 }
