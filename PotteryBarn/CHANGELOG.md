@@ -1,5 +1,12 @@
 ## Changelog
 
+### 1.13.0
+
+  * Fixed for the `v0.217.46` patch.
+  * Bumped up `<LangVersion>` to C# 10.
+  * Updated Jotunn dependency to `v2.19.2`.
+  * Code clean-up and refactoring.
+
 ### 1.12.0
 
   * Moved changelog to CHANGELOG.md
@@ -17,15 +24,15 @@
 
 ### 1.10.1
 
-  * Removed demister ball since it is untargetable and cannot be deconstructed by players
+  * Removed demister ball since it is untargetable and cannot be deconstructed by players.
 
 ### 1.10.0
 
-  * Fixed comfort on Female armor stand
+  * Fixed comfort on Female armor stand.
 
 ### 1.9.0
 
-  * Added demisters to the creatorshop
+  * Added demisters to the CreatorShop.
 
 ### 1.8.0
 

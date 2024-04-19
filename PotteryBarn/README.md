@@ -102,15 +102,13 @@
 
   * The new ArmorStands have 15 different poses available!
   * There is a `Change Pose` switch at the base of the stand.
-  * PotteryBarn fixes the error that prevents changing poses in vanilla.
 
 ### Notes
 
   * See source at: [GitHub/ComfyMods](https://github.com/redseiko/ComfyMods/tree/main/PotteryBarn).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
-  * Check out our community driven listing site at: [valheimlist.org](https://valheimlist.org/)
   * PotteryBarn icon created by [@jenniely](https://twitter.com/jenniely) (jenniely.com)
 
 ### Dependencies
 
-  * [Jotunn-v2.13.0](https://valheim.thunderstore.io/package/ValheimModding/Jotunn/)
+  * [Jotunn-v2.19.2](https://valheim.thunderstore.io/package/ValheimModding/Jotunn/)
