@@ -138,6 +138,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportCard", "ReportCard\Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volumetry", "Volumetry\Volumetry.csproj", "{3E0DEB95-F6D6-4EAA-8154-F9C6E58C775C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unstrippable", "Unstrippable\Unstrippable.csproj", "{08A78E99-5CAD-4CA4-AAFF-3A29533025B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -376,6 +378,10 @@ Global
 		{3E0DEB95-F6D6-4EAA-8154-F9C6E58C775C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E0DEB95-F6D6-4EAA-8154-F9C6E58C775C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E0DEB95-F6D6-4EAA-8154-F9C6E58C775C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08A78E99-5CAD-4CA4-AAFF-3A29533025B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08A78E99-5CAD-4CA4-AAFF-3A29533025B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08A78E99-5CAD-4CA4-AAFF-3A29533025B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08A78E99-5CAD-4CA4-AAFF-3A29533025B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

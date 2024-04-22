@@ -1,0 +1,8 @@
+{
+  "name": "Unstrippable",
+  "version_number": "1.0.0",
+  "author": "ComfyMods",
+  "description": "Disable ZDO data stripping when loading world files.",
+  "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Unstrippable",
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
+}
