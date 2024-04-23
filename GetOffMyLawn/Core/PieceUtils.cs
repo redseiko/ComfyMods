@@ -2,11 +2,17 @@
 
 using System.Collections.Generic;
 
+using ComfyLib;
+
 using UnityEngine;
 
 using static PluginConfig;
 
 public static class PieceUtils {
+  public static bool CanRemovePiece(Piece piece) {
+    return piece.TryGetComponentInChildren(out Ship _) || piece.TryGetComponentInChildren(out Vagon _);
+  }
+
   public static bool RepairPiece(this Player player, ItemDrop.ItemData toolItem, Piece piece) {
     if (!piece || !piece.m_nview || !piece.m_nview.IsValid() || piece.TryGetComponent(out Plant _)) {
       return false;

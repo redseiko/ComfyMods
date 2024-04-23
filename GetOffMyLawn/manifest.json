@@ -1,6 +1,6 @@
 {
   "name": "GetOffMyLawn",
-  "version_number": "1.7.0",
+  "version_number": "1.8.0",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/GetOffMyLawn",
   "author": "ComfyMods",
   "description": "Set the health of player-placed items in the game to a configurable health value.",

@@ -1,9 +1,9 @@
 ﻿namespace GetOffMyLawn;
 
-using HarmonyLib;
-
 using System.Collections.Generic;
 using System.Reflection.Emit;
+
+using HarmonyLib;
 
 using static PluginConfig;
 
@@ -24,22 +24,18 @@ static class PlayerPatch {
   [HarmonyPatch(nameof(Player.RemovePiece))]
   static IEnumerable<CodeInstruction> RemovePieceTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: false,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldfld, typeof(Piece).GetField(nameof(Piece.m_canBeRemoved))))
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(CanBeRemovedDelegate))
+        .ThrowIfInvalid($"Could not patch Player.RemovePiece()! (m_canBeRemoved)")
+        .Advance(offset: 1)
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Ldloc_1),
+            Transpilers.EmitDelegate(CanBeRemovedDelegate))
         .InstructionEnumeration();
   }
 
-  public static readonly HashSet<string> RemovablePieceOverrides =
-      new() {
-        "$tool_cart",
-        "$ship_longship",
-        "$ship_raft",
-        "$ship_karve"
-      };
-
-  static bool CanBeRemovedDelegate(Piece piece) {
-      return piece.m_canBeRemoved || (IsModEnabled.Value && RemovablePieceOverrides.Contains(piece.m_name));
+  static bool CanBeRemovedDelegate(bool canBeRemoved, Piece piece) {
+    return canBeRemoved || (IsModEnabled.Value && PieceUtils.CanRemovePiece(piece));
   }
 }

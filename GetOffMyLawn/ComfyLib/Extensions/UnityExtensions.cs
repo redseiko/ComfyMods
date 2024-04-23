@@ -2,6 +2,14 @@
 
 using System;
 
+public static class ComponentExtensions {
+  public static bool TryGetComponentInChildren<T>(
+      this UnityEngine.Component rootComponent, out T component) where T : UnityEngine.Component {
+    component = rootComponent.GetComponentInChildren<T>(includeInactive: true);
+    return component;
+  }
+}
+
 public static class ObjectExtensions {
   public static T FirstByNameOrThrow<T>(this T[] unityObjects, string name) where T : UnityEngine.Object {
     foreach (T unityObject in unityObjects) {

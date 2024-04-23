@@ -6,7 +6,9 @@ using ComfyLib;
 
 public static class PluginConfig {
   public static ConfigEntry<bool> IsModEnabled { get; private set; }
+
   public static ConfigEntry<float> TargetPieceHealth { get; private set; }
+  public static ConfigEntry<bool> RepairPiecesOnWardActivation { get; private set; }
 
   public static ConfigEntry<bool> EnablePieceHealthDamageThreshold { get; private set; }
 
@@ -22,6 +24,13 @@ public static class PluginConfig {
             "targetPieceHealth",
             100_000_000_000_000_000f,
             "Target value to set piece health to when creating and repairing.");
+
+    RepairPiecesOnWardActivation =
+        config.BindInOrder(
+            "Behaviour",
+            "repairPiecesOnWardActivation",
+            true,
+            "IF set, will repair all Pieces in Ward range when a Ward is activated.");
 
     EnablePieceHealthDamageThreshold =
         config.BindInOrder(

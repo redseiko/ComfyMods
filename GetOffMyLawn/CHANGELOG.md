@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.8.0
+
+  * Fixed for the `v0.218.9` PTB patch.
+  * Added new config option `Behaviour.repairPiecesOnWardActivation` (default: `true`) for use with `PrivateAreaPatch`.
+  * Modified the `Player.RemovePiece()` transpiler patch to check if the Piece has a `Ship` or `Vagon` component.
+
 ### 1.7.0
 
   * Updated for the `v0.217.38` patch.
