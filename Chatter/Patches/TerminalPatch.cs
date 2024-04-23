@@ -26,7 +26,7 @@ static class TerminalPatch {
   static class SayDelegatePatch {
     [HarmonyTargetMethod]
     static MethodBase FindSayDelegateMethod() {
-      return AccessTools.Method(AccessTools.Inner(typeof(Terminal), "<>c"), "<InitTerminal>b__7_120");
+      return AccessTools.Method(AccessTools.Inner(typeof(Terminal), "<>c"), "<InitTerminal>b__7_125");
     }
 
     [HarmonyPostfix]
@@ -42,7 +42,7 @@ static class TerminalPatch {
   static class ShoutDelegatePatch {
     [HarmonyTargetMethod]
     static MethodBase FindShoutDelegateMethod() {
-      return AccessTools.Method(AccessTools.Inner(typeof(Terminal), "<>c"), "<InitTerminal>b__7_121");
+      return AccessTools.Method(AccessTools.Inner(typeof(Terminal), "<>c"), "<InitTerminal>b__7_126");
     }
 
     [HarmonyPostfix]
@@ -58,7 +58,7 @@ static class TerminalPatch {
   static class WhisperDelegatePatch {
     [HarmonyTargetMethod]
     static MethodBase FindWhisperDelegateMethod() {
-      return AccessTools.Method(AccessTools.Inner(typeof(Terminal), "<>c"), "<InitTerminal>b__7_122");
+      return AccessTools.Method(AccessTools.Inner(typeof(Terminal), "<>c"), "<InitTerminal>b__7_127");
     }
 
     [HarmonyPostfix]
