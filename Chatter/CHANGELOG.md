@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.7.0
+
+  * Fixed for the `v0.218.9` PTB patch.
+
 ### 2.6.0
 
   * Fixed for the `v0.217.43` PTB patch.
