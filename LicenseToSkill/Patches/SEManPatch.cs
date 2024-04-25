@@ -1,23 +1,19 @@
-﻿using HarmonyLib;
+﻿namespace LicenseToSkill;
 
-using static LicenseToSkill.LicenseToSkill;
-using static LicenseToSkill.PluginConfig;
+using HarmonyLib;
 
-namespace LicenseToSkill {
-  [HarmonyPatch(typeof(SEMan))]
-  static class SEManPatch {
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(SEMan.AddStatusEffect), typeof(int), typeof(bool), typeof(int), typeof(float))]
-    static void AddStatusEffectPostfix(
-        ref SEMan __instance, ref StatusEffect __result, int nameHash, bool resetTime) {
-      if (!IsModEnabled.Value
-          || !__result
-          || __instance.m_character != Player.m_localPlayer
-          || nameHash != Player.s_statusEffectSoftDeath) {
-        return;
-      }
+using static PluginConfig;
 
-      __result.m_ttl = GetConfigHardDeathCooldown();
+[HarmonyPatch(typeof(SEMan))]
+static class SEManPatch {
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(SEMan.AddStatusEffect), typeof(int), typeof(bool), typeof(int), typeof(float))]
+  static void AddStatusEffectPostfix(SEMan __instance, ref StatusEffect __result) {
+    if (IsModEnabled.Value
+        && Player.m_localPlayer == __instance.m_character
+        && __result
+        && __result.NameHash() == SEMan.s_statusEffectSoftDeath) {
+      __result.m_ttl = StatusEffectUtils.GetConfigHardDeathCooldown();
     }
   }
 }

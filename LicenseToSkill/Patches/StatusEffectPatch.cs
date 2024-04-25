@@ -1,21 +1,19 @@
-﻿using HarmonyLib;
+﻿namespace LicenseToSkill;
 
-using static LicenseToSkill.PluginConfig;
+using HarmonyLib;
 
-namespace LicenseToSkill.Patches {
-  [HarmonyPatch(typeof(StatusEffect))]
-  static class StatusEffectPatch {
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(StatusEffect.GetIconText))]
-    public static bool GetIconTextPrefix(ref StatusEffect __instance, ref string __result) {
-      if (IsModEnabled.Value
-          || __instance.NameHash() != Player.s_statusEffectSoftDeath) {
+using static PluginConfig;
 
-        return true;
-      }
-
-      __result = "";
-      return false;
+[HarmonyPatch(typeof(StatusEffect))]
+static class StatusEffectPatch {
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(StatusEffect.GetIconText))]
+  static bool GetIconTextPrefix(StatusEffect __instance, ref string __result) {
+    if (IsModEnabled.Value || (__instance.NameHash() != SEMan.s_statusEffectSoftDeath)) {
+      return true;
     }
+
+    __result = string.Empty;
+    return false;
   }
 }
