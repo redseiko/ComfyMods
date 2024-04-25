@@ -6,10 +6,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public sealed class PanelDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
-  Vector2 _lastMousePosition;
-
   public RectTransform TargetRectTransform;
   public event EventHandler<Vector3> OnPanelEndDrag;
+
+  Vector2 _lastMousePosition;
 
   public void OnBeginDrag(PointerEventData eventData) {
     _lastMousePosition = eventData.position;
@@ -17,7 +17,7 @@ public sealed class PanelDragger : MonoBehaviour, IBeginDragHandler, IDragHandle
 
   public void OnDrag(PointerEventData eventData) {
     Vector2 difference = eventData.position - _lastMousePosition;
-    TargetRectTransform.position += new Vector3(difference.x, difference.y, TargetRectTransform.position.z);
+    TargetRectTransform.position += new Vector3(difference.x, difference.y, 0);
 
     _lastMousePosition = eventData.position;
   }
