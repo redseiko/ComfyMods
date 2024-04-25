@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.4.0
+
+  * Updated for the `v0.218.11` PTB patch.
+  * Added new feature to default selected button to `Close` when using `Old` menu.
+  * Code clean-up and refactoring.
+
 ### 1.3.0
 
   * Updated for the `v0.217.38` patch.
