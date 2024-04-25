@@ -1,29 +1,24 @@
-﻿using HarmonyLib;
+﻿namespace LicenseToSkill;
 
-using static LicenseToSkill.LicenseToSkill;
-using static LicenseToSkill.PluginConfig;
+using HarmonyLib;
 
-namespace LicenseToSkill {
-  [HarmonyPatch(typeof(Player))]
-  static class PlayerPatch {
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Player.OnSpawned))]
-    static void SetupAwakePostfix(ref Player __instance) {
-      if (!IsModEnabled.Value || __instance != Player.m_localPlayer) {
-        return;
-      }
+using static PluginConfig;
 
-      __instance.m_hardDeathCooldown = GetConfigHardDeathCooldown();
-    }
+[HarmonyPatch(typeof(Player))]
+static class PlayerPatch {
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Player.OnSpawned))]
+  static void OnSpawnedPostfix(ref Player __instance) {
+    if (IsModEnabled.Value && __instance == Player.m_localPlayer) {
+      __instance.m_hardDeathCooldown = StatusEffectUtils.GetConfigHardDeathCooldown();
+    }   
+  }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Player.HardDeath))]
-    static void HardDeathPostfix(ref Player __instance, ref bool __result) {
-      if (!IsModEnabled.Value || __instance != Player.m_localPlayer) {
-        return;
-      }
-
-      __result = __instance.m_timeSinceDeath > GetConfigHardDeathCooldown();
-    }
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Player.HardDeath))]
+  static void HardDeathPostfix(Player __instance, ref bool __result) {
+    if (IsModEnabled.Value && __instance == Player.m_localPlayer) {
+      __result = __instance.m_timeSinceDeath > StatusEffectUtils.GetConfigHardDeathCooldown();
+    }   
   }
 }
