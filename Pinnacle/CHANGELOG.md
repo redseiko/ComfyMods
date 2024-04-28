@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.10.0
+
+  * Removed custom Player pin creation added in `v1.2.1` as vanilla game no longer orphans Player pins.
+
 ### 1.9.0
 
   * Updated for the `v0.217.46` patch.

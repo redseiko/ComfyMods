@@ -3,8 +3,6 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
-using BepInEx.Logging;
-
 using ComfyLib;
 
 using HarmonyLib;
@@ -30,14 +28,6 @@ static class MinimapPatch {
 
       Pinnacle.PinFilterPanel?.UpdatePinIconFilters();
     }
-
-    _playerPins.Clear();
-  }
-
-  [HarmonyPrefix]
-  [HarmonyPatch(nameof(Minimap.OnDestroy))]
-  static void OnDestroyPrefix() {
-    _playerPins.Clear();
   }
 
   [HarmonyTranspiler]
@@ -217,67 +207,6 @@ static class MinimapPatch {
   static void ToggleIconFilterPostfix() {
     if (IsModEnabled.Value) {
       Pinnacle.PinFilterPanel?.UpdatePinIconFilters();
-    }
-  }
-
-  static readonly Dictionary<ZDOID, Minimap.PinData> _playerPins = new();
-  static readonly HashSet<ZDOID> _characterIds = new();
-
-  [HarmonyPrefix]
-  [HarmonyPatch(nameof(Minimap.UpdatePlayerPins))]
-  static bool UpdatePlayerPinsPrefix(ref Minimap __instance, float dt) {
-    if (!IsModEnabled.Value) {
-      return true;
-    }
-
-    __instance.m_tempPlayerInfo.Clear();
-    ZNet.m_instance.GetOtherPublicPlayers(__instance.m_tempPlayerInfo);
-
-    _characterIds.Clear();
-    _characterIds.UnionWith(_playerPins.Keys);
-
-    foreach (ZNet.PlayerInfo playerInfo in __instance.m_tempPlayerInfo) {
-      _characterIds.Remove(playerInfo.m_characterID);
-
-      if (_playerPins.TryGetValue(playerInfo.m_characterID, out Minimap.PinData pin)) {
-        pin.m_pos = Vector3.MoveTowards(pin.m_pos, playerInfo.m_position, 200f * dt);
-      } else {
-        pin = __instance.AddPin(playerInfo.m_position, Minimap.PinType.Player, playerInfo.m_name, false, false, 0L);
-        _playerPins[playerInfo.m_characterID] = pin;
-        __instance.m_playerPins.Add(pin);
-      }
-    }
-
-    if (_characterIds.Count <= 0) {
-      return false;
-    }
-
-    Pinnacle.Log(LogLevel.Info, $"Removing {_characterIds.Count} stale player pins.");
-
-    foreach (ZDOID characterId in _characterIds) {
-      if (_playerPins.TryGetValue(characterId, out Minimap.PinData pin)) {
-        _playerPins.Remove(characterId);
-        __instance.m_playerPins.Remove(pin);
-        __instance.m_pins.Remove(pin);
-
-        DestroyPin(pin);
-      } else {
-        Pinnacle.LogWarning($"WTF: {characterId} did not have a matching entry in _playerPins in same frame.");
-      }
-    }
-
-    return false;
-  }
-
-  static void DestroyPin(Minimap.PinData pin) {
-    if (pin.m_uiElement) {
-      UnityEngine.Object.Destroy(pin.m_uiElement.gameObject);
-      pin.m_uiElement = null;
-    }
-
-    if (pin.m_NamePinData?.PinNameGameObject) {
-      UnityEngine.Object.Destroy(pin.m_NamePinData.PinNameGameObject);
-      pin.m_NamePinData.PinNameGameObject = null;
     }
   }
 }
