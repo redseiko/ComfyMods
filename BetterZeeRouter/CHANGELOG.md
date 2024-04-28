@@ -1,5 +1,12 @@
 ## Changelog
 
+### 1.9.0
+
+  * Fixed for the `v0.218.12` PTB patch.
+  * Converted `RoutedRpcManager` to static singleton and modified its `AddHandler()` interface.
+  * Renamed `WntHealthChangedHandler` to `HealthChangedHandler` as `WearNTear` RPC method names have changed.
+  * Code clean-up and refactoring.
+
 ### 1.8.0
 
  * Updated for the `v0.217.46` patch.

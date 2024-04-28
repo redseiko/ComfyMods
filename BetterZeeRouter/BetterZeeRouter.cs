@@ -10,39 +10,29 @@ using BepInEx.Logging;
 using HarmonyLib;
 
 using static PluginConfig;
-using static RpcHashCodes;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 public sealed class BetterZeeRouter : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.betterzeerouter";
   public const string PluginName = "BetterZeeRouter";
-  public const string PluginVersion = "1.8.0";
+  public const string PluginVersion = "1.9.0";
 
   static ManualLogSource _logger;
-  Harmony _harmony;
-
-  RoutedRpcManager _routedRpcManager;
-  TeleportPlayerHandler _teleportPlayerHandler;
 
   void Awake() {
     _logger = Logger;
     BindConfig(Config);
 
-    _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
+    Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
 
-    _routedRpcManager = RoutedRpcManager.Instance;
-    _routedRpcManager.AddHandler(WntHealthChangedHashCode, new WntHealthChangedHandler());
-    _routedRpcManager.AddHandler(DamageTextHashCode, new DamageTextHandler());
-    _routedRpcManager.AddHandler(RpcSetTargetHashCode, new SetTargetHandler());
-
-    _teleportPlayerHandler = new();
-    _routedRpcManager.AddHandler(RpcTeleportPlayerHashCode, _teleportPlayerHandler);
-    _routedRpcManager.AddHandler(RpcTeleportToHashCode, _teleportPlayerHandler);
+    RegisterStandardHandlers();
   }
 
-  void OnDestroy() {
-    _teleportPlayerHandler?.Dispose();
-    _harmony?.UnpatchSelf();
+  static void RegisterStandardHandlers() {
+    HealthChangedHandler.Register();
+    DamageTextHandler.Register();
+    SetTargetHandler.Register();
+    TeleportPlayerHandler.Register();
   }
 
   public static void LogInfo(string message) {
