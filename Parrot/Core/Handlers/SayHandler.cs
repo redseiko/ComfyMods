@@ -5,10 +5,8 @@ using BetterZeeRouter;
 using static PluginConfig;
 
 public sealed class SayHandler : RpcMethodHandler {
-  public static readonly int SayHashCode = "Say".GetStableHashCode();
-
-  public static void Register(RoutedRpcManager rpcManager) {
-    rpcManager.AddHandler(SayHashCode, _instance);
+  public static void Register() {
+    RoutedRpcManager.AddHandler("Say", _instance);
   }
 
   static readonly SayHandler _instance = new();

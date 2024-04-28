@@ -4,5 +4,8 @@
   "author": "ComfyMods",
   "description": "Polly want a cracker?",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Parrot",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2202",
+    "ComfyMods-BetterZeeRouter-1.9.0"
+  ]
 }

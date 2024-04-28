@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.4.0
+
+  * Updated for the `v0.218.12` PTB patch and `BetterZeeRouter v1.9.0` update.
+
 ### 1.3.0
 
   * Fixed for the `v0.217.46` patch.
