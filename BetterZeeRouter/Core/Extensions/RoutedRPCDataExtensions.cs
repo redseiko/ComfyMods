@@ -1,6 +1,6 @@
 ﻿namespace BetterZeeRouter;
 
-public static class RoutedRpcDataExtensions {
+public static class RoutedRPCDataExtensions {
   public static void DeserializeFrom(this ZRoutedRpc.RoutedRPCData routedRpcData, ref ZPackage sourcePackage) {
     routedRpcData.m_msgID = sourcePackage.ReadLong();
     routedRpcData.m_senderPeerID = sourcePackage.ReadLong();

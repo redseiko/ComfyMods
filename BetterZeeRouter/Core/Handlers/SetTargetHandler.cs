@@ -5,6 +5,16 @@ using UnityEngine;
 using static PluginConfig;
 
 public sealed class SetTargetHandler : RpcMethodHandler {
+  public static void Register() {
+    RoutedRpcManager.AddHandler("RPC_SetTarget", _instance);
+  }
+
+  static readonly SetTargetHandler _instance = new();
+
+  SetTargetHandler() {
+    // ...
+  }
+
   static readonly int _playerHashCode = "Player".GetStableHashCode();
 
   public override bool Process(ZRoutedRpc.RoutedRPCData routedRpcData) {

@@ -3,11 +3,18 @@
 using System;
 using System.IO;
 
-public sealed class TeleportPlayerHandler : RpcMethodHandler, IDisposable {
+public sealed class TeleportPlayerHandler : RpcMethodHandler {
+  public static void Register() {
+    RoutedRpcManager.AddHandler("RPC_TeleportTo", _instance);
+    RoutedRpcManager.AddHandler("RPC_TeleportPlayer", _instance);
+  }
+
+  static readonly TeleportPlayerHandler _instance = new();
+
   readonly SyncedList _teleportPlayerAccess;
   readonly StreamWriter _teleportPlayerLog;
 
-  public TeleportPlayerHandler() {
+  TeleportPlayerHandler() {
     _teleportPlayerAccess =
         new(
             Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), "TeleportPlayerAccess.txt"),
@@ -15,10 +22,7 @@ public sealed class TeleportPlayerHandler : RpcMethodHandler, IDisposable {
 
     _teleportPlayerLog =
         File.AppendText(Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), "TeleportPlayerLog.txt"));
-  }
-
-  public void Dispose() {
-    _teleportPlayerLog.Dispose();
+    _teleportPlayerLog.AutoFlush = true;
   }
 
   public override bool Process(ZRoutedRpc.RoutedRPCData routedRpcData) {
@@ -48,10 +52,8 @@ public sealed class TeleportPlayerHandler : RpcMethodHandler, IDisposable {
   }
 
   static string MethodHashToString(int methodHash) {
-    if (methodHash == RpcHashCodes.RpcTeleportPlayerHashCode) {
-      return "RPC_TeleportPlayer";
-    } else if (methodHash == RpcHashCodes.RpcTeleportToHashCode) {
-      return "RPC_TeleportTo";
+    if (RoutedRpcManager.HashCodeToMethodNameCache.TryGetValue(methodHash, out string methodName)) {
+      return methodName;
     }
 
     return $"RPC_{methodHash}";

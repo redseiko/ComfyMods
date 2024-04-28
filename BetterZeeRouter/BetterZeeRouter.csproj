@@ -82,18 +82,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BetterZeeRouter.cs" />
-    <Compile Include="Core\RpcHashCodes.cs" />
-    <Compile Include="Handlers\DamageTextHandler.cs" />
-    <Compile Include="Handlers\SetTargetHandler.cs" />
-    <Compile Include="Handlers\TeleportPlayerHandler.cs" />
-    <Compile Include="Handlers\WntHealthChangedHandler.cs" />
+    <Compile Include="Core\Handlers\DamageTextHandler.cs" />
+    <Compile Include="Core\Handlers\SetTargetHandler.cs" />
+    <Compile Include="Core\Handlers\TeleportPlayerHandler.cs" />
+    <Compile Include="Core\Handlers\HealthChangedHandler.cs" />
     <Compile Include="Patches\ZRoutedRpcPatch.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Extensions\RoutedRpcDataExtensions.cs" />
-    <Compile Include="Handlers\RpcMethodHandler.cs" />
+    <Compile Include="Core\Extensions\RoutedRPCDataExtensions.cs" />
+    <Compile Include="Core\RpcMethodHandler.cs" />
     <Compile Include="Core\RoutedRpcManager.cs" />
-    <Compile Include="Extensions\ZPackageExtensions.cs" />
+    <Compile Include="Core\Extensions\ZPackageExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CHANGELOG.md" />
@@ -101,6 +100,7 @@
     <None Include="README.md" />
     <None Include="icon.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GetAssemblyVersion" AfterTargets="Build">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
