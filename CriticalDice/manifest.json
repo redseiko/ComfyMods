@@ -1,11 +1,11 @@
 {
   "name": "CriticalDice",
-  "version_number": "1.6.0",
+  "version_number": "1.7.0",
   "author": "ComfyMods",
   "description": "Roll for initiative.",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/master/CriticalDice",
   "dependencies": [
     "denikson-BepInExPack_Valheim-5.4.2202",
-    "ComfyMods-BetterZeeRouter-1.6.0"
+    "ComfyMods-BetterZeeRouter-1.9.0"
   ]
 }
