@@ -21,20 +21,15 @@ public sealed class Parrot : BaseUnityPlugin {
   public const string PluginVersion = "1.3.0";
 
   static ManualLogSource _logger;
-  Harmony _harmony;
 
   void Awake() {
     _logger = Logger;
     BindConfig(Config);
 
-    _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
+    Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
 
-    ChatMessageHandler.Register(RoutedRpcManager.Instance);
-    SayHandler.Register(RoutedRpcManager.Instance);
-  }
-
-  void OnDestroy() {
-    _harmony?.UnpatchSelf();
+    ChatMessageHandler.Register();
+    SayHandler.Register();
   }
 
   public static void LogInfo(string message) {

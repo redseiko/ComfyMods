@@ -7,10 +7,8 @@ using UnityEngine;
 using static PluginConfig;
 
 public sealed class ChatMessageHandler : RpcMethodHandler {
-  public static readonly int ChatMessageHashCode = "ChatMessage".GetStableHashCode();
-
-  public static void Register(RoutedRpcManager rpcManager) {
-    rpcManager.AddHandler(ChatMessageHashCode, _instance);
+  public static void Register() {
+    RoutedRpcManager.AddHandler("ChatMessage", _instance);
   }
 
   static readonly ChatMessageHandler _instance = new();
