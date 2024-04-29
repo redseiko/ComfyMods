@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class GetOffMyLawn : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.getoffmylawn";
   public const string PluginName = "GetOffMyLawn";
-  public const string PluginVersion = "1.8.0";
+  public const string PluginVersion = "1.8.1";
 
   static ManualLogSource _logger;
   Harmony _harmony;

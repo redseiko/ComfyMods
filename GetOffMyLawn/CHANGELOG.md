@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.8.1
+
+  * Fixed a bug where damage was not being applied correctly to non-over-healthed Pieces.
+
 ### 1.8.0
 
   * Fixed for the `v0.218.9` PTB patch.

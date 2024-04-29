@@ -26,6 +26,7 @@ static class WearNTearPatch {
       return false;
     }
 
+    health -= damage;
     wearNTear.m_nview.m_zdo.Set(ZDOVars.s_health, health);
 
     if (health <= 0f) {
