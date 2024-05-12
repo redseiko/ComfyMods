@@ -1,0 +1,8 @@
+{
+  "name": "Contextual",
+  "version_number": "1.0.0",
+  "author": "ComfyMods",
+  "description": "Comfy context-menu library.",
+  "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Contextual",
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
+}
