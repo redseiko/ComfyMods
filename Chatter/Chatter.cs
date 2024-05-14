@@ -12,17 +12,11 @@ using static PluginConfig;
 public sealed class Chatter : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.chatter";
   public const string PluginName = "Chatter";
-  public const string PluginVersion = "2.7.0";
-
-  Harmony _harmony;
+  public const string PluginVersion = "2.8.0";
 
   void Awake() {
     BindConfig(Config);
 
-    _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
-  }
-
-  void OnDestroy() {
-    _harmony?.UnpatchSelf();
+    Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
   }
 }

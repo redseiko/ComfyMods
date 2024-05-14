@@ -32,18 +32,15 @@ static class ChatPatch {
   [HarmonyPatch(nameof(Chat.InputText))]
   static IEnumerable<CodeInstruction> InputTextTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(useEnd: true, new CodeMatch(OpCodes.Ldstr, "say "))
+        .Start()
+        .MatchStartForward(new CodeMatch(OpCodes.Ldstr, "say "))
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate<Func<string, string>>(PrefixSayDelegate))
+        .InsertAndAdvance(Transpilers.EmitDelegate(PrefixSayDelegate))
         .InstructionEnumeration();
   }
 
   static string PrefixSayDelegate(string value) {
-    if (IsModEnabled.Value) {
-      return ChatTextInputUtils.ChatTextInputPrefix;
-    }
-
-    return value;
+    return IsModEnabled.Value ? ChatTextInputUtils.ChatTextInputPrefix : value;
   }
 
   static bool _isChatMessageFiltered = false;
@@ -90,8 +87,8 @@ static class ChatPatch {
   [HarmonyPatch(nameof(Chat.Update))]
   static IEnumerable<CodeInstruction> UpdateTranspiler1(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: false,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldarg_0),
             new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideTimer))),
             new CodeMatch(OpCodes.Ldarg_0),
@@ -103,7 +100,7 @@ static class ChatPatch {
         .InsertAndAdvance(
             new CodeInstruction(OpCodes.Ldarg_0),
             new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideTimer))),
-            Transpilers.EmitDelegate<Action<float>>(HideChatPanelDelegate))
+            Transpilers.EmitDelegate(HideChatPanelDelegate))
         .InstructionEnumeration();
   }
 
@@ -111,8 +108,8 @@ static class ChatPatch {
   [HarmonyPatch(nameof(Chat.Update))]
   static IEnumerable<CodeInstruction> UpdateTranspiler2(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: false,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldarg_0),
             new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_input))),
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(Component), "get_gameObject")),
@@ -122,7 +119,7 @@ static class ChatPatch {
             new CodeMatch(
                 OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_doubleOpenForVirtualKeyboard))))
         .ThrowIfInvalid("Could not patch Chat.Update()! (EnableChatPanel)")
-        .InsertAndAdvance(Transpilers.EmitDelegate<Action>(EnableChatPanelDelegate))
+        .InsertAndAdvance(Transpilers.EmitDelegate(EnableChatPanelDelegate))
         .InstructionEnumeration();
   }
 
@@ -130,8 +127,8 @@ static class ChatPatch {
   [HarmonyPatch(nameof(Chat.Update))]
   static IEnumerable<CodeInstruction> UpdateTranspiler3(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: false,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldarg_0),
             new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_input))),
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(Component), "get_gameObject")),
@@ -142,7 +139,7 @@ static class ChatPatch {
             new CodeMatch(OpCodes.Stfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_focused))))
         .ThrowIfInvalid("Could not patch Chat.Update()! (DisableChatPanel)")
         .Advance(offset: 4)
-        .InsertAndAdvance(Transpilers.EmitDelegate<Func<bool, bool>>(DisableChatPanelDelegate))
+        .InsertAndAdvance(Transpilers.EmitDelegate(DisableChatPanelDelegate))
         .InstructionEnumeration();
   }
 
@@ -173,7 +170,7 @@ static class ChatPatch {
 
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Chat.Update))]
-  static void UpdatePostfix(ref Chat __instance) {
+  static void UpdatePostfix(Chat __instance) {
     if (!IsModEnabled.Value || !ChatPanelController.ChatPanel?.Panel) {
       return;
     }
@@ -193,10 +190,11 @@ static class ChatPatch {
   [HarmonyPatch(nameof(Chat.SendInput))]
   static IEnumerable<CodeInstruction> SendInputTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: false,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))))
-        .InsertAndAdvance(Transpilers.EmitDelegate<Func<bool, bool>>(DisableChatPanelDelegate))
+        .ThrowIfInvalid($"Could not patch Chat.SendInput()! (SetActive)")
+        .InsertAndAdvance(Transpilers.EmitDelegate(DisableChatPanelDelegate))
         .InstructionEnumeration();
   }
 
@@ -230,10 +228,11 @@ static class ChatPatch {
   [HarmonyPatch(nameof(Chat.AddInworldText))]
   static IEnumerable<CodeInstruction> AddInworldTextTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: false,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(string), nameof(string.ToUpper))))
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate<Func<string, string>>(ToUpperDelegate))
+        .ThrowIfInvalid($"Could not patch Chat.AddInworldText()! (ToUpper)")
+        .SetInstructionAndAdvance(Transpilers.EmitDelegate(ToUpperDelegate))
         .InstructionEnumeration();
   }
 
