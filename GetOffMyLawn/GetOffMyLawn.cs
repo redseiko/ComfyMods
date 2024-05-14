@@ -15,20 +15,15 @@ using static PluginConfig;
 public sealed class GetOffMyLawn : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.getoffmylawn";
   public const string PluginName = "GetOffMyLawn";
-  public const string PluginVersion = "1.8.1";
+  public const string PluginVersion = "1.9.0";
 
   static ManualLogSource _logger;
-  Harmony _harmony;
 
   void Awake() {
     _logger = Logger;
     BindConfig(Config);
 
-    _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
-  }
-
-  void OnDestroy() {
-    _harmony?.UnpatchSelf();
+    Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
   }
 
   public static void LogInfo(object obj) {

@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.9.0
+
+  * Updated for the `v0.218.15` Ashlands patch.
+
 ### 1.8.1
 
   * Fixed a bug where damage was not being applied correctly to non-over-healthed Pieces.

@@ -46,7 +46,7 @@ public static class PieceUtils {
     }
   }
 
-  static readonly List<Piece> _pieceCache = new();
+  static readonly List<Piece> _pieceCache = [];
   static int _pieceCount = 0;
 
   public static void RepairPiecesInRadius(Vector3 origin, float radius) {
