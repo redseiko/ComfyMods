@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.4.0
+
+  * Updated for the `v0.218.15` Ashlands patch.
+
 ### 1.3.0
 
   * Fixed for the `v0.218.11` PTB patch.
