@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using BepInEx.Configuration;
 
 public static class ConfigFileExtensions {
-  static readonly Dictionary<string, int> _sectionToSettingOrder = new();
+  static readonly Dictionary<string, int> _sectionToSettingOrder = [];
 
   static int GetSettingOrder(string section) {
     if (!_sectionToSettingOrder.TryGetValue(section, out int order)) {

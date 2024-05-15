@@ -75,19 +75,19 @@ static class ZDOManPatch {
         .Advance(offset: 3)
         .InsertAndAdvance(
             ldLocS12,
-            Transpilers.EmitDelegate(SetTimeCreatedDelegate))
+            Transpilers.EmitDelegate(ZDOManUtils.SetTimeCreatedDelegate))
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(ZDOMan), nameof(ZDOMan.m_deadZDOs))),
+            new CodeMatch(OpCodes.Ldloc_S),
+            new CodeMatch(
+                OpCodes.Callvirt,
+                AccessTools.Method(typeof(Dictionary<ZDOID, long>), nameof(Dictionary<ZDOID, long>.ContainsKey))))
+        .ThrowIfInvalid("Could not patch ZDOMan.RPC_ZDOData()! (ContainsKey)")
+        .Advance(offset: 3)
+        .InsertAndAdvance(
+            ldLocS12,
+            Transpilers.EmitDelegate(ZDOManUtils.DestroyZDOsDelegate))
         .InstructionEnumeration();
-  }
-
-  static void SetTimeCreatedDelegate(ZDO zdo) {
-    if (!zdo.TryGetLong(Atlas.TimeCreatedHashCode, out _)) {
-      zdo.Set(Atlas.TimeCreatedHashCode, (long) (ZNet.m_instance.m_netTime * TimeSpan.TicksPerSecond));
-      zdo.Set(Atlas.EpochTimeCreatedHashCode, DateTimeOffset.Now.ToUnixTimeSeconds());
-    }
-
-    if (!zdo.TryGetZDOID(Atlas.OriginalUidHashPair, out _)) {
-      zdo.Set(Atlas.OriginalUidHashPair, zdo.m_uid);
-    }
   }
 
   [HarmonyPostfix]
@@ -107,8 +107,8 @@ static class ZDOManPatch {
   static bool ConnectSpawnersPrefix(ref ZDOMan __instance) {
     PluginLogger.LogInfo($"Starting ConnectSpawners with caching.");
 
-    Dictionary<ZDOID, ZDOConnectionHashData> spawned = new();
-    Dictionary<int, ZDOID> targetsByHash = new();
+    Dictionary<ZDOID, ZDOConnectionHashData> spawned = [];
+    Dictionary<int, ZDOID> targetsByHash = [];
 
     foreach (KeyValuePair<ZDOID, ZDOConnectionHashData> pair in ZDOExtraData.s_connectionsHashData) {
       if (pair.Value.m_type == ZDOExtraData.ConnectionType.Spawned) {

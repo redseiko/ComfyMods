@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.13.0 (WIP)
+
+  * Created new `ZDOManUtils` and added new `RPC_ZDOData()` transpiler patch to destroy ZDOs matching specific prefabs.
+
 ### 1.12.0
 
   * Fixed for the `v0.217.46` patch.

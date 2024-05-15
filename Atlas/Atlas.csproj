@@ -11,7 +11,7 @@
     <AssemblyName>Atlas</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <LangVersion>10</LangVersion>
+    <LangVersion>12</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -100,6 +100,7 @@
     <Compile Include="ComfyLib\Extensions\StringExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\ZDOExtensions.cs" />
     <Compile Include="Core\Commands\SetWorldTimeCommand.cs" />
+    <Compile Include="Core\ZDOManUtils.cs" />
     <Compile Include="Patches\TerminalPatch.cs" />
     <Compile Include="Patches\ZDOManPatch.cs" />
     <Compile Include="Patches\ZoneSystemPatch.cs" />
@@ -132,7 +133,7 @@
   </Target>
   <Target Name="MakeThunderstorePackage" AfterTargets="GetAssemblyVersion">
     <ItemGroup>
-      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; README.md; CHANGELOG.md; manifest.json; icon.png" />
+      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; CHANGELOG.md; README.md; manifest.json; icon.png" />
     </ItemGroup>
     <MakeDir Directories="$(PackageDir)" />
     <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageDir)" />

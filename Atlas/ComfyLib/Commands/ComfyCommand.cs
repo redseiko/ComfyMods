@@ -11,7 +11,7 @@ public sealed class ComfyCommand : Attribute {
 }
 
 public static class ComfyCommandUtils {
-  static readonly List<Terminal.ConsoleCommand> _commands = new();
+  static readonly List<Terminal.ConsoleCommand> _commands = [];
 
   public static void ToggleCommands(bool toggleOn) {
     DeregisterCommands(_commands);

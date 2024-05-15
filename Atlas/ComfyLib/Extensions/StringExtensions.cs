@@ -6,8 +6,8 @@ using System.Globalization;
 using UnityEngine;
 
 public static class StringExtensions {
-  public static readonly char[] CommaSeparator = { ',' };
-  public static readonly char[] ColonSeparator = { ':' };
+  public static readonly char[] CommaSeparator = [','];
+  public static readonly char[] ColonSeparator = [':'];
 
   public static bool TryParseVector2(this string text, out Vector2 value) {
     string[] parts = text.Split(CommaSeparator, 2, StringSplitOptions.RemoveEmptyEntries);

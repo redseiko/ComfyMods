@@ -15,7 +15,7 @@ public sealed class ComfyArgs {
               + "|no(?<argfalse>\\w[\\w-]*)"
               + "|(?<argtrue>\\w[\\w-]*)))*");
 
-  public static readonly char[] CommaSeparator = { ',' };
+  public static readonly char[] CommaSeparator = [','];
 
   public readonly Terminal.ConsoleEventArgs Args;
   public readonly string Command;
@@ -28,7 +28,7 @@ public sealed class ComfyArgs {
 
   static void ParseArgs(
       Terminal.ConsoleEventArgs args, out string command, out Dictionary<string, string> argsValueByName) {
-    argsValueByName = new();
+    argsValueByName = [];
 
     Match match = CommandRegex.Match(args.FullLine);
     command = match.Groups["command"].Value;
