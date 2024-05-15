@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.5.0 (WIP)
+
+  * Updated for the `v0.218.15` Ashlands patch.
+
 ### 1.4.0
 
   * Updated for the `v0.218.12` PTB patch and `BetterZeeRouter v1.9.0` update.

@@ -86,9 +86,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\PluginConfig.cs" />
+    <Compile Include="Core\ConnectionManager.cs" />
     <Compile Include="Core\Handlers\ChatMessageHandler.cs" />
     <Compile Include="Core\Handlers\SayHandler.cs" />
     <Compile Include="Parrot.cs" />
+    <Compile Include="Patches\ZNetPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +107,7 @@
   <ItemGroup>
     <None Include="icon.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GetAssemblyVersion" AfterTargets="Build">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
