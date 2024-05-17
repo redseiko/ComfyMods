@@ -16,6 +16,9 @@ dotnet_diagnostic.IDE0060.severity = none
 # IDE0090: 'new' expression can be simplified
 dotnet_diagnostic.IDE0090.severity = none
 
+# CS8632: Nullable reference types should only be used within a '#nullable' annotations context
+dotnet_diagnostic.CS8632.severity = none
+
 [*.{cs,vb,json,csproj,md}]
 
 tab_width = 2

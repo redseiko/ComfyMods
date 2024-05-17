@@ -29,9 +29,16 @@ static class ZNetPatch {
 
   static bool OnNewConnectionDelegate(ZNetPeer netPeer) {
     if (ConnectionManager.IsSteamGameServer(netPeer)) {
+      ConnectionManager.RegisterParrotClient(netPeer);
       return true;
     }
 
     return false;
+  }
+
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(ZNet.Disconnect))]
+  static void DisconnectPrefix(ZNetPeer peer) {
+    ConnectionManager.ParrotNetPeers.Remove(peer);
   }
 }
