@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.9.0
+
+  * Updated for the `v0.218.15` Ashlands patch.
+  * Added a new `UIGroupHandler.Update()` transpiler patch to filter out "Activating ... element" log spam.
+  * Rewrote existing `ZSteamSocket.SendQueuedPackages()` transpiler to use branching instead of overwrites.
+
 ### 1.8.0
 
   * Added a `Projectile.FixedUpdate()` transpiler patch to handle zero `m_vel` passed to `Quaternion.LookRotation()`.

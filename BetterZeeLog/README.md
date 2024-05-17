@@ -7,6 +7,7 @@
   * Modifies all `ZLog.Log*` methods to prefix a timestamp and remove the trailing new-line.
   * Removes stack traces for `Info` and `Warning` log types.
   * Removes the 'Failed to send data' logging in `ZSteamSocket` to reduce log spam.
+  * Removes 'Activating default/right-stick element' logging to reduce log spam.
 
 ## Notes
 

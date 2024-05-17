@@ -17,13 +17,11 @@ static class ProjectilePatch {
     if (CheckProjectFixedUpdateZeroVelocity.Value) {
       return new CodeMatcher(instructions)
           .Start()
-          .MatchForward(
-              useEnd: false,
+          .MatchStartForward(
               new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Projectile), nameof(Projectile.m_vel))),
               new CodeMatch(
                   OpCodes.Call,
-                  AccessTools.Method(
-                      typeof(Quaternion), nameof(Quaternion.LookRotation), new System.Type[] { typeof(Vector3) })),
+                  AccessTools.Method(typeof(Quaternion), nameof(Quaternion.LookRotation), [typeof(Vector3)])),
               new CodeMatch(
                   OpCodes.Callvirt, AccessTools.PropertySetter(typeof(Transform), nameof(Transform.rotation))))
           .ThrowIfInvalid($"Could not patch Projectile.FixedUpdate()! (LookRotation)")

@@ -25,16 +25,15 @@ static class ZLogPatch {
   [HarmonyPatch(nameof(ZLog.Log))]
   static IEnumerable<CodeInstruction> LogTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: true,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, ": "))
-        .ThrowIfInvalid("Could not patch ZLog.Log() colon instruction.")
+        .ThrowIfInvalid("Could not patch ZLog.Log()! (colon)")
         .InsertAndAdvance(Transpilers.EmitDelegate(DateTimeNowDelegate))
         .SetOperandAndAdvance(string.Empty)
-        .MatchForward(
-            useEnd: true,
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, "\n"))
-        .ThrowIfInvalid("Could not patch ZLog.Log() newline instruction.")
+        .ThrowIfInvalid("Could not patch ZLog.Log()! (newline)")
         .SetOperandAndAdvance(string.Empty)
         .InstructionEnumeration();
   }
@@ -43,16 +42,15 @@ static class ZLogPatch {
   [HarmonyPatch(nameof(ZLog.LogWarning))]
   static IEnumerable<CodeInstruction> LogWarningTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: true,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, ": "))
-        .ThrowIfInvalid("Could not patch ZLog.LogWarning() colon instruction.")
+        .ThrowIfInvalid("Could not patch ZLog.LogWarning()! (colon)")
         .InsertAndAdvance(Transpilers.EmitDelegate(DateTimeNowDelegate))
         .SetOperandAndAdvance(string.Empty)
-        .MatchForward(
-            useEnd: true,
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, "\n"))
-        .ThrowIfInvalid("Could not patch ZLog.LogWarning() newline instruction.")
+        .ThrowIfInvalid("Could not patch ZLog.LogWarning()! (newline)")
         .SetOperandAndAdvance(string.Empty)
         .InstructionEnumeration();
   }
@@ -61,16 +59,15 @@ static class ZLogPatch {
   [HarmonyPatch(nameof(ZLog.LogError))]
   static IEnumerable<CodeInstruction> LogErrorTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: true,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, ": "))
-        .ThrowIfInvalid("Could not patch ZLog.LogError() colon instruction.")
+        .ThrowIfInvalid("Could not patch ZLog.LogError()! (colon)")
         .InsertAndAdvance(Transpilers.EmitDelegate(DateTimeNowDelegate))
         .SetOperandAndAdvance(string.Empty)
-        .MatchForward(
-            useEnd: true,
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, "\n"))
-        .ThrowIfInvalid("Could not patch ZLog.LogError() newline instruction.")
+        .ThrowIfInvalid("Could not patch ZLog.LogError()! (newline)")
         .SetOperandAndAdvance(string.Empty)
         .InstructionEnumeration();
   }
@@ -79,16 +76,15 @@ static class ZLogPatch {
   [HarmonyPatch(nameof(ZLog.DevLog))]
   static IEnumerable<CodeInstruction> DevLogTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: true,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, ": "))
-        .ThrowIfInvalid("Could not patch ZLog.DevLog() colon instruction.")
+        .ThrowIfInvalid("Could not patch ZLog.DevLog()! (colon)")
         .InsertAndAdvance(Transpilers.EmitDelegate(DateTimeNowDelegate))
         .SetOperandAndAdvance(string.Empty)
-        .MatchForward(
-            useEnd: true,
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, "\n"))
-        .ThrowIfInvalid("Could not patch ZLog.DevLog() newline instruction.")
+        .ThrowIfInvalid("Could not patch ZLog.DevLog()! (newline)")
         .SetOperandAndAdvance(string.Empty)
         .InstructionEnumeration();
   }
