@@ -5,84 +5,9 @@ using ComfyLib;
 using TMPro;
 
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public sealed class ContextMenuController : MonoBehaviour {
-  GameObject _contextMenu;
-  Canvas _contextMenuCanvas;
-
-  void Awake() {
-    _contextMenu = CreateMenu(gameObject.transform);
-    _contextMenuCanvas = _contextMenu.GetComponentInParent<Canvas>();
-
-    CreateMenuItem(_contextMenu.transform, "Test One");
-    CreateMenuItem(_contextMenu.transform, "Not Test Two");
-    CreateMenuItem(_contextMenu.transform, "Three");
-
-    _contextMenu.SetActive(false);
-  }
-
-  void Update() {
-    if (ZInput.GetMouseButtonDown(1)) {
-      if (_contextMenu.activeSelf) {
-        HideMenu();
-      } else {
-        ShowMenu(ZInput.mousePosition / _contextMenuCanvas.scaleFactor);
-      }
-    }
-  }
-
-  public void ShowMenu(Vector2 position) {
-    _contextMenu.GetComponent<RectTransform>().anchoredPosition = position;
-
-    EventSystem.current.SetSelectedGameObject(_contextMenu);
-    _contextMenu.SetActive(true);
-  }
-
-  public void HideMenu() {
-    _contextMenu.SetActive(false);
-  }
-
-  static GameObject CreateMenu(Transform parentTransform) {
-    GameObject menu = new("Menu", typeof(RectTransform));
-    menu.transform.SetParent(parentTransform, worldPositionStays: false);
-
-    menu.AddComponent<Image>()
-        .SetSprite(UIResources.GetSprite("item_background"))
-        .SetType(Image.Type.Sliced)
-        .SetColor(new(0f, 0f, 0f, 0.565f))
-        .SetRaycastTarget(true);
-
-    menu.GetComponent<RectTransform>()
-        .SetAnchorMin(Vector2.zero)
-        .SetAnchorMax(Vector2.zero)
-        .SetPivot(Vector2.up)
-        .SetPosition(Vector2.zero)
-        .SetSizeDelta(new(200f, 0f));
-
-    menu.AddComponent<VerticalLayoutGroup>()
-        .SetChildControl(width: true, height: true)
-        .SetChildForceExpand(width: false, height: false)
-        .SetPadding(left: 5, right: 5, top: 5, bottom: 5)
-        .SetSpacing(5f);
-
-    menu.AddComponent<ContentSizeFitter>()
-        .SetHorizontalFit(ContentSizeFitter.FitMode.Unconstrained)
-        .SetVerticalFit(ContentSizeFitter.FitMode.PreferredSize);
-
-    return menu;
-  }
-
-  static MenuItem CreateMenuItem(Transform parentTransform, string label) {
-    MenuItem menuItem = new(parentTransform);
-    menuItem.SetText(label);
-
-    return menuItem;
-  }
-}
-
-public sealed class MenuItem {
+public sealed class ContextMenuItem {
   public readonly GameObject Container;
   public readonly RectTransform RectTransform;
   public readonly LayoutElement LayoutElement;
@@ -90,7 +15,7 @@ public sealed class MenuItem {
   public readonly TMP_Text Label;
   public readonly Button Button;
 
-  public MenuItem(Transform parentTransform) {
+  public ContextMenuItem(Transform parentTransform) {
     Container = CreateContainer(parentTransform);
     RectTransform = Container.GetComponent<RectTransform>();
     LayoutElement = Container.GetComponent<LayoutElement>();
@@ -107,7 +32,7 @@ public sealed class MenuItem {
   }
 
   static GameObject CreateContainer(Transform parentTransform) {
-    GameObject container = new("MenuItem", typeof(RectTransform));
+    GameObject container = new("ContextMenuItem", typeof(RectTransform));
     container.transform.SetParent(parentTransform, worldPositionStays: true);
 
     container.AddComponent<Image>()
