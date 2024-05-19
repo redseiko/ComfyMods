@@ -1,8 +1,9 @@
 ## Changelog
 
-### 1.13.0 (WIP)
+### 1.13.0
 
   * Created new `ZDOManUtils` and added new `RPC_ZDOData()` transpiler patch to destroy ZDOs matching specific prefabs.
+  * Created new `PrefabUtils` and `CustomFieldUtils` to try modifying ZDOs on world load for specific custom fields.
 
 ### 1.12.0
 

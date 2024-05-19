@@ -100,9 +100,12 @@
     <Compile Include="ComfyLib\Extensions\StringExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\ZDOExtensions.cs" />
     <Compile Include="Core\Commands\SetWorldTimeCommand.cs" />
+    <Compile Include="Core\CustomFieldUtils.cs" />
+    <Compile Include="Core\PrefabUtils.cs" />
     <Compile Include="Core\ZDOManUtils.cs" />
     <Compile Include="Patches\TerminalPatch.cs" />
     <Compile Include="Patches\ZDOManPatch.cs" />
+    <Compile Include="Patches\ZNetScenePatch.cs" />
     <Compile Include="Patches\ZoneSystemPatch.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Logger\PluginLogger.cs" />

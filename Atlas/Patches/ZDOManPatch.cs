@@ -2,10 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection.Emit;
-
-using ComfyLib;
 
 using HarmonyLib;
 
@@ -13,22 +10,10 @@ using UnityEngine;
 
 [HarmonyPatch(typeof(ZDOMan))]
 static class ZDOManPatch {
-  public static int MissingTimeCreatedCount = 0;
-
   [HarmonyPostfix]
   [HarmonyPatch(nameof(ZDOMan.FilterZDO))]
   static void FilterZDOPostfix(ZDO zdo) {
-    if (!zdo.TryGetLong(Atlas.TimeCreatedHashCode, out _)) {
-      ZDOExtraData.Set(zdo.m_uid, Atlas.TimeCreatedHashCode, TimeSpan.TicksPerSecond);
-      ZDOExtraData.Set(zdo.m_uid, Atlas.EpochTimeCreatedHashCode, 1L);
-      MissingTimeCreatedCount++;
-    }
-  }
-
-  [HarmonyPostfix]
-  [HarmonyPatch(nameof(ZDOMan.Load))]
-  static void LoadPostfix(ZDOMan __instance) {
-    PluginLogger.LogInfo($"Found {MissingTimeCreatedCount} ZDOs missing TimeCreated long value, set value to 1.");
+    ZDOManUtils.FilterZDO(zdo);
   }
 
   [HarmonyTranspiler]
@@ -59,6 +44,12 @@ static class ZDOManPatch {
     }
 
     objectsById[uid] = zdo;
+  }
+
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(ZDOMan.WarnAndRemoveBrokenZDOs))]
+  static void WarnAndRemoveBrokenZDOsPostfix() {
+    ZDOManUtils.LogModifiedZDOs();
   }
 
   [HarmonyTranspiler]
