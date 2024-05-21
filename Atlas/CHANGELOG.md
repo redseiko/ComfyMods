@@ -1,5 +1,9 @@
 ## Changelog
 
+## 1.13.1
+
+  * Added `ZDOMan.setCustomFieldsForAshlandsZDOs` config option to gate the specific custom fields logic.
+
 ### 1.13.0
 
   * Created new `ZDOManUtils` and added new `RPC_ZDOData()` transpiler patch to destroy ZDOs matching specific prefabs.

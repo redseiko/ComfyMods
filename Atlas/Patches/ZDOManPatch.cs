@@ -8,12 +8,18 @@ using HarmonyLib;
 
 using UnityEngine;
 
+using static PluginConfig;
+
 [HarmonyPatch(typeof(ZDOMan))]
 static class ZDOManPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(ZDOMan.FilterZDO))]
   static void FilterZDOPostfix(ZDO zdo) {
-    ZDOManUtils.FilterZDO(zdo);
+    ZDOManUtils.SetTimeCreatedFields(zdo);
+    
+    if (SetCustomFieldsForAshlandsZDOs.Value) {
+      ZDOManUtils.SetAshlandsCustomFields(zdo);
+    }
   }
 
   [HarmonyTranspiler]
@@ -49,7 +55,9 @@ static class ZDOManPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(ZDOMan.WarnAndRemoveBrokenZDOs))]
   static void WarnAndRemoveBrokenZDOsPostfix() {
-    ZDOManUtils.LogModifiedZDOs();
+    if (SetCustomFieldsForAshlandsZDOs.Value) {
+      ZDOManUtils.LogModifiedZDOs();
+    }
   }
 
   [HarmonyTranspiler]

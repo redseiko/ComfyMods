@@ -11,7 +11,7 @@ using HarmonyLib;
 public sealed class Atlas : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.atlas";
   public const string PluginName = "Atlas";
-  public const string PluginVersion = "1.13.0";
+  public const string PluginVersion = "1.13.1";
 
   public static readonly int TimeCreatedHashCode = "timeCreated".GetStableHashCode();
   public static readonly int EpochTimeCreatedHashCode = "epochTimeCreated".GetStableHashCode();
