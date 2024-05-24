@@ -11,7 +11,7 @@
     <AssemblyName>Pinnacle</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <LangVersion>10</LangVersion>
+    <LangVersion>12</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -110,6 +110,7 @@
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="Core\CenterMapHelper.cs" />
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
+    <Compile Include="Core\Commands\ExploredStatsCommand.cs" />
     <Compile Include="Core\Commands\ExportPinsCommand.cs" />
     <Compile Include="Core\Commands\ImportPinsCommand.cs" />
     <Compile Include="Core\Commands\RemoveAllPinsCommand.cs" />
