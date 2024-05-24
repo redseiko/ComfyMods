@@ -13,13 +13,13 @@ using UnityEngine.UI;
 public sealed class PlayerStatsPanel {
   public GameObject Panel { get; private set; }
   public TMP_Text Title { get; private set; }
-  public ListView StatsListView { get; private set; }
+  public ListView StatsList { get; private set; }
   public LabelButton CloseButton { get; private set; }
 
   public PlayerStatsPanel(Transform parentTransform) {
     Panel = CreatePanel(parentTransform);
     Title = CreateTitle(Panel.transform);
-    StatsListView = CreateStatsListView(Panel.transform);
+    StatsList = CreateStatsList(Panel.transform);
 
     CloseButton = CreateCloseButton(Panel.transform);
     CloseButton.Button.onClick.AddListener(HidePanel);
@@ -31,7 +31,7 @@ public sealed class PlayerStatsPanel {
     List<KeyValuePair<PlayerStatType, float>> stats = [..profile.m_playerStats.m_stats];
 
     for (int i = StatLabels.Count; i < stats.Count; i++) {
-      TMP_Text label = CreateStatLabel(StatsListView.Content.transform);
+      TMP_Text label = CreateStatLabel(StatsList.Content.transform);
       StatLabels.Add(label);
     }
 
@@ -131,7 +131,7 @@ public sealed class PlayerStatsPanel {
     return title;
   }
 
-  static ListView CreateStatsListView(Transform parentTransform) {
+  static ListView CreateStatsList(Transform parentTransform) {
     ListView listView = new(parentTransform);
     listView.Container.name = "StatsListView";
 

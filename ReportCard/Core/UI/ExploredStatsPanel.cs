@@ -1,24 +1,91 @@
 ﻿namespace ReportCard;
 
+using System;
+using System.Collections.Generic;
+
 using ComfyLib;
 
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public sealed class ExploredStatsPanel {
   public GameObject Panel { get; }
   public RectTransform RectTransform { get; }
   public TextMeshProUGUI Title { get; }
-  public ListView StatsListView { get; }
+  public ListView StatsList { get; }
   public LabelButton CloseButton { get; }
+  public List<TextMeshProUGUI> StatLabels { get; }
 
   public ExploredStatsPanel(Transform parentTransform) {
     Panel = CreatePanel(parentTransform);
     RectTransform = Panel.GetComponent<RectTransform>();
     Title = CreateTitle(RectTransform);
-    StatsListView = CreateStatsListView(RectTransform);
+    StatsList = CreateStatsList(RectTransform);
     CloseButton = CreateCloseButton(RectTransform);
+    StatLabels = [];
+  }
+
+  public TextMeshProUGUI AddStatLabel() {
+    TextMeshProUGUI label = CreateStatLabel(StatsList.Content.transform);
+    StatLabels.Add(label);
+
+    return label;
+  }
+
+  public void ResetStatsList() {
+    foreach (TextMeshProUGUI label in StatLabels) {
+      UnityEngine.Object.Destroy(label.gameObject);
+    }
+
+    StatLabels.Clear();
+  }
+
+  public void UpdateStatsList(ExploredStats exploredStats) {
+    StatLabels.Add(CreateExploredStatLabel("Explored", exploredStats.ExploredCount(), exploredStats.TotalCount()));
+
+    foreach (Heightmap.Biome biome in ExploredStats.GetHeightmapBiomes()) {
+      int explored = exploredStats.ExploredCount(biome);
+      int total = exploredStats.TotalCount(biome);
+
+      if (total > 0) {
+        StatLabels.Add(CreateExploredStatLabel(Enum.GetName(typeof(Heightmap.Biome), biome), explored, total));
+      }
+    }
+  }
+
+  TextMeshProUGUI CreateExploredStatLabel(string stat, int explored, int total) {
+    float percent = ((explored * 1f) / (total * 1f)) * 100f;
+    TextMeshProUGUI label = CreateStatLabel(StatsList.Content.transform);
+
+    label.text =
+        $"<align=left><color=#FFD600>{stat}</color> <size=-2>({explored}/{total})</size><line-height=0>\n"
+            + $"<align=right>{percent:F2}%<line-height=1em>";
+
+    return label;
+  }
+
+  static TextMeshProUGUI CreateStatLabel(Transform parentTransform) {
+    TextMeshProUGUI label = UIBuilder.CreateTMPLabel(parentTransform);
+    label.name = "StatLabel";
+
+    label.rectTransform
+        .SetAnchorMin(Vector2.zero)
+        .SetAnchorMax(Vector2.right)
+        .SetPivot(Vector2.zero)
+        .SetPosition(Vector2.zero)
+        .SetSizeDelta(Vector2.zero);
+
+    label
+        .SetFontSize(18f)
+        .SetAlignment(TextAlignmentOptions.Left);
+
+    label.gameObject.AddComponent<LayoutElement>()
+        .SetFlexible(width: 1f)
+        .SetPreferred(height: 30f);
+
+    return label;
   }
 
   static GameObject CreatePanel(Transform parentTransform) {
@@ -46,7 +113,7 @@ public sealed class ExploredStatsPanel {
     return title;
   }
 
-  static ListView CreateStatsListView(Transform parentTransform) {
+  static ListView CreateStatsList(Transform parentTransform) {
     ListView listView = new(parentTransform);
     listView.Container.name = "StatsListView";
 

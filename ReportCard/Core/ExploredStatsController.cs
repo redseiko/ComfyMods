@@ -2,10 +2,13 @@
 
 using ComfyLib;
 
+using TMPro;
+
 using UnityEngine;
 
 public static class ExploredStatsController {
   public static ExploredStatsPanel StatsPanel { get; private set; }
+  static readonly ExploredStats _exploredStats = new();
 
   public static void CreateStatsPanel(Minimap minimap) {
     StatsPanel = new(minimap.m_largeRoot.transform);
@@ -28,13 +31,34 @@ public static class ExploredStatsController {
 
   public static void ToggleStatsPanel() {
     if (IsStatsPanelValid()) {
-      StatsPanel.Panel.SetActive(!StatsPanel.Panel.activeSelf);
+      if (StatsPanel.Panel.activeSelf) {
+        HideStatsPanel();
+      } else {
+        ShowStatsPanel();
+      }
+    }
+  }
+
+  public static void ShowStatsPanel() {
+    if (IsStatsPanelValid()) {
+      StatsPanel.Panel.SetActive(true);
+      StatsPanel.ResetStatsList();
+
+      TextMeshProUGUI label = StatsPanel.AddStatLabel();
+      _exploredStats.Generate(Minimap.m_instance, label, UpdateStatsPanel);
     }
   }
 
   public static void HideStatsPanel() {
     if (IsStatsPanelValid()) {
       StatsPanel.Panel.SetActive(false);
+    }
+  }
+
+  static void UpdateStatsPanel(ExploredStats explorerStats) {
+    if (IsStatsPanelValid()) {
+      StatsPanel.ResetStatsList();
+      StatsPanel.UpdateStatsList(explorerStats);
     }
   }
 
