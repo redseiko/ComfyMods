@@ -14,12 +14,12 @@ public sealed class PlayerStatsPanel {
   public GameObject Panel { get; private set; }
   public TMP_Text Title { get; private set; }
   public ListView StatsListView { get; private set; }
-  public ButtonCell CloseButton { get; private set; }
+  public LabelButton CloseButton { get; private set; }
 
   public PlayerStatsPanel(Transform parentTransform) {
     Panel = CreatePanel(parentTransform);
     Title = CreateTitle(Panel.transform);
-    StatsListView = CreateStatsList(Panel.transform);
+    StatsListView = CreateStatsListView(Panel.transform);
 
     CloseButton = CreateCloseButton(Panel.transform);
     CloseButton.Button.onClick.AddListener(HidePanel);
@@ -131,27 +131,27 @@ public sealed class PlayerStatsPanel {
     return title;
   }
 
-  static ListView CreateStatsList(Transform parentTransform) {
-    ListView playerList = new(parentTransform);
-    playerList.View.name = "StatsList";
+  static ListView CreateStatsListView(Transform parentTransform) {
+    ListView listView = new(parentTransform);
+    listView.Container.name = "StatsListView";
 
-    playerList.View.GetComponent<RectTransform>()
+    listView.Container.GetComponent<RectTransform>()
         .SetAnchorMin(Vector2.zero)
         .SetAnchorMax(Vector2.one)
         .SetPivot(Vector2.up)
         .SetPosition(new(20f, -60f))
         .SetSizeDelta(new(-40f, -135f));
 
-    playerList.ContentLayoutGroup.SetPadding(left: 10, right: 20);
+    listView.ContentLayoutGroup.SetPadding(left: 10, right: 20);
 
-    return playerList;
+    return listView;
   }
 
-  static ButtonCell CreateCloseButton(Transform parentTransform) {
-    ButtonCell closeButton = new(parentTransform);
+  static LabelButton CreateCloseButton(Transform parentTransform) {
+    LabelButton closeButton = new(parentTransform);
     closeButton.Button.name = "CloseButton";
 
-    closeButton.Cell.GetComponent<RectTransform>()
+    closeButton.Container.GetComponent<RectTransform>()
         .SetAnchorMin(Vector2.right)
         .SetAnchorMax(Vector2.right)
         .SetPivot(Vector2.right)

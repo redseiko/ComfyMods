@@ -62,13 +62,18 @@ public static class PlayerStatsController {
 
   public static void UpdateStatsPanel(PlayerProfile profile) {
     if (StatsPanel?.Panel) {
-      StatsPanel.UpdateStatsList(profile);
+      if (profile != null && profile.m_playerStats != null) {
+        StatsPanel.ShowPanel();
+        StatsPanel.UpdateStatsList(profile);
+      } else {
+        StatsPanel.HidePanel();
+      }
     }
   }
 
-  static ButtonCell CreateStatsButton(Transform parentTransform) {
-    ButtonCell statsButton = new(parentTransform);
-    statsButton.Cell.name = "StatsButton";
+  static LabelButton CreateStatsButton(Transform parentTransform) {
+    LabelButton statsButton = new(parentTransform);
+    statsButton.Container.name = "StatsButton";
 
     statsButton.Label
         .SetFontSize(20f)
@@ -78,9 +83,9 @@ public static class PlayerStatsController {
   }
 
   public static void CreateStatsButton(FejdStartup fejdStartup) {
-    ButtonCell statsButton = CreateStatsButton(fejdStartup.m_characterSelectScreen.transform);
+    LabelButton statsButton = CreateStatsButton(fejdStartup.m_characterSelectScreen.transform);
 
-    statsButton.Cell.GetComponent<RectTransform>()
+    statsButton.Container.GetComponent<RectTransform>()
         .SetAnchorMin(Vector2.right)
         .SetAnchorMax(Vector2.right)
         .SetPivot(Vector2.right)
@@ -91,10 +96,10 @@ public static class PlayerStatsController {
   }
 
   public static void CreateStatsButton(SkillsDialog skillsDialog) {
-    ButtonCell statsButton = CreateStatsButton(skillsDialog.transform.Find("SkillsFrame"));
+    LabelButton statsButton = CreateStatsButton(skillsDialog.transform.Find("SkillsFrame"));
     statsButton.Button.name = "StatsButton";
 
-    statsButton.Cell.GetComponent<RectTransform>()
+    statsButton.Container.GetComponent<RectTransform>()
         .SetAnchorMin(Vector2.one)
         .SetAnchorMax(Vector2.one)
         .SetPivot(Vector2.one)

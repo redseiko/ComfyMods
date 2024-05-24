@@ -108,16 +108,20 @@
   <ItemGroup>
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
-    <Compile Include="ComfyLib\UI\Builder\ButtonCell.cs" />
+    <Compile Include="ComfyLib\UI\Builder\LabelButton.cs" />
     <Compile Include="ComfyLib\UI\Builder\ListView.cs" />
     <Compile Include="ComfyLib\UI\Core\UIBuilder.cs" />
     <Compile Include="ComfyLib\UI\Core\UIExtensions.cs" />
     <Compile Include="ComfyLib\UI\Core\UIResources.cs" />
     <Compile Include="Config\PluginConfig.cs" />
+    <Compile Include="Core\ExploredStats.cs" />
+    <Compile Include="Core\ExploredStatsController.cs" />
     <Compile Include="Core\PlayerStatsController.cs" />
+    <Compile Include="Core\UI\ExploredStatsPanel.cs" />
     <Compile Include="Core\UI\PlayerStatsPanel.cs" />
     <Compile Include="Patches\FejdStartupPatch.cs" />
     <Compile Include="Patches\InventoryGuiPatch.cs" />
+    <Compile Include="Patches\MinimapPatch.cs" />
     <Compile Include="Patches\SkillsDialogPatch.cs" />
     <Compile Include="ReportCard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

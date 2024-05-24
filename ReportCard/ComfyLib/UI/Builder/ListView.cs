@@ -4,38 +4,38 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public sealed class ListView {
-  public GameObject View { get; private set; }
+  public GameObject Container { get; private set; }
   public Image Background { get; private set; }
   public GameObject Viewport { get; private set; }
   public GameObject Content { get; private set; }
-  public HorizontalOrVerticalLayoutGroup ContentLayoutGroup { get; private set; }
+  public VerticalLayoutGroup ContentLayoutGroup { get; private set; }
   public ScrollRect ScrollRect { get; private set; }
 
   public ListView(Transform parentTransform) {
-    View = CreateView(parentTransform);
-    Background = View.GetComponent<Image>();
-    Viewport = CreateChildViewport(View.transform);
-    Content = CreateChildContent(Viewport.transform);
-    ContentLayoutGroup = Content.GetComponent<HorizontalOrVerticalLayoutGroup>();
-    ScrollRect = CreateChildScrollRect(View, Viewport, Content);
+    Container = CreateContainer(parentTransform);
+    Background = Container.GetComponent<Image>();
+    Viewport = CreateViewport(Container.transform);
+    Content = CreateContent(Viewport.transform);
+    ContentLayoutGroup = Content.GetComponent<VerticalLayoutGroup>();
+    ScrollRect = CreateScrollRect(Container, Viewport, Content);
   }
 
-  static GameObject CreateView(Transform parentTransform) {
-    GameObject view = new("ListView", typeof(RectTransform));
-    view.transform.SetParent(parentTransform, worldPositionStays: false);
+  static GameObject CreateContainer(Transform parentTransform) {
+    GameObject container = new("ListView", typeof(RectTransform));
+    container.transform.SetParent(parentTransform, worldPositionStays: false);
 
-    view.GetComponent<RectTransform>()
+    container.GetComponent<RectTransform>()
         .SetSizeDelta(Vector2.zero);
 
-    view.AddComponent<Image>()
+    container.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
         .SetSprite(UIResources.GetSprite("item_background"))
         .SetColor(new(0f, 0f, 0f, 0.5f));
 
-    return view;
+    return container;
   }
 
-  static GameObject CreateChildViewport(Transform parentTransform) {
+  static GameObject CreateViewport(Transform parentTransform) {
     GameObject viewport = new("Viewport", typeof(RectTransform));
     viewport.transform.SetParent(parentTransform, worldPositionStays: false);
 
@@ -51,7 +51,7 @@ public sealed class ListView {
     return viewport;
   }
 
-  static GameObject CreateChildContent(Transform parentTransform) {
+  static GameObject CreateContent(Transform parentTransform) {
     GameObject content = new("Content", typeof(RectTransform));
     content.transform.SetParent(parentTransform, worldPositionStays: false);
 
@@ -74,7 +74,7 @@ public sealed class ListView {
     return content;
   }
 
-  static ScrollRect CreateChildScrollRect(GameObject view, GameObject viewport, GameObject content) {
+  static ScrollRect CreateScrollRect(GameObject view, GameObject viewport, GameObject content) {
     ScrollRect scrollrect =
         view.AddComponent<ScrollRect>()
             .SetViewport(viewport.GetComponent<RectTransform>())

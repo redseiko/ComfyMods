@@ -5,37 +5,37 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class ButtonCell {
-  public GameObject Cell { get; private set; }
+public sealed class LabelButton {
+  public GameObject Container { get; private set; }
   public TMP_Text Label { get; private set; }
   public Button Button { get; private set; }
 
-  public ButtonCell(Transform parentTransform) {
-    Cell = CreateChildCell(parentTransform);
-    Label = CreateChildLabel(Cell.transform);
-    Button = CreateChildButton(Cell);
+  public LabelButton(Transform parentTransform) {
+    Container = CreateContainer(parentTransform);
+    Label = CreateLabel(Container.transform);
+    Button = CreateButton(Container);
   }
 
-  static GameObject CreateChildCell(Transform parentTransform) {
-    GameObject cell = new("Button", typeof(RectTransform));
-    cell.transform.SetParent(parentTransform, worldPositionStays: false);
+  static GameObject CreateContainer(Transform parentTransform) {
+    GameObject container = new("Button", typeof(RectTransform));
+    container.transform.SetParent(parentTransform, worldPositionStays: false);
 
-    cell.AddComponent<Image>()
+    container.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
         .SetSprite(UIResources.GetSprite("button"))
         .SetColor(Color.white);
 
-    cell.GetComponent<RectTransform>()
+    container.GetComponent<RectTransform>()
         .SetAnchorMin(new(0.5f, 0.5f))
         .SetAnchorMax(new(0.5f, 0.5f))
         .SetPivot(new(0.5f, 0.5f))
         .SetPosition(Vector2.zero)
         .SetSizeDelta(new(120f, 45f));
 
-    return cell;
+    return container;
   }
 
-  static TMP_Text CreateChildLabel(Transform parentTransform) {
+  static TMP_Text CreateLabel(Transform parentTransform) {
     TMP_Text label = UIBuilder.CreateTMPLabel(parentTransform);
 
     label
@@ -53,8 +53,8 @@ public sealed class ButtonCell {
     return label;
   }
 
-  static Button CreateChildButton(GameObject cell) {
-    Button button = cell.AddComponent<Button>();
+  static Button CreateButton(GameObject container) {
+    Button button = container.AddComponent<Button>();
 
     button
         .SetTransition(Selectable.Transition.SpriteSwap)
