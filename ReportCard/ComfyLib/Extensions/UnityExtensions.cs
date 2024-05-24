@@ -1,9 +1,10 @@
 ﻿namespace ComfyLib;
 
 using System;
+using System.Collections.Generic;
 
 public static class ObjectExtensions {
-  public static T FirstByNameOrThrow<T>(this T[] unityObjects, string name) where T : UnityEngine.Object {
+  public static T FirstByNameOrThrow<T>(this IEnumerable<T> unityObjects, string name) where T : UnityEngine.Object {
     foreach (T unityObject in unityObjects) {
       if (unityObject.name == name) {
         return unityObject;

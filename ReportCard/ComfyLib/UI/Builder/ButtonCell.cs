@@ -36,8 +36,7 @@ public sealed class ButtonCell {
   }
 
   static TMP_Text CreateChildLabel(Transform parentTransform) {
-    TMP_Text label =
-        UIBuilder.CreateTMPLabel(parentTransform);
+    TMP_Text label = UIBuilder.CreateTMPLabel(parentTransform);
 
     label
         .SetFontSize(16f)

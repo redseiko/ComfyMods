@@ -11,7 +11,7 @@
     <AssemblyName>ReportCard</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <LangVersion>10</LangVersion>
+    <LangVersion>12</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -70,13 +70,13 @@
     <Reference Include="BepInEx">
       <HintPath>$(GamePath)\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="gui_framework_publicized">
+      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\gui_framework_publicized.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="ui_lib_publicized">
-      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\ui_lib_publicized.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>$(GamePath)\valheim_Data\Managed\Unity.TextMeshPro.dll</HintPath>
     </Reference>

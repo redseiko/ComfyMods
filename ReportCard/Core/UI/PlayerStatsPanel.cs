@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using ComfyLib;
 
@@ -26,10 +25,10 @@ public sealed class PlayerStatsPanel {
     CloseButton.Button.onClick.AddListener(HidePanel);
   }
 
-  public List<TMP_Text> StatLabels { get; } = new();
+  public List<TMP_Text> StatLabels { get; } = [];
 
   public void UpdateStatsList(PlayerProfile profile) {
-    List<KeyValuePair<PlayerStatType, float>> stats = profile.m_playerStats.m_stats.ToList();
+    List<KeyValuePair<PlayerStatType, float>> stats = [..profile.m_playerStats.m_stats];
 
     for (int i = StatLabels.Count; i < stats.Count; i++) {
       TMP_Text label = CreateStatLabel(StatsListView.Content.transform);

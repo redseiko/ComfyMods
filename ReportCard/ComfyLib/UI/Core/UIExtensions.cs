@@ -27,8 +27,7 @@ public static class ColorExtensions {
 }
 
 public static class ContentSizeFitterExtensions {
-  public static ContentSizeFitter SetHorizontalFit(
-      this ContentSizeFitter fitter, ContentSizeFitter.FitMode fitMode) {
+  public static ContentSizeFitter SetHorizontalFit(this ContentSizeFitter fitter, ContentSizeFitter.FitMode fitMode) {
     fitter.horizontalFit = fitMode;
     return fitter;
   }
@@ -40,6 +39,12 @@ public static class ContentSizeFitterExtensions {
 }
 
 public static class LayoutGroupExtensions {
+  public static T SetChildAlignment<T>(
+      this T layoutGroup, TextAnchor alignment) where T : HorizontalOrVerticalLayoutGroup {
+    layoutGroup.childAlignment = alignment;
+    return layoutGroup;
+  }
+
   public static T SetChildControl<T>(
       this T layoutGroup, bool? width = null, bool? height = null) where T : HorizontalOrVerticalLayoutGroup {
     if (!width.HasValue && !height.HasValue) {
@@ -71,12 +76,6 @@ public static class LayoutGroupExtensions {
       layoutGroup.childForceExpandHeight = height.Value;
     }
 
-    return layoutGroup;
-  }
-
-  public static T SetChildAlignment<T>(
-      this T layoutGroup, TextAnchor alignment) where T : HorizontalOrVerticalLayoutGroup {
-    layoutGroup.childAlignment = alignment;
     return layoutGroup;
   }
 
@@ -184,23 +183,6 @@ public static class ImageExtensions {
 }
 
 public static class LayoutElementExtensions {
-  public static LayoutElement SetPreferred(
-      this LayoutElement layoutElement, float? width = null, float? height = null) {
-    if (!width.HasValue && !height.HasValue) {
-      throw new ArgumentException("Value for width or height must be provided.");
-    }
-
-    if (width.HasValue) {
-      layoutElement.preferredWidth = width.Value;
-    }
-
-    if (height.HasValue) {
-      layoutElement.preferredHeight = height.Value;
-    }
-
-    return layoutElement;
-  }
-
   public static LayoutElement SetFlexible(
       this LayoutElement layoutElement, float? width = null, float? height = null) {
     if (!width.HasValue && !height.HasValue) {
@@ -215,6 +197,11 @@ public static class LayoutElementExtensions {
       layoutElement.flexibleHeight = height.Value;
     }
 
+    return layoutElement;
+  }
+
+  public static LayoutElement SetIgnoreLayout(this LayoutElement layoutElement, bool ignoreLayout) {
+    layoutElement.ignoreLayout = ignoreLayout;
     return layoutElement;
   }
 
@@ -235,16 +222,21 @@ public static class LayoutElementExtensions {
     return layoutElement;
   }
 
-  public static LayoutElement SetIgnoreLayout(this LayoutElement layoutElement, bool ignoreLayout) {
-    layoutElement.ignoreLayout = ignoreLayout;
-    return layoutElement;
-  }
-}
+  public static LayoutElement SetPreferred(
+      this LayoutElement layoutElement, float? width = null, float? height = null) {
+    if (!width.HasValue && !height.HasValue) {
+      throw new ArgumentException("Value for width or height must be provided.");
+    }
 
-public static class MaskExtensions {
-  public static Mask SetShowMaskGraphic(this Mask mask, bool showMaskGraphic) {
-    mask.showMaskGraphic = showMaskGraphic;
-    return mask;
+    if (width.HasValue) {
+      layoutElement.preferredWidth = width.Value;
+    }
+
+    if (height.HasValue) {
+      layoutElement.preferredHeight = height.Value;
+    }
+
+    return layoutElement;
   }
 }
 
@@ -334,8 +326,28 @@ public static class SelectableExtensions {
 }
 
 public static class ScrollRectExtensions {
+  public static T SetContent<T>(this T scrollRect, RectTransform content) where T : ScrollRect {
+    scrollRect.content = content;
+    return scrollRect;
+  }
+
+  public static T SetHorizontal<T>(this T scrollRect, bool horizontal) where T : ScrollRect {
+    scrollRect.horizontal = horizontal;
+    return scrollRect;
+  }
+
+  public static T SetMovementType<T>(this T scrollRect, ScrollRect.MovementType movementType) where T : ScrollRect {
+    scrollRect.movementType = movementType;
+    return scrollRect;
+  }
+
   public static T SetScrollSensitivity<T>(this T scrollRect, float sensitivity) where T : ScrollRect {
     scrollRect.scrollSensitivity = sensitivity;
+    return scrollRect;
+  }
+
+  public static T SetVertical<T>(this T scrollRect, bool vertical) where T : ScrollRect {
+    scrollRect.vertical = vertical;
     return scrollRect;
   }
 
@@ -351,26 +363,6 @@ public static class ScrollRectExtensions {
 
   public static T SetViewport<T>(this T scrollRect, RectTransform viewport) where T : ScrollRect {
     scrollRect.viewport = viewport;
-    return scrollRect;
-  }
-
-  public static T SetContent<T>(this T scrollRect, RectTransform content) where T : ScrollRect {
-    scrollRect.content = content;
-    return scrollRect;
-  }
-
-  public static T SetHorizontal<T>(this T scrollRect, bool horizontal) where T : ScrollRect {
-    scrollRect.horizontal = horizontal;
-    return scrollRect;
-  }
-
-  public static T SetVertical<T>(this T scrollRect, bool vertical) where T : ScrollRect {
-    scrollRect.vertical = vertical;
-    return scrollRect;
-  }
-
-  public static T SetMovementType<T>(this T scrollRect, ScrollRect.MovementType movementType) where T : ScrollRect {
-    scrollRect.movementType = movementType;
     return scrollRect;
   }
 }
@@ -411,16 +403,6 @@ public static class TextMeshProExtensions {
     return tmpText;
   }
 
-  public static T SetOutlineColorProperty<T>(this T tmpText, Color color) where T : TMP_Text {
-    tmpText.outlineColor = color;
-    return tmpText;
-  }
-
-  public static T SetOutlineWidth<T>(this T tmpText, float outlineWidth) where T : TMP_Text {
-    tmpText.outlineWidth = outlineWidth;
-    return tmpText;
-  }
-
   public static T SetOverflowMode<T>(this T tmpText, TextOverflowModes overflowMode) where T : TMP_Text {
     tmpText.overflowMode = overflowMode;
     return tmpText;
@@ -438,18 +420,13 @@ public static class TextMeshProExtensions {
 }
 
 public static class Texture2DExtensions {
-  public static Texture2D SetName(this Texture2D texture, string name) {
-    texture.name = name;
+  public static Texture2D SetFilterMode(this Texture2D texture, FilterMode filterMode) {
+    texture.filterMode = filterMode;
     return texture;
   }
 
   public static Texture2D SetWrapMode(this Texture2D texture, TextureWrapMode wrapMode) {
     texture.wrapMode = wrapMode;
-    return texture;
-  }
-
-  public static Texture2D SetFilterMode(this Texture2D texture, FilterMode filterMode) {
-    texture.filterMode = filterMode;
     return texture;
   }
 }
