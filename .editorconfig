@@ -13,6 +13,9 @@ dotnet_diagnostic.IDE0051.severity = none
 # IDE0060: Remove unused parameter
 dotnet_diagnostic.IDE0060.severity = none
 
+# IDE0066: Convert switch statement to expression
+dotnet_diagnostic.IDE0066.severity = none
+
 # IDE0090: 'new' expression can be simplified
 dotnet_diagnostic.IDE0090.severity = none
 
