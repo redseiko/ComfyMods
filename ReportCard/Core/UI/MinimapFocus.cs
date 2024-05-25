@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-public sealed class MinimapFocusPanel : MonoBehaviour {
+public sealed class MinimapFocus : MonoBehaviour {
   void Update() {
     Minimap.m_instance.m_wasFocused = true;
   }

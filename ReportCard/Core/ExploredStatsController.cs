@@ -10,6 +10,10 @@ public static class ExploredStatsController {
   public static ExploredStatsPanel StatsPanel { get; private set; }
   static readonly ExploredStats _exploredStats = new();
 
+  public static bool IsStatsPanelValid() {
+    return StatsPanel?.Panel;
+  }
+
   public static void CreateStatsPanel(Minimap minimap) {
     StatsPanel = new(minimap.m_largeRoot.transform);
 
@@ -23,12 +27,6 @@ public static class ExploredStatsController {
     StatsPanel.CloseButton.Button.onClick.AddListener(HideStatsPanel);
 
     HideStatsPanel();
-
-    StatsPanel.Panel.AddComponent<MinimapFocusPanel>();
-  }
-
-  public static bool IsStatsPanelValid() {
-    return StatsPanel?.Panel;
   }
 
   public static void ToggleStatsPanel() {
@@ -79,7 +77,7 @@ public static class ExploredStatsController {
         .SetAnchorMax(Vector2.up)
         .SetPivot(Vector2.up)
         .SetPosition(new(25f, -20f))
-        .SetSizeDelta(new(120f, 45f));
+        .SetSizeDelta(new(100f, 42.5f));
 
     StatsButton.Button.onClick.AddListener(ToggleStatsPanel);
   }

@@ -326,6 +326,16 @@ public static class SelectableExtensions {
 }
 
 public static class SliderExtensions {
+  public static T SetDirection<T>(this T slider, Slider.Direction direction) where T : Slider {
+    slider.direction = direction;
+    return slider;
+  }
+
+  public static T SetFillRect<T>(this T slider, RectTransform fillRect) where T : Slider {
+    slider.fillRect = fillRect;
+    return slider;
+  }
+
   public static T SetHandleRect<T>(this T slider, RectTransform handleRect) where T : Slider {
     slider.handleRect = handleRect;
     return slider;
@@ -380,6 +390,12 @@ public static class ScrollRectExtensions {
 
   public static T SetVerticalScrollPosition<T>(this T scrollRect, float position) where T : ScrollRect {
     scrollRect.verticalNormalizedPosition = position;
+    return scrollRect;
+  }
+
+  public static T SetVerticalScrollbarVisibility<T>(
+      this T scrollRect, ScrollRect.ScrollbarVisibility visibility) where T : ScrollRect {
+    scrollRect.verticalScrollbarVisibility = visibility;
     return scrollRect;
   }
 

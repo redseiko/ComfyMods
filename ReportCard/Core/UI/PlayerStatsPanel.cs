@@ -12,17 +12,17 @@ using UnityEngine.UI;
 
 public sealed class PlayerStatsPanel {
   public GameObject Panel { get; private set; }
+  public RectTransform RectTransform { get; }
   public TMP_Text Title { get; private set; }
   public ListView StatsList { get; private set; }
   public LabelButton CloseButton { get; private set; }
 
   public PlayerStatsPanel(Transform parentTransform) {
     Panel = CreatePanel(parentTransform);
+    RectTransform = Panel.GetComponent<RectTransform>();
     Title = CreateTitle(Panel.transform);
     StatsList = CreateStatsList(Panel.transform);
-
     CloseButton = CreateCloseButton(Panel.transform);
-    CloseButton.Button.onClick.AddListener(HidePanel);
   }
 
   public List<TMP_Text> StatLabels { get; } = [];
@@ -89,18 +89,6 @@ public sealed class PlayerStatsPanel {
         .SetPreferred(height: 30f);
 
     return label;
-  }
-
-  public void ShowPanel() {
-    Panel.gameObject.SetActive(true);
-  }
-
-  public void HidePanel() {
-    Panel.gameObject.SetActive(false);
-  }
-
-  public void TogglePanel() {
-    Panel.gameObject.SetActive(!Panel.gameObject.activeSelf);
   }
 
   static GameObject CreatePanel(Transform parentTransform) {

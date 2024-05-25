@@ -41,8 +41,6 @@ public sealed class ExploredStatsPanel {
     AddExploredStatsLabel("World", explored, total);
     AddExploredStatsSlider(Color.white, explored, total);
 
-    CreateStatDivider(StatsList.Content.transform);
-
     foreach (Heightmap.Biome biome in ExploredStats.GetHeightmapBiomes()) {
       explored = exploredStats.ExploredCount(biome);
       total = exploredStats.TotalCount(biome);
@@ -51,8 +49,10 @@ public sealed class ExploredStatsPanel {
         continue;
       }
 
+      string name = Enum.GetName(typeof(Heightmap.Biome), biome);
       Color color = BiomeToSliderColor(biome);
-      AddExploredStatsLabel(Enum.GetName(typeof(Heightmap.Biome), biome), explored, total);
+
+      AddExploredStatsLabel(name, explored, total);
       AddExploredStatsSlider(color, explored, total);
     }
   }
@@ -71,12 +71,12 @@ public sealed class ExploredStatsPanel {
     };
   }
 
-  void AddExploredStatsLabel(string stat, int explored, int total) {
+  void AddExploredStatsLabel(string name, int explored, int total) {
     TextMeshProUGUI label = CreateStatLabel(StatsList.Content.transform);
     float percent = ((explored * 1f) / (total * 1f)) * 100f;
 
     label.text =
-        $"<align=left><color=#FFD600>{stat}</color> <size=-2>({explored}/{total})</size><line-height=0>\n"
+        $"<align=left><color=#FFD600>{name}</color><line-height=0>\n"
             + $"<align=right>{percent:F2}%<line-height=1em>";
   }
 
@@ -88,69 +88,17 @@ public sealed class ExploredStatsPanel {
 
     slider
         .SetInteractable(false)
-        .SetTransition(Selectable.Transition.None)
         .SetWholeNumbers(true)
         .SetMinValue(0f)
         .SetMaxValue(total)
         .SetValueWithoutNotify(explored);
   }
 
-  static TextMeshProUGUI CreateStatLabel(Transform parentTransform) {
-    TextMeshProUGUI label = UIBuilder.CreateTMPLabel(parentTransform);
-    label.name = "StatLabel";
-
-    label.rectTransform
-        .SetAnchorMin(Vector2.zero)
-        .SetAnchorMax(Vector2.right)
-        .SetPivot(Vector2.zero)
-        .SetPosition(Vector2.zero)
-        .SetSizeDelta(Vector2.zero);
-
-    label
-        .SetFontSize(18f)
-        .SetAlignment(TextAlignmentOptions.Left);
-
-    label.gameObject.AddComponent<LayoutElement>()
-        .SetFlexible(width: 1f)
-        .SetPreferred(height: 30f);
-
-    return label;
-  }
-
-  static Slider CreateStatSlider(Transform parentTransform) {
-    Slider slider = UIBuilder.CreateSlider(parentTransform);
-    slider.name = "StatSlider";
-
-    slider.GetComponent<RectTransform>()
-        .SetAnchorMin(Vector2.zero)
-        .SetAnchorMax(Vector2.right)
-        .SetPivot(Vector2.zero)
-        .SetPosition(Vector2.zero)
-        .SetSizeDelta(Vector2.zero);
-
-    slider.handleRect.gameObject.SetActive(false);
-
-    slider.gameObject.AddComponent<LayoutElement>()
-        .SetFlexible(width: 1f)
-        .SetPreferred(height: 25f);
-
-    return slider;
-  }
-
-  static GameObject CreateStatDivider(Transform parentTransform) {
-    GameObject divider = new("Divider", typeof(RectTransform));
-    divider.transform.SetParent(parentTransform, worldPositionStays: false);
-
-    divider.AddComponent<LayoutElement>()
-        .SetFlexible(width: 1f)
-        .SetPreferred(height: 10f);
-
-    return divider;
-  }
-
   static GameObject CreatePanel(Transform parentTransform) {
     GameObject panel = UIBuilder.CreatePanel(parentTransform);
     panel.name = "ExploredStatsPanel";
+
+    panel.AddComponent<MinimapFocus>();
 
     return panel;
   }
@@ -184,7 +132,9 @@ public sealed class ExploredStatsPanel {
         .SetPosition(new(20f, -60f))
         .SetSizeDelta(new(-40f, -135f));
 
-    listView.ContentLayoutGroup.SetPadding(left: 10, right: 20);
+    listView.ContentLayoutGroup
+        .SetPadding(left: 10, right: 20)
+        .SetSpacing(2.5f);
 
     return listView;
   }
@@ -205,5 +155,79 @@ public sealed class ExploredStatsPanel {
         .SetText("Close");
 
     return closeButton;
+  }
+
+  static TextMeshProUGUI CreateStatLabel(Transform parentTransform) {
+    TextMeshProUGUI label = UIBuilder.CreateTMPLabel(parentTransform);
+    label.name = "StatLabel";
+
+    label.rectTransform
+        .SetAnchorMin(Vector2.zero)
+        .SetAnchorMax(Vector2.right)
+        .SetPivot(Vector2.zero)
+        .SetPosition(Vector2.zero)
+        .SetSizeDelta(Vector2.zero);
+
+    label
+        .SetFontSize(18f)
+        .SetAlignment(TextAlignmentOptions.Left);
+
+    label.gameObject.AddComponent<LayoutElement>()
+        .SetFlexible(width: 1f)
+        .SetPreferred(height: 30f);
+
+    return label;
+  }
+
+  static Slider CreateStatSlider(Transform parentTransform) {
+    GameObject container = new("StatSlider", typeof(RectTransform));
+    container.transform.SetParent(parentTransform, worldPositionStays: false);
+
+    container.GetComponent<RectTransform>()
+        .SetAnchorMin(Vector2.zero)
+        .SetAnchorMax(Vector2.right)
+        .SetPivot(Vector2.zero)
+        .SetPosition(Vector2.zero)
+        .SetSizeDelta(new(0f, 20f));
+
+    GameObject background = new("Background", typeof(RectTransform));
+    background.transform.SetParent(container.transform, worldPositionStays: false);
+
+    background.AddComponent<Image>()
+        .SetColor(new(0.271f, 0.271f, 0.271f, 1f));
+
+    background.GetComponent<RectTransform>()
+        .SetAnchorMin(Vector2.zero)
+        .SetAnchorMax(Vector2.one)
+        .SetPivot(new(0.5f, 0.5f))
+        .SetPosition(Vector2.zero)
+        .SetSizeDelta(Vector2.zero);
+
+    GameObject fill = new("Fill", typeof(RectTransform));
+    fill.transform.SetParent(container.transform, worldPositionStays: false);
+
+    fill.AddComponent<Image>()
+        .SetColor(Color.white);
+
+    fill.GetComponent<RectTransform>()
+        .SetAnchorMin(Vector2.zero)
+        .SetAnchorMax(Vector2.one)
+        .SetPivot(new(0.5f, 0.5f))
+        .SetPosition(Vector2.zero)
+        .SetSizeDelta(Vector2.zero);
+
+    Slider slider = container.AddComponent<Slider>();
+
+    slider
+        .SetDirection(Slider.Direction.LeftToRight)
+        .SetFillRect(fill.GetComponent<RectTransform>())
+        .SetTargetGraphic(fill.GetComponent<Image>())
+        .SetTransition(Selectable.Transition.None);
+
+    container.AddComponent<LayoutElement>()
+        .SetFlexible(width: 1f)
+        .SetPreferred(height: 10f);
+
+    return slider;
   }
 }

@@ -10,7 +10,8 @@ public static class PluginConfig {
   public static ConfigEntry<bool> OpenStatsPanelOnCharacterSelect { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
-    IsModEnabled = config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
+    IsModEnabled =
+        config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod (restart required).");
 
     OpenStatsPanelOnCharacterSelect =
         config.BindInOrder(

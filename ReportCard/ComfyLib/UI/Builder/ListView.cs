@@ -87,8 +87,9 @@ public sealed class ListView {
     Scrollbar scrollbar = UIBuilder.CreateScrollbar(view.transform);
     scrollbar.direction = Scrollbar.Direction.BottomToTop;
 
-    scrollrect.verticalScrollbar = scrollbar;
-    scrollrect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
+    scrollrect
+        .SetVerticalScrollbar(scrollbar)
+        .SetVerticalScrollbarVisibility(ScrollRect.ScrollbarVisibility.Permanent);
 
     return scrollrect;
   }

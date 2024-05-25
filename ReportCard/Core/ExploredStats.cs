@@ -25,7 +25,7 @@ public sealed class ExploredStats {
   public int TotalCount(Heightmap.Biome biome) => BiomeTotalCount[biome];
   public int ExploredCount(Heightmap.Biome biome) => BiomeExploredCount[biome];
 
-  public void Reset() {
+  void Reset() {
     BiomeTotalCount.Clear();
     BiomeExploredCount.Clear();
 
@@ -90,7 +90,7 @@ public sealed class ExploredStats {
 
         counter++;
 
-        if (counter % 10000 == 0) {
+        if (counter % 15000 == 0) {
           if (label) {
             float percent = ((y * textureSize + x) * 1f / (explored.Length * 1f)) * 100f;
             label.text = $"Generating stats... ({percent:F2}%)";

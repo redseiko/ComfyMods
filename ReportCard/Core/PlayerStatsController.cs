@@ -7,67 +7,77 @@ using UnityEngine;
 public static class PlayerStatsController {
   public static PlayerStatsPanel StatsPanel { get; private set; }
 
+  public static bool IsStatsPanelValid() {
+    return StatsPanel?.Panel;
+  }
+
   public static void CreateStatsPanel(FejdStartup fejdStartup) {
     DestroyStatsPanel();
     StatsPanel = new(fejdStartup.m_characterSelectScreen.transform);
 
-    StatsPanel.Panel.GetComponent<RectTransform>()
+    StatsPanel.RectTransform
         .SetAnchorMin(new(1f, 0.5f))
         .SetAnchorMax(new(1f, 0.5f))
         .SetPivot(new(1f, 0.5f))
         .SetPosition(new(-25f, 0f))
         .SetSizeDelta(new(400f, 600f));
 
-    StatsPanel.HidePanel();
+    StatsPanel.CloseButton.Button.onClick.AddListener(HideStatsPanel);
+
+    HideStatsPanel();
   }
 
   public static void CreateStatsPanel(SkillsDialog skillsDialog) {
     DestroyStatsPanel();
     StatsPanel = new(skillsDialog.transform);
 
-    StatsPanel.Panel.GetComponent<RectTransform>()
+    StatsPanel.RectTransform
         .SetAnchorMin(new(0.5f, 0.5f))
         .SetAnchorMax(new(0.5f, 0.5f))
         .SetPivot(new(0.5f, 0.5f))
         .SetPosition(Vector2.zero)
-        .SetSizeDelta(new(400f, 640f));
+        .SetSizeDelta(new(450f, 660f));
 
-    StatsPanel.HidePanel();
+    StatsPanel.CloseButton.Button.onClick.AddListener(HideStatsPanel);
+
+    HideStatsPanel();
   }
 
   public static void DestroyStatsPanel() {
-    if (StatsPanel?.Panel) {
+    if (IsStatsPanelValid()) {
       UnityEngine.Object.Destroy(StatsPanel.Panel);
       StatsPanel = default;
     }
   }
 
   public static void ShowStatsPanel() {
-    if (StatsPanel?.Panel) {
-      StatsPanel.ShowPanel();
+    if (IsStatsPanelValid()) {
+      StatsPanel.Panel.SetActive(true);
     }
   }
 
   public static void HideStatsPanel() {
-    if (StatsPanel?.Panel) {
-      StatsPanel.HidePanel();
+    if (IsStatsPanelValid()) {
+      StatsPanel.Panel.SetActive(false);
     }
   }
 
   public static void ToggleStatsPanel() {
-    if (StatsPanel?.Panel) {
-      StatsPanel.TogglePanel();
+    if (IsStatsPanelValid()) {
+      StatsPanel.Panel.SetActive(!StatsPanel.Panel.activeSelf);
     }
   }
 
   public static void UpdateStatsPanel(PlayerProfile profile) {
-    if (StatsPanel?.Panel) {
-      if (profile != null && profile.m_playerStats != null) {
-        StatsPanel.ShowPanel();
-        StatsPanel.UpdateStatsList(profile);
-      } else {
-        StatsPanel.HidePanel();
-      }
+    if (!IsStatsPanelValid()) {
+      return;
+    }
+
+    if (profile?.m_playerStats == null) {
+      HideStatsPanel();
+    } else {
+      ShowStatsPanel();
+      StatsPanel.UpdateStatsList(profile);
     }
   }
 
@@ -110,9 +120,6 @@ public static class PlayerStatsController {
   }
 
   static void OnStatsButtonClick() {
-    if (StatsPanel?.Panel && Game.instance) {
-      StatsPanel.UpdateStatsList(Game.instance.m_playerProfile);
-      StatsPanel.ShowPanel();
-    }
+    UpdateStatsPanel(Game.instance.Ref()?.m_playerProfile);
   }
 }
