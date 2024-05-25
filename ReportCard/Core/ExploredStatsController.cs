@@ -23,6 +23,8 @@ public static class ExploredStatsController {
     StatsPanel.CloseButton.Button.onClick.AddListener(HideStatsPanel);
 
     HideStatsPanel();
+
+    StatsPanel.Panel.AddComponent<MinimapFocusPanel>();
   }
 
   public static bool IsStatsPanelValid() {
@@ -73,10 +75,10 @@ public static class ExploredStatsController {
         .SetText("Stats");
 
     StatsButton.Container.GetComponent<RectTransform>()
-        .SetAnchorMin(Vector2.one)
-        .SetAnchorMax(Vector2.one)
-        .SetPivot(Vector2.one)
-        .SetPosition(new(-25f, -20f))
+        .SetAnchorMin(Vector2.up)
+        .SetAnchorMax(Vector2.up)
+        .SetPivot(Vector2.up)
+        .SetPosition(new(25f, -20f))
         .SetSizeDelta(new(120f, 45f));
 
     StatsButton.Button.onClick.AddListener(ToggleStatsPanel);

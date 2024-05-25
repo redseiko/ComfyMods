@@ -1,7 +1,6 @@
 ﻿namespace ReportCard;
 
 using System;
-using System.Collections.Generic;
 
 using ComfyLib;
 
@@ -16,7 +15,6 @@ public sealed class ExploredStatsPanel {
   public TextMeshProUGUI Title { get; }
   public ListView StatsList { get; }
   public LabelButton CloseButton { get; }
-  public List<TextMeshProUGUI> StatLabels { get; }
 
   public ExploredStatsPanel(Transform parentTransform) {
     Panel = CreatePanel(parentTransform);
@@ -24,46 +22,77 @@ public sealed class ExploredStatsPanel {
     Title = CreateTitle(RectTransform);
     StatsList = CreateStatsList(RectTransform);
     CloseButton = CreateCloseButton(RectTransform);
-    StatLabels = [];
   }
 
   public TextMeshProUGUI AddStatLabel() {
-    TextMeshProUGUI label = CreateStatLabel(StatsList.Content.transform);
-    StatLabels.Add(label);
-
-    return label;
+    return CreateStatLabel(StatsList.Content.transform);
   }
 
   public void ResetStatsList() {
-    foreach (TextMeshProUGUI label in StatLabels) {
-      UnityEngine.Object.Destroy(label.gameObject);
+    foreach (Transform transform in StatsList.Content.transform) {
+      UnityEngine.Object.Destroy(transform.gameObject);
     }
-
-    StatLabels.Clear();
   }
 
   public void UpdateStatsList(ExploredStats exploredStats) {
-    StatLabels.Add(CreateExploredStatLabel("Explored", exploredStats.ExploredCount(), exploredStats.TotalCount()));
+    int explored = exploredStats.ExploredCount();
+    int total = exploredStats.TotalCount();
+
+    AddExploredStatsLabel("World", explored, total);
+    AddExploredStatsSlider(Color.white, explored, total);
+
+    CreateStatDivider(StatsList.Content.transform);
 
     foreach (Heightmap.Biome biome in ExploredStats.GetHeightmapBiomes()) {
-      int explored = exploredStats.ExploredCount(biome);
-      int total = exploredStats.TotalCount(biome);
+      explored = exploredStats.ExploredCount(biome);
+      total = exploredStats.TotalCount(biome);
 
-      if (total > 0) {
-        StatLabels.Add(CreateExploredStatLabel(Enum.GetName(typeof(Heightmap.Biome), biome), explored, total));
+      if (total <= 0) {
+        continue;
       }
+
+      Color color = BiomeToSliderColor(biome);
+      AddExploredStatsLabel(Enum.GetName(typeof(Heightmap.Biome), biome), explored, total);
+      AddExploredStatsSlider(color, explored, total);
     }
   }
 
-  TextMeshProUGUI CreateExploredStatLabel(string stat, int explored, int total) {
-    float percent = ((explored * 1f) / (total * 1f)) * 100f;
+  static Color BiomeToSliderColor(Heightmap.Biome biome) {
+    return biome switch {
+      Heightmap.Biome.Meadows => new(0f, 1f, 0.4f),
+      Heightmap.Biome.BlackForest => new(0f, 0.46f, 0.33f),
+      Heightmap.Biome.Swamp => new(1f, 0.6f, 0.46f),
+      Heightmap.Biome.Mountain => new(0.26f, 1f, 1f),
+      Heightmap.Biome.Plains => new(1f, 1f, 0f),
+      Heightmap.Biome.Mistlands => new(0.6f, 0f, 0.66f),
+      Heightmap.Biome.AshLands => new(1f, 0f, 0f),
+      Heightmap.Biome.Ocean => new(0f, 0.46f, 1f),
+      _ => Color.white,
+    };
+  }
+
+  void AddExploredStatsLabel(string stat, int explored, int total) {
     TextMeshProUGUI label = CreateStatLabel(StatsList.Content.transform);
+    float percent = ((explored * 1f) / (total * 1f)) * 100f;
 
     label.text =
         $"<align=left><color=#FFD600>{stat}</color> <size=-2>({explored}/{total})</size><line-height=0>\n"
             + $"<align=right>{percent:F2}%<line-height=1em>";
+  }
 
-    return label;
+  void AddExploredStatsSlider(Color color, int explored, int total) {
+    Slider slider = CreateStatSlider(StatsList.Content.transform);
+
+    slider.fillRect.GetComponent<Image>()
+        .SetColor(color);
+
+    slider
+        .SetInteractable(false)
+        .SetTransition(Selectable.Transition.None)
+        .SetWholeNumbers(true)
+        .SetMinValue(0f)
+        .SetMaxValue(total)
+        .SetValueWithoutNotify(explored);
   }
 
   static TextMeshProUGUI CreateStatLabel(Transform parentTransform) {
@@ -86,6 +115,37 @@ public sealed class ExploredStatsPanel {
         .SetPreferred(height: 30f);
 
     return label;
+  }
+
+  static Slider CreateStatSlider(Transform parentTransform) {
+    Slider slider = UIBuilder.CreateSlider(parentTransform);
+    slider.name = "StatSlider";
+
+    slider.GetComponent<RectTransform>()
+        .SetAnchorMin(Vector2.zero)
+        .SetAnchorMax(Vector2.right)
+        .SetPivot(Vector2.zero)
+        .SetPosition(Vector2.zero)
+        .SetSizeDelta(Vector2.zero);
+
+    slider.handleRect.gameObject.SetActive(false);
+
+    slider.gameObject.AddComponent<LayoutElement>()
+        .SetFlexible(width: 1f)
+        .SetPreferred(height: 25f);
+
+    return slider;
+  }
+
+  static GameObject CreateStatDivider(Transform parentTransform) {
+    GameObject divider = new("Divider", typeof(RectTransform));
+    divider.transform.SetParent(parentTransform, worldPositionStays: false);
+
+    divider.AddComponent<LayoutElement>()
+        .SetFlexible(width: 1f)
+        .SetPreferred(height: 10f);
+
+    return divider;
   }
 
   static GameObject CreatePanel(Transform parentTransform) {

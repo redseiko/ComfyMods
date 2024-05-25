@@ -325,6 +325,28 @@ public static class SelectableExtensions {
   }
 }
 
+public static class SliderExtensions {
+  public static T SetHandleRect<T>(this T slider, RectTransform handleRect) where T : Slider {
+    slider.handleRect = handleRect;
+    return slider;
+  }
+
+  public static T SetMaxValue<T>(this T slider, float maxValue) where T : Slider {
+    slider.maxValue = maxValue;
+    return slider;
+  }
+
+  public static T SetMinValue<T>(this T slider, float minValue) where T : Slider {
+    slider.minValue = minValue;
+    return slider;
+  }
+
+  public static T SetWholeNumbers<T>(this T slider, bool wholeNumbers) where T : Slider {
+    slider.wholeNumbers = wholeNumbers;
+    return slider;
+  }
+}
+
 public static class ScrollRectExtensions {
   public static T SetContent<T>(this T scrollRect, RectTransform content) where T : ScrollRect {
     scrollRect.content = content;

@@ -118,6 +118,7 @@
     <Compile Include="Core\ExploredStatsController.cs" />
     <Compile Include="Core\PlayerStatsController.cs" />
     <Compile Include="Core\UI\ExploredStatsPanel.cs" />
+    <Compile Include="Core\UI\MinimapFocusPanel.cs" />
     <Compile Include="Core\UI\PlayerStatsPanel.cs" />
     <Compile Include="Patches\FejdStartupPatch.cs" />
     <Compile Include="Patches\InventoryGuiPatch.cs" />

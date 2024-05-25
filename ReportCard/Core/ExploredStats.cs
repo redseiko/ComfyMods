@@ -13,6 +13,8 @@ public sealed class ExploredStats {
   public readonly Dictionary<Heightmap.Biome, int> BiomeTotalCount = [];
   public readonly Dictionary<Heightmap.Biome, int> BiomeExploredCount = [];
 
+  public static readonly float GenerateRadius = 10000f;
+
   public ExploredStats() {
     Reset();
   }
@@ -55,7 +57,7 @@ public sealed class ExploredStats {
     float pixelHalfSize = pixelSize / 2f;
     int textureSize = minimap.m_textureSize;
     int textureHalfSize = textureSize / 2;
-    int radius = Mathf.CeilToInt(10500f / pixelSize);
+    int radius = Mathf.CeilToInt(GenerateRadius / pixelSize);
     int radiusSquared = radius * radius;
     minimap.WorldToPixel(Vector3.zero, out int px, out int py);
 
