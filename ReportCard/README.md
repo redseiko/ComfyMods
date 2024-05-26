@@ -2,6 +2,9 @@
 
 *See your player stats and explored stats.*
 
+![PlayerStats](https://i.imgur.com/CW0UnqUl.png)
+![ExploredStats](https://i.imgur.com/UwJMamIm.png)
+
 ## Features
 
 ### Player Stats
@@ -20,6 +23,8 @@
   * Adds a Stats button to the large Minimap view (top-left).
   * Shows a new panel with the current player's explored stats for the current world (by biome).
   * Stats take several seconds to generate as it needs to calculate biome data for the entire map.
+
+
 
 ## Notes
 
