@@ -10,7 +10,7 @@ static class ZSFXPatch {
   [HarmonyPatch(nameof(ZSFX.Play))]
   static void PlayPostfix(ZSFX __instance) {
     if (IsModEnabled.Value) {
-      // Do the thing on the __instance.
+      VolumeController.ProcessSFX(__instance);
     }
   }
 }

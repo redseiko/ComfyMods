@@ -12,17 +12,11 @@ using static PluginConfig;
 public sealed class Volumetry : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.volumetry";
   public const string PluginName = "Volumetry";
-  public const string PluginVersion = "0.1.0";
-
-  Harmony _harmony;
+  public const string PluginVersion = "0.2.0";
 
   void Awake() {
     BindConfig(Config);
 
-    _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
-  }
-
-  void OnDestroy() {
-    _harmony?.UnpatchSelf();
+    Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
   }
 }

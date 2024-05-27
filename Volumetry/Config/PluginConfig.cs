@@ -12,6 +12,8 @@ public static class PluginConfig {
   public static ConfigEntry<float> OceanLoopVolumeMax { get; private set; }
   public static ConfigEntry<float> WindLoopVolumeMax { get; private set; }
 
+  public static ConfigEntry<float> SfxVolumeMistlandsThunder { get; private set; }
+
   public static void BindConfig(ConfigFile config) {
     CurrentConfig = config;
 
@@ -39,6 +41,14 @@ public static class PluginConfig {
             "windLoopVolumeMax",
             1f,
             "WindLoop: volume maximum.",
+            new AcceptableValueRange<float>(0f, 1f));
+
+    SfxVolumeMistlandsThunder =
+        config.BindInOrder(
+            "SFX.Volume",
+            "mistlandsThunder",
+            1f,
+            "SFX volume for: sfx_mistlands_thunder",
             new AcceptableValueRange<float>(0f, 1f));
   }
 }
