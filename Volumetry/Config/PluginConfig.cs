@@ -1,8 +1,12 @@
 ﻿namespace Volumetry;
 
+using System.Collections.Generic;
+
 using BepInEx.Configuration;
 
 using ComfyLib;
+
+using static ComfyLib.ToggleSliderListConfigEntry;
 
 public static class PluginConfig {
   public static ConfigFile CurrentConfig { get; private set; }
@@ -14,6 +18,8 @@ public static class PluginConfig {
 
   public static ConfigEntry<float> SfxVolumeMistlandsThunder { get; private set; }
 
+  public static ToggleSliderListConfigEntry SfxVolumeOverrides { get; private set; }
+
   public static void BindConfig(ConfigFile config) {
     CurrentConfig = config;
 
@@ -21,7 +27,7 @@ public static class PluginConfig {
 
     AmbientLoopVolumeMax =
         config.BindInOrder(
-            "AmbientLoop",
+            "Loop.AmbientLoop",
             "ambientLoopVolumeMax",
             1f,
             "AmbientLoop: volume maximum.",
@@ -29,7 +35,7 @@ public static class PluginConfig {
 
     OceanLoopVolumeMax =
         config.BindInOrder(
-            "OceanLoop",
+            "Loop.OceanLoop",
             "oceanLoopVolumeMax",
             1f,
             "OceanLoop: volume maximum.",
@@ -37,11 +43,20 @@ public static class PluginConfig {
 
     WindLoopVolumeMax =
         config.BindInOrder(
-            "WindLoop",
+            "Loop.WindLoop",
             "windLoopVolumeMax",
             1f,
             "WindLoop: volume maximum.",
             new AcceptableValueRange<float>(0f, 1f));
+
+    SfxVolumeOverrides =
+        new(
+            config,
+            "SFX.Volume",
+            "sfxVolumeOverrides",
+            string.Empty,
+            "SFX volume overrides.",
+            GetSfxHistory);
 
     SfxVolumeMistlandsThunder =
         config.BindInOrder(
@@ -50,5 +65,9 @@ public static class PluginConfig {
             1f,
             "SFX volume for: sfx_mistlands_thunder",
             new AcceptableValueRange<float>(0f, 1f));
+  }
+
+  static IEnumerable<SearchOption> GetSfxHistory() {
+    return VolumeController.SfxHistorySearchOptions;
   }
 }

@@ -22,6 +22,9 @@ dotnet_diagnostic.IDE0090.severity = none
 # CS8632: Nullable reference types should only be used within a '#nullable' annotations context
 dotnet_diagnostic.CS8632.severity = none
 
+# IDE0290: Use primary constructor
+csharp_style_prefer_primary_constructors = false
+
 [*.{cs,vb,json,csproj,md}]
 
 tab_width = 2
