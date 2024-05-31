@@ -32,6 +32,46 @@ public sealed class ToggleSliderListConfigEntry {
   readonly List<string> _valuesCache = [];
   string _valueText = string.Empty;
 
+  static readonly Lazy<GUIStyle> _sliderStyle = new(
+      () => new GUIStyle(GUI.skin.horizontalSlider) {
+        margin = new(4, 4, 9, 9)
+      });
+
+  static readonly Lazy<GUIStyle> _toggleStyle = new(
+      () => new GUIStyle(GUI.skin.toggle) {
+        padding = new(25, 0, 3, 3)
+      });
+
+  bool _hasChanged = false;
+  int _removeIndex = -1;
+  bool _toggleResult = false;
+  int _sliderResult = 0;
+
+  void DrawValue(int index, string label, int sliderValue, bool isToggled) {
+    GUILayout.BeginVertical(GUI.skin.box);
+    GUILayout.BeginHorizontal();
+
+    _toggleResult = GUILayout.Toggle(isToggled, label, _toggleStyle.Value, GUILayout.ExpandWidth(true));
+
+    if (GUILayout.Button("\u2212", GUILayout.MinWidth(40f), GUILayout.ExpandWidth(false))) {
+      _removeIndex = index;
+    }
+
+    GUILayout.EndHorizontal();
+    GUILayout.BeginHorizontal();
+
+    _sliderResult =
+        Mathf.RoundToInt(
+            GUILayout.HorizontalSlider(
+                sliderValue, 0, 100, _sliderStyle.Value, GUI.skin.horizontalSliderThumb, GUILayout.ExpandWidth(true)));
+
+    GUILayout.Space(3f);
+    GUILayout.Label($"{sliderValue:F0}%", GUILayout.Width(40f));
+
+    GUILayout.EndHorizontal();
+    GUILayout.EndVertical();
+  }
+
   public void Drawer(ConfigEntryBase configEntry) {
     GUILayout.BeginVertical(GUILayout.ExpandWidth(true));
 
@@ -39,8 +79,8 @@ public sealed class ToggleSliderListConfigEntry {
     _valuesCache.AddRange(
         configEntry.BoxedValue.ToString().Split(ValueSeparator, StringSplitOptions.RemoveEmptyEntries));
 
-    bool hasChanged = false;
-    int removeIndex = -1;
+    _hasChanged = false;
+    _removeIndex = -1;
 
     for (int i = 0, count = _valuesCache.Count; i < count; i++) {
       string[] parts = _valuesCache[i].Split(ToggleSeparator, 3, StringSplitOptions.RemoveEmptyEntries);
@@ -48,20 +88,11 @@ public sealed class ToggleSliderListConfigEntry {
       int sliderValue = parts.Length >= 3 && int.TryParse(parts[1], out sliderValue) ? sliderValue : 0;
       bool isToggled = parts.Length >= 3 && parts[2] == "1";
 
-      GUILayout.BeginHorizontal();
+      DrawValue(i, parts[0], sliderValue, isToggled);
 
-      bool toggleResult = GUILayout.Toggle(isToggled, parts[0], GUILayout.ExpandWidth(true));
-      int sliderResult = Mathf.RoundToInt(GUILayout.HorizontalSlider(sliderValue, 0, 100, GUILayout.Width(120f)));
-
-      if (GUILayout.Button("\u2212", GUILayout.MinWidth(40f), GUILayout.ExpandWidth(false))) {
-        removeIndex = i;
-      }
-
-      GUILayout.EndHorizontal();
-
-      if (toggleResult != isToggled || sliderResult != sliderValue) {
-        hasChanged = true;
-        _valuesCache[i] = $"{parts[0]}={sliderResult:###}={(toggleResult ? "1" : "0")}";
+      if (_toggleResult != isToggled || _sliderResult != sliderValue) {
+        _hasChanged = true;
+        _valuesCache[i] = $"{parts[0]}={_sliderResult:###}={(_toggleResult ? "1" : "0")}";
       }
     }
 
@@ -75,7 +106,7 @@ public sealed class ToggleSliderListConfigEntry {
         && _valueText.IndexOf('=') < 0) {
       _valuesCache.Add(_valueText + "=100=1");
       _valueText = string.Empty;
-      hasChanged = true;
+      _hasChanged = true;
     }
 
     GUILayout.EndHorizontal();
@@ -85,18 +116,18 @@ public sealed class ToggleSliderListConfigEntry {
 
       if (!string.IsNullOrEmpty(result)) {
         _valuesCache.Add(result + "=100=1");
-        hasChanged = true;
+        _hasChanged = true;
       }
     }
 
     GUILayout.EndVertical();
 
-    if (removeIndex >= 0) {
-      _valuesCache.RemoveAt(removeIndex);
-      hasChanged = true;
+    if (_removeIndex >= 0) {
+      _valuesCache.RemoveAt(_removeIndex);
+      _hasChanged = true;
     }
 
-    if (hasChanged) {
+    if (_hasChanged) {
       configEntry.BoxedValue = string.Join(",", _valuesCache);
     }
   }
