@@ -109,6 +109,7 @@
     <Compile Include="ComfyLib\Config\ToggleSliderListConfigEntry.cs" />
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
+    <Compile Include="ComfyLib\Utils\CircularQueue.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Core\VolumeController.cs" />
     <Compile Include="Patches\AudioManPatch.cs" />

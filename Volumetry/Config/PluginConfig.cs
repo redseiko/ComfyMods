@@ -1,12 +1,11 @@
 ﻿namespace Volumetry;
 
 using System.Collections.Generic;
+using System.Linq;
 
 using BepInEx.Configuration;
 
 using ComfyLib;
-
-using static ComfyLib.ToggleSliderListConfigEntry;
 
 public static class PluginConfig {
   public static ConfigFile CurrentConfig { get; private set; }
@@ -15,8 +14,6 @@ public static class PluginConfig {
   public static ConfigEntry<float> AmbientLoopVolumeMax { get; private set; }
   public static ConfigEntry<float> OceanLoopVolumeMax { get; private set; }
   public static ConfigEntry<float> WindLoopVolumeMax { get; private set; }
-
-  public static ConfigEntry<float> SfxVolumeMistlandsThunder { get; private set; }
 
   public static ToggleSliderListConfigEntry SfxVolumeOverrides { get; private set; }
 
@@ -27,7 +24,7 @@ public static class PluginConfig {
 
     AmbientLoopVolumeMax =
         config.BindInOrder(
-            "Loop.AmbientLoop",
+            "Loop",
             "ambientLoopVolumeMax",
             1f,
             "AmbientLoop: volume maximum.",
@@ -35,7 +32,7 @@ public static class PluginConfig {
 
     OceanLoopVolumeMax =
         config.BindInOrder(
-            "Loop.OceanLoop",
+            "Loop",
             "oceanLoopVolumeMax",
             1f,
             "OceanLoop: volume maximum.",
@@ -43,7 +40,7 @@ public static class PluginConfig {
 
     WindLoopVolumeMax =
         config.BindInOrder(
-            "Loop.WindLoop",
+            "Loop",
             "windLoopVolumeMax",
             1f,
             "WindLoop: volume maximum.",
@@ -54,20 +51,24 @@ public static class PluginConfig {
             config,
             "SFX.Volume",
             "sfxVolumeOverrides",
-            string.Empty,
+            "sfx_mistlands_thunder;0;1", // Set to string.Empty after.
             "SFX volume overrides.",
             GetSfxHistory);
 
-    SfxVolumeMistlandsThunder =
-        config.BindInOrder(
-            "SFX.Volume",
-            "mistlandsThunder",
-            1f,
-            "SFX volume for: sfx_mistlands_thunder",
-            new AcceptableValueRange<float>(0f, 1f));
+    SfxVolumeOverrides.ConfigEntry.OnSettingChanged(OnSfxVolumeOverridesChanged);
   }
 
   static IEnumerable<SearchOption> GetSfxHistory() {
-    return VolumeController.SfxHistorySearchOptions;
+    return VolumeController.SfxHistorySearchOptions.Reverse();
+  }
+
+  static void OnSfxVolumeOverridesChanged() {
+    VolumeController.SfxVolumeOverrideMap.Clear();
+
+    foreach ((string name, float volume) in SfxVolumeOverrides.GetToggledValues()) {
+      VolumeController.SfxVolumeOverrideMap[name] = volume;
+    }
+
+    Volumetry.LogInfo($"SFX volume overrides: {VolumeController.SfxVolumeOverrideMap.Count}");
   }
 }

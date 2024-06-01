@@ -2,29 +2,32 @@
 
 using System.Collections.Generic;
 
-using static ComfyLib.ToggleSliderListConfigEntry;
-using static PluginConfig;
+using ComfyLib;
 
 public static class VolumeController {
-  public static readonly HashSet<string> SFXHistory = [];
-  public static readonly List<SearchOption> SfxHistorySearchOptions = [];
+  public static readonly CircularQueue<SearchOption> SfxHistorySearchOptions = new(50);
+  public static readonly Dictionary<string, float> SfxVolumeOverrideMap = [];
 
-  // TODO: do this.
-  // public static readonly Dictionary<string, float> SfxVolumeOverrideMap = [];
-
-  public static void ProcessSFX(ZSFX sfx) {
+  public static void ProcessSfx(ZSFX sfx) {
     string sfxName = Utils.GetPrefabName(sfx.name);
 
-    if (SFXHistory.Add(sfxName)) {
-      SfxHistorySearchOptions.Insert(0, new(sfxName));
+    if (SfxVolumeOverrideMap.TryGetValue(sfxName, out float volume)) {
+      Volumetry.LogInfo($"Overring SFX {sfxName} volume from {sfx.m_vol:F0} to {volume:F0}.");
+      SetSfxVolume(sfx, volume);
     }
 
-    if (sfxName == "sfx_mistlands_thunder") {
-      SetSFXVolume(sfx, SfxVolumeMistlandsThunder.Value);
+    AddSfxToHistory(sfx, sfxName);
+  }
+
+  static readonly HashSet<string> _sfxHistoryCache = [];
+
+  static void AddSfxToHistory(ZSFX sfx, string sfxName) {
+    if (_sfxHistoryCache.Add(sfxName)) {
+      SfxHistorySearchOptions.Enqueue(new(sfxName));
     }
   }
 
-  public static void SetSFXVolume(ZSFX sfx, float volume) {
+  public static void SetSfxVolume(ZSFX sfx, float volume) {
     sfx.m_audioSource.volume = volume;
     sfx.m_vol = volume;
   }

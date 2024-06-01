@@ -142,6 +142,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unstrippable", "Unstrippabl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contextual", "Contextual\Contextual.csproj", "{73D8DC7F-CD2F-4D91-9140-5CE24CA7BBB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostalCode", "PostalCode\PostalCode.csproj", "{78F89555-D46B-499C-A1D3-539233980450}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -388,6 +390,10 @@ Global
 		{73D8DC7F-CD2F-4D91-9140-5CE24CA7BBB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73D8DC7F-CD2F-4D91-9140-5CE24CA7BBB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73D8DC7F-CD2F-4D91-9140-5CE24CA7BBB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78F89555-D46B-499C-A1D3-539233980450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78F89555-D46B-499C-A1D3-539233980450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78F89555-D46B-499C-A1D3-539233980450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78F89555-D46B-499C-A1D3-539233980450}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
