@@ -1,6 +1,7 @@
 ﻿namespace Volumetry;
 
 using System.Collections.Generic;
+using System.Linq;
 
 using ComfyLib;
 
@@ -10,20 +11,35 @@ public static class VolumeController {
 
   public static void ProcessSfx(ZSFX sfx) {
     string sfxName = Utils.GetPrefabName(sfx.name);
+    string clipName = sfx.m_audioSource.clip.name;
 
-    if (SfxVolumeOverrideMap.TryGetValue(sfxName, out float volume)) {
-      Volumetry.LogInfo($"Overring SFX {sfxName} volume from {sfx.m_vol:F0} to {volume:F0}.");
+    if (SfxVolumeOverrideMap.TryGetValue(sfxName, out float volume)
+        || SfxVolumeOverrideMap.TryGetValue(clipName, out volume)) {
+      Volumetry.LogInfo($"Overring SFX {sfxName} ({clipName}) volume from {sfx.m_vol:F0} to {volume:F0}.");
       SetSfxVolume(sfx, volume);
     }
 
-    AddSfxToHistory(sfx, sfxName);
+    AddSfxToHistory(sfxName, clipName);
+  }
+
+  public static void ProcessCurrentSfx() {
+    foreach (ZSFX sfx in ZSFX.Instances.Cast<ZSFX>()) {
+      if (sfx.m_audioSource
+          && sfx.m_audioSource.clip
+          && (SfxVolumeOverrideMap.TryGetValue(Utils.GetPrefabName(sfx.name), out float volume)
+              || SfxVolumeOverrideMap.TryGetValue(sfx.m_audioSource.clip.name, out volume))) {
+        SetSfxVolume(sfx, volume);
+      }
+    }
   }
 
   static readonly HashSet<string> _sfxHistoryCache = [];
 
-  static void AddSfxToHistory(ZSFX sfx, string sfxName) {
-    if (_sfxHistoryCache.Add(sfxName)) {
-      SfxHistorySearchOptions.Enqueue(new(sfxName));
+  static void AddSfxToHistory(string sfxName, string clipName) {
+    string displayName = $"{sfxName}\n{clipName}";
+
+    if (_sfxHistoryCache.Add(displayName)) {
+      SfxHistorySearchOptions.Enqueue(new(sfxName, clipName));
     }
   }
 

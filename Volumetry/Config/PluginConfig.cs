@@ -1,11 +1,14 @@
 ﻿namespace Volumetry;
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 using BepInEx.Configuration;
 
 using ComfyLib;
+
+using UnityEngine;
 
 public static class PluginConfig {
   public static ConfigFile CurrentConfig { get; private set; }
@@ -62,7 +65,24 @@ public static class PluginConfig {
     return VolumeController.SfxHistorySearchOptions.Reverse();
   }
 
+  // TODO: encapsulate all of this into a reuseable class like DelayableOnSettingChangedSomething.
+
   static void OnSfxVolumeOverridesChanged() {
+    _changedCoroutineEnd = Time.time + 0.5f;
+
+    if (_changedCoroutine == default) {
+      _changedCoroutine = MonoUpdaters.s_instance.StartCoroutine(OnSfxVolumeOverridesChangedCoroutine());
+    }
+  }
+
+  static Coroutine _changedCoroutine = default;
+  static float _changedCoroutineEnd = 0f;
+
+  static IEnumerator OnSfxVolumeOverridesChangedCoroutine() {
+    while (Time.time < _changedCoroutineEnd) {
+      yield return null;
+    }
+
     VolumeController.SfxVolumeOverrideMap.Clear();
 
     foreach ((string name, float volume) in SfxVolumeOverrides.GetToggledValues()) {
@@ -70,5 +90,8 @@ public static class PluginConfig {
     }
 
     Volumetry.LogInfo($"SFX volume overrides: {VolumeController.SfxVolumeOverrideMap.Count}");
+    VolumeController.ProcessCurrentSfx();
+
+    _changedCoroutine = default;
   }
 }

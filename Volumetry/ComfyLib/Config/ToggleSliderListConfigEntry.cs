@@ -130,6 +130,8 @@ public sealed class ToggleSliderListConfigEntry {
     GUILayout.EndHorizontal();
 
     if (_autoCompleteBox != default) {
+      GUILayout.Space(3f);
+
       string result = _autoCompleteBox.DrawBox(_valueText);
 
       if (!string.IsNullOrEmpty(result)) {
@@ -175,9 +177,11 @@ public sealed class ToggleSliderListConfigEntry {
     }
 
     string DrawCurrentOptions() {
+      GUILayout.Label("AutoComplete", GUILayout.ExpandWidth(true));
+
       _scrollPosition =
           GUILayout.BeginScrollView(
-              _scrollPosition, GUI.skin.box, GUILayout.ExpandWidth(true), GUILayout.Height(120f));
+              _scrollPosition, GUI.skin.box, GUILayout.ExpandWidth(true), GUILayout.Height(200f));
 
       string result = string.Empty;
 
@@ -186,15 +190,28 @@ public sealed class ToggleSliderListConfigEntry {
           continue;
         }
 
-        string displayValue = option.DisplayValue;
+        GUILayout.BeginVertical(GUI.skin.box);
 
-        if (displayValue.Length <= 0) {
-          displayValue = option.OptionValue;
-        }
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("SFX", GUILayout.Width(40f));
 
-        if (GUILayout.Button(displayValue, GUILayout.MinWidth(40f))) {
+        if (GUILayout.Button(option.OptionValue, GUILayout.MinWidth(40f), GUILayout.ExpandWidth(true))) {
           result = option.OptionValue;
         }
+        GUILayout.EndHorizontal();
+
+        if (option.DisplayValue.Length > 0) {
+          GUILayout.BeginHorizontal();
+          GUILayout.Label("Clip", GUILayout.Width(40f));
+
+          if (GUILayout.Button(option.DisplayValue, GUILayout.MinWidth(40f), GUILayout.ExpandWidth(true))) {
+            result = option.DisplayValue;
+          }
+
+          GUILayout.EndHorizontal();
+        }
+
+        GUILayout.EndVertical();
       }
 
       GUILayout.EndScrollView();
