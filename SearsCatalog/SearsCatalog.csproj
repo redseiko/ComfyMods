@@ -11,8 +11,9 @@
     <AssemblyName>SearsCatalog</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <LangVersion>9</LangVersion>
+    <LangVersion>12</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -63,19 +64,22 @@
     <Reference Include="assembly_utils_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_steamworks_publicized">
-      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_steamworks_publicized.dll</HintPath>
-    </Reference>
     <Reference Include="assembly_valheim_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_valheim_publicized.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx">
       <HintPath>$(GamePath)\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="gui_framework_publicized">
+      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\gui_framework_publicized.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>$(GamePath)\valheim_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
@@ -109,26 +113,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
+    <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
+    <Compile Include="Core\BuildHudController.cs" />
+    <Compile Include="Core\ScrollRectUtils.cs" />
     <Compile Include="Patches\HudPatch.cs" />
     <Compile Include="Patches\PieceTablePatch.cs" />
     <Compile Include="Patches\PlayerPatch.cs" />
     <Compile Include="Config\PluginConfig.cs" />
-    <Compile Include="Extensions\PluginExtensions.cs" />
     <Compile Include="SearsCatalog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\Components\DisableHighlightOnSelect.cs" />
-    <Compile Include="UI\Components\PanelDragger.cs" />
-    <Compile Include="UI\Components\PanelResizer.cs" />
-    <Compile Include="UI\Components\ParentSizeFitter.cs" />
-    <Compile Include="UI\Controls\ValueCell.cs" />
-    <Compile Include="UI\Core\UIBuilder.cs" />
-    <Compile Include="UI\Core\UIExtensions.cs" />
-    <Compile Include="UI\Core\UIResources.cs" />
-    <Compile Include="UI\PieceListPanel.cs" />
-    <Compile Include="UI\PieceListRow.cs" />
+    <Compile Include="ComfyLib\UI\Components\PanelDragger.cs" />
+    <Compile Include="ComfyLib\UI\Components\PanelResizer.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIBuilder.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIExtensions.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIResources.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="manifest.json" />
+    <None Include="CHANGELOG.md" />
     <None Include="README.md" />
     <None Include="icon.png" />
   </ItemGroup>
@@ -154,7 +156,7 @@
   </Target>
   <Target Name="MakeThunderstorePackage" AfterTargets="GetAssemblyVersion">
     <ItemGroup>
-      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; README.md; manifest.json; icon.png" />
+      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; CHANGELOG.md; README.md; manifest.json; icon.png" />
     </ItemGroup>
     <MakeDir Directories="$(PackageDir)" />
     <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageDir)" />
