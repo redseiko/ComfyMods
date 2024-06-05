@@ -1,41 +1,33 @@
-﻿using System;
+﻿namespace SearsCatalog;
+
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
 using HarmonyLib;
 
-using static SearsCatalog.PluginConfig;
+using static PluginConfig;
 
-namespace SearsCatalog {
-  [HarmonyPatch(typeof(Player))]
-  static class PlayerPatch {
-    [HarmonyTranspiler]
-    [HarmonyPatch(nameof(Player.UpdateBuildGuiInput))]
-    static IEnumerable<CodeInstruction> UpdateBuildGuiInputTranspiler(IEnumerable<CodeInstruction> instructions) {
-      return new CodeMatcher(instructions)
-          .MatchForward(
-              useEnd: false,
-              new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZInput), nameof(ZInput.GetMouseScrollWheel))),
-              new CodeMatch(OpCodes.Ldc_R4))
-          .ThrowIfInvalid("Could not patch Player.UpdateBuildGuiInput()! (PrevCategory)")
-          .Advance(offset: 1)
-          .InsertAndAdvance(Transpilers.EmitDelegate<Func<float, float>>(GetAxisDelegate))
-          .MatchForward(
-              useEnd: false,
-              new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZInput), nameof(ZInput.GetMouseScrollWheel))),
-              new CodeMatch(OpCodes.Ldc_R4))
-          .ThrowIfInvalid("Could not patch Player.UpdateBuildGuiInput()! (NextCategory)")
-          .Advance(offset: 1)
-          .InsertAndAdvance(Transpilers.EmitDelegate<Func<float, float>>(GetAxisDelegate))
-          .InstructionEnumeration();
-    }
+[HarmonyPatch(typeof(Player))]
+static class PlayerPatch {
+  [HarmonyTranspiler]
+  [HarmonyPatch(nameof(Player.UpdateBuildGuiInput))]
+  static IEnumerable<CodeInstruction> UpdateBuildGuiInputTranspiler(IEnumerable<CodeInstruction> instructions) {
+    return new CodeMatcher(instructions)
+        .Start()
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZInput), nameof(ZInput.GetMouseScrollWheel))))
+        .ThrowIfInvalid("Could not patch Player.UpdateBuildGuiInput()! (GetMouseScrollWheel)")
+        .Repeat(InsertGetMouseScrollWheelDelegate)
+        .InstructionEnumeration();
+  }
 
-    static float GetAxisDelegate(float result) {
-      if (result != 0f && IsModEnabled.Value) {
-        return 0f;
-      }
+  static void InsertGetMouseScrollWheelDelegate(CodeMatcher matcher) {
+    matcher
+        .Advance(offset: 1)
+        .InsertAndAdvance(Transpilers.EmitDelegate(GetAxisDelegate));
+  }
 
-      return result;
-    }
+  static float GetAxisDelegate(float result) {
+    return IsModEnabled.Value ? 0f : result;
   }
 }
