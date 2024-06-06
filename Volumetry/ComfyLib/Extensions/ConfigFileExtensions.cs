@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 using BepInEx.Configuration;
 
+using UnityEngine;
+
 public static class ConfigFileExtensions {
   static readonly Dictionary<string, int> _sectionToSettingOrder = [];
 
