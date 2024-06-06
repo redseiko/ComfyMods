@@ -1,5 +1,6 @@
 ﻿namespace Volumetry;
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ public static class PluginConfig {
   public static ConfigEntry<float> OceanLoopVolumeMax { get; private set; }
   public static ConfigEntry<float> WindLoopVolumeMax { get; private set; }
 
-  public static ToggleSliderListConfigEntry SfxVolumeOverrides { get; private set; }
+  public static VolumeSliderListConfigEntry SfxVolumeOverrides { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
     CurrentConfig = config;
@@ -54,7 +55,7 @@ public static class PluginConfig {
             config,
             "SFX.Volume",
             "sfxVolumeOverrides",
-            "sfx_mistlands_thunder;0;1", // Set to string.Empty after.
+            string.Empty,
             "SFX volume overrides.",
             GetSfxHistory);
 
@@ -68,7 +69,7 @@ public static class PluginConfig {
   // TODO: encapsulate all of this into a reuseable class like DelayableOnSettingChangedSomething.
 
   static void OnSfxVolumeOverridesChanged() {
-    _changedCoroutineEnd = Time.time + 0.5f;
+    _changedCoroutineEnd = Time.time + 0.35f;
 
     if (_changedCoroutine == default) {
       _changedCoroutine = MonoUpdaters.s_instance.StartCoroutine(OnSfxVolumeOverridesChangedCoroutine());

@@ -8,12 +8,12 @@ using BepInEx.Configuration;
 
 using UnityEngine;
 
-public sealed class ToggleSliderListConfigEntry {
+public sealed class VolumeSliderListConfigEntry {
   public ConfigEntry<string> ConfigEntry { get; }
 
   readonly AutoCompleteBox _autoCompleteBox = default;
 
-  public ToggleSliderListConfigEntry(
+  public VolumeSliderListConfigEntry(
       ConfigFile config,
       string section,
       string key,
@@ -177,7 +177,7 @@ public sealed class ToggleSliderListConfigEntry {
     }
 
     string DrawCurrentOptions() {
-      GUILayout.Label("AutoComplete", GUILayout.ExpandWidth(true));
+      GUILayout.Label("Recent SFX", GUILayout.ExpandWidth(true));
 
       _scrollPosition =
           GUILayout.BeginScrollView(

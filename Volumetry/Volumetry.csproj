@@ -106,7 +106,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComfyLib\Config\ToggleSliderListConfigEntry.cs" />
+    <Compile Include="ComfyLib\Config\VolumeSliderListConfigEntry.cs" />
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="ComfyLib\Utils\CircularQueue.cs" />
