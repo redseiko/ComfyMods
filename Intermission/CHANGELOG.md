@@ -1,5 +1,9 @@
 ## Changelog
 
+### Unreleased
+
+  * Display a black background behind custom loading images for a consistent experience no matter the image or screen aspect ratio.
+
 ### 1.5.0
 
   * Updated for the `v0.217.46` patch.
