@@ -144,6 +144,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contextual", "Contextual\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostalCode", "PostalCode\PostalCode.csproj", "{78F89555-D46B-499C-A1D3-539233980450}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unbuildable", "Unbuildable\Unbuildable.csproj", "{BB7F5DAF-ADD4-420D-AE7B-39B9614F7E2D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -394,6 +396,10 @@ Global
 		{78F89555-D46B-499C-A1D3-539233980450}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78F89555-D46B-499C-A1D3-539233980450}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78F89555-D46B-499C-A1D3-539233980450}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB7F5DAF-ADD4-420D-AE7B-39B9614F7E2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB7F5DAF-ADD4-420D-AE7B-39B9614F7E2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB7F5DAF-ADD4-420D-AE7B-39B9614F7E2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB7F5DAF-ADD4-420D-AE7B-39B9614F7E2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
