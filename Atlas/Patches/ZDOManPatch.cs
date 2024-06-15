@@ -4,11 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
+using ComfyLib;
+
 using HarmonyLib;
 
 using UnityEngine;
-
-using static PluginConfig;
 
 [HarmonyPatch(typeof(ZDOMan))]
 static class ZDOManPatch {
@@ -16,10 +16,6 @@ static class ZDOManPatch {
   [HarmonyPatch(nameof(ZDOMan.FilterZDO))]
   static void FilterZDOPostfix(ZDO zdo) {
     ZDOManUtils.SetTimeCreatedFields(zdo);
-    
-    if (SetCustomFieldsForAshlandsZDOs.Value) {
-      ZDOManUtils.SetAshlandsCustomFields(zdo);
-    }
   }
 
   [HarmonyTranspiler]
@@ -28,8 +24,8 @@ static class ZDOManPatch {
       IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
         // Add exception handling for duplicate ZDOs saved.
-        .MatchForward(
-            useEnd: false,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldarg_0),
             new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(ZDOMan), nameof(ZDOMan.m_objectsByID))),
             new CodeMatch(OpCodes.Ldloc_S),
@@ -52,14 +48,6 @@ static class ZDOManPatch {
     objectsById[uid] = zdo;
   }
 
-  [HarmonyPostfix]
-  [HarmonyPatch(nameof(ZDOMan.WarnAndRemoveBrokenZDOs))]
-  static void WarnAndRemoveBrokenZDOsPostfix() {
-    if (SetCustomFieldsForAshlandsZDOs.Value) {
-      ZDOManUtils.LogModifiedZDOs();
-    }
-  }
-
   [HarmonyTranspiler]
   [HarmonyPatch(nameof(ZDOMan.RPC_ZDOData))]
   static IEnumerable<CodeInstruction> RPC_ZDODataTranspiler(IEnumerable<CodeInstruction> instructions) {
@@ -75,17 +63,6 @@ static class ZDOManPatch {
         .InsertAndAdvance(
             ldLocS12,
             Transpilers.EmitDelegate(ZDOManUtils.SetTimeCreatedDelegate))
-        .MatchStartForward(
-            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(ZDOMan), nameof(ZDOMan.m_deadZDOs))),
-            new CodeMatch(OpCodes.Ldloc_S),
-            new CodeMatch(
-                OpCodes.Callvirt,
-                AccessTools.Method(typeof(Dictionary<ZDOID, long>), nameof(Dictionary<ZDOID, long>.ContainsKey))))
-        .ThrowIfInvalid("Could not patch ZDOMan.RPC_ZDOData()! (ContainsKey)")
-        .Advance(offset: 3)
-        .InsertAndAdvance(
-            ldLocS12,
-            Transpilers.EmitDelegate(ZDOManUtils.DestroyZDOsDelegate))
         .InstructionEnumeration();
   }
 
@@ -145,10 +122,5 @@ static class ZDOManPatch {
     PluginLogger.LogInfo($"Connected {connectedCount} spawners ({doneCount} 'done').");
 
     return false;
-  }
-
-  static CodeMatcher SaveInstruction(this CodeMatcher matcher, int offset, out CodeInstruction instruction) {
-    instruction = matcher.InstructionAt(offset);
-    return matcher;
   }
 }
