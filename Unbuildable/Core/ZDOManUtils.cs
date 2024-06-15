@@ -15,10 +15,8 @@ public static class ZDOManUtils {
     Unbuildable.LogInfo($"Watching for {PrefabsToDestroy.Count} prefabs to destroy on placement.");
   }
 
-  public static readonly int CatapultHashCode = "Catapult".GetStableHashCode();
-
   public static bool DestroyZDOsDelegate(bool deadZDOsContainsKey, ZDO zdo) {
-    if (!deadZDOsContainsKey && zdo.m_prefab == CatapultHashCode) {
+    if (!deadZDOsContainsKey && PrefabsToDestroy.Count > 0 && PrefabsToDestroy.Contains(zdo.m_prefab)) {
       ZRoutedRpc.s_instance.InvokeRoutedRPC(zdo.GetOwner(), zdo.m_uid, "RPC_Remove");
     }
 

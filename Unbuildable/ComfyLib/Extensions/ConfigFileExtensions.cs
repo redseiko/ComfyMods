@@ -93,6 +93,10 @@ public static class ConfigFileExtensions {
             settingChangedHandler((ConfigEntry<T>) ((SettingChangedEventArgs) eventArgs).ChangedSetting.BoxedValue);
   }
 
+  public static string[] GetStringValues(this ConfigEntry<string> configEntry) {
+    return configEntry.Value.Split([','], StringSplitOptions.RemoveEmptyEntries);
+  }
+
   internal sealed class ConfigurationManagerAttributes {
     public Action<ConfigEntryBase> CustomDrawer;
     public bool? Browsable;
