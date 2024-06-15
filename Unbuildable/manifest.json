@@ -1,0 +1,8 @@
+{
+  "name": "Unbuildable",
+  "version_number": "1.0.0",
+  "author": "ComfyMods",
+  "description": "Mod description.",
+  "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Unbuildable",
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
+}
