@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.5.1
+
+  * Added missing negative index check in `CenterOnSelectedIndex()`.
+
 ### 1.5.0
 
   * Fixed for the `v0.218.16` patch.

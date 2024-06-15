@@ -29,7 +29,7 @@ public static class BuildHudController {
     Vector2Int gridIndex = Player.m_localPlayer.m_buildPieces.GetSelectedIndex();
     int index = (BuildHudColumns * gridIndex.y) + gridIndex.x;
 
-    if (index >= Hud.m_instance.m_pieceIcons.Count) {
+    if (index < 0 || index >= Hud.m_instance.m_pieceIcons.Count) {
       return;
     }
 
