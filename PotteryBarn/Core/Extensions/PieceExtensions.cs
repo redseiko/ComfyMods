@@ -1,9 +1,6 @@
 ﻿namespace PotteryBarn;
 
 using System;
-using System.Linq;
-
-using ComfyLib;
 
 public static class PieceExtensions {
   public static Piece SetCanBeRemoved(this Piece piece, bool canBeRemoved) {
@@ -13,6 +10,11 @@ public static class PieceExtensions {
 
   public static Piece SetCategory(this Piece piece, Piece.PieceCategory pieceCategory) {
     piece.m_category = pieceCategory;
+    return piece;
+  }
+
+  public static Piece SetComfort(this Piece piece, int comfort) {
+    piece.m_comfort = comfort;
     return piece;
   }
 
@@ -36,19 +38,45 @@ public static class PieceExtensions {
     return piece;
   }
 
-  public static Piece SetResource(
-      this Piece piece, string resourceName, Action<Piece.Requirement> modifyResourceAction) {
-    modifyResourceAction?.Invoke(piece.GetResource(resourceName));
-    return piece;
-  }
-
   public static Piece SetTargetNonPlayerBuilt(this Piece piece, bool canTarget) {
     piece.m_targetNonPlayerBuilt = canTarget;
     return piece;
   }
 
+  public static Piece ModifyResource(
+      this Piece piece,
+      string resourceName,
+      int? amount = default,
+      int? amountPerLevel = default,
+      bool? recover = default) {
+    if (!amount.HasValue && !amountPerLevel.HasValue && !recover.HasValue) {
+      throw new InvalidOperationException($"At least one of the optional parameters must be specified!");
+    }
+
+    Piece.Requirement resource = GetResource(piece, resourceName);
+
+    if (amount.HasValue) {
+      resource.m_amount = amount.Value;
+    }
+
+    if (amountPerLevel.HasValue) {
+      resource.m_amountPerLevel = amountPerLevel.Value;
+    }
+
+    if (recover.HasValue) {
+      resource.m_recover = recover.Value;
+    }
+
+    return piece;
+  }
+
   public static Piece.Requirement GetResource(this Piece piece, string resourceName) {
-    return piece.Ref()?.m_resources?.Where(req => req?.m_resItem.Ref()?.name == resourceName).FirstOrDefault();
+    foreach (Piece.Requirement requirement in piece.m_resources) {
+      if (requirement.m_resItem.name == resourceName) {
+        return requirement;
+      }
+    }
+
+    throw new InvalidOperationException($"No matching resource '{resourceName}' for Piece {piece.m_name}.");
   }
 }
-

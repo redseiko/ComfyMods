@@ -15,8 +15,8 @@ static class DropOnDestroyedPatch {
       return false;
     }
 
-    if (PotteryBarn.IsDropTableDisabled) {
-      PotteryBarn.IsDropTableDisabled = false;
+    if (PotteryManager.IsDropTableDisabled) {
+      PotteryManager.IsDropTableDisabled = false;
       return false;
     }
 

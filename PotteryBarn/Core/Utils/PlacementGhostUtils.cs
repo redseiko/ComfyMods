@@ -1,7 +1,5 @@
 ﻿namespace PotteryBarn;
 
-using System;
-
 using UnityEngine;
 
 public static class PlacementGhostUtils {
@@ -31,11 +29,11 @@ public static class PlacementGhostUtils {
     }
 
     if (gameObject.TryGetComponent(out Humanoid humanoid)) {
-      humanoid.m_defaultItems ??= Array.Empty<GameObject>();
-      humanoid.m_randomWeapon ??= Array.Empty<GameObject>();
-      humanoid.m_randomArmor ??= Array.Empty<GameObject>();
-      humanoid.m_randomShield ??= Array.Empty<GameObject>();
-      humanoid.m_randomSets ??= Array.Empty<Humanoid.ItemSet>();
+      humanoid.m_defaultItems = [];
+      humanoid.m_randomWeapon = [];
+      humanoid.m_randomArmor = [];
+      humanoid.m_randomShield = [];
+      humanoid.m_randomSets = [];
     }
   }
 }

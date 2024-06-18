@@ -26,7 +26,7 @@ static class PlayerPatch {
                         typeof(UnityEngine.Object),
                         nameof(UnityEngine.Object.Instantiate),
                         genericParameterCount: 1,
-                        new Type[] { typeof(Type) })
+                        [typeof(Type)])
                     .MakeGenericMethod(typeof(GameObject))),
             new CodeMatch(OpCodes.Stfld, AccessTools.Field(typeof(Player), nameof(Player.m_placementGhost))))
         .ThrowIfInvalid("Could not patch Player.SetupPlacementGhost()! (m_placementGhost)")
@@ -59,19 +59,19 @@ static class PlayerPatch {
   static bool CheckCanRemovePrefix(Piece piece, ref bool __result) {
     if (IsModEnabled.Value) {
       // Prevents world generated piece from player removal with build hammer.
-      if (!piece.IsPlacedByPlayer() && PotteryBarn.IsCreatorShopPiece(piece)) {
+      if (!piece.IsPlacedByPlayer() && PotteryManager.IsCreatorShopPiece(piece)) {
         __result = false;
         return false;
       }
 
       // Prevents player from breaking pottery barn pieces they didn't create themselves.
-      if (PotteryBarn.IsCreatorShopPiece(piece) && !piece.IsCreator()) {
+      if (PotteryManager.IsCreatorShopPiece(piece) && !piece.IsCreator()) {
         __result = false;
         return false;
       }
 
       // Enforces destruction by damage rather than build hammer.
-      if (!PotteryBarn.IsDestructibleCreatorShopPiece(piece) && PotteryBarn.IsCreatorShopPiece(piece)) {
+      if (!PotteryManager.IsDestructibleCreatorShopPiece(piece) && PotteryManager.IsCreatorShopPiece(piece)) {
         __result = false;
         return false;
       }

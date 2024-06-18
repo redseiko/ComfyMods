@@ -1,5 +1,12 @@
 ## Changelog
 
+### 1.14.0 (WIP)
+
+  * Updated for the `v0.218.15` patch.
+  * Bumped up `<LangVersion>` to C# 12.
+  * Updated Jotunn dependency to `v2.20.1`.
+  * New prefabs added, new "Builder Shop" tab, removed some existing prefabs, moved some prefabs to new tab.
+
 ### 1.13.0
 
   * Fixed for the `v0.217.46` patch.

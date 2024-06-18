@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-public class DvergrPieces {
+public static class DvergrPieces {
   public static readonly Dictionary<string, Dictionary<string, int>> DvergrPrefabs = new() {
     { "blackmarble_head01", new Dictionary<string, int>() {
       { "Copper", 4 }}},

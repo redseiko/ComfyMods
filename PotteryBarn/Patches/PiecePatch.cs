@@ -22,7 +22,7 @@ static class PiecePatch {
       }
 
       if (__instance.IsCreator()) {
-        PotteryBarn.IsDropTableDisabled = true;
+        PotteryManager.IsDropTableDisabled = true;
         return true;
       }
 

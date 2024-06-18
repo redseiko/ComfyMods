@@ -1,13 +1,11 @@
 ﻿namespace PotteryBarn;
 
 public static class PieceTableExtensions {
-  public static bool AddPiece(this PieceTable pieceTable, Piece piece) {
-    if (!piece || !pieceTable || pieceTable.m_pieces == null || pieceTable.m_pieces.Contains(piece.gameObject)) {
-      return false;
+  public static PieceTable AddPiece(this PieceTable pieceTable, Piece piece) {
+    if (!pieceTable.m_pieces.Contains(piece.gameObject)) {
+      pieceTable.m_pieces.Add(piece.gameObject);
     }
 
-    pieceTable.m_pieces.Add(piece.gameObject);
-
-    return true;
+    return pieceTable;
   }
 }

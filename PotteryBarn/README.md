@@ -111,4 +111,4 @@
 
 ### Dependencies
 
-  * [Jotunn-v2.19.2](https://valheim.thunderstore.io/package/ValheimModding/Jotunn/)
+  * [Jotunn-v2.20.1](https://valheim.thunderstore.io/package/ValheimModding/Jotunn/)
