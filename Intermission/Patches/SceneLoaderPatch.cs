@@ -27,6 +27,10 @@ static class SceneLoaderPatch {
       __instance._showSaveNotification = false;
       __instance._showHealthWarning = false;
 
+      // set black background as default backing such that the SceneLoader loading screen does not display the default
+      // Unity scene behind loading images that do not scale up to the whole screen
+      HudUtils.SetupBlackBackground(_loadingImage);
+
       HudUtils.SetupLoadingImage(_loadingImage);
       HudUtils.SetLoadingImage(_loadingImage);
       __instance.ScaleLerpLoadingImage(_loadingImage);

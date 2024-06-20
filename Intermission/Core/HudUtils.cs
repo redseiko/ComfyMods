@@ -41,6 +41,15 @@ public static class HudUtils {
         .SetPreserveAspect(true);
   }
 
+  public static void SetupBlackBackground(Image loadingImage) {
+    // setting up an empty sprite as first sibling so that it's displayed behind seems to do the trick just fine
+    Transform backing = UnityEngine.Object.Instantiate(loadingImage.transform, loadingImage.transform.parent);
+    backing.name = "BlackBackground";
+    backing.GetComponent<Image>().sprite = null;
+    backing.SetActive(true);
+    backing.SetAsFirstSibling();
+  }
+
   public static void SetupPanelSeparator(Transform panelSeparator = default) {
     if (panelSeparator) {
       _cachedPanelSeparator = panelSeparator;
