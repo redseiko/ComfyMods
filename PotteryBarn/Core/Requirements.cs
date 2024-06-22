@@ -2,12 +2,6 @@
 
 using System.Collections.Generic;
 
-public sealed class PotteryPiece {
-  public string Prefab { get; set; } = string.Empty;
-  public string Category { get; set; } = string.Empty;
-  public string CraftingStation { get; set; } = string.Empty;
-}
-
 public static class Requirements {
   public static readonly Dictionary<string, Dictionary<string, int>> HammerCreatorShopItems = new() {
     // Goblin items
@@ -112,13 +106,6 @@ public static class Requirements {
         {"YggdrasilWood", 20 },
         {"MushroomBlue", 3 }}},
 
-     {"dvergrprops_bed", new Dictionary<string, int>() {
-        {"YggdrasilWood", 8 },
-        {"Copper", 1 },
-        {"WolfPelt", 2 },
-        {"LoxPelt", 1 },
-        {"MushroomBlue", 1 }}},
-
      {"dverger_demister", new Dictionary<string, int>() {
         {"Wisp", 20 },
         {"MushroomBlue", 8 }}},
@@ -126,13 +113,6 @@ public static class Requirements {
      {"dverger_demister_large", new Dictionary<string, int>() {
         {"Wisp", 50 },
         {"MushroomBlue", 30 }}}
-  };
-
-  public static readonly Dictionary<string, Dictionary<string, int>> BuilderShopPrefabs = new() {
-    {"dvergrprops_chair", new Dictionary<string, int>() {
-       {"YggdrasilWood", 4 },
-       {"Copper", 1 },
-       {"MushroomBlue", 1 }}},
   };
 
   public static readonly Dictionary<string, Dictionary<string, int>> MiscPrefabs =
