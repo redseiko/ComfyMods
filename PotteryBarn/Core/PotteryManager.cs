@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+using ComfyLib;
+
 using Jotunn.Managers;
 
 using UnityEngine;
@@ -70,46 +72,47 @@ public static class PotteryManager {
     foreach (
         KeyValuePair<string, Dictionary<string, int>> entry in
             Requirements.HammerCreatorShopItems.OrderBy(o => o.Key).ToList()) {
-      GetOrAddPieceComponent(entry.Key, pieceTable)
-          .SetResources(CreateRequirements(entry.Value))
-          .SetCategory(HammerCreatorShopCategory)
-          .SetCraftingStation(GetCraftingStation(Requirements.CraftingStationRequirements, entry.Key))
-          .SetCanBeRemoved(true)
-          .SetTargetNonPlayerBuilt(false);
+      pieceTable.AddPiece(
+          GetOrAddPiece(entry.Key)
+              .SetResources(CreateRequirements(entry.Value))
+              .SetCategory(HammerCreatorShopCategory)
+              .SetCraftingStation(GetCraftingStation(Requirements.CraftingStationRequirements, entry.Key))
+              .SetCanBeRemoved(true)
+              .SetTargetNonPlayerBuilt(false));
     }
 
     foreach (
         KeyValuePair<string, Dictionary<string, int>> entry in
             Requirements.MiscPrefabs.OrderBy(o => o.Key).ToList()) {
-
-      GetOrAddPieceComponent(entry.Key, pieceTable)
-          .SetResources(CreateRequirements(entry.Value))
-          .SetCategory(HammerMiscCategory)
-          .SetCraftingStation(GetCraftingStation(Requirements.CraftingStationRequirements, entry.Key))
-          .SetCanBeRemoved(true)
-          .SetTargetNonPlayerBuilt(true);
+      pieceTable.AddPiece(
+          GetOrAddPiece(entry.Key)
+              .SetResources(CreateRequirements(entry.Value))
+              .SetCategory(HammerMiscCategory)
+              .SetCraftingStation(GetCraftingStation(Requirements.CraftingStationRequirements, entry.Key))
+              .SetCanBeRemoved(true)
+              .SetTargetNonPlayerBuilt(true));
     }
 
     foreach (
         KeyValuePair<string, Dictionary<string, int>> entry in
             DvergrPieces.DvergrPrefabs.OrderBy(o => o.Key).ToList()) {
-      GetOrAddPieceComponent(entry.Key, pieceTable)
-          .SetResources(CreateRequirements(entry.Value))
-          .SetCategory(HammerBuildingCategory)
-          .SetCraftingStation(GetCraftingStation(DvergrPieces.DvergrPrefabCraftingStationRequirements, entry.Key))
-          .SetCanBeRemoved(true)
-          .SetTargetNonPlayerBuilt(false);
+      pieceTable.AddPiece(
+          GetOrAddPiece(entry.Key)
+              .SetResources(CreateRequirements(entry.Value))
+              .SetCategory(HammerBuildingCategory)
+              .SetCraftingStation(GetCraftingStation(DvergrPieces.DvergrPrefabCraftingStationRequirements, entry.Key))
+              .SetCanBeRemoved(true)
+              .SetTargetNonPlayerBuilt(false));
     }
 
-    foreach (
-        KeyValuePair<string, Dictionary<string, int>> entry in
-            Requirements.BuilderShopPrefabs.OrderBy(o => o.Key).ToList()) {
-      GetOrAddPieceComponent(entry.Key, pieceTable)
-          .SetResources(CreateRequirements(entry.Value))
-          .SetCategory(HammerBuilderShopCategory)
-          .SetCraftingStation(GetCraftingStation(Requirements.CraftingStationRequirements, entry.Key))
-          .SetCanBeRemoved(true)
-          .SetTargetNonPlayerBuilt(false);
+    foreach (PotteryPiece potteryPiece in BuilderShop.HammerPieces) {
+      pieceTable.AddPiece(
+          GetOrAddPiece(potteryPiece.PiecePrefab)
+              .SetCategory(HammerBuilderShopCategory)
+              .SetResources(CreatePieceRequirements(potteryPiece.PieceResources))
+              .SetCraftingStation(GetCraftingStation(potteryPiece.CraftingStation))
+              .SetCanBeRemoved(true)
+              .SetTargetNonPlayerBuilt(false));
     }
   }
 
@@ -124,12 +127,13 @@ public static class PotteryManager {
     foreach (
         KeyValuePair<string, Dictionary<string, int>> entry in
             Requirements.CultivatorCreatorShopItems.OrderBy(o => o.Key).ToList()) {
-      GetOrAddPieceComponent(entry.Key, pieceTable)
-          .SetResources(CreateRequirements(entry.Value))
-          .SetCategory(CultivatorCreatorShopCategory)
-          .SetCraftingStation(GetCraftingStation(Requirements.CraftingStationRequirements, entry.Key))
-          .SetCanBeRemoved(true)
-          .SetTargetNonPlayerBuilt(false);
+      pieceTable.AddPiece(
+          GetOrAddPiece(entry.Key)
+              .SetResources(CreateRequirements(entry.Value))
+              .SetCategory(CultivatorCreatorShopCategory)
+              .SetCraftingStation(GetCraftingStation(Requirements.CraftingStationRequirements, entry.Key))
+              .SetCanBeRemoved(true)
+              .SetTargetNonPlayerBuilt(false));
     }
   }
 
@@ -156,27 +160,23 @@ public static class PotteryManager {
     return piece;
   }
 
-  public static Piece GetOrAddPieceComponent(string prefabName, PieceTable pieceTable) {
-    GameObject prefab = ZNetScene.instance.GetPrefab(prefabName);
+  public static Piece.Requirement[] CreatePieceRequirements(ICollection<PieceResource> pieceResources) {
+    return pieceResources.Select(CreatePieceRequirement).ToArray();
+  }
 
-    if (!prefab.TryGetComponent(out Piece piece)) {
-      piece = prefab.AddComponent<Piece>();
-      piece.m_name = FormatPrefabName(prefab.name);
+  public static Piece.Requirement CreatePieceRequirement(PieceResource pieceResource) {
+    return new() {
+      m_resItem = PrefabManager.Instance.GetPrefab(pieceResource.Name).GetComponent<ItemDrop>(),
+      m_amount = pieceResource.Amount,
+    };
+  }
 
-      SetPlacementRestrictions(piece);
+  public static CraftingStation GetCraftingStation(string prefabName) {
+    if (string.IsNullOrEmpty(prefabName)) {
+      return default;
     }
 
-    if (!piece.m_icon) {
-      piece.m_icon = LoadOrRenderIcon(prefab, PrefabIconRenderRotation);
-    }
-
-    if (!pieceTable.m_pieces.Contains(prefab)) {
-      pieceTable.m_pieces.Add(prefab);
-    }
-
-    piece.m_description = prefab.name;
-
-    return piece;
+    return PrefabManager.Instance.GetPrefab(prefabName).GetComponent<CraftingStation>();
   }
 
   public static Piece SetPlacementRestrictions(Piece piece) {
@@ -231,44 +231,14 @@ public static class PotteryManager {
     return null;
   }
 
-  public static bool IsBuildHammerItem(string prefabName) {
-    if (Requirements.HammerCreatorShopItems.Keys.Contains(prefabName)) {
-      return true;
-    }
-
-    return false;
+  public static bool IsShopPiece(Piece piece) {
+    return
+        Requirements.HammerCreatorShopItems.ContainsKey(piece.m_description)
+        || BuilderShop.HammerPieces.Contains(piece.m_description);
   }
 
-  public static bool IsCreatorShopPiece(Piece piece) {
-    if (Requirements.HammerCreatorShopItems.Keys.Contains(piece.m_description)) {
-      return true;
-    }
-
-    return false;
-  }
-
-  public static bool IsDestructibleCreatorShopPiece(string prefabName) {
-    if (Requirements.HammerCreatorShopItems.Keys.Contains(prefabName)) {
-      return true;
-    }
-
-    return false;
-  }
-
-  public static bool IsDestructibleCreatorShopPiece(Piece piece) {
-    if (Requirements.HammerCreatorShopItems.Keys.Contains(piece.m_description)) {
-      return true;
-    }
-
-    return false;
-  }
-
-  public static bool IsNewDvergrPiece(Piece piece) {
-    if (DvergrPieces.DvergrPrefabs.Keys.Contains(piece.m_description)) {
-      return true;
-    }
-
-    return false;
+  public static bool IsDvergrPiece(Piece piece) {
+    return DvergrPieces.DvergrPrefabs.ContainsKey(piece.m_description);
   }
 
   public static Sprite LoadOrRenderIcon(GameObject prefab, Quaternion renderRotation) {
@@ -278,13 +248,4 @@ public static class PotteryManager {
 
     return RenderManager.Instance.Render(request);
   }
-
-  static Sprite CreateColorSprite(Color color) {
-    Texture2D texture = new(1, 1);
-    texture.SetPixel(0, 0, color);
-    texture.Apply();
-
-    return Sprite.Create(texture, new(0, 0, 1, 1), Vector2.zero);
-  }
-
 }

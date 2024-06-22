@@ -1,6 +1,6 @@
 ﻿namespace PotteryBarn;
 
-using System.Linq;
+using System.Collections;
 
 using HarmonyLib;
 
@@ -10,8 +10,8 @@ static class DropOnDestroyedPatch {
   [HarmonyPatch(nameof(DropOnDestroyed.OnDestroyed))]
   static bool OnDestroyedPrefix(DropOnDestroyed __instance) {
     if (__instance.TryGetComponent(out Piece piece)
-        && DvergrPieces.DvergrPrefabs.Keys.Contains(piece.m_description)
-        && piece.IsPlacedByPlayer()) {
+        && piece.IsPlacedByPlayer()
+        && PotteryManager.IsDvergrPiece(piece)) {
       return false;
     }
 
