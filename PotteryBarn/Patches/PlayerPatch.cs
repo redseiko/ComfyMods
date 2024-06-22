@@ -57,21 +57,15 @@ static class PlayerPatch {
   [HarmonyPrefix]
   [HarmonyPatch(nameof(Player.CheckCanRemovePiece))]
   static bool CheckCanRemovePrefix(Piece piece, ref bool __result) {
-    if (IsModEnabled.Value) {
-      // Prevents world generated piece from player removal with build hammer.
-      if (!piece.IsPlacedByPlayer() && PotteryManager.IsCreatorShopPiece(piece)) {
+    if (IsModEnabled.Value && PotteryManager.IsShopPiece(piece)) {
+      // Prevent player from removing world-generated pieces via build hammer.
+      if (!piece.IsPlacedByPlayer()) {
         __result = false;
         return false;
       }
 
-      // Prevents player from breaking pottery barn pieces they didn't create themselves.
-      if (PotteryManager.IsCreatorShopPiece(piece) && !piece.IsCreator()) {
-        __result = false;
-        return false;
-      }
-
-      // Enforces destruction by damage rather than build hammer.
-      if (!PotteryManager.IsDestructibleCreatorShopPiece(piece) && PotteryManager.IsCreatorShopPiece(piece)) {
+      // Prevent player from removing pieces they did not place themselves.
+      if (!piece.IsCreator()) {
         __result = false;
         return false;
       }

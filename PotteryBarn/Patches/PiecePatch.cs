@@ -1,7 +1,6 @@
 ﻿namespace PotteryBarn;
 
 using System.Collections.Generic;
-using System.Linq;
 
 using HarmonyLib;
 
@@ -16,7 +15,7 @@ static class PiecePatch {
   static bool DropResourcePrefix(Piece __instance) {
     // Should not need to check against cultivator creator shop items here because they do not pass the
     // Player.CanRemovePiece check.
-    if (Requirements.HammerCreatorShopItems.Keys.Contains(__instance.m_description)) {
+    if (PotteryManager.IsShopPiece(__instance)) {
       if (__instance.TryGetComponent(out Container container)) {
         DropContainerContents(container);
       }
@@ -29,7 +28,8 @@ static class PiecePatch {
       return false;
     }
 
-    if (DvergrPrefabs.Keys.Contains(__instance.m_description) && !__instance.IsPlacedByPlayer()) {
+    // TODO: remove me and alter Piece resources on Awake() instead.
+    if (PotteryManager.IsDvergrPiece(__instance) && !__instance.IsPlacedByPlayer()) {
       DropDefaultResources(__instance);
       return false;
     }
