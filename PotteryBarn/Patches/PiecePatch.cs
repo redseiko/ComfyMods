@@ -10,6 +10,14 @@ using static DvergrPieces;
 
 [HarmonyPatch(typeof(Piece))]
 static class PiecePatch {
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Piece.Awake))]
+  static void AwakePostfix(Piece __instance) {
+    if (__instance.m_canBeRemoved && !PotteryManager.CanBeRemoved(__instance)) {
+      __instance.m_canBeRemoved = false;
+    }
+  }
+
   [HarmonyPrefix]
   [HarmonyPatch(nameof(Piece.DropResources))]
   static bool DropResourcePrefix(Piece __instance) {
