@@ -54,23 +54,36 @@ static class PlayerPatch {
     return clonedPrefab;
   }
 
-  [HarmonyPrefix]
+  [HarmonyPostfix]
   [HarmonyPatch(nameof(Player.CheckCanRemovePiece))]
-  static bool CheckCanRemovePrefix(Piece piece, ref bool __result) {
-    if (IsModEnabled.Value && PotteryManager.IsShopPiece(piece)) {
-      // Prevent player from removing world-generated pieces via build hammer.
-      if (!piece.IsPlacedByPlayer()) {
-        __result = false;
-        return false;
-      }
-
-      // Prevent player from removing pieces they did not place themselves.
-      if (!piece.IsCreator()) {
-        __result = false;
-        return false;
-      }
+  static bool CheckCanRemovePostfix(Piece piece, ref bool __result) {
+    if (__result && !PotteryManager.CanBeRemoved(piece)) {
+      __result = false;
     }
 
     return true;
+  }
+
+  [HarmonyTranspiler]
+  [HarmonyPatch(nameof(Player.PlacePiece))]
+  static IEnumerable<CodeInstruction> PlacePieceTranspiler(IEnumerable<CodeInstruction> instructions) {
+    return new CodeMatcher(instructions)
+        .Start()
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldarg_0),
+            new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Humanoid), nameof(Humanoid.GetRightItem))),
+            new CodeMatch(OpCodes.Stloc_S))
+        .ThrowIfInvalid($"Could not patch Player.PlacePiece()! (GetRightItem)")
+        .Advance(offset: 3)
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Ldloc_3),
+            Transpilers.EmitDelegate(PlacePieceInstantiateDelegate))
+        .InstructionEnumeration();
+  }
+
+  static void PlacePieceInstantiateDelegate(GameObject clonedObject) {
+    if (clonedObject.TryGetComponent(out Container container)) {
+      container.GetInventory().RemoveAll();
+    }
   }
 }

@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-using ComfyLib;
-
 using Jotunn.Managers;
 
 using UnityEngine;
@@ -16,8 +14,9 @@ public static class PotteryManager {
   public static readonly string HammerPieceTable = "_HammerPieceTable";
   public static Piece.PieceCategory HammerBuildingCategory;
   public static Piece.PieceCategory HammerMiscCategory;
-  public static Piece.PieceCategory HammerCreatorShopCategory;
-  public static Piece.PieceCategory HammerBuilderShopCategory;
+
+  public static Piece.PieceCategory CreatorShopCategory;
+  public static Piece.PieceCategory BuilderShopCategory;
 
   public static readonly string CultivatorPieceTable = "_CultivatorPieceTable";
   public static Piece.PieceCategory CultivatorMiscCategory;
@@ -41,8 +40,8 @@ public static class PotteryManager {
     HammerBuildingCategory = Piece.PieceCategory.BuildingWorkbench;
     HammerMiscCategory = Piece.PieceCategory.Misc;
 
-    HammerCreatorShopCategory = pieceManager.AddPieceCategory(HammerPieceTable, "CreatorShop");
-    HammerBuilderShopCategory = pieceManager.AddPieceCategory(HammerPieceTable, "BuilderShop");
+    CreatorShopCategory = pieceManager.AddPieceCategory(HammerPieceTable, "CreatorShop");
+    BuilderShopCategory = pieceManager.AddPieceCategory(HammerPieceTable, "BuilderShop");
   }
 
   public static void AddHammerPieces(PieceManager pieceManager) {  
@@ -75,7 +74,7 @@ public static class PotteryManager {
       pieceTable.AddPiece(
           GetOrAddPiece(entry.Key)
               .SetResources(CreateRequirements(entry.Value))
-              .SetCategory(HammerCreatorShopCategory)
+              .SetCategory(CreatorShopCategory)
               .SetCraftingStation(GetCraftingStation(Requirements.CraftingStationRequirements, entry.Key))
               .SetCanBeRemoved(true)
               .SetTargetNonPlayerBuilt(false));
@@ -108,7 +107,7 @@ public static class PotteryManager {
     foreach (PotteryPiece potteryPiece in BuilderShop.HammerPieces) {
       pieceTable.AddPiece(
           GetOrAddPiece(potteryPiece.PiecePrefab)
-              .SetCategory(HammerBuilderShopCategory)
+              .SetCategory(BuilderShopCategory)
               .SetResources(CreatePieceRequirements(potteryPiece.PieceResources))
               .SetCraftingStation(GetCraftingStation(potteryPiece.CraftingStation))
               .SetCanBeRemoved(true)
@@ -232,13 +231,29 @@ public static class PotteryManager {
   }
 
   public static bool IsShopPiece(Piece piece) {
+    return IsShopPiecePrefab(piece.m_description);
+  }
+
+  public static bool IsShopPiecePrefab(string prefabName) {
     return
-        Requirements.HammerCreatorShopItems.ContainsKey(piece.m_description)
-        || BuilderShop.HammerPieces.Contains(piece.m_description);
+        Requirements.HammerCreatorShopItems.ContainsKey(prefabName)
+        || BuilderShop.HammerPieces.Contains(prefabName);
   }
 
   public static bool IsDvergrPiece(Piece piece) {
     return DvergrPieces.DvergrPrefabs.ContainsKey(piece.m_description);
+  }
+
+  public static bool CanBeRemoved(Piece piece) {
+    if (IsShopPiece(piece) && !piece.IsCreator()) {
+      return false;
+    }
+
+    if (IsDvergrPiece(piece) && !piece.IsPlacedByPlayer()) {
+      return false;
+    }
+
+    return true;
   }
 
   public static Sprite LoadOrRenderIcon(GameObject prefab, Quaternion renderRotation) {

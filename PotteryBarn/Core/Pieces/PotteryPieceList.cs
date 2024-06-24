@@ -4,19 +4,17 @@ using System.Collections;
 using System.Collections.Generic;
 
 public sealed class PotteryPieceList : IEnumerable<PotteryPiece> {
-  public readonly List<PotteryPiece> Pieces = [];
-  public readonly HashSet<string> Prefabs = [];
+  public readonly Dictionary<string, PotteryPiece> Pieces = [];
 
   public PotteryPieceList Add(string piecePrefab, string craftingStation, ICollection<PieceResource> pieceResources) {
-    Pieces.Add(new(piecePrefab, craftingStation, pieceResources));
-    Prefabs.Add(piecePrefab);
+    Pieces[piecePrefab] = new(piecePrefab, craftingStation, pieceResources);
     return this;
   }
 
-  public bool Contains(string prefabName) => Prefabs.Contains(prefabName);
+  public bool Contains(string prefabName) => Pieces.ContainsKey(prefabName);
 
   public IEnumerator<PotteryPiece> GetEnumerator() {
-    return Pieces.GetEnumerator();
+    return Pieces.Values.GetEnumerator();
   }
 
   IEnumerator IEnumerable.GetEnumerator() {
