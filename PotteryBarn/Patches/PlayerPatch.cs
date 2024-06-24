@@ -56,12 +56,10 @@ static class PlayerPatch {
 
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Player.CheckCanRemovePiece))]
-  static bool CheckCanRemovePostfix(Piece piece, ref bool __result) {
+  static void CheckCanRemovePostfix(Piece piece, ref bool __result) {
     if (__result && !PotteryManager.CanBeRemoved(piece)) {
       __result = false;
     }
-
-    return true;
   }
 
   [HarmonyTranspiler]

@@ -138,6 +138,7 @@
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="ComfyLib\Utils\IsExternalInit.cs" />
     <Compile Include="Core\Pieces\BuilderShop.cs" />
+    <Compile Include="Core\Pieces\CreatorShop.cs" />
     <Compile Include="Core\PotteryManager.cs" />
     <Compile Include="Core\DvergrPieces.cs" />
     <Compile Include="ComfyLib\Utils\ReflectionUtils.cs" />

@@ -12,6 +12,8 @@ public static class PotteryManager {
   public static readonly Regex PrefabNameRegex = new(@"([a-z])([A-Z])");
 
   public static readonly string HammerPieceTable = "_HammerPieceTable";
+  public static PieceTable GetHammerPieceTable() => PieceManager.Instance.GetPieceTable(HammerPieceTable);
+
   public static Piece.PieceCategory HammerBuildingCategory;
   public static Piece.PieceCategory HammerMiscCategory;
 
@@ -19,12 +21,16 @@ public static class PotteryManager {
   public static Piece.PieceCategory BuilderShopCategory;
 
   public static readonly string CultivatorPieceTable = "_CultivatorPieceTable";
+  public static PieceTable GetCultivatorPieceTable() => PieceManager.Instance.GetPieceTable(CultivatorPieceTable);
+
   public static Piece.PieceCategory CultivatorMiscCategory;
   public static Piece.PieceCategory CultivatorCreatorShopCategory;
 
   public static readonly Quaternion PrefabIconRenderRotation = Quaternion.Euler(0f, -45f, 0f);
 
   public static bool IsDropTableDisabled { get; set; } = false;
+
+  public static readonly Dictionary<string, Piece> ShopPieces = [];
 
   public static void AddPieces() {
     PieceManager.OnPiecesRegistered -= AddPieces;
@@ -104,14 +110,23 @@ public static class PotteryManager {
               .SetTargetNonPlayerBuilt(false));
     }
 
-    foreach (PotteryPiece potteryPiece in BuilderShop.HammerPieces) {
-      pieceTable.AddPiece(
-          GetOrAddPiece(potteryPiece.PiecePrefab)
-              .SetCategory(BuilderShopCategory)
-              .SetResources(CreatePieceRequirements(potteryPiece.PieceResources))
-              .SetCraftingStation(GetCraftingStation(potteryPiece.CraftingStation))
-              .SetCanBeRemoved(true)
-              .SetTargetNonPlayerBuilt(false));
+    AddPotteryPieces(GetHammerPieceTable(), CreatorShopCategory, CreatorShop.HammerPieces);
+    AddPotteryPieces(GetHammerPieceTable(), BuilderShopCategory, BuilderShop.HammerPieces);
+  }
+
+  public static void AddPotteryPieces(
+      PieceTable pieceTable, Piece.PieceCategory pieceCategory, PotteryPieceList potteryPieces) {
+    foreach (PotteryPiece potteryPiece in potteryPieces) {
+      Piece piece = GetOrAddPiece(potteryPiece.PiecePrefab);
+
+      piece
+          .SetCategory(pieceCategory)
+          .SetResources(CreatePieceRequirements(potteryPiece.PieceResources))
+          .SetCraftingStation(GetCraftingStation(potteryPiece.CraftingStation))
+          .SetCanBeRemoved(true);
+
+      pieceTable.AddPiece(piece);
+      ShopPieces.Add(potteryPiece.PiecePrefab, piece);
     }
   }
 
@@ -237,7 +252,7 @@ public static class PotteryManager {
   public static bool IsShopPiecePrefab(string prefabName) {
     return
         Requirements.HammerCreatorShopItems.ContainsKey(prefabName)
-        || BuilderShop.HammerPieces.Contains(prefabName);
+        || ShopPieces.ContainsKey(prefabName);
   }
 
   public static bool IsDvergrPiece(Piece piece) {
