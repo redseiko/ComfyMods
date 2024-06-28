@@ -20,20 +20,15 @@ using static PluginConfig;
 public sealed class Pinnacle : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.pinnacle";
   public const string PluginName = "Pinnacle";
-  public const string PluginVersion = "1.10.0";
+  public const string PluginVersion = "1.11.0";
 
   static ManualLogSource _logger;
-  Harmony _harmony;
 
   void Awake() {
     _logger = Logger;
     BindConfig(Config); 
 
-    _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
-  }
-
-  void OnDestroy() {
-    _harmony?.UnpatchSelf();
+    Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
   }
 
   public static void TogglePinnacle(bool toggleOn) {

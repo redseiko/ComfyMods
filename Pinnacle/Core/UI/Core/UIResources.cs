@@ -8,7 +8,7 @@ using TMPro;
 using UnityEngine;
 
 public static class UIResources {
-  static readonly Dictionary<string, Sprite> SpriteCache = new();
+  static readonly Dictionary<string, Sprite> SpriteCache = [];
 
   public static Sprite GetSprite(string spriteName) {
     if (!SpriteCache.TryGetValue(spriteName, out Sprite sprite)) {
@@ -19,7 +19,7 @@ public static class UIResources {
     return sprite;
   }
 
-  public static Dictionary<string, TMP_FontAsset> FontAssetCache { get; private set; } = new();
+  public static Dictionary<string, TMP_FontAsset> FontAssetCache { get; private set; } = [];
 
   public static string ValheimNorseFont = "Valheim-Norse";
   public static string ValheimAveriaSansLibre = "Valheim-AveriaSansLibre";

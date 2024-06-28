@@ -31,11 +31,11 @@ public sealed class PinEditPanel {
   public VectorCell PinPosition { get; private set; }
 
   // Styling.
-  readonly List<TMP_Text> Labels = new();
-  readonly List<GameObject> ValueCells = new();
+  readonly List<TMP_Text> Labels = [];
+  readonly List<GameObject> ValueCells = [];
 
   // HasFocus.
-  readonly List<GameObject> Selectables = new();
+  readonly List<GameObject> Selectables = [];
 
   Coroutine _setActiveCoroutine;
 

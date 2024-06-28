@@ -44,7 +44,7 @@ public static class UIBuilder {
         content, text.GetGenerationSettings(text.rectTransform.rect.size));
   }
 
-  static readonly Dictionary<string, Sprite> _spriteCache = new();
+  static readonly Dictionary<string, Sprite> _spriteCache = [];
 
   static readonly Color32 ColorWhite = Color.white;
   static readonly Color32 ColorClear = Color.clear;

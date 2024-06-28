@@ -11,7 +11,7 @@
     <AssemblyName>Pinnacle</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <LangVersion>10</LangVersion>
+    <LangVersion>12</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -116,6 +116,7 @@
     <Compile Include="Core\PinImportExport.cs" />
     <Compile Include="Core\PinMarkerUtils.cs" />
     <Compile Include="Core\PinnacleUtils.cs" />
+    <Compile Include="Core\UI\Builder\LabelButton.cs" />
     <Compile Include="Patches\GamePatch.cs" />
     <Compile Include="Patches\MinimapPatch.cs" />
     <Compile Include="Patches\TerminalPatch.cs" />

@@ -15,8 +15,8 @@ public sealed class PinIconSelector {
   public GameObject Grid { get; private set; }
   public GridLayoutGroup GridLayoutGroup { get; private set; }
 
-  public List<GameObject> Icons { get; } = new();
-  public Dictionary<Minimap.PinType, GameObject> IconsByType { get; } = new();
+  public List<GameObject> Icons { get; } = [];
+  public Dictionary<Minimap.PinType, GameObject> IconsByType { get; } = [];
 
   public PinIconSelector(Transform parentTransform) {
     Grid = CreateChildGrid(parentTransform);

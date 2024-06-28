@@ -9,13 +9,35 @@ public static class PinnacleUtils {
     if (IsModEnabled.Value
         && Console.m_instance.IsCheatsEnabled()
         && Player.m_localPlayer
-        && ZInput.GetKey(KeyCode.LeftShift)
-        && targetPin != null) {
-      TeleportTo(targetPin.m_pos);
+        && ZInput.GetKey(KeyCode.LeftShift)) {
+      TeleportTo(targetPin);
     } else {
       Pinnacle.TogglePinEditPanel(PinListPanelEditPinOnRowClick.Value ? targetPin : default);
       CenterMapHelper.CenterMapOnPosition(targetPin.m_pos);
     }
+  }
+
+  public static void TeleportTo(Minimap.PinData targetPin) {
+    Vector3 targetPosition = targetPin.m_pos;
+
+    if (targetPin.m_type == Minimap.PinType.Player && !targetPin.m_save && !targetPin.m_checked) {
+      targetPosition = GetPlayerInfoPosition(targetPin);
+    }
+
+    TeleportTo(targetPosition);
+  }
+
+  public static Vector3 GetPlayerInfoPosition(Minimap.PinData targetPin) {
+    foreach (ZNet.PlayerInfo playerInfo in ZNet.m_instance.m_players) {
+      if (playerInfo.m_name == targetPin.m_name && playerInfo.m_publicPosition) {
+        Pinnacle.LogInfo(
+            $"Found PlayerInfo for {playerInfo.m_name}: {targetPin.m_pos:F0} -> {playerInfo.m_position:F0}");
+
+        return playerInfo.m_position;
+      }
+    }
+
+    return targetPin.m_pos;
   }
 
   public static void TeleportTo(Vector3 targetPosition) {
@@ -30,7 +52,7 @@ public static class PinnacleUtils {
       targetPosition.y = GetHeight(targetPosition);
     }
 
-    Pinnacle.LogInfo($"Teleporting player from {player.transform.position} to {targetPosition}.");
+    Pinnacle.LogInfo($"Teleporting player from {player.transform.position:F0} to {targetPosition:F0}.");
     player.TeleportTo(targetPosition, player.transform.rotation, distantTeleport: true);
 
     Minimap.m_instance.SetMapMode(Minimap.MapMode.Small);

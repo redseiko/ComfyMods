@@ -20,7 +20,9 @@ public sealed class PinListPanel {
   public GameObject Content { get; private set; }
 
   public ScrollRect ScrollRect { get; private set; }
+
   public LabelCell PinStats { get; private set; }
+  public LabelButton RefreshButton { get; private set; }
 
   public PanelDragger PanelDragger { get; private set; }
   public PanelResizer PanelResizer { get; private set; }
@@ -45,18 +47,38 @@ public sealed class PinListPanel {
     ScrollRect = CreateChildScrollRect(Panel, Viewport, Content);
 
     PinStats = new(Panel.transform);
-    PinStats.Cell.GetComponent<HorizontalLayoutGroup>().SetPadding(left: 8, right: 8, top: 5, bottom: 5);
+    PinStats.Cell.GetComponent<HorizontalLayoutGroup>().SetPadding(left: 8, right: 8, top: 2, bottom: 2);
     PinStats.Cell.Image().SetColor(new(0.5f, 0.5f, 0.5f, 0.1f));
     PinStats.Cell.AddComponent<Outline>().SetEffectDistance(new(2f, -2f));
 
+    RefreshButton = CreateRefreshButton(PinStats.Cell.transform);
+
     _pointerState = Panel.AddComponent<PointerState>();
+  }
+
+  LabelButton CreateRefreshButton(Transform parentTransform) {
+    LabelButton refresh = new(parentTransform);
+
+    refresh.RectTransform
+        .SetSizeDelta(new(70f, 35f));
+
+    refresh.Container.AddComponent<LayoutElement>()
+        .SetPreferred(width: 70f, height: 35f);
+
+    refresh.Label
+        .SetFontSize(14f)
+        .SetText("Ref.");
+
+    refresh.Button.onClick.AddListener(SetTargetPins);
+
+    return refresh;
   }
 
   public bool HasFocus() {
     return Panel && Panel.activeInHierarchy && _pointerState.IsPointerHovered;
   }
 
-  public readonly List<Minimap.PinData> TargetPins = new();
+  public readonly List<Minimap.PinData> TargetPins = [];
   
   static bool IsPinNameValid(Minimap.PinData pin, string filter) {
     return filter.Length == 0
@@ -85,7 +107,7 @@ public sealed class PinListPanel {
     PinStats.Label.SetText($"{TargetPins.Count} pins.");
   }
 
-  readonly List<PinListRow> _rowCache = new();
+  readonly List<PinListRow> _rowCache = [];
   int _visibleRows = 0;
   float _rowPreferredHeight = 0f;
   LayoutElement _bufferBlock;
