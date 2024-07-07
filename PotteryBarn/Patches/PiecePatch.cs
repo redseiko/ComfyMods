@@ -13,8 +13,20 @@ static class PiecePatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Piece.Awake))]
   static void AwakePostfix(Piece __instance) {
-    if (__instance.m_canBeRemoved && !PotteryManager.CanBeRemoved(__instance)) {
-      __instance.m_canBeRemoved = false;
+    ModifyCanBeRemoved(__instance);
+  }
+
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Piece.SetCreator))]
+  static void SetCreatorPostfix(Piece __instance) {
+    ModifyCanBeRemoved(__instance);
+  }
+
+  public static void ModifyCanBeRemoved(Piece piece) {
+    if (PotteryManager.IsShopPiece(piece)) {
+      piece.m_canBeRemoved = piece.IsCreator();
+    } else if (PotteryManager.IsDvergrPiece(piece)) {
+      piece.m_canBeRemoved = piece.IsPlacedByPlayer();
     }
   }
 

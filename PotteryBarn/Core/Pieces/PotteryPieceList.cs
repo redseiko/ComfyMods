@@ -1,12 +1,13 @@
 ﻿namespace PotteryBarn;
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 public sealed class PotteryPieceList : IEnumerable<PotteryPiece> {
   public readonly Dictionary<string, PotteryPiece> Pieces = [];
 
-  public PotteryPieceList Add(string piecePrefab, string craftingStation, ICollection<PieceResource> pieceResources) {
+  public PotteryPieceList AddPiece(string piecePrefab, string craftingStation, ICollection<PieceResource> pieceResources) {
     Pieces[piecePrefab] = new(piecePrefab, craftingStation, pieceResources);
     return this;
   }
@@ -32,4 +33,8 @@ public sealed class PieceResourceList : List<PieceResource> {
   }
 }
 
-public sealed record class PieceResource(string Name, int Amount);
+public sealed record class PieceResource(string Name, int Amount) {
+  public static implicit operator PieceResource(ValueTuple<string, int> tuple) {
+    return new(tuple.Item1, tuple.Item2);
+  }
+}

@@ -127,6 +127,10 @@ public static class PotteryManager {
 
       pieceTable.AddPiece(piece);
       ShopPieces.Add(potteryPiece.PiecePrefab, piece);
+
+      if (!piece.TryGetComponent(out WearNTear _)) {
+        Jotunn.Logger.LogInfo($"Prefab {piece.name} does not have a WearNTear component.");
+      }
     }
   }
 
