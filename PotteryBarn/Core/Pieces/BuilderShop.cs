@@ -1,233 +1,213 @@
 ﻿namespace PotteryBarn;
 
+using static PieceConstants;
+
 public static class BuilderShop {
-  public static readonly string NoStation = string.Empty;
-  public const string BlackForge = "blackforge";
-  public const string Forge = "forge";
-  public const string Stonecutter = "piece_stonecutter";
-  public const string Workbench = "piece_workbench";
-
-  public const string BlackMarble = "BlackMarble";
-  public const string Blackwood = "Blackwood";
-  public const string Bronze = "Bronze";
-  public const string Coal = "Coal";
-  public const string Copper = "Copper";
-  public const string Crystal = "Crystal";
-  public const string FlametalNew = "FlametalNew";
-  public const string Grausten = "Grausten";
-  public const string JuteRed = "JuteRed";
-  public const string LoxPelt = "LoxPelt";
-  public const string PotShardRed = "Pot_Shard_Red";
-  public const string Resin = "Resin";
-  public const string WolfPelt = "WolfPelt";
-  public const string Wood = "Wood";
-  public const string YggdrasilWood = "YggdrasilWood";
-
   public static readonly PotteryPieceList HammerPieces =
       new PotteryPieceList()
-          .Add(
+          .AddPiece(
               "Ashlands_Fortress_Floor",
-              Stonecutter,
+              Workstation.Stonecutter,
               new PieceResourceList()
-                  .Add(PotShardRed, 1)
-                  .Add(Grausten, 4))
-          .Add(
+                  .Add(Item.PotShardRed, 1)
+                  .Add(Item.Grausten, 4))
+          .AddPiece(
               "Ashlands_Fortress_Gate",
-              Stonecutter,
+              Workstation.Stonecutter,
               new PieceResourceList()
-                  .Add(PotShardRed, 10)
-                  .Add(Grausten, 10))
-          .Add(
+                  .Add(Item.PotShardRed, 10)
+                  .Add(Item.Grausten, 10))
+          .AddPiece(
               "Ashlands_Fortress_Gate_Door",
-              BlackForge,
+              Workstation.BlackForge,
               new PieceResourceList()
-                  .Add(PotShardRed, 10)
-                  .Add(FlametalNew, 5))
-          .Add(
+                  .Add(Item.PotShardRed, 10)
+                  .Add(Item.FlametalNew, 5))
+          .AddPiece(
               "Ashlands_Fortress_Wall_Spikes",
-              BlackForge,
+              Workstation.BlackForge,
               new PieceResourceList()
-                  .Add(PotShardRed, 10)
-                  .Add(Blackwood, 6)
-                  .Add(FlametalNew, 6))
-          .Add(
+                  .Add(Item.PotShardRed, 10)
+                  .Add(Item.Blackwood, 6)
+                  .Add(Item.FlametalNew, 6))
+          .AddPiece(
               "Ashlands_Wall_2x2",
-              Stonecutter,
+              Workstation.Stonecutter,
               new PieceResourceList()
-                  .Add(PotShardRed, 1)
-                  .Add(Grausten, 6))
-          .Add(
+                  .Add(Item.PotShardRed, 1)
+                  .Add(Item.Grausten, 6))
+          .AddPiece(
               "Ashlands_Wall_2x2_cornerR",
-              Stonecutter,
+              Workstation.Stonecutter,
               new PieceResourceList()
-                  .Add(PotShardRed, 1)
-                  .Add(Grausten, 6))
-          .Add(
+                  .Add(Item.PotShardRed, 1)
+                  .Add(Item.Grausten, 6))
+          .AddPiece(
               "Ashlands_Wall_2x2_cornerR_top",
-              Stonecutter,
+              Workstation.Stonecutter,
               new PieceResourceList()
-                  .Add(PotShardRed, 1)
-                  .Add(Grausten, 6))
-          .Add(
+                  .Add(Item.PotShardRed, 1)
+                  .Add(Item.Grausten, 6))
+          .AddPiece(
               "Ashlands_Wall_2x2_edge",
-              Stonecutter,
+              Workstation.Stonecutter,
               new PieceResourceList()
-                  .Add(PotShardRed, 1)
-                  .Add(Grausten, 6))
-          .Add(
+                  .Add(Item.PotShardRed, 1)
+                  .Add(Item.Grausten, 6))
+          .AddPiece(
               "Ashlands_Wall_2x2_edge_top",
-              Stonecutter,
+              Workstation.Stonecutter,
               new PieceResourceList()
-                  .Add(PotShardRed, 1)
-                  .Add(Grausten, 6))
-          .Add(
+                  .Add(Item.PotShardRed, 1)
+                  .Add(Item.Grausten, 6))
+          .AddPiece(
               "Ashlands_Wall_2x2_edge2",
-              Stonecutter,
+              Workstation.Stonecutter,
               new PieceResourceList()
-                  .Add(PotShardRed, 1)
-                  .Add(Grausten, 6))
-          .Add(
+                  .Add(Item.PotShardRed, 1)
+                  .Add(Item.Grausten, 6))
+          .AddPiece(
               "Ashlands_Wall_2x2_edge2_top",
-              Stonecutter,
+              Workstation.Stonecutter,
               new PieceResourceList()
-                  .Add(PotShardRed, 1)
-                  .Add(Grausten, 6))
-          .Add(
+                  .Add(Item.PotShardRed, 1)
+                  .Add(Item.Grausten, 6))
+          .AddPiece(
               "Ashlands_Wall_2x2_top",
-              Stonecutter,
+              Workstation.Stonecutter,
               new PieceResourceList()
-                  .Add(PotShardRed, 1)
-                  .Add(Grausten, 6))
-          .Add(
+                  .Add(Item.PotShardRed, 1)
+                  .Add(Item.Grausten, 6))
+          .AddPiece(
               "blackmarble_altar_crystal_broken",
-              Stonecutter,
+              Workstation.Stonecutter,
               new PieceResourceList()
-                  .Add(PotShardRed, 5)
-                  .Add(Crystal, 8))
-          .Add(
+                  .Add(Item.PotShardRed, 5)
+                  .Add(Item.Crystal, 8))
+          .AddPiece(
               "blackmarble_post01",
-              Stonecutter,
+              Workstation.Stonecutter,
               new PieceResourceList()
-                  .Add(PotShardRed, 10)
-                  .Add(BlackMarble, 7))
-          .Add(
+                  .Add(Item.PotShardRed, 10)
+                  .Add(Item.BlackMarble, 7))
+          .AddPiece(
               "CharredBanner1",
-              Workbench,
+              Workstation.Workbench,
               new PieceResourceList()
-                  .Add(PotShardRed, 1)
-                  .Add(Blackwood, 4)
-                  .Add(JuteRed, 2))
-          .Add(
+                  .Add(Item.PotShardRed, 1)
+                  .Add(Item.Blackwood, 4)
+                  .Add(Item.JuteRed, 2))
+          .AddPiece(
               "CharredBanner2",
-              Workbench,
+              Workstation.Workbench,
               new PieceResourceList()
-                  .Add(PotShardRed, 1)
-                  .Add(Blackwood, 3)
-                  .Add(JuteRed, 1))
-          .Add(
+                  .Add(Item.PotShardRed, 1)
+                  .Add(Item.Blackwood, 3)
+                  .Add(Item.JuteRed, 1))
+          .AddPiece(
               "CharredBanner3",
-              Workbench,
+              Workstation.Workbench,
               new PieceResourceList()
-                  .Add(PotShardRed, 1)
-                  .Add(Blackwood, 2)
-                  .Add(JuteRed, 1))
-          .Add(
+                  .Add(Item.PotShardRed, 1)
+                  .Add(Item.Blackwood, 2)
+                  .Add(Item.JuteRed, 1))
+          .AddPiece(
               "dvergrprops_barrel",
-              Workbench,
+              Workstation.Workbench,
               new PieceResourceList()
-                  .Add(PotShardRed, 5)
-                  .Add(YggdrasilWood, 25)
-                  .Add(Copper, 5)
-                  .Add(Resin, 10))
-          .Add(
+                  .Add(Item.PotShardRed, 5)
+                  .Add(Item.YggdrasilWood, 25)
+                  .Add(Item.Copper, 5)
+                  .Add(Item.Resin, 10))
+          .AddPiece(
               "dvergrprops_bed",
-              Workbench,
+              Workstation.Workbench,
               new PieceResourceList()
-                  .Add(PotShardRed, 5)
-                  .Add(YggdrasilWood, 8)
-                  .Add(Copper, 1)
-                  .Add(WolfPelt, 2)
-                  .Add(LoxPelt, 1))
-          .Add(
+                  .Add(Item.PotShardRed, 5)
+                  .Add(Item.YggdrasilWood, 8)
+                  .Add(Item.Copper, 1)
+                  .Add(Item.WolfPelt, 2)
+                  .Add(Item.LoxPelt, 1))
+          .AddPiece(
               "dvergrprops_chair",
-              Workbench,
+              Workstation.Workbench,
               new PieceResourceList()
-                  .Add(PotShardRed, 1)
-                  .Add(YggdrasilWood, 4)
-                  .Add(Copper, 1))
-          .Add(
+                  .Add(Item.PotShardRed, 1)
+                  .Add(Item.YggdrasilWood, 4)
+                  .Add(Item.Copper, 1))
+          .AddPiece(
               "dvergrprops_crate",
-              Workbench,
+              Workstation.Workbench,
               new PieceResourceList()
-                  .Add(PotShardRed, 1)
-                  .Add(YggdrasilWood, 6))
-          .Add(
+                  .Add(Item.PotShardRed, 1)
+                  .Add(Item.YggdrasilWood, 6))
+          .AddPiece(
               "dvergrprops_crate_long",
-              Workbench,
+              Workstation.Workbench,
               new PieceResourceList()
-                  .Add(PotShardRed, 5)
-                  .Add(YggdrasilWood, 10)
-                  .Add(Copper, 1))
-          .Add(
+                  .Add(Item.PotShardRed, 5)
+                  .Add(Item.YggdrasilWood, 10)
+                  .Add(Item.Copper, 1))
+          .AddPiece(
               "dvergrprops_shelf",
-              Workbench,
+              Workstation.Workbench,
               new PieceResourceList()
-                  .Add(PotShardRed, 5)
-                  .Add(YggdrasilWood, 15)
-                  .Add(Copper, 4))
-          .Add(
+                  .Add(Item.PotShardRed, 5)
+                  .Add(Item.YggdrasilWood, 15)
+                  .Add(Item.Copper, 4))
+          .AddPiece(
               "dvergrprops_stool",
-              Workbench,
+              Workstation.Workbench,
               new PieceResourceList()
-                  .Add(PotShardRed, 1)
-                  .Add(YggdrasilWood, 2)
-                  .Add(Copper, 1))
-          .Add(
+                  .Add(Item.PotShardRed, 1)
+                  .Add(Item.YggdrasilWood, 2)
+                  .Add(Item.Copper, 1))
+          .AddPiece(
               "dvergrprops_table",
-              Workbench,
+              Workstation.Workbench,
               new PieceResourceList()
-                  .Add(PotShardRed, 5)
-                  .Add(YggdrasilWood, 10)
-                  .Add(Copper, 2))
-          .Add(
+                  .Add(Item.PotShardRed, 5)
+                  .Add(Item.YggdrasilWood, 10)
+                  .Add(Item.Copper, 2))
+          .AddPiece(
               "dvergrtown_slidingdoor",
-              Workbench,
+              Workstation.Workbench,
               new PieceResourceList()
-                  .Add(PotShardRed, 10)
-                  .Add(BlackMarble, 10))
-          .Add(
+                  .Add(Item.PotShardRed, 10)
+                  .Add(Item.BlackMarble, 10))
+          .AddPiece(
               "MountainKit_brazier",
-              Forge,
+              Workstation.Forge,
               new PieceResourceList()
-                  .Add(PotShardRed, 5)
-                  .Add(Coal, 4)
-                  .Add(Bronze, 2))
-          .Add(
+                  .Add(Item.PotShardRed, 5)
+                  .Add(Item.Coal, 4)
+                  .Add(Item.Bronze, 2))
+          .AddPiece(
               "MountainKit_brazier_blue",
-              Forge,
+              Workstation.Forge,
               new PieceResourceList()
-                  .Add(PotShardRed, 5)
-                  .Add(Coal, 4)
-                  .Add(Bronze, 2))
-          .Add(
+                  .Add(Item.PotShardRed, 5)
+                  .Add(Item.Coal, 4)
+                  .Add(Item.Bronze, 2))
+          .AddPiece(
               "MountainKit_brazier_purple",
-              Forge,
+              Workstation.Forge,
               new PieceResourceList()
-                  .Add(PotShardRed, 5)
-                  .Add(Coal, 4)
-                  .Add(Bronze, 2))
-          .Add(
+                  .Add(Item.PotShardRed, 5)
+                  .Add(Item.Coal, 4)
+                  .Add(Item.Bronze, 2))
+          .AddPiece(
               "MountainKit_wood_gate",
-              Workbench,
+              Workstation.Workbench,
               new PieceResourceList()
-                  .Add(PotShardRed, 5)
-                  .Add(Wood, 10)
-                  .Add(Bronze, 2))
-          .Add(
+                  .Add(Item.PotShardRed, 5)
+                  .Add(Item.Wood, 10)
+                  .Add(Item.Bronze, 2))
+          .AddPiece(
               "TreasureChest_dvergrtower",
-              Workbench,
+              Workstation.Workbench,
               new PieceResourceList()
-                  .Add(PotShardRed, 5)
-                  .Add(YggdrasilWood, 7)
-                  .Add(Copper, 7));
+                  .Add(Item.PotShardRed, 5)
+                  .Add(Item.YggdrasilWood, 7)
+                  .Add(Item.Copper, 7));
 }

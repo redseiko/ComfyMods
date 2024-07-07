@@ -105,14 +105,6 @@ public static class Requirements {
      {"dvergrtown_wood_support", new Dictionary<string, int>() {
         {"YggdrasilWood", 20 },
         {"MushroomBlue", 3 }}},
-
-     {"dverger_demister", new Dictionary<string, int>() {
-        {"Wisp", 20 },
-        {"MushroomBlue", 8 }}},
-
-     {"dverger_demister_large", new Dictionary<string, int>() {
-        {"Wisp", 50 },
-        {"MushroomBlue", 30 }}}
   };
 
   public static readonly Dictionary<string, Dictionary<string, int>> MiscPrefabs =
