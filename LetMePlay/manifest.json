@@ -1,8 +1,8 @@
 {
   "name": "LetMePlay",
-  "version_number": "1.4.0",
+  "version_number": "1.5.0",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/LetMePlay",
   "author": "ComfyMods",
   "description": "Various game adjustments and tweaks for player accessibility and comfort.",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.1901" ]
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }

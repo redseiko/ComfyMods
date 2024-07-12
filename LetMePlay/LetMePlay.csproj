@@ -11,7 +11,7 @@
     <AssemblyName>LetMePlay</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <LangVersion>9</LangVersion>
+    <LangVersion>12</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -94,11 +94,12 @@
     <Compile Include="Patches\PlayerPatch.cs" />
     <Compile Include="Patches\PrivateAreaPatch.cs" />
     <Compile Include="Patches\SpawnAreaPatch.cs" />
-    <Compile Include="PluginConfig.cs" />
+    <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="manifest.json" />
+    <None Include="CHANGELOG.md" />
     <None Include="README.md" />
     <None Include="icon.png" />
   </ItemGroup>
@@ -124,7 +125,7 @@
   </Target>
   <Target Name="MakeThunderstorePackage" AfterTargets="GetAssemblyVersion">
     <ItemGroup>
-      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; README.md; manifest.json; icon.png" />
+      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; README.md; CHANGELOG.md; manifest.json; icon.png" />
     </ItemGroup>
     <MakeDir Directories="$(PackageDir)" />
     <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageDir)" />
