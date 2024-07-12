@@ -33,7 +33,10 @@ namespace LetMePlay {
           return false;
         }
 
-        if (DisableWeatherAshParticles.Value && envSetup.m_name == "Ashrain") {
+        if (DisableWeatherAshParticles.Value
+            && (envSetup.m_name == "Ashlands_ashrain"
+                || envSetup.m_name == "Ashlands_storm"))
+        {
           return false;
         }
       }
