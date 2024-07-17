@@ -140,7 +140,7 @@ public sealed class ColorPalette {
   public ColorPalette(ExtendedColorConfigEntry colorConfigEntry, ConfigEntry<string> paletteConfigEntry) {
     _colorConfigEntry = colorConfigEntry;
     _paletteConfigEntry = paletteConfigEntry;
-    _paletteColors = new();
+    _paletteColors = [];
 
     LoadPalette();
   }

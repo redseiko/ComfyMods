@@ -76,8 +76,9 @@ public static class PluginConfig {
         config.BindInOrder(
             "Hud",
             "colorPromptFontSize",
-            15,
-            "Font size for the 'change/remove/copy' color text prompt.");
+            16,
+            "Font size for the 'change/remove/copy' color text prompt.",
+            new AcceptableValueRange<int>(2, 32));
 
     BindUpdateColorsConfig(config);
     BindPieceStabilityColorsConfig(config);

@@ -6,8 +6,8 @@ using UnityEngine;
 
 public static class ShortcutUtils {
   public static bool OnChangePieceColorShortcut(GameObject hovering) {
-    if (hovering.TryGetComponentInParent(out WearNTear changeTarget)) {
-      ColorfulPieces.ChangePieceColorAction(changeTarget);
+    if (hovering.TryGetComponentInParent(out WearNTear changeTarget) && changeTarget) {
+      ColorfulUtils.ChangePieceColorAction(changeTarget);
       return true;
     }
 
@@ -15,8 +15,8 @@ public static class ShortcutUtils {
   }
 
   public static bool OnClearPieceColorShortcut(GameObject hovering) {
-    if (hovering.TryGetComponentInParent(out WearNTear clearTarget)) {
-      ColorfulPieces.ClearPieceColorAction(clearTarget);
+    if (hovering.TryGetComponentInParent(out WearNTear clearTarget) && clearTarget) {
+      ColorfulUtils.ClearPieceColorAction(clearTarget);
       return true;
     }
 
@@ -24,8 +24,8 @@ public static class ShortcutUtils {
   }
 
   public static bool OnCopyPieceColorShortcut(GameObject hovering) {
-    if (hovering.TryGetComponentInParent(out WearNTear copyTarget)) {
-      ColorfulPieces.CopyPieceColorAction(copyTarget.m_nview);
+    if (hovering.TryGetComponentInParent(out WearNTear copyTarget) && copyTarget) {
+      ColorfulUtils.CopyPieceColorAction(copyTarget.m_nview);
       return true;
     }
 

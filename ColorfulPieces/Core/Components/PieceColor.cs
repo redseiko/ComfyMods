@@ -6,16 +6,16 @@ using ComfyLib;
 
 using UnityEngine;
 
-using static PluginConstants;
+using static ColorfulConstants;
 
 public sealed class PieceColor : MonoBehaviour {
-  public static readonly Dictionary<int, int> RendererCountCache = new();
-  public static readonly List<PieceColor> PieceColorCache = new();
+  public static readonly Dictionary<int, int> RendererCountCache = [];
+  public static readonly List<PieceColor> PieceColorCache = [];
 
   public Color TargetColor { get; set; } = Color.clear;
   public float TargetEmissionColorFactor { get; set; } = 0f;
 
-  readonly List<Renderer> _renderers = new(0);
+  readonly List<Renderer> _renderers = [];
   IPieceColorRenderer _pieceColorRenderer;
 
   int _cacheIndex;

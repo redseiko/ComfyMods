@@ -1,9 +1,10 @@
 ﻿namespace ColorfulPieces;
 
-using System;
 using System.Collections.Generic;
 
 using ComfyLib;
+
+using UnityEngine;
 
 public static class ClearColorCommand {
   [ComfyCommand]
@@ -15,7 +16,7 @@ public static class ClearColorCommand {
 
     yield return new Terminal.ConsoleCommand(
         "clear-color",
-        "(ColorfulPieces) clear-color --radius=<r> [--prefab=<name1>]",
+        "(ColorfulPieces) clear-color --radius=<r> [--prefab=<name1>] [--position=<x,y,z>]",
         Run);
   }
 
@@ -25,8 +26,7 @@ public static class ClearColorCommand {
     }
 
     Game.instance.StartCoroutine(
-        ColorfulPieces.ClearColorsInRadiusCoroutine(
-            Player.m_localPlayer.transform.position, radius, Array.Empty<int>()));
+        ColorfulUtils.ClearColorsInRadiusCoroutine(Player.m_localPlayer.transform.position, radius, []));
 
     return true;
   }
@@ -53,7 +53,7 @@ public static class ClearColorCommand {
       return false;
     }
 
-    HashSet<int> prefabHashCodes = new();
+    HashSet<int> prefabHashCodes = [];
 
     if (args.TryGetListValue("prefab", "p", out List<string> prefabs)) {
       foreach (string prefab in prefabs) {
@@ -61,9 +61,11 @@ public static class ClearColorCommand {
       }
     }
 
-    Game.instance.StartCoroutine(
-        ColorfulPieces.ClearColorsInRadiusCoroutine(
-            Player.m_localPlayer.transform.position, radius, prefabHashCodes));
+    if (!args.TryGetValue("position", "pos", out Vector3 position)) {
+      position = Player.m_localPlayer.transform.position;
+    }
+
+    Game.instance.StartCoroutine(ColorfulUtils.ClearColorsInRadiusCoroutine(position, radius, prefabHashCodes));
 
     return true;
   }

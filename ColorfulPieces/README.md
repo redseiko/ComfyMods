@@ -12,7 +12,7 @@
 
 ### Setting target color
 
-  * In-game, press F1 to bring up the ConfigurationManager and navigate to the ColorfulPieces section.
+  * In-game, press `F1` to bring up the `ConfigurationManager` and navigate to the ColorfulPieces section.
   * Change the target color using the RGB sliders or using an HTML color code.
   * Change the target emission color factor using the slider (this affects how bright the target color will be).
 
@@ -42,21 +42,23 @@ These two commands still call the same action as the hotkey and so will obey all
 
 ### Clearing piece colors in a radius
 
-    clear-color --radius=<radius> [--prefab=<name1>]
-    clear-color --r=<radius> [--p=<name1>]
+    clear-color --radius=<radius> [--prefab=<name1>] [--position=<x,y,z>]
+    clear-color --r=<radius> [--p=<name1>] [--pos=<x,y,z>]
 
   * Clears any colors from pieces within `<radius>` meters from the playerr.
   * If `--prefab` is specified, only pieces with prefab names matching `<name1>` will be affected.
   * Specify multiple prefab names with commas: `--prefab=<name1>,<name2>`
+  * If `--position` is specified, target position will be at `x,y,z` instead of the current player position.
 
 ### Changing piece colors in a radius
 
-    change-color --radius=<radius> --prefab=<name1>
-    change-color --r=<radius> --p=<name1>
+    change-color --radius=<radius> [--prefab=<name1>] [--position=<x,y,z>]
+    change-color --r=<radius> [--p=<name1>] [--pos=<x,y,z>]
 
   * Changes the color of pieces within `<radius>` meters from the player to the currently set target color.
   * If `--prefab` is specified, only pieces with prefab names matching `<name1>` will be affected.
   * Specify multiple prefab names with commas: `--prefab=<name1>,<name2>`
+  * If `--position` is specified, target position will be at `x,y,z` instead of the current player position.
 
 ## Notes
 

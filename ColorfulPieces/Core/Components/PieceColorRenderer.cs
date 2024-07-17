@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using static PluginConstants;
+using static ColorfulConstants;
 
 public interface IPieceColorRenderer {
   void SetColors(List<Renderer> renderers, Color color, Color emissionColor);

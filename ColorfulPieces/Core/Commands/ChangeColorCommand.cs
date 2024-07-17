@@ -1,22 +1,24 @@
 ﻿namespace ColorfulPieces;
 
-using System;
 using System.Collections.Generic;
 
 using ComfyLib;
 
+using UnityEngine;
+
 public static class ChangeColorCommand {
   [ComfyCommand]
   public static IEnumerable<Terminal.ConsoleCommand> Register() {
-    yield return new Terminal.ConsoleCommand(
-        "changecolor",
-        "(ColorfulPieces) Changes the color of all pieces within radius of player to the currently set color.",
-        RunLegacy);
+    return [
+      new Terminal.ConsoleCommand(
+          "changecolor",
+          "(ColorfulPieces) Changes the color of all pieces within radius of player to the currently set color.",
+          RunLegacy),
 
-    yield return new Terminal.ConsoleCommand(
-        "change-color",
-        "(ColorfulPieces) change-color --radius=<r> [--prefab=<name1>]",
-        Run);
+      new Terminal.ConsoleCommand(
+          "change-color",
+          "(ColorfulPieces) change-color --radius=<r> [--prefab=<name1>] [--position=<x,y,z>]",
+          Run)];
   }
 
   public static object RunLegacy(Terminal.ConsoleEventArgs args) {
@@ -25,8 +27,7 @@ public static class ChangeColorCommand {
     }
 
     Game.instance.StartCoroutine(
-        ColorfulPieces.ChangeColorsInRadiusCoroutine(
-            Player.m_localPlayer.transform.position, radius, Array.Empty<int>()));
+        ColorfulUtils.ChangeColorsInRadiusCoroutine(Player.m_localPlayer.transform.position, radius, []));
 
     return true;
   }
@@ -53,7 +54,7 @@ public static class ChangeColorCommand {
       return false;
     }
 
-    HashSet<int> prefabHashCodes = new();
+    HashSet<int> prefabHashCodes = [];
 
     if (args.TryGetListValue("prefab", "p", out List<string> prefabs)) {
       foreach (string prefab in prefabs) {
@@ -61,9 +62,11 @@ public static class ChangeColorCommand {
       }
     }
 
-    Game.instance.StartCoroutine(
-        ColorfulPieces.ChangeColorsInRadiusCoroutine(
-            Player.m_localPlayer.transform.position, radius, prefabHashCodes));
+    if (!args.TryGetValue("position", "pos", out Vector3 position)) {
+      position = Player.m_localPlayer.transform.position;
+    }
+
+    Game.instance.StartCoroutine(ColorfulUtils.ChangeColorsInRadiusCoroutine(position, radius, prefabHashCodes));
 
     return true;
   }

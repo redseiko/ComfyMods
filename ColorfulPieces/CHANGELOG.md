@@ -1,5 +1,14 @@
 ## Changelog
 
+### 1.16.0
+
+  * Updated for the `v0.218.19` patch.
+  * Bumped up `<LangVersion>` to C# 12.
+  * Code clean-up and refactoring.
+  * Added new logic to prevent coloring chests/ships/wagons if they are currently in-use.
+  * Simplified the change/remove-color prompt to not include `copyPieceColorShortcut` text.
+  * Added a new `--position=<x,y,z>` arg to the `change-color` and `clear-color` commands.
+
 ### 1.15.1
 
   * Fixed a bug with `ClearPieceColorShortcut` not working.

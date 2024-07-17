@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-public static class PluginConstants {
+public static class ColorfulConstants {
   public static readonly int ColorShaderId = Shader.PropertyToID("_Color");
   public static readonly int EmissionColorShaderId = Shader.PropertyToID("_EmissionColor");
 
