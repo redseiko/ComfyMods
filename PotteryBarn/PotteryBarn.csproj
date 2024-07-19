@@ -140,6 +140,7 @@
     <Compile Include="Core\Pieces\BuilderShop.cs" />
     <Compile Include="Core\Pieces\CreatorShop.cs" />
     <Compile Include="Core\Pieces\PieceConstants.cs" />
+    <Compile Include="Core\Pieces\VanillaShop.cs" />
     <Compile Include="Core\PotteryManager.cs" />
     <Compile Include="Core\DvergrPieces.cs" />
     <Compile Include="ComfyLib\Utils\ReflectionUtils.cs" />

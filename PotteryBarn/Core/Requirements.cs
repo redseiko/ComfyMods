@@ -4,87 +4,6 @@ using System.Collections.Generic;
 
 public static class Requirements {
   public static readonly Dictionary<string, Dictionary<string, int>> HammerCreatorShopItems = new() {
-    // Goblin items
-    {"goblin_banner", new Dictionary<string, int>() {
-        {"FineWood", 2 },
-        {"LeatherScraps", 6 },
-        {"Bloodbag", 2 },
-        {"BoneFragments", 2 },
-        {"MushroomBlue", 1 }}},
-    {"goblin_fence", new Dictionary<string, int>() {
-        {"Wood", 4 },
-        {"BoneFragments", 8},
-        {"MushroomBlue", 1 }}},
-    {"goblin_pole", new Dictionary<string, int>() {
-        {"Wood", 2 },
-        {"BoneFragments", 4},
-        {"MushroomBlue", 1 }}},
-     {"goblin_pole_small", new Dictionary<string, int>() {
-        {"Wood", 1 },
-        {"BoneFragments", 2},
-        {"MushroomBlue", 1 }}},
-     {"goblin_roof_45d", new Dictionary<string, int>() {
-        {"Wood", 2 },
-        {"DeerHide", 2 },
-        {"BoneFragments", 8 },
-        {"MushroomBlue", 1 }}},
-     {"goblin_roof_45d_corner", new Dictionary<string, int>() {
-        {"Wood", 2 },
-        {"DeerHide", 2 },
-        {"BoneFragments", 8 },
-        {"MushroomBlue", 1 }}},
-     {"goblin_roof_cap", new Dictionary<string, int>() {
-        {"Wood", 10 },
-        {"DeerHide", 6 },
-        {"BoneFragments", 12 },
-        {"MushroomBlue", 4 }}},
-     {"goblin_stairs", new Dictionary<string, int>() {
-        {"Wood", 2 },
-        {"BoneFragments", 4 },
-        {"MushroomBlue", 1 }}},
-     {"goblin_stepladder", new Dictionary<string, int>() {
-        {"Wood", 2 },
-        {"BoneFragments", 4 },
-        {"MushroomBlue", 1 }}},
-     {"goblin_woodwall_1m", new Dictionary<string, int>() {
-        {"Wood", 2 },
-        {"BoneFragments", 4 },
-        {"MushroomBlue", 1 }}},
-     {"goblin_woodwall_2m", new Dictionary<string, int>() {
-        {"Wood", 2 },
-        {"BoneFragments", 4 },
-        {"MushroomBlue", 1 }}},
-     {"goblin_woodwall_2m_ribs", new Dictionary<string, int>() {
-        {"Wood", 2 },
-        {"BoneFragments", 4 },
-        {"MushroomBlue", 1 }}},
-
-    // Statues, Stone Chests, and Skulls
-     {"Skull1", new Dictionary<string, int>() {
-        {"BoneFragments", 10 },
-        {"MushroomBlue", 1 }}},
-     {"Skull2", new Dictionary<string, int>() {
-        {"BoneFragments", 50 },
-        {"MushroomBlue", 10 }}},
-     {"StatueCorgi", new Dictionary<string, int>() {
-        {"Stone", 20 },
-        {"MushroomBlue", 5 }}},
-     {"StatueDeer", new Dictionary<string, int>() {
-        {"Stone", 20 },
-        {"MushroomBlue", 5 }}},
-     {"StatueEvil", new Dictionary<string, int>() {
-        {"Stone", 20 },
-        {"MushroomBlue", 5 }}},
-     {"StatueHare", new Dictionary<string, int>() {
-        {"Stone", 20 },
-        {"MushroomBlue", 5 }}},
-     {"StatueSeed", new Dictionary<string, int>() {
-        {"Stone", 20 },
-        {"MushroomBlue", 5 }}},
-     {"stonechest", new Dictionary<string, int>() {
-        {"Stone", 20 },
-        {"MushroomBlue", 10 }}},
-
      // Roots, Vines, and Glowing Mushroom
      {"root07", new Dictionary<string, int>() {
         {"ElderBark", 2 }}},
@@ -94,17 +13,6 @@ public static class Requirements {
         {"ElderBark", 2 }}},
      {"root12", new Dictionary<string, int>() {
         {"ElderBark", 2 }}},
-
-     // Dvergr Items
-     {"trader_wagon_destructable", new Dictionary<string, int>() {
-        {"YggdrasilWood", 50 },
-        {"BronzeNails", 80 },
-        {"Tar", 10 },
-        {"MushroomBlue", 10 }}},
-
-     {"dvergrtown_wood_support", new Dictionary<string, int>() {
-        {"YggdrasilWood", 20 },
-        {"MushroomBlue", 3 }}},
   };
 
   public static readonly Dictionary<string, Dictionary<string, int>> MiscPrefabs =
@@ -118,16 +26,6 @@ public static class Requirements {
         { "Coal", 2},
         { "WolfClaw", 3} }}
     };
-
-  public static readonly Dictionary<string, Dictionary<string, int>> CultivatorCreatorShopItems =
-      new() {
-        { "vines",
-          new() { {"Wood", 2 }} },
-        { "GlowingMushroom",
-          new() {
-            { "MushroomYellow", 3 },
-            { "MushroomBlue", 1 }} }
-      };
 
   //public static readonly Dictionary<string, Dictionary<string, int>> cultivatorCreatorShopItems = new() {
   //   // Natural Items

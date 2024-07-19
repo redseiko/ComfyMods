@@ -67,8 +67,8 @@
 
   * Added dvergr pieces.
   * World generated pieces will have the same drop rate as vanilla if destroyed with damage or the build hammer.
-  * Player constructed pieces will return recipe costs and may be broken by other players (not just the creator) for any
-    items not on the CreatorShop tab.
+  * Player constructed pieces will return recipe costs and may be broken by other players (not just the creator) for
+    and items not on the CreatorShop tab.
 
 ### 1.5.1
 

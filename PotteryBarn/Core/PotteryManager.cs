@@ -114,6 +114,19 @@ public static class PotteryManager {
     AddPotteryPieces(GetHammerPieceTable(), BuilderShopCategory, BuilderShop.HammerPieces);
   }
 
+  public static void SetupCultivatorCategories(PieceManager pieceManager) {
+    CultivatorMiscCategory = Piece.PieceCategory.Misc;
+    CultivatorCreatorShopCategory = pieceManager.AddPieceCategory(CultivatorPieceTable, "CreatorShop");
+
+    pieceManager.GetPieceTable(CultivatorPieceTable)
+        .m_useCategories = true;
+  }
+
+  public static void AddCultivatorPieces(PieceTable cultivatorPieceTable) {
+    AddPotteryPieces(cultivatorPieceTable, CultivatorMiscCategory, VanillaShop.CultivatorPieces);
+    AddPotteryPieces(cultivatorPieceTable, CreatorShopCategory, CreatorShop.CultivatorPieces);
+  }
+
   public static void AddPotteryPieces(
       PieceTable pieceTable, Piece.PieceCategory pieceCategory, PotteryPieceList potteryPieces) {
     foreach (PotteryPiece potteryPiece in potteryPieces) {
@@ -129,29 +142,12 @@ public static class PotteryManager {
       ShopPieces.Add(potteryPiece.PiecePrefab, piece);
 
       if (!piece.TryGetComponent(out WearNTear _)) {
-        Jotunn.Logger.LogInfo($"Prefab {piece.name} does not have a WearNTear component.");
+        Jotunn.Logger.LogInfo($"{piece.name},-WearNTear");
       }
-    }
-  }
 
-  public static void SetupCultivatorCategories(PieceManager pieceManager) {
-    CultivatorMiscCategory = Piece.PieceCategory.Misc;
-    CultivatorCreatorShopCategory = pieceManager.AddPieceCategory(CultivatorPieceTable, "CreatorShop");
-  }
-
-  public static void AddCultivatorPieces(PieceTable pieceTable) {
-    pieceTable.m_useCategories = true;
-
-    foreach (
-        KeyValuePair<string, Dictionary<string, int>> entry in
-            Requirements.CultivatorCreatorShopItems.OrderBy(o => o.Key).ToList()) {
-      pieceTable.AddPiece(
-          GetOrAddPiece(entry.Key)
-              .SetResources(CreateRequirements(entry.Value))
-              .SetCategory(CultivatorCreatorShopCategory)
-              .SetCraftingStation(GetCraftingStation(Requirements.CraftingStationRequirements, entry.Key))
-              .SetCanBeRemoved(true)
-              .SetTargetNonPlayerBuilt(false));
+      if (piece.TryGetComponent(out StaticPhysics _)) {
+        Jotunn.Logger.LogInfo($"{piece.name},+StaticPhysics");
+      }
     }
   }
 
