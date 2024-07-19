@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.10.0
+
+  * Updated for the `v0.218.19` patch.
+  * Added a `Container.RPC_RequestOpen()` transpiler patch to filter out "Player wants to open" log spam.
+
 ### 1.9.0
 
   * Updated for the `v0.218.15` Ashlands patch.

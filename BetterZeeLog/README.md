@@ -8,6 +8,11 @@
   * Removes stack traces for `Info` and `Warning` log types.
   * Removes the 'Failed to send data' logging in `ZSteamSocket` to reduce log spam.
   * Removes 'Activating default/right-stick element' logging to reduce log spam.
+  * Removes 'Players wants to open/but im not the owner' logging to reduce log spam.
+
+## Config
+
+  * All config option changes require a full game restart to take effect.
 
 ## Notes
 
