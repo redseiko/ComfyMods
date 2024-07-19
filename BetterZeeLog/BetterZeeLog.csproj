@@ -87,6 +87,7 @@
   <ItemGroup>
     <Compile Include="BetterZeeLog.cs" />
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
+    <Compile Include="Patches\ContainerPatch.cs" />
     <Compile Include="Patches\ProjectilePatch.cs" />
     <Compile Include="Patches\UIGroupHandlerPatch.cs" />
     <Compile Include="Patches\ZLogPatch.cs" />
