@@ -1,4 +1,6 @@
-﻿namespace PotteryBarn;
+﻿using ComfyLib;
+
+namespace PotteryBarn;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -14,121 +16,80 @@ public static class PotteryManager {
   public static readonly string HammerPieceTable = "_HammerPieceTable";
   public static PieceTable GetHammerPieceTable() => PieceManager.Instance.GetPieceTable(HammerPieceTable);
 
-  public static Piece.PieceCategory HammerBuildingCategory;
-  public static Piece.PieceCategory HammerMiscCategory;
+  public static readonly string CultivatorPieceTable = "_CultivatorPieceTable";
+  public static PieceTable GetCultivatorPieceTable() => PieceManager.Instance.GetPieceTable(CultivatorPieceTable);
+
+  public static Piece.PieceCategory BuildingCategory;
+  public static Piece.PieceCategory MiscCategory;
 
   public static Piece.PieceCategory CreatorShopCategory;
   public static Piece.PieceCategory BuilderShopCategory;
 
-  public static readonly string CultivatorPieceTable = "_CultivatorPieceTable";
-  public static PieceTable GetCultivatorPieceTable() => PieceManager.Instance.GetPieceTable(CultivatorPieceTable);
-
-  public static Piece.PieceCategory CultivatorMiscCategory;
-  public static Piece.PieceCategory CultivatorCreatorShopCategory;
-
-  public static readonly Quaternion PrefabIconRenderRotation = Quaternion.Euler(0f, -45f, 0f);
+  public static readonly Quaternion PrefabIconRenderRotation = Quaternion.Euler(0f, -37.5f, 0f);
 
   public static bool IsDropTableDisabled { get; set; } = false;
 
+  public static readonly Dictionary<string, Piece> VanillaPieces = [];
   public static readonly Dictionary<string, Piece> ShopPieces = [];
 
   public static void AddPieces() {
     PieceManager.OnPiecesRegistered -= AddPieces;
 
-    SetupHammerCategories(PieceManager.Instance);
-    SetupCultivatorCategories(PieceManager.Instance);
+    SetupCategories(PieceManager.Instance);
 
-    AddHammerPieces(PieceManager.Instance);
-    AddCultivatorPieces(PieceManager.Instance.GetPieceTable("_CultivatorPieceTable"));
+    AddHammerPieces(GetHammerPieceTable());
+    AddCultivatorPieces(GetCultivatorPieceTable());
   }
 
-  public static void SetupHammerCategories(PieceManager pieceManager) {
-    HammerBuildingCategory = Piece.PieceCategory.BuildingWorkbench;
-    HammerMiscCategory = Piece.PieceCategory.Misc;
+  public static void SetupCategories(PieceManager pieceManager) {
+    BuildingCategory = Piece.PieceCategory.BuildingWorkbench;
+    MiscCategory = Piece.PieceCategory.Misc;
 
     CreatorShopCategory = pieceManager.AddPieceCategory(HammerPieceTable, "CreatorShop");
     BuilderShopCategory = pieceManager.AddPieceCategory(HammerPieceTable, "BuilderShop");
+
+    //GetCultivatorPieceTable().m_useCategories = true;
   }
 
-  public static void AddHammerPieces(PieceManager pieceManager) {  
-    PieceTable pieceTable = pieceManager.GetPieceTable(HammerPieceTable);
+  public static void AddHammerPieces(PieceTable hammerPieceTable) {  
+    hammerPieceTable.AddPiece(GetExistingPiece("turf_roof").SetName("turf_roof"));
+    hammerPieceTable.AddPiece(GetExistingPiece("turf_roof_top").SetName("turf_roof_top"));
+    hammerPieceTable.AddPiece(GetExistingPiece("turf_roof_wall").SetName("turf_roof_wall"));
 
-    pieceTable.AddPiece(GetExistingPiece("turf_roof").SetName("turf_roof"));
-    pieceTable.AddPiece(GetExistingPiece("turf_roof_top").SetName("turf_roof_top"));
-    pieceTable.AddPiece(GetExistingPiece("turf_roof_wall").SetName("turf_roof_wall"));
-
-    pieceTable.AddPiece(
+    hammerPieceTable.AddPiece(
         GetExistingPiece("ArmorStand_Female")
             .SetName("ArmorStand_Female")
             .SetComfort(0));
 
-    pieceTable.AddPiece(
+    hammerPieceTable.AddPiece(
         GetExistingPiece("ArmorStand_Male")
             .SetName("ArmorStand_Male"));
 
-    pieceTable.AddPiece(
+    hammerPieceTable.AddPiece(
         GetExistingPiece("stone_floor")
             .ModifyResource("Stone", amount: 12, recover: true));
 
-    pieceTable.AddPiece(
+    hammerPieceTable.AddPiece(
         GetExistingPiece("wood_ledge")
             .ModifyResource("Wood", amount: 1, recover: true));
 
-    foreach (
-        KeyValuePair<string, Dictionary<string, int>> entry in
-            Requirements.HammerCreatorShopItems.OrderBy(o => o.Key).ToList()) {
-      pieceTable.AddPiece(
-          GetOrAddPiece(entry.Key)
-              .SetResources(CreateRequirements(entry.Value))
-              .SetCategory(CreatorShopCategory)
-              .SetCraftingStation(GetCraftingStation(Requirements.CraftingStationRequirements, entry.Key))
-              .SetCanBeRemoved(true)
-              .SetTargetNonPlayerBuilt(false));
-    }
+    AddPotteryPieces(hammerPieceTable, BuildingCategory, VanillaShop.BuildingPieces, VanillaPieces);
+    AddPotteryPieces(hammerPieceTable, MiscCategory, VanillaShop.MiscPieces, VanillaPieces);
 
-    foreach (
-        KeyValuePair<string, Dictionary<string, int>> entry in
-            Requirements.MiscPrefabs.OrderBy(o => o.Key).ToList()) {
-      pieceTable.AddPiece(
-          GetOrAddPiece(entry.Key)
-              .SetResources(CreateRequirements(entry.Value))
-              .SetCategory(HammerMiscCategory)
-              .SetCraftingStation(GetCraftingStation(Requirements.CraftingStationRequirements, entry.Key))
-              .SetCanBeRemoved(true)
-              .SetTargetNonPlayerBuilt(true));
-    }
-
-    foreach (
-        KeyValuePair<string, Dictionary<string, int>> entry in
-            DvergrPieces.DvergrPrefabs.OrderBy(o => o.Key).ToList()) {
-      pieceTable.AddPiece(
-          GetOrAddPiece(entry.Key)
-              .SetResources(CreateRequirements(entry.Value))
-              .SetCategory(HammerBuildingCategory)
-              .SetCraftingStation(GetCraftingStation(DvergrPieces.DvergrPrefabCraftingStationRequirements, entry.Key))
-              .SetCanBeRemoved(true)
-              .SetTargetNonPlayerBuilt(false));
-    }
-
-    AddPotteryPieces(GetHammerPieceTable(), CreatorShopCategory, CreatorShop.HammerPieces);
-    AddPotteryPieces(GetHammerPieceTable(), BuilderShopCategory, BuilderShop.HammerPieces);
-  }
-
-  public static void SetupCultivatorCategories(PieceManager pieceManager) {
-    CultivatorMiscCategory = Piece.PieceCategory.Misc;
-    CultivatorCreatorShopCategory = pieceManager.AddPieceCategory(CultivatorPieceTable, "CreatorShop");
-
-    pieceManager.GetPieceTable(CultivatorPieceTable)
-        .m_useCategories = true;
+    AddPotteryPieces(hammerPieceTable, CreatorShopCategory, CreatorShop.HammerPieces, ShopPieces);
+    AddPotteryPieces(hammerPieceTable, BuilderShopCategory, BuilderShop.HammerPieces, ShopPieces);
   }
 
   public static void AddCultivatorPieces(PieceTable cultivatorPieceTable) {
-    AddPotteryPieces(cultivatorPieceTable, CultivatorMiscCategory, VanillaShop.CultivatorPieces);
-    AddPotteryPieces(cultivatorPieceTable, CreatorShopCategory, CreatorShop.CultivatorPieces);
+    AddPotteryPieces(cultivatorPieceTable, MiscCategory, VanillaShop.CultivatorPieces, VanillaPieces);
+    AddPotteryPieces(cultivatorPieceTable, CreatorShopCategory, CreatorShop.CultivatorPieces, ShopPieces);
   }
 
   public static void AddPotteryPieces(
-      PieceTable pieceTable, Piece.PieceCategory pieceCategory, PotteryPieceList potteryPieces) {
+      PieceTable pieceTable,
+      Piece.PieceCategory pieceCategory,
+      PotteryPieceList potteryPieces,
+      Dictionary<string, Piece> pieceByNameCache) {
     foreach (PotteryPiece potteryPiece in potteryPieces) {
       Piece piece = GetOrAddPiece(potteryPiece.PiecePrefab);
 
@@ -139,7 +100,7 @@ public static class PotteryManager {
           .SetCanBeRemoved(true);
 
       pieceTable.AddPiece(piece);
-      ShopPieces.Add(potteryPiece.PiecePrefab, piece);
+      pieceByNameCache.Add(potteryPiece.PiecePrefab, piece);
 
       if (!piece.TryGetComponent(out WearNTear _)) {
         Jotunn.Logger.LogInfo($"{piece.name},-WearNTear");
@@ -148,7 +109,20 @@ public static class PotteryManager {
       if (piece.TryGetComponent(out StaticPhysics _)) {
         Jotunn.Logger.LogInfo($"{piece.name},+StaticPhysics");
       }
+
+      if (piece.TryGetComponent(out Destructible destructible)) {
+        Jotunn.Logger.LogInfo($"{piece.name},+Destructible,{destructible.Ref()?.m_spawnWhenDestroyed.Ref()?.name}");
+      }
+
+      if (piece.TryGetComponent(out DropOnDestroyed dropOnDestroyed)) {
+        Jotunn.Logger.LogInfo($"{piece.name},+DropOnDestroyed,{ToDebugString(dropOnDestroyed)}");
+      }
     }
+  }
+
+  static string ToDebugString(DropOnDestroyed dropOnDestroyed) {
+    return string.Join(
+        ",", dropOnDestroyed.m_dropWhenDestroyed.GetDropList(dropOnDestroyed.m_dropWhenDestroyed.m_dropMax));
   }
 
   public static Piece GetExistingPiece(string prefabName) {
@@ -185,12 +159,19 @@ public static class PotteryManager {
     };
   }
 
+  public static readonly Dictionary<string, CraftingStation> CraftingStationCache = [];
+
   public static CraftingStation GetCraftingStation(string prefabName) {
     if (string.IsNullOrEmpty(prefabName)) {
       return default;
     }
 
-    return PrefabManager.Instance.GetPrefab(prefabName).GetComponent<CraftingStation>();
+    if (!CraftingStationCache.TryGetValue(prefabName, out CraftingStation craftingStation)) {
+      craftingStation = PrefabManager.Instance.GetPrefab(prefabName).GetComponent<CraftingStation>();
+      CraftingStationCache.Add(prefabName, craftingStation);
+    }
+
+    return craftingStation;
   }
 
   public static Piece SetPlacementRestrictions(Piece piece) {
@@ -235,28 +216,12 @@ public static class PotteryManager {
     return requirements;
   }
 
-  public static CraftingStation GetCraftingStation(Dictionary<string, string> requirements, string prefabName) {
-    if (requirements.ContainsKey(prefabName)) {
-      return PrefabManager.Instance
-          .GetPrefab(requirements[prefabName])
-          .GetComponent<CraftingStation>();
-    }
-
-    return null;
-  }
-
   public static bool IsShopPiece(Piece piece) {
-    return IsShopPiecePrefab(piece.m_description);
+    return ShopPieces.ContainsKey(piece.m_description);
   }
 
-  public static bool IsShopPiecePrefab(string prefabName) {
-    return
-        Requirements.HammerCreatorShopItems.ContainsKey(prefabName)
-        || ShopPieces.ContainsKey(prefabName);
-  }
-
-  public static bool IsDvergrPiece(Piece piece) {
-    return DvergrPieces.DvergrPrefabs.ContainsKey(piece.m_description);
+  public static bool IsVanillaPiece(Piece piece) {
+    return VanillaPieces.ContainsKey(piece.m_description);
   }
 
   public static bool CanBeRemoved(Piece piece) {
@@ -264,11 +229,23 @@ public static class PotteryManager {
       return false;
     }
 
-    if (IsDvergrPiece(piece) && !piece.IsPlacedByPlayer()) {
+    if (IsVanillaPiece(piece) && !piece.IsPlacedByPlayer()) {
       return false;
     }
 
     return true;
+  }
+
+  public static void PlacePieceInstantiateDelegate(GameObject clonedObject) {
+    if (clonedObject.TryGetComponent(out Container container)) {
+      container.GetInventory().RemoveAll();
+    }
+
+    if (clonedObject.TryGetComponent(out Destructible destructible) && destructible.m_spawnWhenDestroyed) {
+      Jotunn.Logger.LogInfo(
+          $"Setting {destructible.name} spawnWhenDestroyed from {destructible.m_spawnWhenDestroyed} to vfx_SawDust.");
+      CustomFieldUtils.SetDestructibleFields(destructible, "vfx_SawDust");
+    }
   }
 
   public static Sprite LoadOrRenderIcon(GameObject prefab, Quaternion renderRotation) {

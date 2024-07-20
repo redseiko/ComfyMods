@@ -134,6 +134,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComfyLib\Extensions\CodeMatcherExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="ComfyLib\Utils\IsExternalInit.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Core\Extensions\PieceRequirementExtensions.cs" />
     <Compile Include="Core\Extensions\PieceTableExtensions.cs" />
     <Compile Include="Core\Pieces\PotteryPieceList.cs" />
+    <Compile Include="Core\Utils\CustomFieldUtils.cs" />
     <Compile Include="Core\Utils\PlacementGhostUtils.cs" />
     <Compile Include="Patches\DropOnDestroyedPatch.cs" />
     <Compile Include="Patches\EffectListPatch.cs" />

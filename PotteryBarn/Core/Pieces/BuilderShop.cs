@@ -209,5 +209,5 @@ public static class BuilderShop {
               new PieceResourceList()
                   .Add(Item.PotShardRed, 5)
                   .Add(Item.YggdrasilWood, 7)
-                  .Add(Item.Copper, 7));
+                  .Add(Item.Copper, 2));
 }
