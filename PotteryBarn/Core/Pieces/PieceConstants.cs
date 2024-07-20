@@ -23,7 +23,9 @@ public static class PieceConstants {
     public const string FineWood = "FineWood";
     public const string FlametalNew = "FlametalNew";
     public const string Grausten = "Grausten";
+    public const string GreydwarfEye = "GreydwarfEye";
     public const string Iron = "Iron";
+    public const string JuteBlue = "JuteBlue";
     public const string JuteRed = "JuteRed";
     public const string Lantern = "Lantern";
     public const string LeatherScraps = "LeatherScraps";
@@ -34,9 +36,11 @@ public static class PieceConstants {
     public const string Resin = "Resin";
     public const string RoyalJelly = "RoyalJelly";
     public const string Stone = "Stone";
+    public const string SurtlingCore = "SurtlingCore";
     public const string Tar = "Tar";
     public const string TrophySeeker = "TrophySeeker";
     public const string Wisp = "Wisp";
+    public const string WolfClaw = "WolfClaw";
     public const string WolfPelt = "WolfPelt";
     public const string Wood = "Wood";
     public const string YggdrasilWood = "YggdrasilWood";

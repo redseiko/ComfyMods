@@ -63,7 +63,7 @@ static class PlayerPatch {
 
     if (PotteryManager.IsShopPiece(piece)) {
       __result = piece.IsCreator();
-    } else if (PotteryManager.IsDvergrPiece(piece)) {
+    } else if (PotteryManager.IsVanillaPiece(piece)) {
       __result = piece.IsPlacedByPlayer();
     }
   }
@@ -78,16 +78,11 @@ static class PlayerPatch {
             new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Humanoid), nameof(Humanoid.GetRightItem))),
             new CodeMatch(OpCodes.Stloc_S))
         .ThrowIfInvalid($"Could not patch Player.PlacePiece()! (GetRightItem)")
-        .Advance(offset: 3)
-        .InsertAndAdvance(
+        .ExtractLabels(out List<Label> getRightItemLabels)
+        .Insert(
             new CodeInstruction(OpCodes.Ldloc_3),
-            Transpilers.EmitDelegate(PlacePieceInstantiateDelegate))
+            Transpilers.EmitDelegate(PotteryManager.PlacePieceInstantiateDelegate))
+        .AddLabels(getRightItemLabels)
         .InstructionEnumeration();
-  }
-
-  static void PlacePieceInstantiateDelegate(GameObject clonedObject) {
-    if (clonedObject.TryGetComponent(out Container container)) {
-      container.GetInventory().RemoveAll();
-    }
   }
 }

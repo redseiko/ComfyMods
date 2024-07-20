@@ -3,29 +3,7 @@
 using System.Collections.Generic;
 
 public static class Requirements {
-  public static readonly Dictionary<string, Dictionary<string, int>> HammerCreatorShopItems = new() {
-     // Roots, Vines, and Glowing Mushroom
-     {"root07", new Dictionary<string, int>() {
-        {"ElderBark", 2 }}},
-     {"root08", new Dictionary<string, int>() {
-        {"ElderBark", 2 }}},
-     {"root11", new Dictionary<string, int>() {
-        {"ElderBark", 2 }}},
-     {"root12", new Dictionary<string, int>() {
-        {"ElderBark", 2 }}},
-  };
-
-  public static readonly Dictionary<string, Dictionary<string, int>> MiscPrefabs =
-    new() {
-      { "portal", new() {
-        { "Stone", 30 },
-        { "SurtlingCore", 2},
-        { "GreydwarfEye", 10} }},
-      { "CastleKit_brazier", new() {
-        { "Bronze", 5 },
-        { "Coal", 2},
-        { "WolfClaw", 3} }}
-    };
+  public static readonly Dictionary<string, Dictionary<string, int>> HammerCreatorShopItems = [];
 
   //public static readonly Dictionary<string, Dictionary<string, int>> cultivatorCreatorShopItems = new() {
   //   // Natural Items

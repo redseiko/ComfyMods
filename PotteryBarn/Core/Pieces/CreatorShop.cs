@@ -246,7 +246,7 @@ public static class CreatorShop {
                 (Item.BlackMarble, 20) ])
           .AddPiece(
               "TreasureChest_dvergrtown",
-              Workstation.Stonecutter,
+              Workstation.Workbench,
               [ (Item.MushroomBlue, 10),
                 (Item.YggdrasilWood, 10),
                 (Item.Copper, 2) ])

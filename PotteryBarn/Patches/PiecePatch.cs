@@ -25,7 +25,7 @@ static class PiecePatch {
   public static void ModifyCanBeRemoved(Piece piece) {
     if (PotteryManager.IsShopPiece(piece)) {
       piece.m_canBeRemoved = piece.IsCreator();
-    } else if (PotteryManager.IsDvergrPiece(piece)) {
+    } else if (PotteryManager.IsVanillaPiece(piece)) {
       piece.m_canBeRemoved = piece.IsPlacedByPlayer();
     }
   }
@@ -49,7 +49,7 @@ static class PiecePatch {
     }
 
     // TODO: remove me and alter Piece resources on Awake() instead.
-    if (PotteryManager.IsDvergrPiece(__instance) && !__instance.IsPlacedByPlayer()) {
+    if (PotteryManager.IsVanillaPiece(__instance) && !__instance.IsPlacedByPlayer()) {
       DropDefaultResources(__instance);
       return false;
     }

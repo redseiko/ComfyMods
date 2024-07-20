@@ -1,7 +1,5 @@
 ﻿namespace PotteryBarn;
 
-using System.Collections;
-
 using HarmonyLib;
 
 [HarmonyPatch(typeof(DropOnDestroyed))]
@@ -11,7 +9,7 @@ static class DropOnDestroyedPatch {
   static bool OnDestroyedPrefix(DropOnDestroyed __instance) {
     if (__instance.TryGetComponent(out Piece piece)
         && piece.IsPlacedByPlayer()
-        && PotteryManager.IsDvergrPiece(piece)) {
+        && PotteryManager.IsVanillaPiece(piece)) {
       return false;
     }
 
