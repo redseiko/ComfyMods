@@ -54,6 +54,18 @@ static class PlayerPatch {
     return clonedPrefab;
   }
 
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(Player.SetupPlacementGhost))]
+  static void SetupPlacementGhostPrefix() {
+    PotteryManager.IsPlacingPiece = true;
+  }
+
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Player.SetupPlacementGhost))]
+  static void SetupPlacementGhostPostfix() {
+    PotteryManager.IsPlacingPiece = false;
+  }
+
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Player.CheckCanRemovePiece))]
   static void CheckCanRemovePostfix(Piece piece, ref bool __result) {
@@ -75,14 +87,25 @@ static class PlayerPatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldarg_0),
-            new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Humanoid), nameof(Humanoid.GetRightItem))),
-            new CodeMatch(OpCodes.Stloc_S))
+            new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Humanoid), nameof(Humanoid.GetRightItem))))
         .ThrowIfInvalid($"Could not patch Player.PlacePiece()! (GetRightItem)")
         .ExtractLabels(out List<Label> getRightItemLabels)
         .Insert(
             new CodeInstruction(OpCodes.Ldloc_3),
-            Transpilers.EmitDelegate(PotteryManager.PlacePieceInstantiateDelegate))
+            Transpilers.EmitDelegate(PotteryManager.PlacePieceGetRightItemPreDelegate))
         .AddLabels(getRightItemLabels)
         .InstructionEnumeration();
+  }
+
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(Player.PlacePiece))]
+  static void PlacePiecePrefix(Player __instance, Piece piece) {
+    PotteryManager.IsPlacingPiece = true;
+  }
+
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Player.PlacePiece))]
+  static void PlacePiecePostfix() {
+    PotteryManager.IsPlacingPiece = false;
   }
 }

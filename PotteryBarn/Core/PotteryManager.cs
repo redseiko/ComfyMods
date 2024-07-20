@@ -1,6 +1,4 @@
-﻿using ComfyLib;
-
-namespace PotteryBarn;
+﻿namespace PotteryBarn;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +29,8 @@ public static class PotteryManager {
 
   public static readonly Dictionary<string, Piece> VanillaPieces = [];
   public static readonly Dictionary<string, Piece> ShopPieces = [];
+
+  public static readonly Dictionary<string, Piece.Requirement[]> VanillaPieceResources = [];
 
   public static void AddPieces() {
     PieceManager.OnPiecesRegistered -= AddPieces;
@@ -102,28 +102,28 @@ public static class PotteryManager {
       pieceTable.AddPiece(piece);
       pieceByNameCache.Add(potteryPiece.PiecePrefab, piece);
 
-      if (!piece.TryGetComponent(out WearNTear _)) {
-        Jotunn.Logger.LogInfo($"{piece.name},-WearNTear");
-      }
+      //if (!piece.TryGetComponent(out WearNTear _)) {
+      //  Jotunn.Logger.LogInfo($"{piece.name},-WearNTear");
+      //}
 
-      if (piece.TryGetComponent(out StaticPhysics _)) {
-        Jotunn.Logger.LogInfo($"{piece.name},+StaticPhysics");
-      }
+      //if (piece.TryGetComponent(out StaticPhysics _)) {
+      //  Jotunn.Logger.LogInfo($"{piece.name},+StaticPhysics");
+      //}
 
-      if (piece.TryGetComponent(out Destructible destructible)) {
-        Jotunn.Logger.LogInfo($"{piece.name},+Destructible,{destructible.Ref()?.m_spawnWhenDestroyed.Ref()?.name}");
-      }
+      //if (piece.TryGetComponent(out Destructible destructible)) {
+      //  Jotunn.Logger.LogInfo($"{piece.name},+Destructible,{destructible.Ref()?.m_spawnWhenDestroyed.Ref()?.name}");
+      //}
 
-      if (piece.TryGetComponent(out DropOnDestroyed dropOnDestroyed)) {
-        Jotunn.Logger.LogInfo($"{piece.name},+DropOnDestroyed,{ToDebugString(dropOnDestroyed)}");
-      }
+      //if (piece.TryGetComponent(out DropOnDestroyed dropOnDestroyed)) {
+      //  Jotunn.Logger.LogInfo($"{piece.name},+DropOnDestroyed,{ToDebugString(dropOnDestroyed)}");
+      //}
     }
   }
 
-  static string ToDebugString(DropOnDestroyed dropOnDestroyed) {
-    return string.Join(
-        ",", dropOnDestroyed.m_dropWhenDestroyed.GetDropList(dropOnDestroyed.m_dropWhenDestroyed.m_dropMax));
-  }
+  //static string ToDebugString(DropOnDestroyed dropOnDestroyed) {
+  //  return string.Join(
+  //      ",", dropOnDestroyed.m_dropWhenDestroyed.GetDropList(dropOnDestroyed.m_dropWhenDestroyed.m_dropMax));
+  //}
 
   public static Piece GetExistingPiece(string prefabName) {
     return PrefabManager.Instance.GetPrefab(prefabName).GetComponent<Piece>();
@@ -132,18 +132,22 @@ public static class PotteryManager {
   public static Piece GetOrAddPiece(string prefabName) {
     GameObject prefab = PrefabManager.Instance.GetPrefab(prefabName);
 
-    if (!prefab.TryGetComponent(out Piece piece)) {
+    if (prefab.TryGetComponent(out Piece piece)) {
+      if (!VanillaPieceResources.ContainsKey(piece.name)) {
+        VanillaPieceResources.Add(piece.name, piece.m_resources);
+      }
+    } else {
       piece = prefab.AddComponent<Piece>();
-      piece.m_name = piece.name;
+      piece.m_name = FormatPrefabName(prefab.name);
 
       SetPlacementRestrictions(piece);
     }
 
+    piece.m_description = prefab.name;
+
     if (!piece.m_icon) {
       piece.m_icon = LoadOrRenderIcon(prefab, PrefabIconRenderRotation);
     }
-
-    piece.m_description = prefab.name;
 
     return piece;
   }
@@ -236,23 +240,62 @@ public static class PotteryManager {
     return true;
   }
 
-  public static void PlacePieceInstantiateDelegate(GameObject clonedObject) {
-    if (clonedObject.TryGetComponent(out Container container)) {
-      container.GetInventory().RemoveAll();
-    }
-
-    if (clonedObject.TryGetComponent(out Destructible destructible) && destructible.m_spawnWhenDestroyed) {
-      Jotunn.Logger.LogInfo(
-          $"Setting {destructible.name} spawnWhenDestroyed from {destructible.m_spawnWhenDestroyed} to vfx_SawDust.");
-      CustomFieldUtils.SetDestructibleFields(destructible, "vfx_SawDust");
-    }
-  }
-
   public static Sprite LoadOrRenderIcon(GameObject prefab, Quaternion renderRotation) {
     RenderManager.RenderRequest request = new(prefab) {
       Rotation = renderRotation,
     };
 
     return RenderManager.Instance.Render(request);
+  }
+
+  public static void SetupPiece(Piece piece) {
+    bool isShopPiece = IsShopPiece(piece);
+    bool isVanillaPiece = IsVanillaPiece(piece);
+
+    if (!isShopPiece && !isVanillaPiece) {
+      return;
+    }
+
+    bool isPlacedByPlayer = piece.IsPlacedByPlayer();
+
+    if (!isPlacedByPlayer) {
+      if (VanillaPieceResources.TryGetValue(piece.name, out Piece.Requirement[] resources)) {
+        piece.m_resources = resources;
+      } else {
+        UnityEngine.Object.Destroy(piece);
+      }
+
+      return;
+    }
+
+    if (isShopPiece) {
+      piece.m_canBeRemoved = piece.IsCreator();
+    }
+
+    if (isVanillaPiece) {
+      piece.m_canBeRemoved = true;
+    }
+
+    if (piece.TryGetComponent(out DropOnDestroyed dropOnDestroyed)) {
+      dropOnDestroyed.m_dropWhenDestroyed = EmptyDropTable;
+    }
+
+    if (piece.TryGetComponent(out Destructible destructible) && destructible.m_spawnWhenDestroyed) {
+      CustomFieldUtils.SetDestructibleFields(destructible, "vfx_SawDust");
+    }
+  }
+
+  public static readonly DropTable EmptyDropTable = new();
+
+  public static bool IsPlacingPiece { get; set; } = false;
+
+  public static void PlacePieceGetRightItemPreDelegate(GameObject clonedObject) {
+    if (clonedObject.TryGetComponent(out Piece piece)) {
+      SetupPiece(piece);
+    }
+
+    if (clonedObject.TryGetComponent(out Container container)) {
+      container.GetInventory().RemoveAll();
+    }
   }
 }
