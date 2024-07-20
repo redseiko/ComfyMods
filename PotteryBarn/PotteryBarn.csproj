@@ -143,7 +143,6 @@
     <Compile Include="Core\Pieces\PieceConstants.cs" />
     <Compile Include="Core\Pieces\VanillaShop.cs" />
     <Compile Include="Core\PotteryManager.cs" />
-    <Compile Include="Core\DvergrPieces.cs" />
     <Compile Include="ComfyLib\Utils\ReflectionUtils.cs" />
     <Compile Include="Core\Extensions\PieceRequirementExtensions.cs" />
     <Compile Include="Core\Extensions\PieceTableExtensions.cs" />
@@ -158,7 +157,6 @@
     <Compile Include="Core\Extensions\PieceExtensions.cs" />
     <Compile Include="PotteryBarn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Core\Requirements.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CHANGELOG.md" />
