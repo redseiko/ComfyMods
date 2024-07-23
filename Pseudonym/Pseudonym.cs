@@ -15,22 +15,17 @@ using static PluginConfig;
 public sealed class Pseudonym : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.pseudonym";
   public const string PluginName = "Pseudonym";
-  public const string PluginVersion = "1.3.0";
+  public const string PluginVersion = "1.4.0";
 
   static ManualLogSource _logger;
-  Harmony _harmony;
 
   void Awake() {
     _logger = Logger;
     BindConfig(Config);
 
     if (IsModEnabled.Value) {
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
+      Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
     }
-  }
-
-  void OnDestroy() {
-    _harmony?.UnpatchSelf();
   }
 
   public static void LogInfo(object o) {
