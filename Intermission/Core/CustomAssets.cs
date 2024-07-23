@@ -1,6 +1,5 @@
 ﻿namespace Intermission;
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -9,10 +8,10 @@ using ComfyLib;
 using UnityEngine;
 
 public static class CustomAssets {
-  public static List<string> LoadingTips { get; } = new();
-  public static List<string> LoadingImageFiles { get; } = new();
+  public static List<string> LoadingTips { get; } = [];
+  public static List<string> LoadingImageFiles { get; } = [];
 
-  static readonly Dictionary<string, Sprite> _loadingImageCache = new();
+  static readonly Dictionary<string, Sprite> _loadingImageCache = [];
 
   public static void Initialize(string pluginDir) {
     LoadingTips.Clear();
@@ -34,7 +33,7 @@ public static class CustomAssets {
       Directory.CreateDirectory(Path.GetDirectoryName(path));
       File.Create(path);
 
-      return Array.Empty<string>();
+      return [];
     }
   }
 

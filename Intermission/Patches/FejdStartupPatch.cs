@@ -23,9 +23,12 @@ static class FejdStartupPatch {
     Transform panelSeparator =
         UnityEngine.Object.Instantiate(
             __instance.m_menuList.transform.Find("ornament"), __instance.m_loading.transform);
+
     HudUtils.SetupTipText(loadingText);
+    HudUtils.SetupLoadingBackground(loadingImage.transform.parent);
     HudUtils.SetupLoadingImage(loadingImage);
     HudUtils.SetupPanelSeparator(panelSeparator);
+
     HudUtils.SetLoadingTip(loadingText);
     HudUtils.SetLoadingImage(loadingImage);
   }

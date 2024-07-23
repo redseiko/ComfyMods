@@ -5,6 +5,7 @@ using ComfyLib;
 using HarmonyLib;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 [HarmonyPatch(typeof(Hud))]
 static class HudPatch {
@@ -15,6 +16,7 @@ static class HudPatch {
     HudUtils.SetupTipText(__instance.m_loadingTip);
     HudUtils.SetupLoadingImage(__instance.m_loadingImage);
     HudUtils.SetupPanelSeparator(_panelSeparator);
+
     HudUtils.SetLoadingTip(__instance.m_loadingTip);
     HudUtils.SetLoadingImage(__instance.m_loadingImage);
 
@@ -23,6 +25,8 @@ static class HudPatch {
     __instance.m_loadingProgress.transform.Find("text_darken").Ref()?.gameObject.SetActive(false);
 
     __instance.m_teleportingProgress = __instance.m_loadingProgress;
+
+    HudUtils.SetupLoadingBackground(__instance.transform.Find("LoadingBlack/Bkg").GetComponent<Image>());
 
     Transform _loadingBlack = __instance.transform.Find("LoadingBlack");
     __instance.m_loadingImage.transform.SetParent(_loadingBlack, false);

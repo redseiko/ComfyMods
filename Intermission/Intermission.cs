@@ -16,10 +16,9 @@ using static PluginConfig;
 public sealed class Intermission : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.intermission";
   public const string PluginName = "Intermission";
-  public const string PluginVersion = "1.5.0";
+  public const string PluginVersion = "1.6.0";
 
   static ManualLogSource _logger;
-  Harmony _harmony;
 
   void Awake() {
     _logger = Logger;
@@ -27,12 +26,8 @@ public sealed class Intermission : BaseUnityPlugin {
 
     if (IsModEnabled.Value) {
       CustomAssets.Initialize(Path.Combine(Path.GetDirectoryName(Config.ConfigFilePath), PluginName));
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
+      Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
     }
-  }
-
-  void OnDestroy() {
-    _harmony?.UnpatchSelf();
   }
 
   public static void LogInfo(object o) {

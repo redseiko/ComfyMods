@@ -21,6 +21,8 @@ public static class PluginConfig {
   public static ConfigEntry<float> LoadingImageScaleLerpEndScale { get; private set; }
   public static ConfigEntry<float> LoadingImageScaleLerpDuration { get; private set; }
 
+  public static ConfigEntry<Color> LoadingScreenBackgroundColor { get; private set; }
+
   public static ConfigEntry<bool> LoadingScreenShowPanelSeparator { get; private set; }
   public static ConfigEntry<Vector2> LoadingScreenPanelSeparatorPosition { get; private set; }
 
@@ -116,6 +118,16 @@ public static class PluginConfig {
 
     LoadingTipTextColor.SettingChanged += OnLoadingTipConfigChanged;
 
+    // LoadingScreen.Background
+    LoadingScreenBackgroundColor =
+        config.BindInOrder(
+            "LoadingScreen.Background",
+            "backgroundColor",
+            Color.black,
+            "Color to use for the loading screen background.");
+
+    LoadingScreenBackgroundColor.SettingChanged += OnLoadingBackgroundConfigChanged;
+
     // LoadingScreen.PanelSeparator
     LoadingScreenShowPanelSeparator =
         config.BindInOrder(
@@ -142,6 +154,10 @@ public static class PluginConfig {
 
   static void OnLoadingTipConfigChanged(object sender, EventArgs args) {
     HudUtils.SetupTipText();
+  }
+
+  static void OnLoadingBackgroundConfigChanged(object sender, EventArgs args) {
+    HudUtils.SetupLoadingBackground();
   }
 
   static void OnPanelSeparatorConfigChanged(object sender, EventArgs args) {
