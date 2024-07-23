@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.8.0
+
+  * Updated for the `v0.218.19` patch.
+  * Code clean-up and refactoring.
+
 ### 1.7.0
 
   * Added a new enum `PieceName` to the `hoverPiecePanelEnabledRows` and `placementGhostPanelEnabledRows`.

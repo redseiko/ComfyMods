@@ -43,15 +43,13 @@ public static class PanelUtils {
     Gradient gradient = new();
 
     gradient.SetKeys(
-        new GradientColorKey[] {
-          new(new Color32(239, 83, 80, 255), 0.25f),
-          new(new Color32(255, 238, 88, 255), 0.5f),
-          new(new Color32(156, 204, 101, 255), 1),
-        },
-        new GradientAlphaKey[] {
-          new(1, 0),
-          new(1, 1),
-        });
+        colorKeys: [
+          new(new(0.937f, 0.325f, 0.314f, 1f), 0.25f),
+          new(new(1f, 0.933f, 0.345f, 1f), 0.5f),
+          new(new(0.612f, 0.8f, 0.396f, 1f), 1f) ],
+        alphaKeys: [
+          new(1f, 0f),
+          new(1f, 1f) ]);
 
     return gradient;
   }
@@ -60,15 +58,13 @@ public static class PanelUtils {
     Gradient gradient = new();
 
     gradient.SetKeys(
-        new GradientColorKey[] {
-          new(new Color32(239, 83, 80, 255), 0.25f),
-          new(new Color32(255, 238, 88, 255), 0.5f),
-          new(new Color32(100, 181, 246, 255), 1),
-        },
-        new GradientAlphaKey[] {
-          new(1, 0),
-          new(1, 1),
-        });
+        colorKeys: [
+          new(new(0.937f, 0.325f, 0.314f, 1f), 0.25f),
+          new(new(1f, 0.933f, 0.345f, 1f), 0.5f),
+          new(new(0.392f, 0.71f, 0.965f, 1f), 1f) ],
+        alphaKeys: [
+          new(1f, 0f),
+          new(1f, 1f) ]);
 
     return gradient;
   }
