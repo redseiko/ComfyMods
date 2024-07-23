@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.10.1
+
+  * Fixed a bug `Container.RPC_RequestOpen()` transpiler patch.
+
 ### 1.10.0
 
   * Updated for the `v0.218.19` patch.
