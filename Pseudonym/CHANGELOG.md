@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.4.0
+
+  * Updated for the `v0.218.19` patch.
+  * Fixed player name validation to match vanilla and allow digits.
+
 ### 1.3.0
 
   * Fixed for `v0.217.43` PTB patch.

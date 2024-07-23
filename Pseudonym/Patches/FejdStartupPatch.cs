@@ -1,7 +1,5 @@
 ﻿namespace Pseudonym;
 
-using System.Text.RegularExpressions;
-
 using ComfyLib;
 
 using HarmonyLib;
@@ -15,14 +13,15 @@ using UnityEngine.UI;
 static class FejdStartupPatch {
   static Button _editButton;
   static PlayerProfile _editingPlayerProfile;
+  static TextMeshProUGUI _editCharacterPanelTopicText;
 
   static TextMeshProUGUI _newCharacterPanelTopicText;
   static Button.ButtonClickedEvent _onNewCharacterDoneEvent;
   static PlayerCustomizaton _playerCustomization;
 
-  static string _topicText;
   static int _characterLimit;
   static TMP_InputField.ContentType _contentType;
+  static TMP_InputValidator _inputValidator;
 
   [HarmonyPostfix]
   [HarmonyPatch(nameof(FejdStartup.Start))]
@@ -31,12 +30,17 @@ static class FejdStartupPatch {
 
     _newCharacterPanelTopicText =
         __instance.m_newCharacterPanel.transform.Find("Topic").GetComponent<TextMeshProUGUI>();
-    _topicText = _newCharacterPanelTopicText.text;
+
+    _editCharacterPanelTopicText =
+        UnityEngine.Object.Instantiate(_newCharacterPanelTopicText, _newCharacterPanelTopicText.transform.parent);
+    _editCharacterPanelTopicText.text = string.Empty;
+    _editCharacterPanelTopicText.gameObject.SetActive(false);
 
     _onNewCharacterDoneEvent = __instance.m_csNewCharacterDone.onClick;
 
     _characterLimit = __instance.m_csNewCharacterName.characterLimit;
     _contentType = __instance.m_csNewCharacterName.contentType;
+    _inputValidator = __instance.m_csNewCharacterName.inputValidator;
 
     _playerCustomization =
         __instance.m_newCharacterPanel.GetComponentInChildren<PlayerCustomizaton>(includeInactive: true);
@@ -61,8 +65,6 @@ static class FejdStartupPatch {
     _editButton.Ref()?.gameObject.SetActive(__instance.m_profiles.Count > 0);
   }
 
-  static readonly Regex _nameRegex = new("[a-zA-Z0-9 _]", RegexOptions.CultureInvariant);
-
   static void OnEditCharacter(FejdStartup fejdStartup) {
     if (fejdStartup.TryGetPlayerProfile(out PlayerProfile profile)) {
       Pseudonym.LogInfo($"Editing existing player: {profile.GetName()}");
@@ -72,14 +74,18 @@ static class FejdStartupPatch {
       fejdStartup.m_newCharacterError.SetActive(false);
       fejdStartup.m_selectCharacterPanel.SetActive(false);
 
-      _newCharacterPanelTopicText.text = $"Edit Character: {profile.GetName()}";
+      _newCharacterPanelTopicText.gameObject.SetActive(false);
+
+      _editCharacterPanelTopicText.text = $"Edit Character: {profile.GetName()}";
+      _editCharacterPanelTopicText.gameObject.SetActive(true);
 
       fejdStartup.m_csNewCharacterDone.onClick = new();
       fejdStartup.m_csNewCharacterDone.onClick.AddListener(() => OnEditCharacterDone(fejdStartup));
 
       fejdStartup.m_csNewCharacterName.characterLimit = 20;
-      fejdStartup.m_csNewCharacterName.contentType = TMP_InputField.ContentType.Standard;
-      fejdStartup.m_csNewCharacterName.onValidateInput += OnEditCharacterNameValidateInput;
+      fejdStartup.m_csNewCharacterName.inputValidator = NameDigitInputValidator.Create();
+      fejdStartup.m_csNewCharacterName.contentType = TMP_InputField.ContentType.Custom;
+      fejdStartup.m_csNewCharacterName.characterValidation = TMP_InputField.CharacterValidation.CustomValidator;
       fejdStartup.m_csNewCharacterName.text = profile.GetName();
 
       fejdStartup.SetupCharacterPreview(profile);
@@ -88,13 +94,6 @@ static class FejdStartupPatch {
     } else {
       _editingPlayerProfile = null;
     }
-  }
-
-  static char OnEditCharacterNameValidateInput(string text, int charIndex, char addedChar) {
-    return
-        _nameRegex.IsMatch(char.ToString(addedChar)) && (charIndex > 0 || addedChar != ' ')
-            ? addedChar
-            : '\0';
   }
 
   static void SetupPlayerCustomization(Player player, PlayerCustomizaton customization) {
@@ -146,13 +145,15 @@ static class FejdStartupPatch {
 
     _editingPlayerProfile = null;
 
-    _newCharacterPanelTopicText.text = _topicText;
+    _newCharacterPanelTopicText.gameObject.SetActive(true);
+    _editCharacterPanelTopicText.gameObject.SetActive(false);
 
     fejdStartup.m_csNewCharacterDone.onClick = _onNewCharacterDoneEvent;
     fejdStartup.m_csNewCharacterName.text = string.Empty;
     fejdStartup.m_csNewCharacterName.characterLimit = _characterLimit;
-    fejdStartup.m_csNewCharacterName.contentType = _contentType;
-    fejdStartup.m_csNewCharacterName.onValidateInput -= OnEditCharacterNameValidateInput;
+    fejdStartup.m_csNewCharacterName.characterValidation = TMP_InputField.CharacterValidation.Name;
+    fejdStartup.m_csNewCharacterName.contentType = TMP_InputField.ContentType.Name;
+    fejdStartup.m_csNewCharacterName.inputValidator = _inputValidator;
 
     fejdStartup.m_selectCharacterPanel.SetActive(true);
     fejdStartup.m_newCharacterPanel.SetActive(false);
