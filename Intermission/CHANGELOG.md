@@ -1,5 +1,12 @@
 ## Changelog
 
+### 1.6.0
+
+  * Updated for the `v0.218.19` patch.
+  * Added a solid color background to the loading screen to handle images that do not fill the entire screen.
+    * Color can be changed with config option: `LoadingScreen.Background.backgroundColor`
+  * Small code clean-up and refactornig.
+
 ### 1.5.0
 
   * Updated for the `v0.217.46` patch.

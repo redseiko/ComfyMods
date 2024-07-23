@@ -12,6 +12,7 @@ using static PluginConfig;
 public static class HudUtils {
   static TMP_Text _cachedTipText;
   static Image _cachedLoadingImage;
+  static Image _cachedLoadingBackground;
   static Transform _cachedPanelSeparator;
 
   public static void SetLoadingImage(Image loadingImage) {
@@ -41,6 +42,39 @@ public static class HudUtils {
         .SetPreserveAspect(true);
   }
 
+  public static void SetupLoadingBackground(Transform parentTransform) {
+    if (!_cachedLoadingBackground) {
+      GameObject background = new("Background", typeof(RectTransform));
+      _cachedLoadingBackground = background.AddComponent<Image>();
+    }
+
+    _cachedLoadingBackground.transform.SetParent(parentTransform, worldPositionStays: false);
+    _cachedLoadingBackground.transform.SetAsFirstSibling();
+
+    _cachedLoadingBackground.GetComponent<RectTransform>()
+        .SetAnchorMin(Vector2.zero)
+        .SetAnchorMax(Vector2.one)
+        .SetPivot(new(0.5f, 0.5f))
+        .SetPosition(Vector2.zero)
+        .SetSizeDelta(Vector2.zero);
+
+    SetupLoadingBackground();
+  }
+
+  public static void SetupLoadingBackground(Image loadingBackground = default) {
+    if (loadingBackground) {
+      _cachedLoadingBackground = loadingBackground;
+    } else if (_cachedLoadingBackground) {
+      loadingBackground = _cachedLoadingBackground;
+    } else {
+      Intermission.LogError($"Could not find a LoadingBackground to setup!");
+    }
+
+    loadingBackground.Ref()?
+        .SetType(Image.Type.Simple)
+        .SetColor(LoadingScreenBackgroundColor.Value);
+  }
+
   public static void SetupPanelSeparator(Transform panelSeparator = default) {
     if (panelSeparator) {
       _cachedPanelSeparator = panelSeparator;
@@ -50,7 +84,7 @@ public static class HudUtils {
       Intermission.LogError($"Could not find a PanelSeparator to setup!");
     }
 
-    panelSeparator.SetActive(LoadingScreenShowPanelSeparator.Value);
+    panelSeparator.gameObject.SetActive(LoadingScreenShowPanelSeparator.Value);
     panelSeparator.GetComponent<RectTransform>()
         .SetAnchorMin(new(0.5f, 0f))
         .SetAnchorMax(new(0.5f, 0f))

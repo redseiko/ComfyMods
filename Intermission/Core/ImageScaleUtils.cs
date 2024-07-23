@@ -2,8 +2,6 @@
 
 using System.Collections;
 
-using ComfyLib;
-
 using UnityEngine;
 using UnityEngine.UI;
 

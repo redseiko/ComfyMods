@@ -27,6 +27,7 @@ static class SceneLoaderPatch {
       __instance._showSaveNotification = false;
       __instance._showHealthWarning = false;
 
+      HudUtils.SetupLoadingBackground(_loadingImage.transform.parent);
       HudUtils.SetupLoadingImage(_loadingImage);
       HudUtils.SetLoadingImage(_loadingImage);
       __instance.ScaleLerpLoadingImage(_loadingImage);
