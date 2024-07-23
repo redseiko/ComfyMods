@@ -26,19 +26,19 @@ static class ContainerPatch {
               new CodeInstruction(OpCodes.Br, isOwnerLabel))
           .MatchStartForward(
               new CodeInstruction(OpCodes.Ldstr, "  but im not the owner"),
-              new CodeInstruction(OpCodes.Call, AccessTools.Field(typeof(ZLog), nameof(ZLog.Log))))
+              new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
           .ThrowIfInvalid("Could not patch Container.RPC_RequestOpen()! (not-owner-log)")
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .MatchStartForward(
               new CodeInstruction(OpCodes.Ldstr, "  in use"),
-              new CodeInstruction(OpCodes.Call, AccessTools.Field(typeof(ZLog), nameof(ZLog.Log))))
+              new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
           .ThrowIfInvalid("Could not patch Container.RPC_RequestOpen()! (in-use-log)")
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .MatchStartForward(
               new CodeInstruction(OpCodes.Ldstr, "  not yours"),
-              new CodeInstruction(OpCodes.Call, AccessTools.Field(typeof(ZLog), nameof(ZLog.Log))))
+              new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
           .ThrowIfInvalid("Could not patch Container.RPC_RequestOpen()! (not-yours-log)")
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
