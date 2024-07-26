@@ -7,7 +7,8 @@ using System.Collections.Generic;
 public sealed class PotteryPieceList : IEnumerable<PotteryPiece> {
   public readonly Dictionary<string, PotteryPiece> Pieces = [];
 
-  public PotteryPieceList AddPiece(string piecePrefab, string craftingStation, ICollection<PieceResource> pieceResources) {
+  public PotteryPieceList AddPiece(
+      string piecePrefab, string craftingStation, ICollection<PieceResource> pieceResources) {
     Pieces[piecePrefab] = new(piecePrefab, craftingStation, pieceResources);
     return this;
   }

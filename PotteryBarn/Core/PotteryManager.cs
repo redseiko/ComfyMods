@@ -47,8 +47,6 @@ public static class PotteryManager {
 
     CreatorShopCategory = pieceManager.AddPieceCategory(HammerPieceTable, "CreatorShop");
     BuilderShopCategory = pieceManager.AddPieceCategory(HammerPieceTable, "BuilderShop");
-
-    //GetCultivatorPieceTable().m_useCategories = true;
   }
 
   public static void AddHammerPieces(PieceTable hammerPieceTable) {  
@@ -101,29 +99,8 @@ public static class PotteryManager {
 
       pieceTable.AddPiece(piece);
       pieceByNameCache.Add(potteryPiece.PiecePrefab, piece);
-
-      //if (!piece.TryGetComponent(out WearNTear _)) {
-      //  Jotunn.Logger.LogInfo($"{piece.name},-WearNTear");
-      //}
-
-      //if (piece.TryGetComponent(out StaticPhysics _)) {
-      //  Jotunn.Logger.LogInfo($"{piece.name},+StaticPhysics");
-      //}
-
-      //if (piece.TryGetComponent(out Destructible destructible)) {
-      //  Jotunn.Logger.LogInfo($"{piece.name},+Destructible,{destructible.Ref()?.m_spawnWhenDestroyed.Ref()?.name}");
-      //}
-
-      //if (piece.TryGetComponent(out DropOnDestroyed dropOnDestroyed)) {
-      //  Jotunn.Logger.LogInfo($"{piece.name},+DropOnDestroyed,{ToDebugString(dropOnDestroyed)}");
-      //}
     }
   }
-
-  //static string ToDebugString(DropOnDestroyed dropOnDestroyed) {
-  //  return string.Join(
-  //      ",", dropOnDestroyed.m_dropWhenDestroyed.GetDropList(dropOnDestroyed.m_dropWhenDestroyed.m_dropMax));
-  //}
 
   public static Piece GetExistingPiece(string prefabName) {
     return PrefabManager.Instance.GetPrefab(prefabName).GetComponent<Piece>();

@@ -149,7 +149,6 @@
     <Compile Include="Core\Pieces\PotteryPieceList.cs" />
     <Compile Include="Core\Utils\CustomFieldUtils.cs" />
     <Compile Include="Core\Utils\PlacementGhostUtils.cs" />
-    <Compile Include="Patches\DropOnDestroyedPatch.cs" />
     <Compile Include="Patches\EffectListPatch.cs" />
     <Compile Include="Patches\PiecePatch.cs" />
     <Compile Include="Patches\PlayerPatch.cs" />

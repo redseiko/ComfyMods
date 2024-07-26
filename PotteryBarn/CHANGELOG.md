@@ -1,11 +1,13 @@
 ## Changelog
 
-### 1.14.0 (WIP)
+### 1.14.0
 
-  * Updated for the `v0.218.15` patch.
+  * Updated for the `v0.218.19` patch.
   * Bumped up `<LangVersion>` to C# 12.
   * Updated Jotunn dependency to `v2.20.1`.
-  * New prefabs added, new "Builder Shop" tab, removed some existing prefabs, moved some prefabs to new tab.
+  * New prefabs added, new "Builder Shop" tab, removed some existing prefabs, moved some prefabs to the new tab.
+  * Rewrote entire `Piece` + `DropOnDestroyed` logic for existing prefab recipes.
+  * Simplified `README.md` as there are too many new recipes to list.
 
 ### 1.13.0
 
