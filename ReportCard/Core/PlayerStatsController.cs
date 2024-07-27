@@ -74,9 +74,9 @@ public static class PlayerStatsController {
     }
 
     if (profile?.m_playerStats == null) {
+      ReportCard.LogInfo($"PlayerProfile ({profile?.GetName()}) has no valid PlayerStats.");
       HideStatsPanel();
     } else {
-      ShowStatsPanel();
       StatsPanel.UpdateStatsList(profile);
     }
   }
@@ -121,5 +121,6 @@ public static class PlayerStatsController {
 
   static void OnStatsButtonClick() {
     UpdateStatsPanel(Game.instance.Ref()?.m_playerProfile);
+    ShowStatsPanel();
   }
 }
