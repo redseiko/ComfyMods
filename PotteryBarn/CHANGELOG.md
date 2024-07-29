@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.14.1
+
+  * Added check for IsPotteryBarnPlacedShopPiece for resource drops.
+
 ### 1.14.0
 
   * Updated for the `v0.218.19` patch.

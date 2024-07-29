@@ -27,6 +27,8 @@ public static class PotteryManager {
 
   public static bool IsDropTableDisabled { get; set; } = false;
 
+  public static int PotteryBarnPlacedField = "potterybarn.placed".GetStableHashCode();
+
   public static readonly Dictionary<string, Piece> VanillaPieces = [];
   public static readonly Dictionary<string, Piece> ShopPieces = [];
 
@@ -234,8 +236,9 @@ public static class PotteryManager {
     }
 
     bool isPlacedByPlayer = piece.IsPlacedByPlayer();
+    bool isPotteryBarnPlacedShopPiece = IsPotteryBarnPlacedShopPiece(piece);
 
-    if (!isPlacedByPlayer) {
+    if (!isPlacedByPlayer || !isPotteryBarnPlacedShopPiece) {
       if (VanillaPieceResources.TryGetValue(piece.name, out Piece.Requirement[] resources)) {
         piece.m_resources = resources;
       } else {
@@ -274,5 +277,25 @@ public static class PotteryManager {
     if (clonedObject.TryGetComponent(out Container container)) {
       container.GetInventory().RemoveAll();
     }
+  }
+
+  public static void SetPotteryBarnPlacedShopPiece(Piece piece) {
+    if (!piece.m_nview 
+        || !piece.m_nview.IsValid() 
+        || !IsShopPiece(piece)) {
+      return;
+    }
+
+    piece.m_nview.m_zdo.Set(PotteryBarnPlacedField, true);
+  }
+
+  public static bool IsPotteryBarnPlacedShopPiece(Piece piece) {
+    if (!piece.m_nview 
+        || !piece.m_nview.IsValid() 
+        || !IsShopPiece(piece)) {
+      return false;
+    }
+
+    return piece.m_nview.m_zdo.GetBool(PotteryBarnPlacedField, false);
   }
 }
