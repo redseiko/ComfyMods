@@ -107,6 +107,6 @@ static class PlayerPatch {
   [HarmonyPatch(nameof(Player.PlacePiece))]
   static void PlacePiecePostfix(Player __instance, Piece piece) {
     PotteryManager.IsPlacingPiece = false;
-    PotteryManager.SetPotteryBarnPlacedShopPiece(piece);
+    PotteryManager.SetPotteryBarnPlaced(piece);
   }
 }

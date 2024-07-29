@@ -236,9 +236,9 @@ public static class PotteryManager {
     }
 
     bool isPlacedByPlayer = piece.IsPlacedByPlayer();
-    bool isPotteryBarnPlacedShopPiece = IsPotteryBarnPlacedShopPiece(piece);
+    bool isPotteryBarnPlaced = IsPotteryBarnPlaced(piece);
 
-    if (!isPlacedByPlayer || !isPotteryBarnPlacedShopPiece) {
+    if (!isPlacedByPlayer || !isPotteryBarnPlaced) {
       if (VanillaPieceResources.TryGetValue(piece.name, out Piece.Requirement[] resources)) {
         piece.m_resources = resources;
       } else {
@@ -279,20 +279,16 @@ public static class PotteryManager {
     }
   }
 
-  public static void SetPotteryBarnPlacedShopPiece(Piece piece) {
-    if (!piece.m_nview 
-        || !piece.m_nview.IsValid() 
-        || !IsShopPiece(piece)) {
+  public static void SetPotteryBarnPlaced(Piece piece) {
+    if (!piece.m_nview || !piece.m_nview.IsValid()) {
       return;
     }
 
     piece.m_nview.m_zdo.Set(PotteryBarnPlacedField, true);
   }
 
-  public static bool IsPotteryBarnPlacedShopPiece(Piece piece) {
-    if (!piece.m_nview 
-        || !piece.m_nview.IsValid() 
-        || !IsShopPiece(piece)) {
+  public static bool IsPotteryBarnPlaced(Piece piece) {
+    if (!piece.m_nview || !piece.m_nview.IsValid()) {
       return false;
     }
 

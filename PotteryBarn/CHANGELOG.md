@@ -2,7 +2,7 @@
 
 ### 1.14.1
 
-  * Added check for IsPotteryBarnPlacedShopPiece for resource drops.
+  * Added check for IsPotteryBarnPlaced for resource drops.
 
 ### 1.14.0
 
