@@ -238,7 +238,7 @@ public static class PotteryManager {
     bool isPlacedByPlayer = piece.IsPlacedByPlayer();
     bool isPotteryBarnPlaced = IsPotteryBarnPlaced(piece);
 
-    if (!isPlacedByPlayer || !isPotteryBarnPlaced) {
+    if (!isPotteryBarnPlaced) {
       if (VanillaPieceResources.TryGetValue(piece.name, out Piece.Requirement[] resources)) {
         piece.m_resources = resources;
       } else {
@@ -280,7 +280,10 @@ public static class PotteryManager {
   }
 
   public static void SetPotteryBarnPlaced(Piece piece) {
-    if (!piece.m_nview || !piece.m_nview.IsValid()) {
+    if (!piece.m_nview 
+        || !piece.m_nview.IsValid()
+        || !IsShopPiece(piece)
+        || !IsVanillaPiece(piece)) {
       return;
     }
 
