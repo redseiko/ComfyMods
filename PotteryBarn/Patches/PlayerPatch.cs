@@ -99,7 +99,7 @@ static class PlayerPatch {
 
   [HarmonyPrefix]
   [HarmonyPatch(nameof(Player.PlacePiece))]
-  static void PlacePiecePrefix(Player __instance, Piece piece) {
+  static void PlacePiecePrefix() {
     PotteryManager.IsPlacingPiece = true;
   }
 

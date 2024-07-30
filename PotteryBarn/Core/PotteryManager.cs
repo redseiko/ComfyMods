@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+using ComfyLib;
+
 using Jotunn.Managers;
 
 using UnityEngine;
@@ -24,8 +26,6 @@ public static class PotteryManager {
   public static Piece.PieceCategory BuilderShopCategory;
 
   public static readonly Quaternion PrefabIconRenderRotation = Quaternion.Euler(0f, -37.5f, 0f);
-
-  public static bool IsDropTableDisabled { get; set; } = false;
 
   public static readonly Dictionary<string, Piece> VanillaPieces = [];
   public static readonly Dictionary<string, Piece> ShopPieces = [];
@@ -205,18 +205,6 @@ public static class PotteryManager {
     return VanillaPieces.ContainsKey(piece.m_description);
   }
 
-  public static bool CanBeRemoved(Piece piece) {
-    if (IsShopPiece(piece) && !piece.IsCreator()) {
-      return false;
-    }
-
-    if (IsVanillaPiece(piece) && !piece.IsPlacedByPlayer()) {
-      return false;
-    }
-
-    return true;
-  }
-
   public static Sprite LoadOrRenderIcon(GameObject prefab, Quaternion renderRotation) {
     RenderManager.RenderRequest request = new(prefab) {
       Rotation = renderRotation,
@@ -224,6 +212,9 @@ public static class PotteryManager {
 
     return RenderManager.Instance.Render(request);
   }
+
+  public static readonly DropTable EmptyDropTable = new();
+  public static bool IsPlacingPiece { get; set; } = false;
 
   public static void SetupPiece(Piece piece) {
     bool isShopPiece = IsShopPiece(piece);
@@ -233,9 +224,9 @@ public static class PotteryManager {
       return;
     }
 
-    bool isPlacedByPlayer = piece.IsPlacedByPlayer();
-
-    if (!isPlacedByPlayer) {
+    if (IsPlacingPiece) {
+      piece.SetIsPlacedByPotteryBarn(true);
+    } else if (!piece.IsPlacedByPotteryBarn()) {
       if (VanillaPieceResources.TryGetValue(piece.name, out Piece.Requirement[] resources)) {
         piece.m_resources = resources;
       } else {
@@ -262,10 +253,6 @@ public static class PotteryManager {
     }
   }
 
-  public static readonly DropTable EmptyDropTable = new();
-
-  public static bool IsPlacingPiece { get; set; } = false;
-
   public static void PlacePieceGetRightItemPreDelegate(GameObject clonedObject) {
     if (clonedObject.TryGetComponent(out Piece piece)) {
       SetupPiece(piece);
@@ -274,5 +261,20 @@ public static class PotteryManager {
     if (clonedObject.TryGetComponent(out Container container)) {
       container.GetInventory().RemoveAll();
     }
+  }
+
+  public static int IsPlacedByPotteryBarnHashCode = "IsPlacedByPotteryBarn".GetStableHashCode();
+
+  public static void SetIsPlacedByPotteryBarn(this Piece piece, bool isPlacedByPotteryBarn) {
+    if (piece.m_nview && piece.m_nview.IsValid()) {
+      piece.m_nview.m_zdo.Set(IsPlacedByPotteryBarnHashCode, true);
+    }
+  }
+
+  public static bool IsPlacedByPotteryBarn(this Piece piece) {
+    return
+        piece.m_nview
+        && piece.m_nview.IsValid()
+        && piece.m_nview.m_zdo.GetBool(IsPlacedByPotteryBarnHashCode, false);
   }
 }

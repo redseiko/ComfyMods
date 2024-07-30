@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.15.0
+
+  * Fixed logic for `PotteryBarn` placed prefabs to correctly drop resources on breakage.
+
 ### 1.14.0
 
   * Updated for the `v0.218.19` patch.
