@@ -237,6 +237,8 @@ public static class PotteryManager {
     } else if (!piece.IsPlacedByPotteryBarn()) {
       if (VanillaPieceResources.TryGetValue(piece.name, out Piece.Requirement[] resources)) {
         piece.m_resources = resources;
+      } else {
+        piece.m_resources = new Piece.Requirement[0];
       }
 
       return;
