@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.16.0
+
+  * Adjust logic for canBeRemoved for pieces placed previous to v1.15.0.
+
 ### 1.15.0
 
   * Fixed logic for `PotteryBarn` placed prefabs to correctly drop resources on breakage.

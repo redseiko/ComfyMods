@@ -1,6 +1,6 @@
 {
   "name": "PotteryBarn",
-  "version_number": "1.15.0",
+  "version_number": "1.16.0",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/PotteryBarn",
   "author": "ComfyMods",
   "description": "Public build extension that adds existing game prefabs to the Hammer.",
