@@ -224,24 +224,22 @@ public static class PotteryManager {
       return;
     }
 
-    if (IsPlacingPiece) {
-      piece.SetIsPlacedByPotteryBarn(true);
-    } else if (!piece.IsPlacedByPotteryBarn()) {
-      if (VanillaPieceResources.TryGetValue(piece.name, out Piece.Requirement[] resources)) {
-        piece.m_resources = resources;
-      } else {
-        UnityEngine.Object.Destroy(piece);
-      }
-
-      return;
-    }
-
     if (isShopPiece) {
       piece.m_canBeRemoved = piece.IsCreator();
     }
 
     if (isVanillaPiece) {
       piece.m_canBeRemoved = true;
+    }
+
+    if (IsPlacingPiece) {
+      piece.SetIsPlacedByPotteryBarn(true);
+    } else if (!piece.IsPlacedByPotteryBarn()) {
+      if (VanillaPieceResources.TryGetValue(piece.name, out Piece.Requirement[] resources)) {
+        piece.m_resources = resources;
+      }
+
+      return;
     }
 
     if (piece.TryGetComponent(out DropOnDestroyed dropOnDestroyed)) {
