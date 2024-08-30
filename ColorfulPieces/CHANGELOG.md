@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.17.0
+
+  * Updated for the `v0.218.21` patch.
+  * Coloring pieces now uses vanilla `MaterialMan` game code logic instead of its own.
+  * Known issue: wards/guard_stone will be completed colored instead of partially (to be fixed in a later update).
+
 ### 1.16.0
 
   * Updated for the `v0.218.19` patch.

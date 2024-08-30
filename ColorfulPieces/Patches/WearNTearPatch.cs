@@ -51,9 +51,12 @@ static class WearNTearPatch {
 
   [HarmonyPrefix]
   [HarmonyPatch(nameof(WearNTear.ResetHighlight))]
-  static void ResetHighlightPrefix(WearNTear __instance) {
+  static bool ResetHighlightPrefix(WearNTear __instance) {
     if (IsModEnabled.Value && __instance.TryGetComponent(out PieceColor pieceColor)) {
       pieceColor.UpdateColors(forceUpdate: true);
+      return false;
     }
+
+    return true;
   }
 }

@@ -9,13 +9,11 @@ using UnityEngine;
 using static ColorfulConstants;
 
 public sealed class PieceColor : MonoBehaviour {
-  public static readonly Dictionary<int, int> RendererCountCache = [];
   public static readonly List<PieceColor> PieceColorCache = [];
 
   public Color TargetColor { get; set; } = Color.clear;
   public float TargetEmissionColorFactor { get; set; } = 0f;
 
-  readonly List<Renderer> _renderers = [];
   IPieceColorRenderer _pieceColorRenderer;
 
   int _cacheIndex;
@@ -27,35 +25,19 @@ public sealed class PieceColor : MonoBehaviour {
   ZNetView _netView;
 
   void Awake() {
-    _renderers.Clear();
-
     _lastDataRevision = -1L;
     _lastColorVec3 = NoColorVector3;
     _lastEmissionColorFactor = NoEmissionColorFactor;
     _cacheIndex = -1;
 
-    _netView = GetComponent<ZNetView>();
-
-    if (!_netView || !_netView.IsValid()) {
+    if (!TryGetComponent(out _netView) || !_netView || !_netView.IsValid()) {
       return;
     }
 
     PieceColorCache.Add(this);
     _cacheIndex = PieceColorCache.Count - 1;
 
-    int prefab = _netView.m_zdo.m_prefab;
-    CacheRenderers(prefab);
-    _pieceColorRenderer = GetPieceColorRenderer(prefab);
-  }
-
-  static IPieceColorRenderer GetPieceColorRenderer(int prefabHash) {
-    if (prefabHash == GuardStoneHashCode) {
-      return GuardStonePieceColorRenderer.Instance;
-    } else if (prefabHash == PortalWoodHashCode) {
-      return PortalWoodPieceColorRenderer.Instance;
-    }
-
-    return DefaultPieceColorRenderer.Instance;
+    _pieceColorRenderer = GetPieceColorRenderer(_netView.m_zdo.m_prefab);
   }
 
   void OnDestroy() {
@@ -63,22 +45,6 @@ public sealed class PieceColor : MonoBehaviour {
       PieceColorCache[_cacheIndex] = PieceColorCache[PieceColorCache.Count - 1];
       PieceColorCache[_cacheIndex]._cacheIndex = _cacheIndex;
       PieceColorCache.RemoveAt(PieceColorCache.Count - 1);
-    }
-
-    _renderers.Clear();
-  }
-
-  void CacheRenderers(int prefabHash) {
-    if (RendererCountCache.TryGetValue(prefabHash, out int count)) {
-      _renderers.Capacity = count;
-    }
-
-    _renderers.AddRange(gameObject.GetComponentsInChildren<MeshRenderer>(true));
-    _renderers.AddRange(gameObject.GetComponentsInChildren<SkinnedMeshRenderer>(true));
-
-    if (_renderers.Count != count) {
-      RendererCountCache[prefabHash] = _renderers.Count;
-      _renderers.Capacity = _renderers.Count;
     }
   }
 
@@ -117,12 +83,12 @@ public sealed class PieceColor : MonoBehaviour {
       TargetColor = Vector3ToColor(colorVec3);
       TargetEmissionColorFactor = factor;
 
-      _pieceColorRenderer.SetColors(_renderers, TargetColor, TargetColor * TargetEmissionColorFactor);
+      _pieceColorRenderer.SetColors(gameObject, TargetColor, TargetColor * TargetEmissionColorFactor);
     } else {
       TargetColor = Color.clear;
       TargetEmissionColorFactor = 0f;
 
-      _pieceColorRenderer.ClearColors(_renderers);
+      _pieceColorRenderer.ClearColors(gameObject);
     }
 
     _lastColor = TargetColor;
@@ -137,6 +103,16 @@ public sealed class PieceColor : MonoBehaviour {
     _lastColor = color;
     _lastEmissionColor = emissionColor;
 
-    _pieceColorRenderer.SetColors(_renderers, color, emissionColor);
+    _pieceColorRenderer.SetColors(gameObject, color, emissionColor);
+  }
+
+  static IPieceColorRenderer GetPieceColorRenderer(int prefabHash) {
+    if (prefabHash == GuardStoneHashCode) {
+      // return GuardStonePieceColorRenderer.Instance;
+    } else if (prefabHash == PortalWoodHashCode) {
+      return PortalWoodPieceColorRenderer.Instance;
+    }
+
+    return DefaultPieceColorRenderer.Instance;
   }
 }
