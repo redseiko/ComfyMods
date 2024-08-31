@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.7.0
+
+  * Updated for the `v0.218.21` patch.
+  * Fixed the `LoadingIndicator` not centering on the initial `SceneLoader` screen.
+  * Added a new config option `SceneLoadeer.progressIndicatorOffset` for the centered indicator.
+
 ### 1.6.0
 
   * Updated for the `v0.218.19` patch.

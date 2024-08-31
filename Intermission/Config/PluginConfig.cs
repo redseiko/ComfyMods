@@ -14,6 +14,7 @@ public static class PluginConfig {
   public static ConfigEntry<bool> SceneLoaderUseLoadingImages { get; private set; }
   public static ConfigEntry<bool> SceneLoaderShowProgressText { get; private set; }
   public static ConfigEntry<bool> SceneLoaderCenterProgressIndicator { get; private set; }
+  public static ConfigEntry<Vector2> SceneLoaderProgressIndicatorOffset { get; private set; }
 
   public static ConfigEntry<Color> LoadingImageBaseColor { get; private set; }
 
@@ -55,6 +56,13 @@ public static class PluginConfig {
             "centerProgressIndicator",
             true,
             "If set, will center the loading progress indicator (instead of being on the lower-right).");
+
+    SceneLoaderProgressIndicatorOffset =
+        config.BindInOrder(
+            "SceneLoader",
+            "progressIndicatorOffset",
+            new Vector2(0f, 200f),
+            "When centerProgressIndicator is true, this is used to offset from the bottom center.");
 
     // LoadingImage.Image
     LoadingImageBaseColor =

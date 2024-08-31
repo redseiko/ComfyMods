@@ -54,10 +54,11 @@ static class SceneLoaderPatch {
   static void SetupLoadingIndicator(LoadingIndicator indicator) {
     indicator.m_showProgressIndicator = true;
 
-    RectTransform rectTransform = indicator.m_background.transform.parent.GetComponent<RectTransform>();
+    RectTransform rectTransform = indicator.transform.GetComponent<RectTransform>();
     rectTransform.anchorMin = new(0.5f, 0f);
     rectTransform.anchorMax = new(0.5f, 0f);
-    rectTransform.anchoredPosition = new(0f, 250f);
+    rectTransform.pivot = new(0.5f, 0f);
+    rectTransform.anchoredPosition = SceneLoaderProgressIndicatorOffset.Value;
   }
 
   [HarmonyPostfix]

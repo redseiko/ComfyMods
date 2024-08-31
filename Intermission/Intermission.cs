@@ -16,7 +16,7 @@ using static PluginConfig;
 public sealed class Intermission : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.intermission";
   public const string PluginName = "Intermission";
-  public const string PluginVersion = "1.6.0";
+  public const string PluginVersion = "1.7.0";
 
   static ManualLogSource _logger;
 
@@ -30,11 +30,11 @@ public sealed class Intermission : BaseUnityPlugin {
     }
   }
 
-  public static void LogInfo(object o) {
-    _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {o}");
+  public static void LogInfo(object obj) {
+    _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
   }
 
-  public static void LogError(object o) {
-    _logger.LogError($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {o}");
+  public static void LogError(object obj) {
+    _logger.LogError($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
   }
 }
