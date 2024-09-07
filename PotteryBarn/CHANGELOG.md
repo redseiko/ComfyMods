@@ -1,4 +1,15 @@
 ## Changelog
+### 1.17.0
+
+  * Added ashwood arch pieces and plugged a memory leak
+
+### 1.17.0
+
+  * Added empty recipe for non-pottery barn pieces without an exisiting recipe.
+
+### 1.16.0
+
+  * Adjust logic for canBeRemoved for pieces placed previous to v1.15.0.
 
 ### 1.15.0
 
