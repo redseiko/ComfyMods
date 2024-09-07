@@ -1,5 +1,10 @@
 ## Changelog
 
+### 2.18.0
+
+  * Added `ComfyMods-Gizmo-1.10.0`.
+  * Updated all dependencies to latest version.
+
 ### 2.17.0
 
   * Added `ComfyMods-Configula-1.1.0`.
