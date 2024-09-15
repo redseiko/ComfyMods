@@ -1,36 +1,38 @@
-﻿using System;
+﻿namespace ExternalConsole;
+
+using System;
 using System.Collections;
 using System.Globalization;
 
 using UnityEngine;
 
-namespace ExternalConsole {
-  public static class ExternalInputFile {
-    public static IEnumerator ReadFromFileCoroutine(string externalInputFilename) {
-      ExternalConsole.LogInfo($"Starting to read external input from: {externalInputFilename}");
+using Console = Console;
 
-      Console console = Console.m_instance;
-      WaitForSeconds waitInterval = new(seconds: 1f);
-      SyncedList externalInput = new(externalInputFilename, $"ExternalConsole: {externalInputFilename}");
+public static class ExternalInputFile {
+  public static IEnumerator ReadFromFileCoroutine(string externalInputFilename) {
+    ExternalConsole.LogInfo($"Starting to read external input from: {externalInputFilename}");
 
-      while (console) {
-        externalInput.Load();
+    Console console = Console.m_instance;
+    WaitForSeconds waitInterval = new(seconds: 1f);
+    SyncedList externalInput = new(externalInputFilename, $"ExternalConsole: {externalInputFilename}");
 
-        if (externalInput.m_list.Count > 0) {
-          foreach (string line in externalInput.m_list) {
-            ExternalConsole.LogInfo($"Processing external input: {line}");
-            console.TryRunCommand(line, silentFail: false, skipAllowedCheck: true);
+    while (console) {
+      externalInput.Load();
 
-            externalInput.m_comments.Add(
-                $"// [{DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)}] {line}");
-          }
+      if (externalInput.m_list.Count > 0) {
+        foreach (string line in externalInput.m_list) {
+          ExternalConsole.LogInfo($"Processing external input: {line}");
+          console.TryRunCommand(line, silentFail: false, skipAllowedCheck: true);
 
-          externalInput.m_list.Clear();
-          externalInput.Save();
+          externalInput.m_comments.Add(
+              $"// [{DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)}] {line}");
         }
 
-        yield return waitInterval;
+        externalInput.m_list.Clear();
+        externalInput.Save();
       }
+
+      yield return waitInterval;
     }
   }
 }
