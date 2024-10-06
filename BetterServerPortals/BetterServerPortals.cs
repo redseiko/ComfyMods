@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class BetterServerPortals : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.betterserverportals";
   public const string PluginName = "BetterServerPortals";
-  public const string PluginVersion = "1.6.0";
+  public const string PluginVersion = "1.7.0";
 
   static ManualLogSource _logger;
 
