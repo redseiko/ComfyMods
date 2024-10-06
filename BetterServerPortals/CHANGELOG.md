@@ -1,5 +1,9 @@
 ﻿## Changelog
 
+### 1.7.0 (WIP)
+
+  * Add new random portal connection feature.
+
 ### 1.6.0
 
   * Updated for the `v0.218.21` patch.
