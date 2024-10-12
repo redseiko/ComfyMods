@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 
 using UnityEngine;
 
@@ -14,6 +15,11 @@ public static class PortalManager {
   static readonly HashSet<ZDOID> _zdosToForceSend = [];
   static readonly Dictionary<string, ZDO> _portalsByTagCache = [];
   static readonly PooledListDictionary<string, ZDO> _randomPortalsByTagCache = [];
+
+  static readonly SyncedAuthList _randomPortalsAccessList =
+      new(
+          Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), RandomPortalsAccessListFilename.Value),
+          "RandomPortals access list.");
 
   public static void ConnectPortals(ZDOMan zdoManager) {
     ClearCaches();
@@ -38,12 +44,18 @@ public static class PortalManager {
 
   static void UpdateUnconnectedPortals(ZDOMan zdoManager) {
     long sessionId = zdoManager.m_sessionID;
+    HashSet<string> randomPortalsAccess = _randomPortalsAccessList.GetEntries();
 
     foreach (ZDO zdo in zdoManager.m_portalObjects) {
       string portalTag = zdo.GetString(ZDOVars.s_tag, string.Empty);
 
       if (IsRandomTag(portalTag)) {
-        _randomPortalsByTagCache.Add(portalTag, zdo);
+        string tagAuthor = zdo.GetString(ZDOVars.s_tagauthor, string.Empty);
+
+        if (tagAuthor.Length > 0 && randomPortalsAccess.Contains(tagAuthor)) {
+          _randomPortalsByTagCache.Add(portalTag, zdo);
+        }
+
         continue;
       }
 

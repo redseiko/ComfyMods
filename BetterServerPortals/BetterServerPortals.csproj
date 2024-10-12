@@ -93,6 +93,7 @@
   <ItemGroup>
     <Compile Include="Core\PortalManager.cs" />
     <Compile Include="Core\PooledListDictionary.cs" />
+    <Compile Include="Core\SyncedAuthList.cs" />
     <Compile Include="Patches\GamePatch.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="BetterServerPortals.cs" />
