@@ -9,6 +9,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+using static PluginConfig;
+
 public sealed class ExploredStatsPanel {
   public GameObject Panel { get; }
   public RectTransform RectTransform { get; }
@@ -35,25 +37,25 @@ public sealed class ExploredStatsPanel {
   }
 
   public void UpdateStatsList(ExploredStats exploredStats) {
-    int explored = exploredStats.ExploredCount();
-    int total = exploredStats.TotalCount();
+    int worldExplored = exploredStats.ExploredCount();
+    int worldTotal = exploredStats.TotalCount();
 
-    AddExploredStatsLabel("World", explored, total);
-    AddExploredStatsSlider(Color.white, explored, total);
+    AddExploredStatsLabel("World", worldExplored, worldTotal, worldTotal);
+    AddExploredStatsSlider(Color.white, worldExplored, worldTotal);
 
     foreach (Heightmap.Biome biome in ExploredStats.GetHeightmapBiomes()) {
-      explored = exploredStats.ExploredCount(biome);
-      total = exploredStats.TotalCount(biome);
+      int biomeExplored = exploredStats.ExploredCount(biome);
+      int biomeTotal = exploredStats.TotalCount(biome);
 
-      if (total <= 0) {
+      if (biomeTotal <= 0) {
         continue;
       }
 
       string name = Enum.GetName(typeof(Heightmap.Biome), biome);
       Color color = BiomeToSliderColor(biome);
 
-      AddExploredStatsLabel(name, explored, total);
-      AddExploredStatsSlider(color, explored, total);
+      AddExploredStatsLabel(name, biomeExplored, biomeTotal, worldTotal);
+      AddExploredStatsSlider(color, biomeExplored, biomeTotal);
     }
   }
 
@@ -71,13 +73,23 @@ public sealed class ExploredStatsPanel {
     };
   }
 
-  void AddExploredStatsLabel(string name, int explored, int total) {
+  void AddExploredStatsLabel(string biomeName, int biomeExplored, int biomeTotal, int worldTotal) {
     TextMeshProUGUI label = CreateStatLabel(StatsList.Content.transform);
-    float percent = ((explored * 1f) / (total * 1f)) * 100f;
 
-    label.text =
-        $"<align=left><color=#FFD600>{name}</color><line-height=0>\n"
-            + $"<align=right>{percent:F2}%<line-height=1em>";
+    if (ExploredStatsPanelShowRawValues.Value) {
+      float biomePercent = ((biomeTotal * 1f) / (worldTotal * 1f)) * 100f;
+
+      label.text +=
+          $"<align=left><color=#FFD600>{biomeName}</color> "
+              + $"(<color=#FFD600>{biomePercent:F2}%</color>)<line-height=0>\n"
+              + $"<align=right>{biomeExplored:D}/<color=#FFD600>{biomeTotal:D}</color><line-height=1em>";
+    } else {
+      float exploredPercent = ((biomeExplored * 1f) / (biomeTotal * 1f)) * 100f;
+
+      label.text =
+          $"<align=left><color=#FFD600>{biomeName}</color><line-height=0>\n"
+              + $"<align=right>{exploredPercent:F2}%<line-height=1em>";
+    }
   }
 
   void AddExploredStatsSlider(Color color, int explored, int total) {
