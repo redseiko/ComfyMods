@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.11.0
+
+  * Updated for the `v0.219.10` PTB patch.
+  * Minor optimization to `ZLog.Log()` patch.
+
 ### 1.10.1
 
   * Fixed a bug `Container.RPC_RequestOpen()` transpiler patch.

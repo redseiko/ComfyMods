@@ -14,7 +14,7 @@ static class ZLogPatch {
   [HarmonyPrefix]
   [HarmonyPatch(nameof(ZLog.Log))]
   static bool LogPrefix(ref object o) {
-    if (o.ToString().StartsWith("Console: ")) {
+    if (o is string message && message.StartsWith("Console: ", System.StringComparison.Ordinal)) {
       return false;
     }
 
