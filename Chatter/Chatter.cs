@@ -12,7 +12,7 @@ using static PluginConfig;
 public sealed class Chatter : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.chatter";
   public const string PluginName = "Chatter";
-  public const string PluginVersion = "2.8.0";
+  public const string PluginVersion = "2.9.0";
 
   void Awake() {
     BindConfig(Config);

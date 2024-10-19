@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.9.0
+
+  * Fixed for the `v0.219.10` PTB patch.
+
 ### 2.8.0
 
   * Fixed for the `v0.218.15` Ashlands patch.

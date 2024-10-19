@@ -103,6 +103,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComfyLib\Extensions\CodeMatcherExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\StringExtensions.cs" />
     <Compile Include="Core\ChatPanelController.cs" />
     <Compile Include="Core\ChatPanelUtils.cs" />
