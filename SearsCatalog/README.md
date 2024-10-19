@@ -22,27 +22,11 @@
   * Click on any empty space on the build panel and drag it to the desired position.
   * Position is saved/loaded from config and can be reset in ConfigurationManager.
 
-## Compatability
-
-  * SearsCatalog is a replacement for ComfyBuildExpansion and will try to unpatch CBE.
-  * To avoid any issues, please uninstall or disable ComfyBuildExpansion.
-
 ## Configuration
 
 All configuration options (except `isModEnabled`) can be modified in-game and will take effect immediately.
 
 ![Configuration](https://i.imgur.com/Faoihs5.png)
-
-## Installation
-
-### Manual
-
-  * Un-zip `SearsCatalog.dll` to your `/Valheim/BepInEx/plugins/` folder.
-
-### Thunderstore (manual)
-
-  * Go to Settings > Import local mod > Select `SearsCatalog_v1.5.0.zip`.
-  * Click "OK/Import local mod" on the pop-up for information.
 
 ## Notes
 

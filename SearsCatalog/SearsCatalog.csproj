@@ -114,6 +114,7 @@
   <ItemGroup>
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
+    <Compile Include="ComfyLib\Utils\ReflectionUtils.cs" />
     <Compile Include="Core\BuildHudController.cs" />
     <Compile Include="Core\ScrollRectUtils.cs" />
     <Compile Include="Patches\HudPatch.cs" />

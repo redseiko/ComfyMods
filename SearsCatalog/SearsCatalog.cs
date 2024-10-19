@@ -12,7 +12,7 @@ using static PluginConfig;
 public sealed class SearsCatalog : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.searscatalog";
   public const string PluginName = "SearsCatalog";
-  public const string PluginVersion = "1.5.1";
+  public const string PluginVersion = "1.6.0";
 
   void Awake() {
     BindConfig(Config);
