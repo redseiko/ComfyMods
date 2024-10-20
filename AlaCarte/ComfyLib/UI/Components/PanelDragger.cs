@@ -17,7 +17,7 @@ public sealed class PanelDragger : MonoBehaviour, IBeginDragHandler, IDragHandle
 
   public void OnDrag(PointerEventData eventData) {
     Vector2 difference = eventData.position - _lastMousePosition;
-    TargetRectTransform.position += new Vector3(difference.x, difference.y, 0);
+    TargetRectTransform.position += new Vector3(difference.x, difference.y, 0f);
 
     _lastMousePosition = eventData.position;
   }

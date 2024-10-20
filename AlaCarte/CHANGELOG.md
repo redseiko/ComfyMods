@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.5.0
+
+  * Updated for the `v0.219.10` PTB patch.
+
 ### 1.4.0
 
   * Updated for the `v0.218.11` PTB patch.
