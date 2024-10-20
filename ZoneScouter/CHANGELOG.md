@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.6.0
+
+  * Fixed for the `v0.219.10` PTB patch.
+  * Bumped up `<LangVersion>` to C# 12.
+  * Code clean-up and refactoring.
+
 ### 1.5.0
 
   * Added new config option `toggleSectorBoundariesShortcut` to use to toggle sector boundaries (default: un-set).

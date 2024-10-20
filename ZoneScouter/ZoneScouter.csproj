@@ -11,8 +11,9 @@
     <AssemblyName>ZoneScouter</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <LangVersion>9</LangVersion>
+    <LangVersion>12</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,9 +58,6 @@
     </Reference>
     <Reference Include="assembly_guiutils_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_guiutils_publicized.dll</HintPath>
-    </Reference>
-    <Reference Include="assembly_steamworks_publicized">
-      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_steamworks_publicized.dll</HintPath>
     </Reference>
     <Reference Include="assembly_utils_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
@@ -107,20 +105,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
+    <Compile Include="Core\SectorInfoPanelController.cs" />
+    <Compile Include="Core\ZoneSystemUtils.cs" />
     <Compile Include="Patches\HudPatch.cs" />
     <Compile Include="Patches\MenuPatch.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="Core\SectorBoundaries.cs" />
-    <Compile Include="UI\Builder\ButtonCell.cs" />
-    <Compile Include="UI\Components\PanelDragger.cs" />
-    <Compile Include="UI\SectorInfoPanel.cs" />
-    <Compile Include="UI\SectorZdoCountGrid.cs" />
-    <Compile Include="UI\Core\UIBuilder.cs" />
-    <Compile Include="UI\Core\UIExtensions.cs" />
-    <Compile Include="UI\Core\UIResources.cs" />
-    <Compile Include="UI\SectorZdoCountCell.cs" />
-    <Compile Include="UI\Builder\ValueWithLabel.cs" />
+    <Compile Include="Core\UI\Builder\ButtonCell.cs" />
+    <Compile Include="ComfyLib\UI\Components\PanelDragger.cs" />
+    <Compile Include="Core\UI\SectorInfoPanel.cs" />
+    <Compile Include="Core\UI\SectorZdoCountGrid.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIBuilder.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIExtensions.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIResources.cs" />
+    <Compile Include="Core\UI\SectorZdoCountCell.cs" />
+    <Compile Include="Core\UI\Builder\ValueWithLabel.cs" />
     <Compile Include="ZoneScouter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -152,7 +152,7 @@
   </Target>
   <Target Name="MakeThunderstorePackage" AfterTargets="GetAssemblyVersion">
     <ItemGroup>
-      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; README.md; CHANGELOG.md; manifest.json; icon.png" />
+      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; CHANGELOG.md; README.md; manifest.json; icon.png" />
     </ItemGroup>
     <MakeDir Directories="$(PackageDir)" />
     <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageDir)" />
