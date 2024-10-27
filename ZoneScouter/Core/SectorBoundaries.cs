@@ -90,6 +90,11 @@ public static class SectorBoundaries {
     CreateBoundaryCubeWall(cube, new(-32f, 256f, 0f), new(0.1f, 512f, 64f));
     CreateBoundaryCubeWall(cube, new(0f, 256f, 32f), new(64f, 512f, 0.1f));
     CreateBoundaryCubeWall(cube, new(0f, 256f, -32f), new(64f, 512f, 0.1f));
+    
+    CreateBoundaryCubeWall(cube, new(32f, 5000f, 0f), new(0.1f, 512f, 64f));
+    CreateBoundaryCubeWall(cube, new(-32f, 5000f, 0f), new(0.1f, 512f, 64f));
+    CreateBoundaryCubeWall(cube, new(0f, 5000f, 32f), new(64f, 512f, 0.1f));
+    CreateBoundaryCubeWall(cube, new(0f, 5000f, -32f), new(64f, 512f, 0.1f));
 
     return cube;
   }
