@@ -1,13 +1,12 @@
 ﻿namespace EnRoute;
 
-using System;
 using System.Collections.Generic;
 
 public static class RouteManager {
   public static readonly int RoutedRPCHashCode = "RoutedRPC".GetStableHashCode();
 
-  public static readonly Dictionary<long, ZNetPeer> NetPeers = new();
-  public static readonly Dictionary<long, RouteRecord> NetPeerRouting = new();
+  public static readonly Dictionary<long, ZNetPeer> NetPeers = [];
+  public static readonly Dictionary<long, RouteRecord> NetPeerRouting = [];
 
   public static void OnAddPeer(ZNetPeer netPeer) {
     NetPeers[netPeer.m_uid] = netPeer;
@@ -20,10 +19,8 @@ public static class RouteManager {
   }
 
   public static void RefreshRouteRecords() {
-    ZoneSystem zoneSystem = ZoneSystem.instance;
-
     foreach (RouteRecord record in NetPeerRouting.Values) {
-      record.Sector = zoneSystem.GetZone(record.NetPeer.m_refPos);
+      record.Sector = ZoneSystem.GetZone(record.NetPeer.m_refPos);
     }
 
     foreach (RouteRecord record in NetPeerRouting.Values) {
@@ -57,7 +54,7 @@ public static class RouteManager {
   }
 
   static void RouteRPCToEverybody(ZRoutedRpc routedRpc, ZRoutedRpc.RoutedRPCData rpcData) {
-    if (EnRoute.NearbyRPCMethodHashCodes.Contains(rpcData.m_methodHash)
+    if (EnRouteManager.NearbyRPCMethodHashCodes.Contains(rpcData.m_methodHash)
         && NetPeerRouting.TryGetValue(rpcData.m_senderPeerID, out RouteRecord record)) {
       RouteToNearby(routedRpc, rpcData, record);
     } else {

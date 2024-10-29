@@ -11,8 +11,9 @@
     <AssemblyName>EnRoute</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <LangVersion>10</LangVersion>
+    <LangVersion>12</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -86,10 +87,11 @@
   <ItemGroup>
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="Config\PluginConfig.cs" />
+    <Compile Include="Core\EnRouteManager.cs" />
     <Compile Include="Core\RouteRecord.cs" />
     <Compile Include="Core\RouteManager.cs" />
     <Compile Include="EnRoute.cs" />
-    <Compile Include="Extensions\PluginExtensions.cs" />
+    <Compile Include="Core\Extensions\PluginExtensions.cs" />
     <Compile Include="Patches\ZDOManPatch.cs" />
     <Compile Include="Patches\ZNetPatch.cs" />
     <Compile Include="Patches\ZRoutedRPCPatch.cs" />

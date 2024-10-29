@@ -9,7 +9,7 @@ static class ZNetPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(ZNet.UpdateNetTime))]
   static void UpdateNetTime(ZNet __instance) {
-    EnRoute.NetTimeTicks = (long) __instance.m_netTime * TimeSpan.TicksPerSecond;
+    EnRouteManager.NetTimeTicks = (long) __instance.m_netTime * TimeSpan.TicksPerSecond;
   }
 
   [HarmonyPostfix]

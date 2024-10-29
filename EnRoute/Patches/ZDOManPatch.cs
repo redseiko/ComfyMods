@@ -37,7 +37,7 @@ static class ZDOManPatch {
     }
 
     if (ZNet.m_isServer) {
-      __instance.m_deadZDOs[uid] = EnRoute.NetTimeTicks;
+      __instance.m_deadZDOs[uid] = EnRouteManager.NetTimeTicks;
     }
 
     return false;

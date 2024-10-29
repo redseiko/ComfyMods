@@ -15,6 +15,6 @@ public static class PluginConfig {
             "FlashShield,Step,WNTCreateFragments",
             "Comma-separated list of RPC method names that should be routed only to nearby clients.");
 
-    NearbyRPCMethodNames.OnSettingChanged(EnRoute.SetupNearbyRPCMethods);
+    NearbyRPCMethodNames.OnSettingChanged(EnRouteManager.SetupNearbyRPCMethods);
   }
 }
