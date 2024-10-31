@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.7.0
+
+  * Fixed for the `v0.218.14` patch.
+  * Bumped up `LangVersion` to C# 12.
+
 ### 1.6.0
 
   * Fixed for `v0.217.43` PTB patch.
