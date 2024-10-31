@@ -30,7 +30,7 @@ public static class ComfyConfigUtils {
   static void Postfix(MethodBase __originalMethod) {
     if (_configBinders.Count > 0 && _configBinders.TryGetValue(__originalMethod, out List<ConfigBinder> binders)) {
       foreach (ConfigBinder binder in binders) {
-        binder.BindConfigMethod.Invoke(null, new object[] { binder.ConfigFile });
+        binder.BindConfigMethod.Invoke(null, [binder.ConfigFile]);
       }
 
       binders.Clear();
@@ -45,18 +45,18 @@ public static class ComfyConfigUtils {
       ComfyConfigAttribute attribute = method.GetCustomAttribute<ComfyConfigAttribute>(inherit: false);
 
       if (attribute.TargetMethod == default) {
-        method.Invoke(null, new object[] { config });
+        method.Invoke(null, [config]);
       } else {
         AddConfigBinder(config, attribute.TargetMethod, method);
       }
     }
   }
 
-  static readonly Dictionary<MethodBase, List<ConfigBinder>> _configBinders = new();
+  static readonly Dictionary<MethodBase, List<ConfigBinder>> _configBinders = [];
 
   static void AddConfigBinder(ConfigFile configFile, MethodBase targetMethod, MethodBase bindConfigMethod) {
     if (!_configBinders.TryGetValue(targetMethod, out List<ConfigBinder> binders)) {
-      binders = new();
+      binders = [];
       _configBinders[targetMethod] = binders;
     }
 
@@ -76,7 +76,7 @@ public static class ComfyConfigUtils {
   }
 
   static List<MethodInfo> GetBindConfigMethods(Assembly assembly) {
-    List<MethodInfo> methods = new();
+    List<MethodInfo> methods = [];
 
     foreach (Type type in assembly.GetTypes()) {
       foreach (

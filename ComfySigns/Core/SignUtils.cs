@@ -19,7 +19,7 @@ public static class SignUtils {
     }
 
     if (font.fallbackFontAssetTable == null) {
-      font.fallbackFontAssetTable = new() { fallbackFont };
+      font.fallbackFontAssetTable = [fallbackFont];
     } else if (!font.fallbackFontAssetTable.Contains(fallbackFont)) {
       font.fallbackFontAssetTable.Add(fallbackFont);
     }
@@ -32,7 +32,7 @@ public static class SignUtils {
   }
 
   public static bool HasSignEffect(TMP_Text textComponent, string effectId) {
-    if (textComponent.text.Length <= 0 || !textComponent.text.StartsWith("<link")) {
+    if (textComponent.text.Length <= 0 || !textComponent.text.StartsWith("<link", System.StringComparison.Ordinal)) {
       return false;
     }
 

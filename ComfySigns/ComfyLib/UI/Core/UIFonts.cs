@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 
 public static class UIFonts {
-  public static readonly Dictionary<string, Font> FontCache = new();
+  public static readonly Dictionary<string, Font> FontCache = [];
 
   public static Font GetFont(string fontName) {
     if (!FontCache.TryGetValue(fontName, out Font font)) {
@@ -22,7 +22,7 @@ public static class UIFonts {
   public static readonly string ValheimNorsebold = "Valheim-Norsebold";
   public static readonly string FallbackNotoSansNormal = "Fallback-NotoSansNormal";
 
-  public static readonly Dictionary<string, TMP_FontAsset> FontAssetCache = new();
+  public static readonly Dictionary<string, TMP_FontAsset> FontAssetCache = [];
 
   public static TMP_FontAsset GetFontAsset(string fontName) {
     if (!FontAssetCache.TryGetValue(fontName, out TMP_FontAsset fontAsset)) {

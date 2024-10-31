@@ -20,10 +20,19 @@ public static class PluginConfig {
   public static void BindConfig(ConfigFile config) {
     CurrentConfig = config;
 
-    IsModEnabled = config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
+    IsModEnabled =
+        config.BindInOrder(
+            "_Global",
+            "isModEnabled",
+            true,
+            "Globally enable or disable this mod.");
 
     UseFallbackFonts =
-        config.BindInOrder("Fonts", "useFallbackFonts", true, "Use fallback fonts to support additional characters.");
+        config.BindInOrder(
+            "Fonts",
+            "useFallbackFonts",
+            true,
+            "Use fallback fonts to support additional characters.");
   }
 
   public static ConfigEntry<bool> SuppressUnicodeNotFoundWarning { get; private set; }
@@ -37,8 +46,12 @@ public static class PluginConfig {
             true,
             "Hide 'The character with Unicode value ... was not found...' log warnings.");
 
-    SuppressUnicodeNotFoundWarning.OnSettingChanged(static value => TMP_Settings.instance.m_warningsDisabled = value);
-    TMP_Settings.instance.m_warningsDisabled = SuppressUnicodeNotFoundWarning.Value;
+    SuppressUnicodeNotFoundWarning.OnSettingChanged(SetWarningsDisabled);
+    SetWarningsDisabled(SuppressUnicodeNotFoundWarning.Value);
+  }
+
+  static void SetWarningsDisabled(bool warningsDiabled) {
+    TMP_Settings.instance.m_warningsDisabled = warningsDiabled;
   }
 
   public static ConfigEntry<string> SignDefaultTextFontAsset { get; private set; }

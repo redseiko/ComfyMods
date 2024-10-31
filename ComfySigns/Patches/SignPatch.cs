@@ -1,8 +1,5 @@
 ﻿namespace ComfySigns;
 
-using System;
-using System.Reflection;
-
 using ComfyLib;
 
 using HarmonyLib;
@@ -43,24 +40,11 @@ static class SignPatch {
     }
   }
 
-  [HarmonyPatch]
-  static class SignUpdateTextPatch {
-    static FieldInfo _sign;
-
-    [HarmonyTargetMethod]
-    static MethodBase FindUpdateTextMethod() {
-      Type type = AccessTools.Inner(typeof(Sign), "<>c__DisplayClass4_0");
-      _sign = AccessTools.Field(type, "<>4__this");
-
-      return AccessTools.Method(type, "<UpdateText>b__0");
-    }
-
-    [HarmonyPostfix]
-    static void UpdateTextPostfix(object __instance) {
-      if (IsModEnabled.Value) {
-        Sign sign = (Sign) _sign.GetValue(__instance);
-        SignUtils.ProcessSignText(sign);
-      }
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Sign.CanAccessResultFunc))]
+  static void CanAccessResultFuncPostfix(Sign __instance) {
+    if (IsModEnabled.Value) {
+      SignUtils.ProcessSignText(__instance);
     }
   }
 }
