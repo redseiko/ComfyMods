@@ -9,7 +9,7 @@ static class WearNTearPatch {
   public static readonly long PieceHealthDamageThreshold = 100_000L;
 
   [HarmonyPrefix]
-  [HarmonyPatch(nameof(WearNTear.ApplyDamage), new[] { typeof(float), typeof(HitData) })]
+  [HarmonyPatch(nameof(WearNTear.ApplyDamage), [typeof(float), typeof(HitData)])]
   static bool ApplyDamagePrefix(WearNTear __instance, float damage, HitData hitData, ref bool __result) {
     if (IsModEnabled.Value && EnablePieceHealthDamageThreshold.Value) {
       __result = ApplyDamageDelegate(__instance, damage, hitData);
@@ -30,7 +30,7 @@ static class WearNTearPatch {
     wearNTear.m_nview.m_zdo.Set(ZDOVars.s_health, health);
 
     if (health <= 0f) {
-      wearNTear.Destroy(hitData);
+      wearNTear.Destroy(hitData, blockDrop: false);
     } else {
       ZRoutedRpc.s_instance.InvokeRoutedRPC(
           ZRoutedRpc.Everybody, "RPC_HealthChanged", wearNTear.m_nview.m_zdo.m_uid, health);

@@ -14,10 +14,7 @@ static class BaseAIPatch {
   [HarmonyPatch(nameof(BaseAI.Awake))]
   static void AwakePostfix() {
     if (IsModEnabled.Value && TargetRayMask == 0) {
-      TargetRayMask = LayerMask.GetMask(new string[] { "Default", "static_solid", "Default_small", "vehicle" });
-
-      GetOffMyLawn.LogInfo(
-          $"Modifying BaseAI.m_monsterTargetRayMask from: {BaseAI.m_monsterTargetRayMask} to {TargetRayMask}.");
+      TargetRayMask = LayerMask.GetMask(["Default", "static_solid", "Default_small", "vehicle"]);
 
       BaseAI.m_monsterTargetRayMask = TargetRayMask;
     }

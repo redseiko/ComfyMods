@@ -16,7 +16,12 @@ public static class PluginConfig {
   public static ConfigEntry<bool> ShowRepairEffectOnWardActivation { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
-    IsModEnabled = config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
+    IsModEnabled =
+        config.BindInOrder(
+            "_Global",
+            "isModEnabled",
+            true,
+            "Globally enable or disable this mod.");
 
     TargetPieceHealth =
         config.BindInOrder(
