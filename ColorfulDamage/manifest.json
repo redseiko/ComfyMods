@@ -1,8 +1,8 @@
 {
   "name": "ColorfulDamage",
-  "version_number": "1.1.0",
+  "version_number": "1.2.0",
   "author": "ComfyMods",
   "description": "Damage made colorful.",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/ColorfulDamage",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2200" ]
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }
