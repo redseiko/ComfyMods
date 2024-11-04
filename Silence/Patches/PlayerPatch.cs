@@ -1,34 +1,32 @@
-﻿using System;
+﻿namespace Silence;
+
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
 using HarmonyLib;
 
-using static Silence.PluginConfig;
-using static Silence.Silence;
+using static PluginConfig;
 
-namespace Silence {
-  [HarmonyPatch(typeof(Player))]
-  static class PlayerPatch {
-    [HarmonyTranspiler]
-    [HarmonyPatch(nameof(Player.Update))]
-    static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
-      return new CodeMatcher(instructions)
-          .MatchForward(
-              useEnd: false,
-              new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(Character), nameof(Character.TakeInput))))
-          .Advance(offset: 1)
-          .InsertAndAdvance(Transpilers.EmitDelegate<Func<bool, bool>>(TakeInputDelegate))
-          .InstructionEnumeration();
-    }
+[HarmonyPatch(typeof(Player))]
+static class PlayerPatch {
+  [HarmonyTranspiler]
+  [HarmonyPatch(nameof(Player.Update))]
+  static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
+    return new CodeMatcher(instructions)
+        .Start()
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Player), nameof(Player.UpdateHover))))
+        .ThrowIfInvalid($"Could not patch Player.Update()! (update-hover)")
+        .Advance(offset: 1)
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Ldloc_1),
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(UpdateHoverPostDelegate))))
+        .InstructionEnumeration();
+  }
 
-    static bool TakeInputDelegate(bool takeInput) {
-      if (takeInput && IsModEnabled.Value && ToggleSilenceShortcut.Value.IsDown()) {
-        Player.m_localPlayer.StartCoroutine(ToggleSilenceCoroutine());
-        return false;
-      }
-
-      return takeInput;
+  static void UpdateHoverPostDelegate(bool takeInput) {
+    if (takeInput && IsModEnabled.Value && ToggleSilenceShortcut.Value.IsDown()) {
+      Player.m_localPlayer.StartCoroutine(SilenceManager.ToggleSilenceCoroutine());
     }
   }
 }
