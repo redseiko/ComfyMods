@@ -45,8 +45,8 @@ public static class PotteryManager {
     BuildingCategory = Piece.PieceCategory.BuildingWorkbench;
     MiscCategory = Piece.PieceCategory.Misc;
 
-    CreatorShopCategory = pieceManager.AddPieceCategory(HammerPieceTable, "CreatorShop");
-    BuilderShopCategory = pieceManager.AddPieceCategory(HammerPieceTable, "BuilderShop");
+    CreatorShopCategory = pieceManager.AddPieceCategory("CreatorShop");
+    BuilderShopCategory = pieceManager.AddPieceCategory("BuilderShop");
   }
 
   public static void AddHammerPieces(PieceTable hammerPieceTable) {  
@@ -238,7 +238,7 @@ public static class PotteryManager {
       if (VanillaPieceResources.TryGetValue(piece.name, out Piece.Requirement[] resources)) {
         piece.m_resources = resources;
       } else {
-        piece.m_resources = new Piece.Requirement[0];
+        piece.m_resources = [];
       }
 
       return;
@@ -253,7 +253,7 @@ public static class PotteryManager {
     }
   }
 
-  public static void PlacePieceGetRightItemPreDelegate(GameObject clonedObject) {
+  public static void PlacePieceDoAttackPreDelegate(GameObject clonedObject) {
     if (clonedObject.TryGetComponent(out Piece piece)) {
       SetupPiece(piece);
     }

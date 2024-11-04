@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.18.0
+
+  * Fixed for the `v0.219.14` patch.
+
 ### 1.17.0
 
   * Added empty recipe for non-pottery barn pieces without an exisiting recipe.

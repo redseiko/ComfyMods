@@ -16,7 +16,7 @@ static class PiecePatch {
 
   [HarmonyPrefix]
   [HarmonyPatch(nameof(Piece.DropResources))]
-  static void DropResourcePrefix(Piece __instance) {
+  static void DropResourcesPrefix(Piece __instance) {
     if (__instance.TryGetComponent(out Container container)) {
       container.DropAllItems();
     }

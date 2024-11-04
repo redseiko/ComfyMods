@@ -26,4 +26,4 @@
 
 ### Dependencies
 
-  * [Jotunn-v2.20.1](https://valheim.thunderstore.io/package/ValheimModding/Jotunn/)
+  * [Jotunn-v2.21.3](https://valheim.thunderstore.io/package/ValheimModding/Jotunn/)

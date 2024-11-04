@@ -165,7 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="JotunnLib">
-      <Version>2.20.1</Version>
+      <Version>2.21.3</Version>
       <IncludeAssets>compile</IncludeAssets>
       <ExcludeAssets>none</ExcludeAssets>
       <PrivateAssets>all</PrivateAssets>

@@ -30,7 +30,10 @@ static class PlayerPatch {
                     .MakeGenericMethod(typeof(GameObject))),
             new CodeMatch(OpCodes.Stfld, AccessTools.Field(typeof(Player), nameof(Player.m_placementGhost))))
         .ThrowIfInvalid("Could not patch Player.SetupPlacementGhost()! (m_placementGhost)")
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(SetupPlacementGhostInstantiateDelegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call,
+                AccessTools.Method(typeof(PlayerPatch), nameof(SetupPlacementGhostInstantiateDelegate))))
         .InstructionEnumeration();
   }
 
@@ -86,14 +89,17 @@ static class PlayerPatch {
     return new CodeMatcher(instructions)
         .Start()
         .MatchStartForward(
-            new CodeMatch(OpCodes.Ldarg_0),
-            new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Humanoid), nameof(Humanoid.GetRightItem))))
-        .ThrowIfInvalid($"Could not patch Player.PlacePiece()! (GetRightItem)")
-        .ExtractLabels(out List<Label> getRightItemLabels)
+            new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(WearNTear), nameof(WearNTear.OnPlaced))),
+            new CodeMatch(OpCodes.Ldarg_S),
+            new CodeMatch(OpCodes.Brfalse))
+        .Advance(offset: 1)
+        .ExtractLabels(out List<Label> doAttackLabels)
         .Insert(
-            new CodeInstruction(OpCodes.Ldloc_3),
-            Transpilers.EmitDelegate(PotteryManager.PlacePieceGetRightItemPreDelegate))
-        .AddLabels(getRightItemLabels)
+            new CodeInstruction(OpCodes.Ldloc_0),
+            new CodeInstruction(
+                OpCodes.Call,
+                AccessTools.Method(typeof(PotteryManager), nameof(PotteryManager.PlacePieceDoAttackPreDelegate))))
+        .AddLabels(doAttackLabels)
         .InstructionEnumeration();
   }
 
