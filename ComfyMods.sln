@@ -146,6 +146,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostalCode", "PostalCode\Po
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unbuildable", "Unbuildable\Unbuildable.csproj", "{BB7F5DAF-ADD4-420D-AE7B-39B9614F7E2D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComfyAutoRepair", "ComfyAutoRepair\ComfyAutoRepair.csproj", "{BAA1B1FE-AA04-4786-8726-415268475C32}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -400,6 +402,10 @@ Global
 		{BB7F5DAF-ADD4-420D-AE7B-39B9614F7E2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB7F5DAF-ADD4-420D-AE7B-39B9614F7E2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB7F5DAF-ADD4-420D-AE7B-39B9614F7E2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAA1B1FE-AA04-4786-8726-415268475C32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAA1B1FE-AA04-4786-8726-415268475C32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAA1B1FE-AA04-4786-8726-415268475C32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAA1B1FE-AA04-4786-8726-415268475C32}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
