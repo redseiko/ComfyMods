@@ -1,5 +1,12 @@
 ## Changelog
 
+### 2.19.0
+
+  * Added `ComfyMods-ColorfulDamage-1.2.0`.
+  * Removed `Tekla-AutoRepair-5.4.1602` for now.
+  * Replaced `SarcenNexusMods-FarmGrid-0.5.0` with `VentureValheim-Venture_Farm_Grid-0.1.0`.
+  * Updated all dependencies to latest version.
+
 ### 2.18.0
 
   * Added `ComfyMods-Gizmo-1.10.0`.
@@ -45,7 +52,6 @@
     * `ComfyMods-ComfyLoadingScreens-1.2.0`
     * `ComfyMods-Intermission-1.2.0`
   * Updated dependencies list to latest versions.
-
 
 ### 2.10.0
 
