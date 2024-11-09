@@ -1,5 +1,10 @@
 ## Changelog
 
+### 2.20.0
+
+  * Added `ComfyMods-ComfyAutoRepair-1.0.0`.
+  * Updated all dependencies to latest version.
+
 ### 2.19.0
 
   * Added `ComfyMods-ColorfulDamage-1.2.0`.
