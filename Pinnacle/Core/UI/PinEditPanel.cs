@@ -175,6 +175,10 @@ public sealed class PinEditPanel {
     PinPosition.ZValue.InputField.text = $"{pin.m_pos.z:F0}";
   }
 
+  public void ActivatePinNameInputField() {
+    PinName.Value.InputField.ActivateInputField();
+  }
+
   void OnPinNameValueChange(string name) {
     if (TargetPin == null) {
       return;

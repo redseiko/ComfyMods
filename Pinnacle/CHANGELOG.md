@@ -1,8 +1,14 @@
 ## Changelog
 
-### 1.11.0 (WIP)
+### 1.11.0
 
-  * Updated for the `v0.218.15` patch.
+  * Fixed for the `v0.219.14` patch.
+  * Bumped up `<LangVersion>` to C# 12.
+  * Added a "Refresh" button to the `PinListPanel`.
+  * Modified `PinListPanel` scrolling behaviour from elastic to clamped.
+  * Added config-option `PinListPanel.ScrollRect > movementType` to allow switching between scrolling behaviour.
+  * Adding new pins will now try to calculate the position `Y` value from the Heightmap.
+  * Code clean-up and refactoring.
 
 ### 1.10.0
 

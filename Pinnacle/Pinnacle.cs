@@ -33,7 +33,7 @@ public sealed class Pinnacle : BaseUnityPlugin {
 
   public static void TogglePinnacle(bool toggleOn) {
     TogglePinEditPanel(pinToEdit: null);
-    TogglePinListPanel(toggleOn: false);
+    PinListPanelController.TogglePanel(toggleOn: false);
     TogglePinFilterPanel(toggleOn: toggleOn);
     ToggleVanillaIconPanels(toggleOn: !toggleOn);
   }
@@ -68,48 +68,6 @@ public sealed class Pinnacle : BaseUnityPlugin {
 
       PinEditPanel.SetTargetPin(pinToEdit);
       PinEditPanel.SetActive(true);
-    }
-  }
-
-  public static PinListPanel PinListPanel { get; private set; }
-
-  public static void TogglePinListPanel() {
-    TogglePinListPanel(!PinListPanel?.Panel.Ref()?.activeSelf ?? false);
-  }
-
-  public static void TogglePinListPanel(bool toggleOn) {
-    if (!PinListPanel?.Panel) {
-      PinListPanel = new(Minimap.m_instance.m_largeRoot.transform);
-      PinListPanel.Panel.RectTransform()
-          .SetAnchorMin(new(0f, 0.5f))
-          .SetAnchorMax(new(0f, 0.5f))
-          .SetPivot(new(0f, 0.5f))
-          .SetPosition(PinListPanelPosition.Value)
-          .SetSizeDelta(PinListPanelSizeDelta.Value);
-
-      PinListPanelPosition.OnSettingChanged(
-          position => PinListPanel?.Panel.Ref()?.RectTransform().SetPosition(position));
-
-      PinListPanelSizeDelta.OnSettingChanged(
-          sizeDelta => {
-            if (PinListPanel?.Panel) {
-              PinListPanel.Panel.RectTransform().SetSizeDelta(sizeDelta);
-              PinListPanel.SetTargetPins();
-            }
-          });
-
-      PinListPanelBackgroundColor.OnSettingChanged(color => PinListPanel?.Panel.Ref()?.Image().SetColor(color));
-
-      PinListPanel.PanelDragger.OnPanelEndDrag += (_, position) => PinListPanelPosition.Value = position;
-      PinListPanel.PanelResizer.OnPanelEndResize += (_, sizeDelta) => PinListPanelSizeDelta.Value = sizeDelta;
-    }
-
-    if (toggleOn) {
-      PinListPanel.Panel.SetActive(true);
-      PinListPanel.SetTargetPins();
-    } else {
-      PinListPanel.PinNameFilter.InputField.DeactivateInputField();
-      PinListPanel.Panel.SetActive(false);
     }
   }
 

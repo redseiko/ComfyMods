@@ -83,6 +83,6 @@
 
 ## Notes
 
-  * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/Pinnacle).
+  * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/Pinnacle)
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
-  * Pinnacle icon created by [@jenniely](https://twitter.com/jenniely) (jenniely.com)
+  * Pinnacle icon created by [@jenniely](https://twitter.com/jenniely) ([jenniely.com](https://jenniely.com))

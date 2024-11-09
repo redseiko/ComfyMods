@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComfyLib\Commands\ComfyCommand.cs" />
+    <Compile Include="ComfyLib\Config\AcceptableValueEnumList.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="Core\CenterMapHelper.cs" />
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Core\Commands\ImportPinsCommand.cs" />
     <Compile Include="Core\Commands\RemoveAllPinsCommand.cs" />
     <Compile Include="Core\PinImportExport.cs" />
+    <Compile Include="Core\PinListPanelController.cs" />
     <Compile Include="Core\PinMarkerUtils.cs" />
     <Compile Include="Core\PinnacleUtils.cs" />
     <Compile Include="Core\UI\Builder\LabelButton.cs" />

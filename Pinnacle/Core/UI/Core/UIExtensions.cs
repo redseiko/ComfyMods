@@ -61,7 +61,7 @@ public static class GameObjectExtensions {
   public static IEnumerable<GameObject> Children(this GameObject gameObject) {
     return gameObject
         ? gameObject.transform.Cast<Transform>().Select(t => t.gameObject)
-        : Enumerable.Empty<GameObject>();
+        : [];
   }
 
   public static Button Button(this GameObject gameObject) {
@@ -456,6 +456,11 @@ public static class ShadowExtensions {
 }
 
 public static class ScrollRectExtensions {
+  public static ScrollRect SetMovementType(this ScrollRect scrollRect, ScrollRect.MovementType movementType) {
+    scrollRect.movementType = movementType;
+    return scrollRect;
+  }
+
   public static ScrollRect SetScrollSensitivity(this ScrollRect scrollRect, float sensitivity) {
     scrollRect.scrollSensitivity = sensitivity;
     return scrollRect;

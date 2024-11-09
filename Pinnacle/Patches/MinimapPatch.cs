@@ -3,8 +3,6 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
-using ComfyLib;
-
 using HarmonyLib;
 
 using UnityEngine;
@@ -21,7 +19,7 @@ static class MinimapPatch {
       PinMarkerUtils.SetupPinNamePrefab(__instance);
 
       Pinnacle.TogglePinEditPanel(pinToEdit: null);
-      Pinnacle.TogglePinListPanel(toggleOn: false);
+      PinListPanelController.TogglePanel(toggleOn: false);
       Pinnacle.TogglePinFilterPanel(toggleOn: true);
 
       Pinnacle.ToggleVanillaIconPanels(toggleOn: false);
@@ -112,7 +110,7 @@ static class MinimapPatch {
   static void InTextInputPreDelegate(Minimap minimap) {
     if (IsModEnabled.Value && minimap.m_mode == Minimap.MapMode.Large) {
       if (PinListPanelToggleShortcut.Value.IsDown()) {
-        Pinnacle.TogglePinListPanel();
+        PinListPanelController.TogglePanel();
       }
 
       if (AddPinAtMouseShortcut.Value.IsDown()) {
@@ -129,7 +127,7 @@ static class MinimapPatch {
           && Pinnacle.PinEditPanel.Panel.activeSelf
           && Pinnacle.PinEditPanel.HasFocus()) {
         __result = true;
-      } else if (Pinnacle.PinListPanel?.Panel && Pinnacle.PinListPanel.HasFocus()) {
+      } else if (PinListPanelController.PinListPanel?.Panel && PinListPanelController.PinListPanel.HasFocus()) {
         __result = true;
       }
     }
@@ -138,7 +136,7 @@ static class MinimapPatch {
   [HarmonyPrefix]
   [HarmonyPatch(nameof(Minimap.UpdateMap))]
   static void UpdateMapPrefix(ref bool takeInput) {
-    if (IsModEnabled.Value && Pinnacle.PinListPanel?.Panel && Pinnacle.PinListPanel.HasFocus()) {
+    if (IsModEnabled.Value && PinListPanelController.PinListPanel?.Panel && PinListPanelController.PinListPanel.HasFocus()) {
       takeInput = false;
     }
   }
@@ -155,8 +153,8 @@ static class MinimapPatch {
   [HarmonyPatch(nameof(Minimap.SetMapMode))]
   static void SetMapModePrefix(ref Minimap __instance, ref Minimap.MapMode mode, ref Minimap.MapMode __state) {
     if (IsModEnabled.Value
-        && Pinnacle.PinListPanel?.Panel
-        && Pinnacle.PinListPanel.Panel.activeSelf) {
+        && PinListPanelController.PinListPanel?.Panel
+        && PinListPanelController.PinListPanel.Panel.activeSelf) {
       __state = __instance.m_mode;
     }
   }
@@ -169,24 +167,24 @@ static class MinimapPatch {
         Pinnacle.TogglePinEditPanel(null);
       }
 
-      if (Pinnacle.PinListPanel?.Panel) {
-        Pinnacle.PinListPanel.PinNameFilter.InputField.DeactivateInputField();
+      if (PinListPanelController.PinListPanel?.Panel) {
+        PinListPanelController.PinListPanel.PinNameFilter.InputField.DeactivateInputField();
       }
     }
 
     if (IsModEnabled.Value && mode == Minimap.MapMode.Large && __state != mode) {
-      Pinnacle.PinListPanel.SetTargetPins();
+      PinListPanelController.PinListPanel.SetTargetPins();
     }
   }
 
   [HarmonyPrefix]
   [HarmonyPatch(nameof(Minimap.ShowPinNameInput))]
-  static bool ShowPinNameInputPrefix(ref Minimap __instance, Vector3 pos) {
+  static bool ShowPinNameInputPrefix(Minimap __instance, Vector3 pos) {
     if (IsModEnabled.Value) {
       __instance.m_namePin = null;
 
-      Pinnacle.TogglePinEditPanel(__instance.AddPin(pos, __instance.m_selectedType, string.Empty, true, false, 0L));
-      Pinnacle.PinEditPanel?.PinName?.Value?.InputField.Ref()?.ActivateInputField();
+      Pinnacle.TogglePinEditPanel(PinnacleUtils.AddNewPin(__instance, pos));
+      Pinnacle.PinEditPanel?.ActivatePinNameInputField();
 
       return false;
     }

@@ -7,7 +7,7 @@ using ComfyLib;
 public static class ExportPinsCommand {
   [ComfyCommand]
   public static IEnumerable<Terminal.ConsoleCommand> Register() {
-    return new Terminal.ConsoleCommand[] {
+    return [
       new Terminal.ConsoleCommand(
         "pinnacle-exportpins-binary",
         "<filename> [name-filter-regex] -- export pins to a file in binary format.",
@@ -17,7 +17,7 @@ public static class ExportPinsCommand {
         "pinnacle-exportpins-text",
         "<filename> [name-filter-regex] -- export pins to a file in plain text format.",
         ExportPinsToTextFile),
-    };
+    ];
   }
 
   public static object ExportPinsToBinaryFile(Terminal.ConsoleEventArgs args) {

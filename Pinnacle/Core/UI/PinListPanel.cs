@@ -13,6 +13,8 @@ using static PluginConfig;
 
 public sealed class PinListPanel {
   public GameObject Panel { get; private set; }
+  public RectTransform PanelRectTransform { get; private set; }
+  public Image PanelBackground { get; private set; }
 
   public ValueCell PinNameFilter { get; private set; }
 
@@ -31,6 +33,8 @@ public sealed class PinListPanel {
 
   public PinListPanel(Transform parentTransform) {
     Panel = CreateChildPanel(parentTransform);
+    PanelRectTransform = Panel.GetComponent<RectTransform>();
+    PanelBackground = Panel.GetComponent<Image>();
 
     PanelDragger = CreateChildPanelDragger(Panel).AddComponent<PanelDragger>();
     PanelDragger.TargetRectTransform = Panel.RectTransform();
@@ -52,26 +56,9 @@ public sealed class PinListPanel {
     PinStats.Cell.AddComponent<Outline>().SetEffectDistance(new(2f, -2f));
 
     RefreshButton = CreateRefreshButton(PinStats.Cell.transform);
+    RefreshButton.Button.onClick.AddListener(RefreshTargetPins);
 
     _pointerState = Panel.AddComponent<PointerState>();
-  }
-
-  LabelButton CreateRefreshButton(Transform parentTransform) {
-    LabelButton refresh = new(parentTransform);
-
-    refresh.RectTransform
-        .SetSizeDelta(new(70f, 35f));
-
-    refresh.Container.AddComponent<LayoutElement>()
-        .SetPreferred(width: 70f, height: 35f);
-
-    refresh.Label
-        .SetFontSize(14f)
-        .SetText("Ref.");
-
-    refresh.Button.onClick.AddListener(SetTargetPins);
-
-    return refresh;
   }
 
   public bool HasFocus() {
@@ -84,6 +71,10 @@ public sealed class PinListPanel {
     return filter.Length == 0
         || (pin.m_name.Length > 0
             && pin.m_name.IndexOf(filter, 0, StringComparison.InvariantCultureIgnoreCase) >= 0);
+  }
+
+  public void RefreshTargetPins() {
+    SetTargetPins();
   }
 
   public void SetTargetPins() {
@@ -259,6 +250,7 @@ public sealed class PinListPanel {
         .SetContent(content.RectTransform())
         .SetHorizontal(false)
         .SetVertical(true)
+        .SetMovementType(PinListPanelScrollRectMovementType.Value)
         .SetScrollSensitivity(30f);
   }
 
@@ -320,5 +312,23 @@ public sealed class PinListPanel {
     icon.text = "<rotate=-45>\u2194</rotate>";
 
     return resizer;
+  }
+
+  LabelButton CreateRefreshButton(Transform parentTransform) {
+    LabelButton refresh = new(parentTransform);
+
+    refresh.RectTransform
+        .SetSizeDelta(new(100f, 35f));
+
+    refresh.Container.AddComponent<LayoutElement>()
+        .SetPreferred(width: 100f, height: 35f);
+
+    refresh.Label
+        .SetFontSize(14f)
+        .SetText("Refresh");
+
+    refresh.Button.SetNavigationMode(Navigation.Mode.None);
+
+    return refresh;
   }
 }

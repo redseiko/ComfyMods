@@ -28,8 +28,10 @@ public static class PinnacleUtils {
   }
 
   public static Vector3 GetPlayerInfoPosition(Minimap.PinData targetPin) {
+    string pinName = targetPin.m_name;
+
     foreach (ZNet.PlayerInfo playerInfo in ZNet.m_instance.m_players) {
-      if (playerInfo.m_name == targetPin.m_name && playerInfo.m_publicPosition) {
+      if (playerInfo.m_name == pinName && playerInfo.m_publicPosition) {
         Pinnacle.LogInfo(
             $"Found PlayerInfo for {playerInfo.m_name}: {targetPin.m_pos:F0} -> {playerInfo.m_position:F0}");
 
@@ -73,5 +75,13 @@ public static class PinnacleUtils {
     HeightmapBuilder.m_instance.Build(heightmapData);
 
     return heightmapData;
+  }
+
+  public static Minimap.PinData AddNewPin(Minimap minimap, Vector3 targetPosition) {
+    if (Mathf.Approximately(targetPosition.y, 0f)) {
+      targetPosition.y = GetHeight(targetPosition);
+    }
+
+    return minimap.AddPin(targetPosition, minimap.m_selectedType, string.Empty, true, false, 0L);
   }
 }

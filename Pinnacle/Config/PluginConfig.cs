@@ -13,13 +13,23 @@ using HarmonyLib;
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public static class PluginConfig {
+  public static ConfigFile CurrentConfig { get; private set; }
+
   public static ConfigEntry<bool> IsModEnabled { get; private set; }
   public static ConfigEntry<float> CenterMapLerpDuration { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
-    IsModEnabled = config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
+    CurrentConfig = config;
+
+    IsModEnabled =
+        config.BindInOrder(
+            "_Global",
+            "isModEnabled",
+            true,
+            "Globally enable or disable this mod.");
 
     IsModEnabled.OnSettingChanged(Pinnacle.TogglePinnacle);
     IsModEnabled.OnSettingChanged(ComfyCommandUtils.ToggleCommands);
@@ -36,8 +46,8 @@ public static class PluginConfig {
     BindPinEditPanelConfig(config);
     BindPinFilterPanelConfig(config);
 
-    _fejdStartupBindConfigQueue.Clear();
-    _fejdStartupBindConfigQueue.Enqueue(() => BindMinimapConfig(config));
+    _lateBindConfigQueue.Clear();
+    _lateBindConfigQueue.Enqueue(BindMinimapConfig);
   }
 
   public static ConfigEntry<KeyboardShortcut> PinListPanelToggleShortcut { get; private set; }
@@ -46,6 +56,8 @@ public static class PluginConfig {
   public static ConfigEntry<Vector2> PinListPanelPosition { get; private set; }
   public static ConfigEntry<Vector2> PinListPanelSizeDelta { get; private set; }
   public static ConfigEntry<Color> PinListPanelBackgroundColor { get; private set; }
+
+  public static ConfigEntry<ScrollRect.MovementType> PinListPanelScrollRectMovementType { get; private set; }
 
   public static ConfigEntry<bool> PinListPanelEditPinOnRowClick { get; private set; }
 
@@ -71,6 +83,8 @@ public static class PluginConfig {
             new Vector2(25f, 0f),
             "The value for the PinListPanel.Panel position (relative to pivot/anchors).");
 
+    PinListPanelPosition.OnSettingChanged(PinListPanelController.SetPanelPosition);
+
     PinListPanelSizeDelta =
         config.BindInOrder(
             "PinListPanel.Panel",
@@ -78,12 +92,28 @@ public static class PluginConfig {
             new Vector2(400f, 400f),
             "The value for the PinListPanel.Panel sizeDelta (width/height in pixels).");
 
+    PinListPanelSizeDelta.OnSettingChanged(PinListPanelController.SetPanelSize);
+
     PinListPanelBackgroundColor =
         config.BindInOrder(
             "PinListPanel.Panel",
             "pinListPanelBackgroundColor",
             new Color(0f, 0f, 0f, 0.9f),
             "The value for the PinListPanel.Panel background color.");
+
+    PinListPanelBackgroundColor.OnSettingChanged(PinListPanelController.SetBackgroundColor);
+
+    PinListPanelScrollRectMovementType =
+        config.BindInOrder(
+            "PinListPanel.ScrollRect",
+            "movementType",
+            ScrollRect.MovementType.Clamped,
+            "Determines how the PinListPanel scrolling should behave.",
+            new AcceptableValueEnumList<ScrollRect.MovementType>(
+                ScrollRect.MovementType.Clamped,
+                ScrollRect.MovementType.Elastic));
+
+    PinListPanelScrollRectMovementType.OnSettingChanged(PinListPanelController.SetScrollRectMovementType);
 
     PinListPanelEditPinOnRowClick =
         config.BindInOrder(
@@ -138,7 +168,7 @@ public static class PluginConfig {
             defaultValue: UIResources.ValheimNorseFont,
             "The font for the Pin text on the Minimap.",
             new AcceptableValueList<string>(
-            Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Select(f => f.name).OrderBy(f => f).ToArray()));
+            [.. Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Select(f => f.name).OrderBy(f => f)]));
 
     PinFontSize =
         config.BindInOrder(
@@ -159,15 +189,15 @@ public static class PluginConfig {
             "Keyboard shortcut to add a Minimap.Pin at the mouse position.");
   }
 
-  static readonly Queue<Action> _fejdStartupBindConfigQueue = new();
+  static readonly Queue<Action<ConfigFile>> _lateBindConfigQueue = new();
 
   [HarmonyPatch(typeof(FejdStartup))]
   static class FejdStartupPatch {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(FejdStartup.Awake))]
     static void AwakePostfix() {
-      while (_fejdStartupBindConfigQueue.Count > 0) {
-        _fejdStartupBindConfigQueue.Dequeue()?.Invoke();
+      while (_lateBindConfigQueue.Count > 0) {
+        _lateBindConfigQueue.Dequeue()?.Invoke(CurrentConfig);
       }
     }
   }
