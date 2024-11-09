@@ -22,7 +22,9 @@ static class EffectListPatch {
         .ThrowIfInvalid($"Could not patch EffectList.Create()! (m_enabled)")
         .InsertAndAdvance(
             new CodeInstruction(OpCodes.Ldloc_2),
-            Transpilers.EmitDelegate(CheckEffectDataDelegate))
+            new CodeInstruction(
+                OpCodes.Call,
+                AccessTools.Method(typeof(EffectListPatch), nameof(CheckEffectDataDelegate))))
         .InstructionEnumeration();
   }
 

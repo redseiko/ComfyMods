@@ -21,6 +21,10 @@ public static class VanillaShop {
               Workstation.Stonecutter,
               [ (Item.Grausten, 24) ])
           .AddPiece(
+              "ashwood_arch_top",
+              Workstation.Workbench,
+              [ (Item.Blackwood, 2) ])
+          .AddPiece(
               "blackmarble_2x2_enforced",
               Workstation.BlackForge,
               [ (Item.BlackMarble, 8),

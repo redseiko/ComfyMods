@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.19.0
+
+  * Hotfix to help players with conflicting pre-BogWitch `v1.18.0` test version properly update to latest version.
+  * Added new recipe for `ashwood_arch_top`.
+
 ### 1.18.0
 
   * Fixed for the `v0.219.14` patch.

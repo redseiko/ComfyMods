@@ -22,7 +22,7 @@
 
   * See source at: [GitHub/ComfyMods](https://github.com/redseiko/ComfyMods/tree/main/PotteryBarn).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
-  * PotteryBarn icon created by [@jenniely](https://twitter.com/jenniely) (jenniely.com)
+  * PotteryBarn icon created by [@jenniely](https://twitter.com/jenniely) [jenniely.com](https://jenniely.com)
 
 ### Dependencies
 
