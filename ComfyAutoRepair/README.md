@@ -6,6 +6,7 @@
 
   * Interacting with a crafting station will automatically repair all items that can be repaired at that station.
   * Config-option to show the vanilla 'item repaired' message for each item repaired (default: *disabled*).
+  * Minor optimizations for when the game checks if you have repairable items.
 
 ## Notes
 

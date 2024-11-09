@@ -13,10 +13,20 @@ public static class RecipeManager {
     string itemName = item.m_shared.m_name;
 
     if (!_recipeByItemNameCache.TryGetValue(itemName, out recipe)) {
-      recipe = ObjectDB.instance.GetRecipe(item);
+      recipe = GetRecipeByItemName(itemName);
       _recipeByItemNameCache[itemName] = recipe;
     }
 
     return recipe;
+  }
+
+  public static Recipe GetRecipeByItemName(string itemName) {
+    foreach (Recipe recipe in ObjectDB.m_instance.m_recipes) {
+      if (recipe.m_item && recipe.m_item.m_itemData.m_shared.m_name == itemName) {
+        return recipe;
+      }
+    }
+
+    return default;
   }
 }
