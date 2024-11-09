@@ -13,3 +13,4 @@
   * This is the *good enough* release. More features and polish to be added later.
   * See source at: [GitHub/ComfyMods](https://github.com/redseiko/ComfyMods/tree/main/ComfyAutoRepair).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
+  * ComfyAutoRepair icon created by [@jenniely](https://twitter.com/jenniely) ([jenniely.com](https://jenniely.com)).
