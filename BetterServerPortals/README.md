@@ -4,4 +4,4 @@
 
 ## Notes
 
-  * BetterServerPortal icon created by [@jenniely](https://twitter.com/jenniely) (jenniely.com).
+  * BetterServerPortal icon created by [@jenniely](https://twitter.com/jenniely) ([jenniely.com](https://jenniely.com))
