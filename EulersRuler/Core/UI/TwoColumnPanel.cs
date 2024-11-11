@@ -119,4 +119,34 @@ public class TwoColumnPanel {
 
     return this;
   }
+
+  public LabelRow AddLabelRow() {
+    LabelRow row = new(_leftColumn.transform, _rightColumn.transform);
+
+    row.LeftLabel.alignment = TextAlignmentOptions.Right;
+    SetFontSize(row.LeftLabel, _textFontSize);
+
+    row.RightLabel.alignment = TextAlignmentOptions.Left;
+    SetFontSize(row.RightLabel, _textFontSize);
+
+    return row;
+  }
+
+  public sealed class LabelRow {
+    public TextMeshProUGUI LeftLabel { get; }
+    public TextMeshProUGUI RightLabel { get; }
+
+    public LabelRow(Transform leftParentTransform, Transform rightParentTransform) {
+      LeftLabel = UIBuilder.CreateTMPLabel(leftParentTransform);
+      LeftLabel.name = "LeftLabel";
+
+      RightLabel = UIBuilder.CreateTMPLabel(rightParentTransform);
+      RightLabel.name = "RightLabel";
+    }
+
+    public void SetActive(bool active) {
+      LeftLabel.gameObject.SetActive(active);
+      RightLabel.gameObject.SetActive(active);
+    }
+  }
 }

@@ -27,6 +27,8 @@ public static class PluginConfig {
     Euler = 2,
     Quaternion = 4,
     PieceName = 32,
+    Distance = 64,
+    Position = 128,
   }
 
   public static ConfigEntry<bool> IsModEnabled { get; private set; }

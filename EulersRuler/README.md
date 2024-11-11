@@ -6,8 +6,9 @@
 
 ## Features
 
-  * Shows targeted piece name, health, stability and rotations while hammer is active
+  * Shows targeted piece name, health, stability and rotations while hammer is active.
   * Shows name and rotation of build piece currently being placed.
+  * Shows the piece prefab name of targeted piece or current placement ghost piece.
   * Show (or hide) the vanilla piece health bar (colorized to the current piece health).
 
 ## User Interface

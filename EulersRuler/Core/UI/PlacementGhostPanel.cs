@@ -1,33 +1,40 @@
 ﻿namespace EulersRuler;
 
-using TMPro;
-
 using UnityEngine;
 
 using static PluginConfig;
 
 public static class PlacementGhostPanel {
   static TwoColumnPanel _placementGhostPanel;
-  static TMP_Text _placementGhostNameTextLabel;
-  static TMP_Text _placementGhostNameTextValue;
-  static TMP_Text _placementGhostEulerTextLabel;
-  static TMP_Text _placementGhostEulerTextValue;
-  static TMP_Text _placementGhostQuaternionTextLabel;
-  static TMP_Text _placementGhostQuaternionTextValue;
+
+  public static TwoColumnPanel.LabelRow GhostNameRow { get; private set; }
+  public static TwoColumnPanel.LabelRow GhostEulerRow { get; private set; }
+  public static TwoColumnPanel.LabelRow GhostQuaternionRow { get; private set; }
+  public static TwoColumnPanel.LabelRow GhostDistanceRow { get; private set; }
 
   public static void CreatePanel(Hud hud) {
-    _placementGhostPanel =
-        new TwoColumnPanel(hud.m_crosshair.transform)
-            .AddPanelRow(out _placementGhostNameTextLabel, out _placementGhostNameTextValue)
-            .AddPanelRow(out _placementGhostEulerTextLabel, out _placementGhostEulerTextValue)
-            .AddPanelRow(out _placementGhostQuaternionTextLabel, out _placementGhostQuaternionTextValue)
-            .SetPosition(PlacementGhostPanelPosition.Value)
-            .SetAnchors(new Vector2(0, 0.5f), new Vector2(0, 0.5f), new Vector2(0, 0.5f))
-            .SetFontSize(PlacementGhostPanelFontSize.Value);
+    _placementGhostPanel = new TwoColumnPanel(hud.m_crosshair.transform);
 
-    _placementGhostNameTextLabel.text = "Placing \u25a5";
-    _placementGhostEulerTextLabel.text = "Euler \u29bf";
-    _placementGhostQuaternionTextLabel.text = "Quaternion \u2318";
+    GhostNameRow = _placementGhostPanel.AddLabelRow();
+    GhostNameRow.LeftLabel.text = "Placing \u25a5";
+    GhostNameRow.RightLabel.color = new(1f, 0.79f, 0.15f);
+
+    GhostEulerRow = _placementGhostPanel.AddLabelRow();
+    GhostEulerRow.LeftLabel.text = "Euler \u29bf";
+    GhostEulerRow.RightLabel.color = new(0.81f, 0.84f, 0.86f);
+
+    GhostQuaternionRow = _placementGhostPanel.AddLabelRow();
+    GhostQuaternionRow.LeftLabel.text = "Quaternion \u2318";
+    GhostQuaternionRow.RightLabel.color = new(0.84f, 0.8f, 0.78f);
+
+    GhostDistanceRow = _placementGhostPanel.AddLabelRow();
+    GhostDistanceRow.LeftLabel.text = "Distance \u27A1";
+    GhostDistanceRow.RightLabel.color = new(1f, 0.79f, 0.15f);
+
+    _placementGhostPanel
+        .SetPosition(PlacementGhostPanelPosition.Value)
+        .SetAnchors(new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f))
+        .SetFontSize(PlacementGhostPanelFontSize.Value);
   }
 
   public static void DestroyPanel() {
@@ -42,6 +49,8 @@ public static class PlacementGhostPanel {
     _placementGhostPanel?.SetFontSize(fontSize);
   }
 
+  static PlacementGhostPanelRow _lastEnabledRows = PlacementGhostPanelRow.None;
+
   public static void UpdateProperties(GameObject placementGhost, PlacementGhostPanelRow enabledRows) {
     if (!_placementGhostPanel?.Panel) {
       return;
@@ -50,48 +59,74 @@ public static class PlacementGhostPanel {
     if (!placementGhost
         || enabledRows == PlacementGhostPanelRow.None
         || !placementGhost.TryGetComponent(out Piece piece)) {
-      _placementGhostPanel?.SetActive(false);
+      _placementGhostPanel.SetActive(false);
       return;
     }
 
     _placementGhostPanel.SetActive(true);
 
-    UpdatePlacementGhostNameRow(
-        piece, enabledRows.HasFlag(PlacementGhostPanelRow.Name), enabledRows.HasFlag(PlacementGhostPanelRow.PieceName));
-
-    UpdatePlacementGhostEulerRow(placementGhost, enabledRows.HasFlag(PlacementGhostPanelRow.Euler));
-    UpdatePlacementGhostQuaternionRow(placementGhost, enabledRows.HasFlag(PlacementGhostPanelRow.Quaternion));
+    SetupGhostRows(enabledRows);
+    UpdateGhostRows(placementGhost, piece, enabledRows);
   }
 
-  static void UpdatePlacementGhostNameRow(Piece piece, bool isRowEnabled, bool isPieceNameEnabled) {
-    _placementGhostNameTextLabel.gameObject.SetActive(isRowEnabled);
-    _placementGhostNameTextValue.gameObject.SetActive(isRowEnabled);
+  static void SetupGhostRows(PlacementGhostPanelRow enabledRows) {
+    if (enabledRows == _lastEnabledRows) {
+      return;
+    }
 
-    if (isRowEnabled) {
-      _placementGhostNameTextValue.text = $"<color=#FFCA28>{Localization.instance.Localize(piece.m_name)}</color>";
+    GhostNameRow.SetActive(enabledRows.HasFlag(PlacementGhostPanelRow.Name));
+    GhostEulerRow.SetActive(enabledRows.HasFlag(PlacementGhostPanelRow.Euler));
+    GhostQuaternionRow.SetActive(enabledRows.HasFlag(PlacementGhostPanelRow.Quaternion));
+    GhostDistanceRow.SetActive(enabledRows.HasFlag(PlacementGhostPanelRow.Distance));
 
-      if (isPieceNameEnabled) {
-        _placementGhostNameTextValue.text += $" (<color=#FFCA28>{Utils.GetPrefabName(piece.gameObject)}</color>)";
-      }
+    _lastEnabledRows = enabledRows;
+  }
+
+  static void UpdateGhostRows(GameObject placementGhost, Piece piece, PlacementGhostPanelRow enabledRows) {
+    if (enabledRows.HasFlag(PlacementGhostPanelRow.Name)) {
+      UpdateGhostNameRow(piece, enabledRows.HasFlag(PlacementGhostPanelRow.PieceName));
+    }
+
+    if (enabledRows.HasFlag(PlacementGhostPanelRow.Euler)) {
+      UpdateGhostEulerRow(placementGhost);
+    }
+
+    if (enabledRows.HasFlag(PlacementGhostPanelRow.Quaternion)) {
+      UpdateGhostQuaternionRow(placementGhost);
+    }
+
+    if (enabledRows.HasFlag(PlacementGhostPanelRow.Distance)) {
+      UpdateGhostDistanceRow(placementGhost, enabledRows.HasFlag(PlacementGhostPanelRow.Position));
     }
   }
 
-  static void UpdatePlacementGhostEulerRow(GameObject placementGhost, bool isRowEnabled) {
-    _placementGhostEulerTextLabel.gameObject.SetActive(isRowEnabled);
-    _placementGhostEulerTextValue.gameObject.SetActive(isRowEnabled);
-
-    if (isRowEnabled) {
-      _placementGhostEulerTextValue.text = $"<color=#CFD8DC>{placementGhost.transform.rotation.eulerAngles}</color>";
+  static void UpdateGhostNameRow(Piece piece, bool showPrefabName) {
+    if (showPrefabName) {
+      GhostNameRow.RightLabel.text =
+          $"{Localization.instance.Localize(piece.m_name)} ({Utils.GetPrefabName(piece.gameObject)})";
+    } else {
+      GhostNameRow.RightLabel.text = Localization.instance.Localize(piece.m_name);
     }
   }
 
-  static void UpdatePlacementGhostQuaternionRow(GameObject placementGhost, bool isRowEnabled) {
-    _placementGhostQuaternionTextLabel.gameObject.SetActive(isRowEnabled);
-    _placementGhostQuaternionTextValue.gameObject.SetActive(isRowEnabled);
+  static void UpdateGhostEulerRow(GameObject placementGhost) {
+    GhostEulerRow.RightLabel.text = placementGhost.transform.rotation.eulerAngles.ToString();
+  }
 
-    if (isRowEnabled) {
-      _placementGhostQuaternionTextValue.text =
-          $"<color=#D7CCC8>{placementGhost.transform.rotation:N2}</color>";
+  static void UpdateGhostQuaternionRow(GameObject placementGhost) {
+    GhostQuaternionRow.RightLabel.text = placementGhost.transform.rotation.ToString("N2");
+  }
+
+  static void UpdateGhostDistanceRow(GameObject placementGhost, bool showPosition) {
+    float distance =
+        Player.m_localPlayer
+            ? Vector3.Distance(Player.m_localPlayer.transform.position, placementGhost.transform.position)
+            : 0f;
+
+    if (showPosition) {
+      GhostDistanceRow.RightLabel.text = $"{distance:N2} \u2022 {placementGhost.transform.position:F0}";
+    } else {
+      GhostDistanceRow.RightLabel.text = distance.ToString("N2");
     }
   }
 }

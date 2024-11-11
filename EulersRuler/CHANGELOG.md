@@ -1,5 +1,13 @@
 ## Changelog
 
+### 1.9.0
+
+  * Updated for the `v0.219.14` patch.
+  * Added new enum `Distance` and `Position` to the `placementGhostPanelEnabledRows` config-option.
+  * When `Distance` is enabled, the `PlacementGhostPanel` will show the distance from your local player to the ghost.
+  * `Position` requires `Distance` and when enabled will show the position of the ghost next to the distance.
+  * Refactor parts of the `PlacementGhostPanel`.
+
 ### 1.8.0
 
   * Updated for the `v0.218.19` patch.
