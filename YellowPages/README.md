@@ -2,25 +2,19 @@
 
 *Servers listed at your doorstep.*
 
-## Installation
+## Features
 
-### Manual
+### Show custom max-player limits
 
-  * Un-zip `YellowPages.dll` to your `/Valheim/BepInEx/plugins/` folder.
+  * Valheim server listings are hard-coded to show a max-player limit of `10`.
+  * YellowPages will update the max-player count if it differs from the default limits set below.
 
-### Thunderstore (manual)
+### Default max-player limits
 
-  * Go to Settings > Import local mod > Select `YellowPages_v1.0.0.zip`.
-  * Click "OK/Import local mod" on the pop-up for information.
+  * Steam: `32` (client), `64` (dedicated-server)
+  * PlayFab: `10` (client), `11` (dedicated-server)
 
 ## Notes
 
   * See source: [ComfyMods GitHub](https://github.com/redseiko/ComfyMods/tree/main/YellowPages)
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
-  * Check out our community driven listing site: [valheimlist.org](https://valheimlist.org/)
-
-## Changelog
-
-### 1.0.0
-
-  * Initial release.

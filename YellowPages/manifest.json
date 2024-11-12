@@ -4,5 +4,5 @@
   "author": "ComfyMods",
   "description": "Servers listed at your doorstep.",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/YellowPages",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.1901" ]
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }
