@@ -16,6 +16,7 @@ public sealed class ExploredStatsPanel {
   public RectTransform RectTransform { get; }
   public TextMeshProUGUI Title { get; }
   public ListView StatsList { get; }
+  public TextMeshProUGUI StatusLabel { get; }
   public LabelButton CloseButton { get; }
 
   public ExploredStatsPanel(Transform parentTransform) {
@@ -23,6 +24,7 @@ public sealed class ExploredStatsPanel {
     RectTransform = Panel.GetComponent<RectTransform>();
     Title = CreateTitle(RectTransform);
     StatsList = CreateStatsList(RectTransform);
+    StatusLabel = CreateStatusLabel(RectTransform);
     CloseButton = CreateCloseButton(RectTransform);
   }
 
@@ -57,6 +59,10 @@ public sealed class ExploredStatsPanel {
       AddExploredStatsLabel(name, biomeExplored, biomeTotal, worldTotal);
       AddExploredStatsSlider(color, biomeExplored, biomeTotal);
     }
+  }
+
+  public void UpdateStatus(string status) {
+    StatusLabel.text = status;
   }
 
   static Color BiomeToSliderColor(Heightmap.Biome biome) {
@@ -149,6 +155,25 @@ public sealed class ExploredStatsPanel {
         .SetSpacing(2.5f);
 
     return listView;
+  }
+
+  static TextMeshProUGUI CreateStatusLabel(Transform parentTransform) {
+    TextMeshProUGUI label = UIBuilder.CreateTMPLabel(parentTransform);
+    label.name = "StatusLabel";
+
+    label.rectTransform
+        .SetAnchorMin(Vector2.zero)
+        .SetAnchorMax(Vector2.right)
+        .SetPivot(Vector2.zero)
+        .SetPosition(new(20f, 20f))
+        .SetSizeDelta(new(-155f, 42.5f));
+
+    label
+        .SetAlignment(TextAlignmentOptions.MidlineLeft)
+        .SetLineSpacing(10f)
+        .SetText("Status");
+
+    return label;
   }
 
   static LabelButton CreateCloseButton(Transform parentTransform) {

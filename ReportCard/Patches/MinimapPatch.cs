@@ -12,6 +12,7 @@ static class MinimapPatch {
     if (IsModEnabled.Value) {
       ExploredStatsController.CreateStatsPanel(__instance);
       ExploredStatsController.CreateStatsButton(__instance);
+      ExploredStatsController.ToggleStatsButton(ExploredStatsPanelShowStatsButton.Value);
     }
   }
 }

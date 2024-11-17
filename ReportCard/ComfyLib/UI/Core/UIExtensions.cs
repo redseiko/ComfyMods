@@ -436,6 +436,11 @@ public static class TextMeshProExtensions {
     return tmpText;
   }
 
+  public static T SetLineSpacing<T>(this T tmpText, float lineSpacing) where T : TMP_Text {
+    tmpText.lineSpacing = lineSpacing;
+    return tmpText;
+  }
+
   public static T SetMargin<T>(this T tmpText, Vector4 margin) where T : TMP_Text {
     tmpText.margin = margin;
     return tmpText;

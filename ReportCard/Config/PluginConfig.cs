@@ -9,6 +9,7 @@ public static class PluginConfig {
 
   public static ConfigEntry<bool> OpenStatsPanelOnCharacterSelect { get; private set; }
 
+  public static ConfigEntry<bool> ExploredStatsPanelShowStatsButton { get; private set; }
   public static ConfigEntry<bool> ExploredStatsPanelShowRawValues { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
@@ -25,6 +26,15 @@ public static class PluginConfig {
             "openStatsPanelOnCharacterSelect",
             true,
             "If set, opens the StatsPanel on the Character Select screen.");
+
+    ExploredStatsPanelShowStatsButton =
+        config.BindInOrder(
+            "ExploredStatsPanel",
+            "showStatsButton",
+            true,
+            "If set, enables the 'Stats' button in the Minimap.");
+
+    ExploredStatsPanelShowStatsButton.OnSettingChanged(ExploredStatsController.ToggleStatsButton);
 
     ExploredStatsPanelShowRawValues =
         config.BindInOrder(

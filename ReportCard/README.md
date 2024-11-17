@@ -20,11 +20,10 @@
 
 ### Explored Stats
 
-  * Adds a Stats button to the large Minimap view (top-left).
+  * Adds a Stats button to the large Minimap view (top-left), can be hidden using a config-option.
   * Shows a new panel with the current player's explored stats for the current world (by biome).
   * Stats take several seconds to generate as it needs to calculate biome data for the entire map.
-
-
+  * Also shows at the bottom: player name, player ID, world name and current day in the world.
 
 ## Notes
 
