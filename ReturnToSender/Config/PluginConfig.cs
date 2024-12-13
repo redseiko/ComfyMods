@@ -1,12 +1,16 @@
-﻿using BepInEx.Configuration;
+﻿namespace ReturnToSender;
 
-namespace ReturnToSender {
-  public static class PluginConfig {
-    public static ConfigEntry<bool> IsModEnabled { get; private set; }
+using BepInEx.Configuration;
 
-    public static void BindConfig(ConfigFile config) {
-      IsModEnabled =
-          config.Bind("_Global", "isModEnabled", true, "Globally enable or disable this mod (restart required).");
-    }
+public static class PluginConfig {
+  public static ConfigEntry<bool> IsModEnabled { get; private set; }
+
+  public static void BindConfig(ConfigFile config) {
+    IsModEnabled =
+        config.Bind(
+            "_Global",
+            "isModEnabled",
+            true,
+            "Globally enable or disable this mod (restart required).");
   }
 }

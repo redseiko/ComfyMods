@@ -1,30 +1,24 @@
-﻿using System.Reflection;
+﻿namespace ReturnToSender;
+
+using System.Reflection;
 
 using BepInEx;
 
 using HarmonyLib;
 
-using static ReturnToSender.PluginConfig;
+using static PluginConfig;
 
-namespace ReturnToSender {
-  [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
-  public class ReturnToSender : BaseUnityPlugin {
-    public const string PluginGuid = "redseiko.valheim.returntosender";
-    public const string PluginName = "ReturnToSender";
-    public const string PluginVersion = "1.2.0";
+[BepInPlugin(PluginGuid, PluginName, PluginVersion)]
+public sealed class ReturnToSender : BaseUnityPlugin {
+  public const string PluginGuid = "redseiko.valheim.returntosender";
+  public const string PluginName = "ReturnToSender";
+  public const string PluginVersion = "1.3.0";
 
-    Harmony _harmony;
+  void Awake() {
+    BindConfig(Config);
 
-    void Awake() {
-      BindConfig(Config);
-
-      if (IsModEnabled.Value) {
-        _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
-      }
-    }
-
-    void OnDestroy() {
-      _harmony?.UnpatchSelf();
+    if (IsModEnabled.Value) {
+      Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
     }
   }
 }

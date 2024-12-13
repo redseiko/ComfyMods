@@ -1,31 +1,33 @@
-﻿using System.Collections.Generic;
+﻿namespace ReturnToSender;
+
+using System.Collections.Generic;
 using System.Reflection.Emit;
 
 using HarmonyLib;
 
-namespace ReturnToSender {
-  [HarmonyPatch(typeof(ZDOMan))]
-  static class ZDOManPatch {
-    [HarmonyTranspiler]
-    [HarmonyPatch(nameof(ZDOMan.Update))]
-    static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
-      return new CodeMatcher(instructions)
-          .MatchForward(
-              useEnd: false,
-              new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZDOMan), nameof(ZDOMan.SendZDOToPeers2))))
-          .SetOperandAndAdvance(AccessTools.Method(typeof(ZDOManPatch), nameof(SendZDOToPeers)))
-          .InstructionEnumeration();
-    }
+[HarmonyPatch(typeof(ZDOMan))]
+static class ZDOManPatch {
+  [HarmonyTranspiler]
+  [HarmonyPatch(nameof(ZDOMan.Update))]
+  static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
+    return new CodeMatcher(instructions)
+        .Start()
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZDOMan), nameof(ZDOMan.SendZDOToPeers2))))
+        .ThrowIfInvalid($"Could not patch ZDOMan.Update()! (send-zdo-to-peers)")
+        .SetOperandAndAdvance(AccessTools.Method(typeof(ZDOManPatch), nameof(SendZDOToPeers)))
+        .InstructionEnumeration();
+  }
 
-    static void SendZDOToPeers(ZDOMan zdoManager, float dt) {
-      zdoManager.m_sendTimer += dt;
+  static void SendZDOToPeers(ZDOMan zdoManager, float dt) {
+    zdoManager.m_sendTimer += dt;
 
-      if (zdoManager.m_sendTimer > 0.05f) {
-        zdoManager.m_sendTimer = 0f;
+    if (zdoManager.m_sendTimer > 0.05f) {
+      zdoManager.m_sendTimer = 0f;
+      List<ZDOMan.ZDOPeer> peers = zdoManager.m_peers;
 
-        foreach (ZDOMan.ZDOPeer peer in zdoManager.m_peers) {
-          zdoManager.SendZDOs(peer, flush: false);
-        }
+      for (int i = 0, count = peers.Count; i < count; i++) {
+        zdoManager.SendZDOs(peers[i], flush: false);
       }
     }
   }
