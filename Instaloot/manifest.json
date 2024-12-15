@@ -1,8 +1,8 @@
 {
   "name": "Instaloot",
-  "version_number": "1.0.0",
+  "version_number": "1.1.0",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Instaloot",
   "author": "ComfyMods",
   "description": "Instantly instantiating illustrious inhuman inventories.",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2200" ]
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }

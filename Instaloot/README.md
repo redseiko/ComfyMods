@@ -11,9 +11,3 @@
 ### [Instant Monster Loot Drop](https://www.nexusmods.com/valheim/mods/164)
 
   * Instaloot replaces `Instant Monster Loot Drop` entirely; uninstall or disable `Instant Monster Loot Drop`.
-
-## Changelog
-
-### 1.0.0
-
-  * Initial release.
