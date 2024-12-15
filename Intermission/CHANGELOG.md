@@ -1,5 +1,12 @@
 ## Changelog
 
+### 1.8.0
+
+  * Updated for the `v0.219.16` patch.
+  * Fixed an issue with custom loading tips not being shown when manually advanced.
+  * Loading tips can now be manually advanced when teleporting (vanilla is limited to respawning only).
+  * Removed vanilla logging of loading tips when they are manually advanced.
+
 ### 1.7.0
 
   * Updated for the `v0.218.21` patch.
