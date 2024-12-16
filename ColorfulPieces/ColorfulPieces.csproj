@@ -16,6 +16,7 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,16 +24,15 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <Choose>
     <When Condition="($(OS) == 'Unix' OR $(OS) == 'OSX') AND $(GamePath) == ''">
@@ -70,21 +70,30 @@
     <Reference Include="BepInEx">
       <HintPath>$(GamePath)\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="gui_framework_publicized">
+      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\gui_framework_publicized.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>$(GamePath)\valheim_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\Unity.TextMeshPro_publicized.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
@@ -108,7 +117,16 @@
     <Compile Include="ComfyLib\Config\GUI\GUIHelper.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\ZDOExtensions.cs" />
+    <Compile Include="ComfyLib\UI\Builder\ColorSlider.cs" />
+    <Compile Include="ComfyLib\UI\Builder\ColorSquare.cs" />
+    <Compile Include="ComfyLib\UI\Builder\LabelButton.cs" />
+    <Compile Include="ComfyLib\UI\Builder\ListView.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIBuilder.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIExtensions.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIResources.cs" />
+    <Compile Include="Core\Commands\ToggleColorPickerCommand.cs" />
     <Compile Include="Core\Components\PieceColorRenderer.cs" />
+    <Compile Include="Core\Controllers\ColorPickerController.cs" />
     <Compile Include="Core\ShortcutUtils.cs" />
     <Compile Include="Core\ColorfulConstants.cs" />
     <Compile Include="Core\ColorfulUtils.cs" />
@@ -118,11 +136,13 @@
     <Compile Include="Core\Components\PieceColorUpdater.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Core\Extensions\MaterialManExtensions.cs" />
+    <Compile Include="Core\UI\ColorPickerPanel.cs" />
     <Compile Include="Patches\HudPatch.cs" />
     <Compile Include="Patches\PlayerPatch.cs" />
     <Compile Include="Patches\StaticPhysicsPatch.cs" />
     <Compile Include="Patches\TerminalPatch.cs" />
     <Compile Include="Patches\GamePatch.cs" />
+    <Compile Include="Patches\TextInputPatch.cs" />
     <Compile Include="Patches\WearNTearPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -132,6 +152,7 @@
     <None Include="README.md" />
     <None Include="icon.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyAssembly" AfterTargets="Build">
     <Copy SourceFiles="$(TargetDir)$(AssemblyName).dll" DestinationFolder="$(PluginOutputPath)" />
