@@ -9,15 +9,16 @@ using UnityEngine;
 public static class ClearColorCommand {
   [ComfyCommand]
   public static IEnumerable<Terminal.ConsoleCommand> Register() {
-    yield return new Terminal.ConsoleCommand(
-        "clearcolor",
-        "(ColorfulPieces) Clears all colors applied to all pieces within radius of player.",
-        RunLegacy);
+    return [
+      new Terminal.ConsoleCommand(
+          "clearcolor",
+          "(ColorfulPieces) Clears all colors applied to all pieces within radius of player.",
+          RunLegacy),
 
-    yield return new Terminal.ConsoleCommand(
-        "clear-color",
-        "(ColorfulPieces) clear-color --radius=<r> [--prefab=<name1>] [--position=<x,y,z>]",
-        Run);
+      new Terminal.ConsoleCommand(
+          "clear-color",
+          "(ColorfulPieces) clear-color --radius=<r> [--prefab=<name1>] [--position=<x,y,z>]",
+          Run)];
   }
 
   public static object RunLegacy(Terminal.ConsoleEventArgs args) {

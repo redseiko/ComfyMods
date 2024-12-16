@@ -13,6 +13,7 @@ public static class PluginConfig {
   public static ConfigEntry<KeyboardShortcut> ClearPieceColorShortcut { get; private set; }
   public static ConfigEntry<KeyboardShortcut> CopyPieceColorShortcut { get; private set; }
 
+  public static ConfigEntry<KeyboardShortcut> ToggleColorPickerShortcut { get; private set; }
   public static ExtendedColorConfigEntry TargetPieceColor { get; private set; }
   public static ConfigEntry<float> TargetPieceEmissionColorFactor { get; private set; }
 
@@ -44,6 +45,13 @@ public static class PluginConfig {
             "copyPieceColorShortcut",
             new KeyboardShortcut(KeyCode.R, KeyCode.LeftControl),
             "Shortcut to copy the color of the hovered piece.");
+
+    ToggleColorPickerShortcut =
+        config.BindInOrder(
+            "Color",
+            "toggleColorPickerShortcut",
+            new KeyboardShortcut(KeyCode.None),
+            "Shortcut to toggle the new ColorPicker.");
 
     TargetPieceColor =
         new(

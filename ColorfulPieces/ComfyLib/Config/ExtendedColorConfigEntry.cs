@@ -129,7 +129,7 @@ public sealed class ExtendedColorConfigEntry {
 }
 
 public sealed class ColorPalette {
-  static readonly char[] _partSeparator = { ',' };
+  static readonly char[] _partSeparator = [','];
   static readonly string _partJoiner = ",";
   static readonly Texture2D _colorTexture = GUIBuilder.CreateColorTexture(10, 10, Color.white);
 
