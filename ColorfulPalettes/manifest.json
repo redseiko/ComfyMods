@@ -1,0 +1,8 @@
+{
+  "name": "ColorfulPalettes",
+  "version_number": "1.0.0",
+  "author": "ComfyMods",
+  "description": "???",
+  "website_url": "https://github.com/redseiko/ComfyMods/tree/main/ColorfulPalettes",
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
+}
