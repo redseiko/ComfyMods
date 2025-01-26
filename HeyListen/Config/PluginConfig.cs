@@ -1,20 +1,27 @@
 ﻿namespace HeyListen;
 
+using System;
+
 using BepInEx.Configuration;
 
 using ComfyLib;
-
-using System;
 
 using UnityEngine;
 
 public static class PluginConfig {
   public static ConfigEntry<bool> IsModEnabled { get; private set; }
 
+  public enum LockTarget {
+    Head,
+    Eye,
+    Transform
+  }
+
   public static ConfigEntry<bool> DemisterBallLockPosition { get; private set; }
   public static ConfigEntry<Vector3> DemisterBallLockOffset { get; private set; }
-  public static ConfigEntry<bool> DemisterBallUseCustomSettings { get; private set; }
+  public static ConfigEntry<LockTarget> DemisterBallLockTarget { get; private set; }
 
+  public static ConfigEntry<bool> DemisterBallUseCustomSettings { get; private set; }
   public static ConfigEntry<float> DemisterBallBodyScale { get; private set; }
   public static ConfigEntry<Color> DemisterBallBodyColor { get; private set; }
   public static ConfigEntry<float> DemisterBallBodyBrightness { get; private set; }
@@ -48,6 +55,7 @@ public static class PluginConfig {
             "Globally enable or disable this mod.");
 
     IsModEnabled.OnSettingChanged(WispManager.UpdateUseCustomSettings);
+    IsModEnabled.OnSettingChanged(WispManager.SetupParentConstraint);
 
     DemisterBallLockPosition =
         config.BindInOrder(
@@ -56,12 +64,25 @@ public static class PluginConfig {
             true,
             "SE_Demister.m_ballPrefab.transform.position lock to player.");
 
+    DemisterBallLockPosition.OnSettingChanged(WispManager.SetupParentConstraint);
+
     DemisterBallLockOffset =
         config.BindInOrder(
             "DemisterBall",
             "demisterBallLockOffset",
             new Vector3(-0.2f, 0.5f, 0f),
             "SE_Demister.m_ballPrefab.transform.position offset when locked to player.");
+
+    DemisterBallLockOffset.OnSettingChanged(WispManager.SetupParentConstraint);
+
+    DemisterBallLockTarget =
+        config.BindInOrder(
+            "DemisterBall",
+            "demisterBallLockTarget",
+            LockTarget.Head,
+            "Which target to offset from when locked to player.");
+
+    DemisterBallLockTarget.OnSettingChanged(WispManager.SetupParentConstraint);
 
     DemisterBallUseCustomSettings =
         config.BindInOrder(

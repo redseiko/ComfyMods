@@ -3,6 +3,7 @@
 using HarmonyLib;
 
 using UnityEngine;
+using UnityEngine.Animations;
 
 using static PluginConfig;
 
@@ -30,16 +31,20 @@ static class SEDemisterPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(SE_Demister.UpdateStatusEffect))]
   static void UpdateStatusEffectPostfix(SE_Demister __instance, ref bool __state) {
-    if (IsModEnabled.Value && __instance.m_ballInstance) {
-      if ((!__state || !WispManager.LocalPlayerDemisterBall)
-          && __instance.m_character == Player.m_localPlayer
-          && __instance.m_ballInstance.TryGetComponent(out DemisterBallControl demisterBallControl)) {
+    if (!IsModEnabled.Value || !__instance.m_ballInstance) {
+      return;
+    }
+
+    if ((!__state || !WispManager.LocalPlayerDemisterBall) && __instance.m_character == Player.m_localPlayer) {
+      WispManager.LocalPlayerDemister = __instance;
+
+      if (__instance.m_ballInstance.TryGetComponent(out DemisterBallControl demisterBallControl)) {
         WispManager.SetLocalPlayerDemisterBallControl(demisterBallControl);
       }
 
-      if (DemisterBallLockPosition.Value && __instance.m_character) {
-        __instance.m_ballInstance.transform.position =
-            __instance.m_character.m_head.position + DemisterBallLockOffset.Value;
+      if (!__instance.m_ballInstance.TryGetComponent(out ParentConstraint _)) {
+        WispManager.SetupParentConstraint(
+            __instance.m_ballInstance.AddComponent<ParentConstraint>(), __instance.m_character);
       }
     }
   }

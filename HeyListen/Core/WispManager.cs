@@ -3,6 +3,7 @@
 using ComfyLib;
 
 using UnityEngine;
+using UnityEngine.Animations;
 
 using static PluginConfig;
 
@@ -24,6 +25,8 @@ public static class WispManager {
   public static readonly int FlameEffectsSparcsColorHashCode = "FlameEffectsSparcsColor".GetStableHashCode();
   public static readonly int FlameEffectsSparcsBrightnessHashCode =
       "FlameEffectsSparcsBrightness".GetStableHashCode();
+
+  public static SE_Demister LocalPlayerDemister { get; set; }
 
   public static DemisterBallControl LocalPlayerDemisterBall { get; set; }
   public static ZNetView LocalPlayerDemisterBallNetView { get; set; }
@@ -89,5 +92,39 @@ public static class WispManager {
     zdo.Set(FlameEffectsEmbersBrightnessHashCode, FlameEffectsEmbersBrightness.Value);
     zdo.Set(FlameEffectsSparcsColorHashCode, FlameEffectsSparcsColor.Value);
     zdo.Set(FlameEffectsSparcsBrightnessHashCode, FlameEffectsSparcsBrightness.Value);
+  }
+
+  public static void SetupParentConstraint() {
+    if (LocalPlayerDemister
+        && LocalPlayerDemister.m_ballInstance
+        && LocalPlayerDemister.m_character == Player.m_localPlayer) {
+      if (!LocalPlayerDemister.m_ballInstance.TryGetComponent(out ParentConstraint parentConstraint)) {
+        parentConstraint = LocalPlayerDemister.m_ballInstance.AddComponent<ParentConstraint>();
+      }
+
+      SetupParentConstraint(parentConstraint, LocalPlayerDemister.m_character);
+    }
+  }
+
+  public static void SetupParentConstraint(ParentConstraint parentConstraint, Character character) {
+    parentConstraint.constraintActive = DemisterBallLockPosition.Value;
+
+    if (parentConstraint.sourceCount < 1) {
+      parentConstraint.AddSource(new ConstraintSource());
+    }
+
+    ConstraintSource constraintSource =
+        new() {
+          sourceTransform =
+            DemisterBallLockTarget.Value switch {
+              LockTarget.Head => character.m_head,
+              LockTarget.Eye => character.m_eye,
+              _ => character.transform
+            },
+          weight = 1f
+        };
+
+    parentConstraint.SetSource(0, constraintSource);
+    parentConstraint.SetTranslationOffset(0, DemisterBallLockOffset.Value);
   }
 }

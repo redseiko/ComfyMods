@@ -7,6 +7,8 @@
   * Bumped up `<LangVersion>` to C# 12.
   * Code clean-up and refactoring.
   * Removed `ExtendedColorConfig` functionality as it is now provided by another mod `Configula`.
+  * Added new config `demisterBallLockTarget` to enable selecting which Player point to offset from.
+  * Wisp position locking now uses `ParentConstraint` to properly update offset position and rotation.
 
 ### 1.1.0
 
