@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.2.0
+
+  * Added a check for `Ragdoll.m_ttl` custom-field to preserve vanilla custom-field functionality.
+
 ### 1.1.0
 
   * Updated for the `v0.219.16` patch.

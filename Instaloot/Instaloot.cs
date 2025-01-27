@@ -12,7 +12,7 @@ using static PluginConfig;
 public sealed class Instaloot : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.instaloot";
   public const string PluginName = "Instaloot";
-  public const string PluginVersion = "1.1.0";
+  public const string PluginVersion = "1.2.0";
 
   void Awake() {
     BindConfig(Config);

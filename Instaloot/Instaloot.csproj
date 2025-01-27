@@ -108,6 +108,7 @@
   <ItemGroup>
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
+    <Compile Include="Core\RagdollManager.cs" />
     <Compile Include="Instaloot.cs" />
     <Compile Include="Patches\RagdollPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -19,12 +19,14 @@ static class RagdollPatch {
         .ThrowIfInvalid("Could not patch Ragdoll.Awake()! (destroy-now-ttl)")
         .Advance(offset: 1)
         .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Ldarg_0),
+            new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Ragdoll), nameof(Ragdoll.m_nview))),
             new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(RagdollPatch), nameof(DestroyNowDelegate))))
         .InstructionEnumeration();
   }
 
-  static float DestroyNowDelegate(float ttl) {
-    if (IsModEnabled.Value) {
+  static float DestroyNowDelegate(float ttl, ZNetView netView) {
+    if (IsModEnabled.Value && !RagdollManager.HasCustomFieldTtl(netView)) {
       return 0f;
     }
 
