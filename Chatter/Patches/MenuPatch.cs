@@ -11,8 +11,7 @@ static class MenuPatch {
   static void ShowPostfix() {
     if (IsModEnabled.Value && ChatPanelController.ChatPanel?.Panel) {
       Chat.m_instance.m_hideTimer = 0f;
-      ChatPanelController.
-            ChatPanel.EnableOrDisableChatPanel(true);
+      ChatPanelController.ChatPanel.EnableOrDisableChatPanel(true);
       ChatPanelController.ChatPanel.ToggleGrabber(true);
     }
   }

@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace ComfyLib {
   public static class UIResources {
-    public static readonly Dictionary<string, Sprite> SpriteCache = new();
+    public static readonly Dictionary<string, Sprite> SpriteCache = [];
 
     public static Sprite GetSprite(string spriteName) {
       if (!SpriteCache.TryGetValue(spriteName, out Sprite sprite)) {
@@ -22,7 +22,7 @@ namespace ComfyLib {
 
     public static readonly Lazy<Dictionary<string, string>> OsFontMap =
         new(() => {
-          Dictionary<string, string> map = new();
+          Dictionary<string, string> map = [];
           foreach (string osFontPath in Font.GetPathsToOSFonts()) {
             map[Path.GetFileNameWithoutExtension(osFontPath)] = osFontPath;
           }
@@ -39,7 +39,7 @@ namespace ComfyLib {
       get => UnifiedPopup.instance.bodyText.font;
     }
 
-    static readonly Dictionary<string, TMP_FontAsset> _fontAssetCache = new();
+    static readonly Dictionary<string, TMP_FontAsset> _fontAssetCache = [];
 
     public static TMP_FontAsset GetFontAssetByName(string fontAssetName) {
       if (!_fontAssetCache.TryGetValue(fontAssetName, out TMP_FontAsset fontAsset)) {

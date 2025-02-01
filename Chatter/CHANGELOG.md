@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.10.0
+
+  * Updated Terminal patch methods to accomodate missing functionality in other patch-modifying mods.
+
 ### 2.9.0
 
   * Fixed for the `v0.219.10` PTB patch.

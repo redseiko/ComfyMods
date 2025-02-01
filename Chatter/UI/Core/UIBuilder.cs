@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace ComfyLib {
   public static class UIBuilder {
-    static readonly Dictionary<string, Sprite> _spriteCache = new();
+    static readonly Dictionary<string, Sprite> _spriteCache = [];
 
     public static readonly Color32 ColorWhite = Color.white;
     public static readonly Color32 ColorClear = Color.clear;

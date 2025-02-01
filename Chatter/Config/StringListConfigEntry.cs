@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using BepInEx.Configuration;
 
@@ -14,7 +13,7 @@ public sealed class StringListConfigEntry {
   public string[] ValuesSeparator { get; }
 
   public List<string> Values {
-    get => ConfigEntry.Value.Split(ValuesSeparator, StringSplitOptions.RemoveEmptyEntries).ToList();
+    get => [.. ConfigEntry.Value.Split(ValuesSeparator, StringSplitOptions.RemoveEmptyEntries)];
   }
 
   public List<string> CachedValues { get; }
@@ -32,11 +31,11 @@ public sealed class StringListConfigEntry {
         hideDefaultButton: true,
         hideSettingName: true);
 
-    ValuesSeparator = new string[] { valuesSeparator };
+    ValuesSeparator = [valuesSeparator];
     CachedValues = new(Values);
   }
 
-  readonly List<string> _valuesCache = new();
+  readonly List<string> _valuesCache = [];
 
   void Drawer(ConfigEntryBase entry) {
     GUILayout.BeginVertical();

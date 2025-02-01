@@ -1,11 +1,7 @@
 ﻿namespace Chatter;
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Reflection.Emit;
-
-using ComfyLib;
 
 using HarmonyLib;
 
@@ -26,87 +22,51 @@ static class TerminalPatch {
     }
   }
 
-  static MethodInfo _sayMethodDelegate = default;
-  static MethodInfo _shoutMethodDelegate = default;
-  static MethodInfo _whisperMethodDelegate = default;
-
-  [HarmonyTranspiler]
+  [HarmonyPostfix]
   [HarmonyPatch(nameof(Terminal.InitTerminal))]
-  static IEnumerable<CodeInstruction> InitTerminalTranspiler(IEnumerable<CodeInstruction> instructions) {
-    return new CodeMatcher(instructions)
-        .Start()
-        .MatchCommandDelegate("say")
-        .CopyOperand(out _sayMethodDelegate)
-        .Start()
-        .MatchCommandDelegate("s")
-        .CopyOperand(out _shoutMethodDelegate)
-        .Start()
-        .MatchCommandDelegate("w")
-        .CopyOperand(out _whisperMethodDelegate)
-        .InstructionEnumeration();
-  }
-
-  static CodeMatcher MatchCommandDelegate(this CodeMatcher matcher, string command) {
-    return matcher
-        .MatchStartForward(
-            new CodeMatch(OpCodes.Ldstr, command),
-            new CodeMatch(OpCodes.Ldstr))
-        .ThrowIfInvalid($"Could not patch Terminal.InitTerminal()! (ldstr-{command})")
-        .MatchStartForward(
-            new CodeMatch(OpCodes.Ldsfld),
-            new CodeMatch(OpCodes.Ldftn))
-        .ThrowIfInvalid($"Could not patch Terminal.InitTerminal()! (ldftn-{command}")
-        .Advance(offset: 1);
-  }
-
-  [HarmonyPatch]
-  [HarmonyAfter(Chatter.PluginGuid)]
-  static class SayDelegatePatch {
-    [HarmonyTargetMethod]
-    static MethodBase FindSayDelegateMethod() {
-      return _sayMethodDelegate;
+  static void InitTerminalPostfix() {
+    if (TryGetDelegateMethod(Terminal.commands["say"], out MethodInfo sayMethod)) {
+      Chatter.HarmonyInstance.Patch(
+          sayMethod,
+          postfix: new HarmonyMethod(AccessTools.Method(typeof(TerminalPatch), nameof(SayDelegatePostfix))));
     }
 
-    [HarmonyPostfix]
-    static void SayDelegatePostfix(ref object __result) {
-      if (IsModEnabled.Value && (bool) __result == false) {
-        ChatPanelController.ChatPanel?.SetChatTextInputPrefix(Talker.Type.Normal);
-        __result = true;
-      }
+    if (TryGetDelegateMethod(Terminal.commands["s"], out MethodInfo shoutMethod)) {
+      Chatter.HarmonyInstance.Patch(
+          shoutMethod,
+          postfix: new HarmonyMethod(AccessTools.Method(typeof(TerminalPatch), nameof(ShoutDelegatePostfix))));
+    }
+
+    if (TryGetDelegateMethod(Terminal.commands["w"], out MethodInfo whisperMethod)) {
+      Chatter.HarmonyInstance.Patch(
+          whisperMethod,
+          postfix: new HarmonyMethod(AccessTools.Method(typeof(TerminalPatch), nameof(WhisperDelegatePostfix))));
     }
   }
 
-  [HarmonyPatch]
-  [HarmonyAfter(Chatter.PluginGuid)]
-  static class ShoutDelegatePatch {
-    [HarmonyTargetMethod]
-    static MethodBase FindShoutDelegateMethod() {
-      return _shoutMethodDelegate;
-    }
+  static bool TryGetDelegateMethod(Terminal.ConsoleCommand command, out MethodInfo method) {
+    method = (command == default ? default : command.action?.Method ?? command.actionFailable?.Method);
+    return method != default;
+  }
 
-    [HarmonyPostfix]
-    static void ShoutDelegatePostfix(ref object __result) {
-      if (IsModEnabled.Value && (bool) __result == false) {
-        ChatPanelController.ChatPanel?.SetChatTextInputPrefix(Talker.Type.Shout);
-        __result = true;
-      }
+  static void SayDelegatePostfix(ref object __result) {
+    if (IsModEnabled.Value && (bool) __result == false) {
+      ChatPanelController.ChatPanel?.SetChatTextInputPrefix(Talker.Type.Normal);
+      __result = true;
     }
   }
 
-  [HarmonyPatch]
-  [HarmonyAfter(Chatter.PluginGuid)]
-  static class WhisperDelegatePatch {
-    [HarmonyTargetMethod]
-    static MethodBase FindWhisperDelegateMethod() {
-      return _whisperMethodDelegate;
+  static void ShoutDelegatePostfix(ref object __result) {
+    if (IsModEnabled.Value && (bool) __result == false) {
+      ChatPanelController.ChatPanel?.SetChatTextInputPrefix(Talker.Type.Shout);
+      __result = true;
     }
+  }
 
-    [HarmonyPostfix]
-    static void WhisperDelegatePostfix(ref object __result) {
-      if (IsModEnabled.Value && (bool) __result == false) {
-        ChatPanelController.ChatPanel?.SetChatTextInputPrefix(Talker.Type.Whisper);
-        __result = true;
-      }
+  static void WhisperDelegatePostfix(ref object __result) {
+    if (IsModEnabled.Value && (bool) __result == false) {
+      ChatPanelController.ChatPanel?.SetChatTextInputPrefix(Talker.Type.Whisper);
+      __result = true;
     }
   }
 }

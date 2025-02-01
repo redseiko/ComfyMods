@@ -17,8 +17,7 @@ static class ChatPatch {
   [HarmonyPatch(nameof(Chat.Awake))]
   static void AwakePostfix(Chat __instance) {
     ContentRowManager.MessageRows.ClearItems();
-    ChatPanelController.
-        VanillaInputField = __instance.m_input;
+    ChatPanelController.VanillaInputField = __instance.m_input;
     ChatPanelController.ToggleChatter(__instance, IsModEnabled.Value);
     SetupWorldText(__instance);
   }
@@ -34,6 +33,7 @@ static class ChatPatch {
     return new CodeMatcher(instructions)
         .Start()
         .MatchStartForward(new CodeMatch(OpCodes.Ldstr, "say "))
+        .ThrowIfInvalid($"Could not patch Chat.InputText()! (prefix-say)")
         .Advance(offset: 1)
         .InsertAndAdvance(Transpilers.EmitDelegate(PrefixSayDelegate))
         .InstructionEnumeration();
