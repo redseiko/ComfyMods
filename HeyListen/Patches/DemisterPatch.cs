@@ -19,7 +19,6 @@ static class DemisterPatch {
 
     if (prefab.name.StartsWith("demister_ball", System.StringComparison.InvariantCulture)
         && !prefab.TryGetComponent(out DemisterBallControl _)) {
-      HeyListen.LogInfo($"Adding DemisterBallControl to demister_ball.");
       prefab.AddComponent<DemisterBallControl>();
     }
   }

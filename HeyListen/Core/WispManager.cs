@@ -32,8 +32,6 @@ public static class WispManager {
   public static ZNetView LocalPlayerDemisterBallNetView { get; set; }
 
   public static void SetLocalPlayerDemisterBallControl(DemisterBallControl demisterBallControl) {
-    HeyListen.LogInfo($"Setting DemisterBallControl to local config.");
-
     LocalPlayerDemisterBall = demisterBallControl;
     LocalPlayerDemisterBallNetView = demisterBallControl.NetView;
 

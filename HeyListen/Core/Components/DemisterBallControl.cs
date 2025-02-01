@@ -75,7 +75,6 @@ public sealed class DemisterBallControl : MonoBehaviour {
   }
 
   IEnumerator UpdateDemisterBallCoroutine() {
-    ZLog.Log($"Starting UpdateDemisterBallCoroutine.");
     WaitForSeconds waitInterval = new(seconds: 2f);
 
     while (NetView && NetView.IsValid()) {

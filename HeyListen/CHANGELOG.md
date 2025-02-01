@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.2.1
+
+  * Removed no longer required debug logging.
+
 ### 1.2.0
 
   * Updated for the `v0.219.16` patch.

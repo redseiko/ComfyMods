@@ -17,7 +17,7 @@ using static PluginConfig;
 public sealed class HeyListen : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.heylisten";
   public const string PluginName = "HeyListen";
-  public const string PluginVersion = "1.2.0";
+  public const string PluginVersion = "1.2.1";
 
   static ManualLogSource _logger;
 
