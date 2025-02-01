@@ -1,0 +1,8 @@
+{
+  "name": "Entitlement",
+  "version_number": "1.0.0",
+  "author": "ComfyMods",
+  "description": "Entitled are ya?",
+  "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Entitlement",
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
+}

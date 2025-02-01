@@ -148,6 +148,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unbuildable", "Unbuildable\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComfyAutoRepair", "ComfyAutoRepair\ComfyAutoRepair.csproj", "{BAA1B1FE-AA04-4786-8726-415268475C32}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entitlement", "Entitlement\Entitlement.csproj", "{CE1EBA89-178B-4724-9AD6-CC44DA34B341}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -406,6 +408,10 @@ Global
 		{BAA1B1FE-AA04-4786-8726-415268475C32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAA1B1FE-AA04-4786-8726-415268475C32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAA1B1FE-AA04-4786-8726-415268475C32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE1EBA89-178B-4724-9AD6-CC44DA34B341}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE1EBA89-178B-4724-9AD6-CC44DA34B341}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE1EBA89-178B-4724-9AD6-CC44DA34B341}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE1EBA89-178B-4724-9AD6-CC44DA34B341}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
