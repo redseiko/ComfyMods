@@ -125,6 +125,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database\DatabaseManager.cs" />
+    <Compile Include="Database\SQLite\SQLite.cs" />
+    <Compile Include="Database\Tables\PlayerTitle.cs" />
     <Compile Include="Entitlement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -134,9 +137,13 @@
     <None Include="README.md" />
     <None Include="icon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Database\SQLite\System.Data.SQLite.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyAssembly" AfterTargets="Build">
     <Copy SourceFiles="$(TargetDir)$(AssemblyName).dll" DestinationFolder="$(PluginOutputPath)" />
+    <Copy SourceFiles="Database\SQLite\System.Data.SQLite.dll" DestinationFolder="$(PluginOutputPath)" />
   </Target>
   <Target Name="GetAssemblyVersion" AfterTargets="Build">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
@@ -157,9 +164,11 @@
   <Target Name="MakeThunderstorePackage" AfterTargets="GetAssemblyVersion">
     <ItemGroup>
       <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; CHANGELOG.md; README.md; manifest.json; icon.png" />
+      <DatabaseFiles Include="Database\SQLite\System.Data.SQLite.dll" />
     </ItemGroup>
     <MakeDir Directories="$(PackageDir)" />
     <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageDir)" />
+    <Copy SourceFiles="@(DatabaseFiles)" DestinationFolder="$(PackageDir)" />
     <ZipDirectory SourceDirectory="$(PackageDir)" DestinationFile="$(OutDir)$(PackageName).zip" Overwrite="true" />
     <RemoveDir Directories="$(PackageDir)" />
   </Target>
