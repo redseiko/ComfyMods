@@ -138,12 +138,13 @@
     <None Include="icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Database\SQLite\System.Data.SQLite.dll" />
+    <None Include="Database\SQLite\gilzoide-sqlite-net.dll" />
+    <None Include="Database\SQLite\libgilzoide-sqlite-net.so" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyAssembly" AfterTargets="Build">
     <Copy SourceFiles="$(TargetDir)$(AssemblyName).dll" DestinationFolder="$(PluginOutputPath)" />
-    <Copy SourceFiles="Database\SQLite\System.Data.SQLite.dll" DestinationFolder="$(PluginOutputPath)" />
+    <Copy SourceFiles="Database\SQLite\gilzoide-sqlite-net.dll" DestinationFolder="$(PluginOutputPath)" />
   </Target>
   <Target Name="GetAssemblyVersion" AfterTargets="Build">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
@@ -164,7 +165,7 @@
   <Target Name="MakeThunderstorePackage" AfterTargets="GetAssemblyVersion">
     <ItemGroup>
       <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; CHANGELOG.md; README.md; manifest.json; icon.png" />
-      <DatabaseFiles Include="Database\SQLite\System.Data.SQLite.dll" />
+      <DatabaseFiles Include="Database\SQLite\gilzoide-sqlite-net.dll; Database\SQLite\libgilzoide-sqlite-net.so" />
     </ItemGroup>
     <MakeDir Directories="$(PackageDir)" />
     <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageDir)" />
