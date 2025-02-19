@@ -48,7 +48,7 @@ static class ChatPatch {
   [HarmonyPrefix]
   [HarmonyPatch(nameof(Chat.OnNewChatMessage))]
   static void OnNewChatMessagePrefix(
-      Chat __instance, long senderID, Vector3 pos, Talker.Type type, UserInfo user, string text, ref float __state) {
+      Chat __instance, long senderID, Vector3 pos, Talker.Type type, UserInfo sender, string text, ref float __state) {
     if (!IsModEnabled.Value) {
       return;
     }
@@ -59,7 +59,7 @@ static class ChatPatch {
       SenderId = senderID,
       Position = pos,
       TalkerType = type,
-      Username = user.Name,
+      Username = sender.Name,
       Text = Regex.Replace(text, @"(<|>)", " "),
     };
 
@@ -71,7 +71,7 @@ static class ChatPatch {
 
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Chat.OnNewChatMessage))]
-  static void OnNewChatMessagePostfix(ref Chat __instance, float __state) {
+  static void OnNewChatMessagePostfix(Chat __instance, float __state) {
     if (!IsModEnabled.Value) {
       return;
     }
@@ -95,12 +95,12 @@ static class ChatPatch {
             new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideDelay))),
             new CodeMatch(OpCodes.Clt),
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))))
-        .ThrowIfInvalid("Could not patch Chat.Update()! (HideChatPanel)")
+        .ThrowIfInvalid("Could not patch Chat.Update()! (hide-chat-panel)")
         .Advance(offset: 6)
         .InsertAndAdvance(
             new CodeInstruction(OpCodes.Ldarg_0),
             new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideTimer))),
-            Transpilers.EmitDelegate(HideChatPanelDelegate))
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ChatPatch), nameof(HideChatPanelDelegate))))
         .InstructionEnumeration();
   }
 
@@ -117,9 +117,14 @@ static class ChatPatch {
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))),
             new CodeMatch(OpCodes.Ldarg_0),
             new CodeMatch(
+                OpCodes.Call,
+                AccessTools.Method(typeof(Chat), nameof(Chat.TryShowTextCommunicationRestrictedSystemPopup))),
+            new CodeMatch(OpCodes.Ldarg_0),
+            new CodeMatch(
                 OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_doubleOpenForVirtualKeyboard))))
-        .ThrowIfInvalid("Could not patch Chat.Update()! (EnableChatPanel)")
-        .InsertAndAdvance(Transpilers.EmitDelegate(EnableChatPanelDelegate))
+        .ThrowIfInvalid("Could not patch Chat.Update()! (enable-chat-panel)")
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ChatPatch), nameof(EnableChatPanelDelegate))))
         .InstructionEnumeration();
   }
 
@@ -137,9 +142,10 @@ static class ChatPatch {
             new CodeMatch(OpCodes.Ldarg_0),
             new CodeMatch(OpCodes.Ldc_I4_0),
             new CodeMatch(OpCodes.Stfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_focused))))
-        .ThrowIfInvalid("Could not patch Chat.Update()! (DisableChatPanel)")
+        .ThrowIfInvalid("Could not patch Chat.Update()! (disable-chat-panel)")
         .Advance(offset: 4)
-        .InsertAndAdvance(Transpilers.EmitDelegate(DisableChatPanelDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ChatPatch), nameof(DisableChatPanelDelegate))))
         .InstructionEnumeration();
   }
 
@@ -231,8 +237,9 @@ static class ChatPatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(string), nameof(string.ToUpper))))
-        .ThrowIfInvalid($"Could not patch Chat.AddInworldText()! (ToUpper)")
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(ToUpperDelegate))
+        .ThrowIfInvalid($"Could not patch Chat.AddInworldText()! (to-upper)")
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ChatPatch), nameof(ToUpperDelegate))))
         .InstructionEnumeration();
   }
 

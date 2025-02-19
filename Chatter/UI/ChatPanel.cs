@@ -57,6 +57,8 @@ namespace Chatter {
       GameObject panel = new("ChatPanel", typeof(RectTransform));
       panel.SetParent(parentTransform);
 
+      panel.AddComponent<GraphicRaycaster>();
+
       panel.GetComponent<RectTransform>()
           .SetAnchorMin(new(0.5f, 0.5f))
           .SetAnchorMax(new(0.5f, 0.5f))

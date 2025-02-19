@@ -29,17 +29,13 @@ public static class ChatPanelController {
   }
 
   public static void ToggleVanillaChat(Chat chat, bool toggleOn) {
-    foreach (Image image in chat.m_chatWindow.GetComponentsInChildren<Image>(includeInactive: true)) {
-      image.gameObject.SetActive(toggleOn);
-    }
-
-    chat.m_chatWindow.GetComponent<RectMask2D>().enabled = toggleOn;
+    chat.m_output.transform.parent.gameObject.SetActive(toggleOn);
     chat.m_output.gameObject.SetActive(toggleOn);
   }
 
   public static void ToggleChatPanel(Chat chat, bool toggleOn) {
     if (!ChatPanel?.Panel) {
-      ChatPanel = new(chat.m_chatWindow.parent);
+      ChatPanel = new(chat.m_chatWindow);
 
       ChatPanel.Panel.GetComponent<RectTransform>()
           .SetAnchorMin(Vector2.right)
