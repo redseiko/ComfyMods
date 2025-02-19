@@ -105,38 +105,40 @@
   <ItemGroup>
     <Compile Include="ComfyLib\Extensions\CodeMatcherExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\StringExtensions.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIFonts.cs" />
+    <Compile Include="ComfyLib\UI\Core\UISpriteBuilder.cs" />
     <Compile Include="Core\ChatPanelController.cs" />
-    <Compile Include="Core\ChatPanelUtils.cs" />
-    <Compile Include="Core\ChatTextInputUtils.cs" />
+    <Compile Include="Core\Utils\ChatPanelUtils.cs" />
+    <Compile Include="Core\Utils\ChatTextInputUtils.cs" />
     <Compile Include="Core\ChatMessage.cs" />
     <Compile Include="Chatter.cs" />
-    <Compile Include="Core\ChatMessageUtils.cs" />
+    <Compile Include="Core\Utils\ChatMessageUtils.cs" />
     <Compile Include="Core\ContentRowManager.cs" />
     <Compile Include="Core\Enums\ChatMessageType.cs" />
     <Compile Include="Core\Enums\MessageLayoutType.cs" />
-    <Compile Include="Core\WorldTextUtils.cs" />
+    <Compile Include="Core\Utils\WorldTextUtils.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="Patches\MenuPatch.cs" />
     <Compile Include="Patches\MessageHudPatch.cs" />
-    <Compile Include="UI\ChatPanel\InputFieldCell.cs" />
-    <Compile Include="UI\ChatPanel\ContentRow.cs" />
-    <Compile Include="UI\ChatPanel\ResizeCell.cs" />
-    <Compile Include="UI\ChatPanel\ToggleCell.cs" />
-    <Compile Include="UI\ChatPanel\ToggleRow.cs" />
-    <Compile Include="UI\Components\DummyIgnoreDrag.cs" />
-    <Compile Include="UI\Core\UIBuilder.cs" />
-    <Compile Include="UI\Core\UIResources.cs" />
+    <Compile Include="Core\UI\ChatPanel\InputFieldCell.cs" />
+    <Compile Include="Core\UI\ChatPanel\ContentRow.cs" />
+    <Compile Include="Core\UI\ChatPanel\ResizeCell.cs" />
+    <Compile Include="Core\UI\ChatPanel\ToggleCell.cs" />
+    <Compile Include="Core\UI\ChatPanel\ToggleRow.cs" />
+    <Compile Include="ComfyLib\UI\Components\DummyIgnoreDrag.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIBuilder.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIResources.cs" />
     <Compile Include="ComfyLib\Utils\CircularQueue.cs" />
     <Compile Include="Config\StringListConfigEntry.cs" />
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
-    <Compile Include="UI\Core\UIExtensions.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIExtensions.cs" />
     <Compile Include="Patches\ChatPatch.cs" />
     <Compile Include="Patches\TerminalPatch.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\ChatPanel.cs" />
-    <Compile Include="UI\Components\RectTransformDragger.cs" />
-    <Compile Include="UI\Components\RectTransformResizer.cs" />
+    <Compile Include="Core\UI\ChatPanel.cs" />
+    <Compile Include="Core\UI\Components\RectTransformDragger.cs" />
+    <Compile Include="Core\UI\Components\RectTransformResizer.cs" />
     <Compile Include="Core\TerminalCommands.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +147,7 @@
     <None Include="README.md" />
     <None Include="icon.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyAssembly" AfterTargets="Build">
     <Copy SourceFiles="$(TargetDir)$(AssemblyName).dll" DestinationFolder="$(PluginOutputPath)" />

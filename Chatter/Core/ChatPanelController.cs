@@ -5,7 +5,6 @@ using ComfyLib;
 using GUIFramework;
 
 using UnityEngine;
-using UnityEngine.UI;
 
 using static PluginConfig;
 
@@ -29,17 +28,13 @@ public static class ChatPanelController {
   }
 
   public static void ToggleVanillaChat(Chat chat, bool toggleOn) {
-    foreach (Image image in chat.m_chatWindow.GetComponentsInChildren<Image>(includeInactive: true)) {
-      image.gameObject.SetActive(toggleOn);
-    }
-
-    chat.m_chatWindow.GetComponent<RectMask2D>().enabled = toggleOn;
+    chat.m_output.transform.parent.gameObject.SetActive(toggleOn);
     chat.m_output.gameObject.SetActive(toggleOn);
   }
 
   public static void ToggleChatPanel(Chat chat, bool toggleOn) {
     if (!ChatPanel?.Panel) {
-      ChatPanel = new(chat.m_chatWindow.parent);
+      ChatPanel = new(Hud.m_instance.transform);
 
       ChatPanel.Panel.GetComponent<RectTransform>()
           .SetAnchorMin(Vector2.right)
@@ -61,6 +56,11 @@ public static class ChatPanelController {
     }
 
     ChatPanel.Panel.SetActive(toggleOn);
+  }
+
+  public static bool TryGetChatPanel(out ChatPanel chatPanel) {
+    chatPanel = ChatPanel;
+    return chatPanel?.Panel;
   }
 
   static void OnChatterChatPanelEndDrag(object sender, Vector3 position) {

@@ -381,7 +381,7 @@ public static class PluginConfig {
             new AcceptableValueList<string>(fontNames));
 
     ChatMessageFontAsset.OnSettingChanged(
-        fontName => ChatPanelController.ChatPanel?.SetContentFontAsset(UIResources.GetFontAssetByName(fontName)));
+        fontName => ChatPanelController.ChatPanel?.SetContentFontAsset(UIFonts.GetFontAssetByName(fontName)));
 
     ChatMessageFontSize =
         config.BindInOrder(

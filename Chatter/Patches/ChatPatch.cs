@@ -1,6 +1,7 @@
 ﻿namespace Chatter;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using System.Text.RegularExpressions;
@@ -16,10 +17,21 @@ static class ChatPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Chat.Awake))]
   static void AwakePostfix(Chat __instance) {
+    __instance.StartCoroutine(DelayedAwakePostfix());
+  }
+
+  static IEnumerator DelayedAwakePostfix() {
+    while (!Hud.m_instance) {
+      yield return null;
+    }
+
+    Chat chat = Chat.m_instance;
     ContentRowManager.MessageRows.ClearItems();
-    ChatPanelController.VanillaInputField = __instance.m_input;
-    ChatPanelController.ToggleChatter(__instance, IsModEnabled.Value);
-    SetupWorldText(__instance);
+
+    ChatPanelController.VanillaInputField = chat.m_input;
+    ChatPanelController.ToggleChatter(chat, IsModEnabled.Value);
+
+    SetupWorldText(chat);
   }
 
   static void SetupWorldText(Chat chat) {
@@ -35,7 +47,8 @@ static class ChatPatch {
         .MatchStartForward(new CodeMatch(OpCodes.Ldstr, "say "))
         .ThrowIfInvalid($"Could not patch Chat.InputText()! (prefix-say)")
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(PrefixSayDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ChatPatch), nameof(PrefixSayDelegate))))
         .InstructionEnumeration();
   }
 
@@ -43,12 +56,10 @@ static class ChatPatch {
     return IsModEnabled.Value ? ChatTextInputUtils.ChatTextInputPrefix : value;
   }
 
-  static bool _isChatMessageFiltered = false;
-
   [HarmonyPrefix]
   [HarmonyPatch(nameof(Chat.OnNewChatMessage))]
   static void OnNewChatMessagePrefix(
-      Chat __instance, long senderID, Vector3 pos, Talker.Type type, UserInfo user, string text, ref float __state) {
+      Chat __instance, long senderID, Vector3 pos, Talker.Type type, UserInfo sender, string text, ref float __state) {
     if (!IsModEnabled.Value) {
       return;
     }
@@ -59,26 +70,26 @@ static class ChatPatch {
       SenderId = senderID,
       Position = pos,
       TalkerType = type,
-      Username = user.Name,
+      Username = sender.Name,
       Text = Regex.Replace(text, @"(<|>)", " "),
     };
 
     ChatMessageUtils.IsChatMessageQueued = true;
+    ChatMessageUtils.IsChatMessageFiltered = !ChatMessageUtils.AddChatMessage(message);
 
-    _isChatMessageFiltered = !ChatMessageUtils.AddChatMessage(message);
     __state = __instance.m_hideTimer;
   }
 
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Chat.OnNewChatMessage))]
-  static void OnNewChatMessagePostfix(ref Chat __instance, float __state) {
+  static void OnNewChatMessagePostfix(Chat __instance, float __state) {
     if (!IsModEnabled.Value) {
       return;
     }
 
     ChatMessageUtils.IsChatMessageQueued = false;
 
-    if (_isChatMessageFiltered) {
+    if (ChatMessageUtils.IsChatMessageFiltered) {
       __instance.m_hideTimer = __state;
     }
   }
@@ -95,12 +106,12 @@ static class ChatPatch {
             new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideDelay))),
             new CodeMatch(OpCodes.Clt),
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))))
-        .ThrowIfInvalid("Could not patch Chat.Update()! (HideChatPanel)")
+        .ThrowIfInvalid("Could not patch Chat.Update()! (hide-chat-panel)")
         .Advance(offset: 6)
         .InsertAndAdvance(
             new CodeInstruction(OpCodes.Ldarg_0),
             new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideTimer))),
-            Transpilers.EmitDelegate(HideChatPanelDelegate))
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ChatPatch), nameof(HideChatPanelDelegate))))
         .InstructionEnumeration();
   }
 
@@ -117,9 +128,14 @@ static class ChatPatch {
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))),
             new CodeMatch(OpCodes.Ldarg_0),
             new CodeMatch(
+                OpCodes.Call,
+                AccessTools.Method(typeof(Chat), nameof(Chat.TryShowTextCommunicationRestrictedSystemPopup))),
+            new CodeMatch(OpCodes.Ldarg_0),
+            new CodeMatch(
                 OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_doubleOpenForVirtualKeyboard))))
-        .ThrowIfInvalid("Could not patch Chat.Update()! (EnableChatPanel)")
-        .InsertAndAdvance(Transpilers.EmitDelegate(EnableChatPanelDelegate))
+        .ThrowIfInvalid("Could not patch Chat.Update()! (enable-chat-panel)")
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ChatPatch), nameof(EnableChatPanelDelegate))))
         .InstructionEnumeration();
   }
 
@@ -137,29 +153,30 @@ static class ChatPatch {
             new CodeMatch(OpCodes.Ldarg_0),
             new CodeMatch(OpCodes.Ldc_I4_0),
             new CodeMatch(OpCodes.Stfld, AccessTools.Field(typeof(Terminal), nameof(Terminal.m_focused))))
-        .ThrowIfInvalid("Could not patch Chat.Update()! (DisableChatPanel)")
+        .ThrowIfInvalid("Could not patch Chat.Update()! (disable-chat-panel)")
         .Advance(offset: 4)
-        .InsertAndAdvance(Transpilers.EmitDelegate(DisableChatPanelDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ChatPatch), nameof(DisableChatPanelDelegate))))
         .InstructionEnumeration();
   }
 
   static void HideChatPanelDelegate(float hideTimer) {
-    if (IsModEnabled.Value && ChatPanelController.ChatPanel?.Panel) {
+    if (IsModEnabled.Value && ChatPanelController.TryGetChatPanel(out ChatPanel chatPanel)) {
       bool isVisible = (hideTimer < HideChatPanelDelay.Value || Menu.IsVisible()) && !Hud.IsUserHidden();
-      ChatPanelController.ChatPanel.ShowOrHideChatPanel(isVisible);
+      chatPanel.ShowOrHideChatPanel(isVisible);
     }
   }
 
   static void EnableChatPanelDelegate() {
-    if (IsModEnabled.Value) {
-      ChatPanelController.ChatPanel?.EnableOrDisableChatPanel(true);
+    if (IsModEnabled.Value && ChatPanelController.TryGetChatPanel(out ChatPanel chatPanel)) {
+      chatPanel.EnableOrDisableChatPanel(true);
     }
   }
 
   static bool DisableChatPanelDelegate(bool active) {
     if (IsModEnabled.Value) {
-      if (!Menu.IsVisible()) {
-        ChatPanelController.ChatPanel?.EnableOrDisableChatPanel(false);
+      if (!Menu.IsVisible() && ChatPanelController.TryGetChatPanel(out ChatPanel chatPanel)) {
+        chatPanel.EnableOrDisableChatPanel(false);
       }
 
       return true;
@@ -171,17 +188,17 @@ static class ChatPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Chat.Update))]
   static void UpdatePostfix(Chat __instance) {
-    if (!IsModEnabled.Value || !ChatPanelController.ChatPanel?.Panel) {
+    if (!IsModEnabled.Value || !ChatPanelController.TryGetChatPanel(out ChatPanel chatPanel)) {
       return;
     }
 
-    if (ScrollContentUpShortcut.Value.IsDown() && ChatPanelController.ChatPanel.Panel.activeInHierarchy) {
-      ChatPanelController.ChatPanel.OffsetContentVerticalScrollPosition(ScrollContentOffsetInterval.Value);
+    if (ScrollContentUpShortcut.Value.IsDown() && chatPanel.Panel.activeInHierarchy) {
+      chatPanel.OffsetContentVerticalScrollPosition(ScrollContentOffsetInterval.Value);
       __instance.m_hideTimer = 0f;
     }
 
     if (ScrollContentDownShortcut.Value.IsDown()) {
-      ChatPanelController.ChatPanel.OffsetContentVerticalScrollPosition(-ScrollContentOffsetInterval.Value);
+      chatPanel.OffsetContentVerticalScrollPosition(-ScrollContentOffsetInterval.Value);
       __instance.m_hideTimer = 0f;
     }
   }
@@ -193,24 +210,25 @@ static class ChatPatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))))
-        .ThrowIfInvalid($"Could not patch Chat.SendInput()! (SetActive)")
-        .InsertAndAdvance(Transpilers.EmitDelegate(DisableChatPanelDelegate))
+        .ThrowIfInvalid($"Could not patch Chat.SendInput()! (set-active)")
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ChatPatch), nameof(DisableChatPanelDelegate))))
         .InstructionEnumeration();
   }
 
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Chat.SendInput))]
   static void SendInputPostfix() {
-    if (IsModEnabled.Value) {
-      ChatPanelController.ChatPanel?.SetContentVerticalScrollPosition(0f);
+    if (IsModEnabled.Value && ChatPanelController.TryGetChatPanel(out ChatPanel chatPanel)) {
+      chatPanel.SetContentVerticalScrollPosition(0f);
     }
   }
 
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Chat.HasFocus))]
-  static void HasFocusPostfix(ref Chat __instance, ref bool __result) {
-    if (IsModEnabled.Value && ChatPanelController.ChatPanel?.Panel) {
-      __result = ChatPanelController.ChatPanel.Panel.activeInHierarchy && __instance.m_input.isFocused;
+  static void HasFocusPostfix(Chat __instance, ref bool __result) {
+    if (IsModEnabled.Value && ChatPanelController.TryGetChatPanel(out ChatPanel chatPanel)) {
+      __result = chatPanel.Panel.activeInHierarchy && __instance.m_input.isFocused;
     }
   }
 
@@ -231,8 +249,9 @@ static class ChatPatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(string), nameof(string.ToUpper))))
-        .ThrowIfInvalid($"Could not patch Chat.AddInworldText()! (ToUpper)")
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(ToUpperDelegate))
+        .ThrowIfInvalid($"Could not patch Chat.AddInworldText()! (to-upper)")
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ChatPatch), nameof(ToUpperDelegate))))
         .InstructionEnumeration();
   }
 

@@ -9,19 +9,19 @@ static class MenuPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Menu.Show))]
   static void ShowPostfix() {
-    if (IsModEnabled.Value && ChatPanelController.ChatPanel?.Panel) {
+    if (IsModEnabled.Value && ChatPanelController.TryGetChatPanel(out ChatPanel chatPanel)) {
       Chat.m_instance.m_hideTimer = 0f;
-      ChatPanelController.ChatPanel.EnableOrDisableChatPanel(true);
-      ChatPanelController.ChatPanel.ToggleGrabber(true);
+      chatPanel.EnableOrDisableChatPanel(true);
+      chatPanel.ToggleGrabber(true);
     }
   }
 
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Menu.Hide))]
   static void HidePostfix() {
-    if (IsModEnabled.Value && ChatPanelController.ChatPanel?.Panel) {
-      ChatPanelController.ChatPanel.SetContentVerticalScrollPosition(0f);
-      ChatPanelController.ChatPanel.ToggleGrabber(false);
+    if (IsModEnabled.Value && ChatPanelController.TryGetChatPanel(out ChatPanel chatPanel)) {
+      chatPanel.SetContentVerticalScrollPosition(0f);
+      chatPanel.ToggleGrabber(false);
     }
   }
 }

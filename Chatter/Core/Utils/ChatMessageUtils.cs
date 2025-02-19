@@ -15,8 +15,8 @@ using static UnityEngine.ColorUtility;
 public static class ChatMessageUtils {
   public static readonly CircularQueue<ChatMessage> MessageHistory = new(capacity: 50, static _ => { });
 
-  public static bool IsChatMessageQueued { get; set; }
   public static bool IsChatMessageFiltered { get; set; }
+  public static bool IsChatMessageQueued { get; set; }
 
   public static bool AddChatMessage(ChatMessage message) {
     if (ShouldShowText(message.MessageType, message.Text)) {
@@ -56,7 +56,7 @@ public static class ChatMessageUtils {
   }
 
   public static string GetUsernameText(string username) {
-    if (username.Length == 0) {
+    if (username.Length <= 0) {
       return string.Empty;
     }
 

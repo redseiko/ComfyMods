@@ -50,22 +50,28 @@ static class TerminalPatch {
   }
 
   static void SayDelegatePostfix(ref object __result) {
-    if (IsModEnabled.Value && (bool) __result == false) {
-      ChatPanelController.ChatPanel?.SetChatTextInputPrefix(Talker.Type.Normal);
+    if (IsModEnabled.Value
+        && (bool) __result == false
+        && ChatPanelController.TryGetChatPanel(out ChatPanel chatPanel)) {
+      chatPanel.SetChatTextInputPrefix(Talker.Type.Normal);
       __result = true;
     }
   }
 
   static void ShoutDelegatePostfix(ref object __result) {
-    if (IsModEnabled.Value && (bool) __result == false) {
-      ChatPanelController.ChatPanel?.SetChatTextInputPrefix(Talker.Type.Shout);
+    if (IsModEnabled.Value
+        && (bool) __result == false
+        && ChatPanelController.TryGetChatPanel(out ChatPanel chatPanel)) {
+      chatPanel.SetChatTextInputPrefix(Talker.Type.Shout);
       __result = true;
     }
   }
 
   static void WhisperDelegatePostfix(ref object __result) {
-    if (IsModEnabled.Value && (bool) __result == false) {
-      ChatPanelController.ChatPanel?.SetChatTextInputPrefix(Talker.Type.Whisper);
+    if (IsModEnabled.Value
+        && (bool) __result == false
+        && ChatPanelController.TryGetChatPanel(out ChatPanel chatPanel)) {
+      chatPanel.SetChatTextInputPrefix(Talker.Type.Whisper);
       __result = true;
     }
   }

@@ -32,7 +32,7 @@ public sealed class StringListConfigEntry {
         hideSettingName: true);
 
     ValuesSeparator = [valuesSeparator];
-    CachedValues = new(Values);
+    CachedValues = [.. Values];
   }
 
   readonly List<string> _valuesCache = [];

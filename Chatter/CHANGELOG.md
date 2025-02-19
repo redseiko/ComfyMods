@@ -1,5 +1,10 @@
 ## Changelog
 
+### 2.11.0
+
+  * Fixed for the `v0.220.3` patch.
+  * Code clean-up and refactoring.
+
 ### 2.10.0
 
   * Updated Terminal patch methods to accomodate missing functionality in other patch-modifying mods.
