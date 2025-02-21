@@ -1,8 +1,12 @@
 ## Changelog
 
+### 1.6.0
+
+  * 34 new images added! (Feb/2025).
+
 ### 1.5.0
 
-  * 17 new images added! (May/2024)
+  * 17 new images added! (May/2024).
   * Moved changelog into `CHANGELOG.md`.
 
 ### 1.4.0
