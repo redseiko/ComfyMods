@@ -25,6 +25,12 @@ dotnet_diagnostic.CS8632.severity = none
 # IDE0290: Use primary constructor
 csharp_style_prefer_primary_constructors = false
 
+# IDE0305: Simplify collection initialization
+dotnet_diagnostic.IDE0305.severity = none
+
+# IDE0306: Simplify collection initialization
+dotnet_diagnostic.IDE0306.severity = none
+
 [*.{cs,vb,json,csproj,md}]
 
 tab_width = 2
