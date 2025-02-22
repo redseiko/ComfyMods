@@ -3,6 +3,7 @@
 ### 2.11.0 (WIP)
 
   * Fixed for the `v0.220.1` PTB patch.
+  * Code clean-up and refactoring.
 
 ### 2.10.0
 

@@ -17,7 +17,7 @@ namespace Chatter {
 
     public ToggleRow(Transform parentTransform) {
       Row = CreateChildRow(parentTransform);
-      Background = Row.Image();
+      Background = Row.GetComponent<Image>();
 
       SayToggle = CreateChildToggle(Row.transform, "Say");
       ShoutToggle = CreateChildToggle(Row.transform, "Shout");

@@ -30,7 +30,7 @@ public static class ContentRowManager {
     }
 
     TMP_Text bodyLabel = MessageRows.LastItem.AddBodyLabel(message);
-    bodyLabel.font = UIResources.GetFontAssetByName(ChatMessageFontAsset.Value);
+    bodyLabel.font = UIFonts.GetFontAssetByName(ChatMessageFontAsset.Value);
     bodyLabel.fontSize = ChatMessageFontSize.Value;
   }
 
@@ -65,12 +65,12 @@ public static class ContentRowManager {
 
   public static void SetupContentRow(ContentRow row) {
     if (row.LayoutType == MessageLayoutType.WithHeaderRow) {
-      row.HeaderLeftLabel.font = UIResources.GetFontAssetByName(ChatMessageFontAsset.Value);
+      row.HeaderLeftLabel.font = UIFonts.GetFontAssetByName(ChatMessageFontAsset.Value);
       row.HeaderLeftLabel.fontSize = ChatMessageFontSize.Value;
       row.HeaderLeftLabel.text = ChatMessageUtils.GetUsernameText(row.Message.Username);
       row.HeaderLeftLabel.color = ChatMessageUsernameColor.Value;
 
-      row.HeaderRightLabel.font = UIResources.GetFontAssetByName(ChatMessageFontAsset.Value);
+      row.HeaderRightLabel.font = UIFonts.GetFontAssetByName(ChatMessageFontAsset.Value);
       row.HeaderRightLabel.fontSize = ChatMessageFontSize.Value;
       row.HeaderRightLabel.text = ChatMessageUtils.GetTimestampText(row.Message.Timestamp);
       row.HeaderRightLabel.color = ChatMessageTimestampColor.Value;

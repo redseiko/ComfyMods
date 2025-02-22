@@ -21,7 +21,7 @@ namespace Chatter {
       GameObject cell = new("Resizer", typeof(RectTransform));
       cell.SetParent(parentTransform);
 
-      cell.RectTransform()
+      cell.GetComponent<RectTransform>()
           .SetAnchorMin(new(0f, 0.5f))
           .SetAnchorMax(new(0f, 0.5f))
           .SetPivot(new(0f, 0.5f))

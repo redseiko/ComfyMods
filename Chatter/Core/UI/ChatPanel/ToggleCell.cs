@@ -14,7 +14,7 @@ namespace Chatter {
 
     public ToggleCell(Transform parentTransform) {
       Cell = CreateChildCell(parentTransform);
-      Background = Cell.Image();
+      Background = Cell.GetComponent<Image>();
 
       Label = CreateChildLabel(Cell.transform);
 
