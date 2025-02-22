@@ -56,7 +56,7 @@ public static class ChatMessageUtils {
   }
 
   public static string GetUsernameText(string username) {
-    if (username.Length == 0) {
+    if (username.Length <= 0) {
       return string.Empty;
     }
 

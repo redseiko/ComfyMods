@@ -106,6 +106,7 @@
     <Compile Include="ComfyLib\Extensions\CodeMatcherExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\StringExtensions.cs" />
     <Compile Include="ComfyLib\UI\Core\UIFonts.cs" />
+    <Compile Include="ComfyLib\UI\Core\UISpriteBuilder.cs" />
     <Compile Include="Core\ChatPanelController.cs" />
     <Compile Include="Core\Utils\ChatPanelUtils.cs" />
     <Compile Include="Core\Utils\ChatTextInputUtils.cs" />

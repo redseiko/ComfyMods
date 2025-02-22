@@ -5,7 +5,6 @@ using ComfyLib;
 using GUIFramework;
 
 using UnityEngine;
-using UnityEngine.UI;
 
 using static PluginConfig;
 

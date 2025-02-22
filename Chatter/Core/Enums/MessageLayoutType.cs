@@ -1,6 +1,6 @@
-﻿namespace Chatter {
-  public enum MessageLayoutType {
-    WithHeaderRow,
-    SingleRow
-  }
+﻿namespace Chatter;
+
+public enum MessageLayoutType {
+  WithHeaderRow,
+  SingleRow
 }
