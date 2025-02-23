@@ -17,8 +17,10 @@ static class ChatPatch {
   [HarmonyPatch(nameof(Chat.Awake))]
   static void AwakePostfix(Chat __instance) {
     ContentRowManager.MessageRows.ClearItems();
+
     ChatPanelController.VanillaInputField = __instance.m_input;
     ChatPanelController.ToggleChatter(__instance, IsModEnabled.Value);
+
     SetupWorldText(__instance);
   }
 
@@ -35,15 +37,14 @@ static class ChatPatch {
         .MatchStartForward(new CodeMatch(OpCodes.Ldstr, "say "))
         .ThrowIfInvalid($"Could not patch Chat.InputText()! (prefix-say)")
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(PrefixSayDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ChatPatch), nameof(PrefixSayDelegate))))
         .InstructionEnumeration();
   }
 
   static string PrefixSayDelegate(string value) {
     return IsModEnabled.Value ? ChatTextInputUtils.ChatTextInputPrefix : value;
   }
-
-  static bool _isChatMessageFiltered = false;
 
   [HarmonyPrefix]
   [HarmonyPatch(nameof(Chat.OnNewChatMessage))]
@@ -64,8 +65,8 @@ static class ChatPatch {
     };
 
     ChatMessageUtils.IsChatMessageQueued = true;
+    ChatMessageUtils.IsChatMessageFiltered = !ChatMessageUtils.AddChatMessage(message);
 
-    _isChatMessageFiltered = !ChatMessageUtils.AddChatMessage(message);
     __state = __instance.m_hideTimer;
   }
 
@@ -78,7 +79,7 @@ static class ChatPatch {
 
     ChatMessageUtils.IsChatMessageQueued = false;
 
-    if (_isChatMessageFiltered) {
+    if (ChatMessageUtils.IsChatMessageFiltered) {
       __instance.m_hideTimer = __state;
     }
   }
@@ -199,8 +200,9 @@ static class ChatPatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))))
-        .ThrowIfInvalid($"Could not patch Chat.SendInput()! (SetActive)")
-        .InsertAndAdvance(Transpilers.EmitDelegate(DisableChatPanelDelegate))
+        .ThrowIfInvalid($"Could not patch Chat.SendInput()! (set-active)")
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ChatPatch), nameof(DisableChatPanelDelegate))))
         .InstructionEnumeration();
   }
 

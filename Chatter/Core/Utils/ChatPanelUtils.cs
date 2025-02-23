@@ -73,24 +73,24 @@ public static class ChatPanelUtils {
     toggleRow.TextToggle.Toggle.onValueChanged.AddListener(
         isOn => ContentRowManager.ToggleContentRows(isOn, ChatMessageType.Text));
 
-    toggleRow.SayToggle.Toggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.Say));
-    toggleRow.ShoutToggle.Toggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.Shout));
-    toggleRow.PingToggle.Toggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.Ping));
-    toggleRow.WhisperToggle.Toggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.Whisper));
-    toggleRow.MessageHudToggle.Toggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.HudCenter));
-    toggleRow.TextToggle.Toggle.SetIsOn(togglesToEnable.HasFlag(ChatMessageType.Text));
+    toggleRow.SayToggle.SetToggleIsOn(togglesToEnable.HasFlag(ChatMessageType.Say));
+    toggleRow.ShoutToggle.SetToggleIsOn(togglesToEnable.HasFlag(ChatMessageType.Shout));
+    toggleRow.PingToggle.SetToggleIsOn(togglesToEnable.HasFlag(ChatMessageType.Ping));
+    toggleRow.WhisperToggle.SetToggleIsOn(togglesToEnable.HasFlag(ChatMessageType.Whisper));
+    toggleRow.MessageHudToggle.SetToggleIsOn(togglesToEnable.HasFlag(ChatMessageType.HudCenter));
+    toggleRow.TextToggle.SetToggleIsOn(togglesToEnable.HasFlag(ChatMessageType.Text));
   }
 
   public static bool IsMessageTypeToggleActive(this ChatPanel chatPanel, ChatMessageType messageType) {
     ToggleRow toggleRow = chatPanel.MessageTypeToggleRow;
 
     return messageType switch {
-      ChatMessageType.Text => toggleRow.TextToggle.Toggle.isOn,
-      ChatMessageType.HudCenter => toggleRow.MessageHudToggle.Toggle.isOn,
-      ChatMessageType.Say => toggleRow.SayToggle.Toggle.isOn,
-      ChatMessageType.Shout => toggleRow.ShoutToggle.Toggle.isOn,
-      ChatMessageType.Whisper => toggleRow.WhisperToggle.Toggle.isOn,
-      ChatMessageType.Ping => toggleRow.PingToggle.Toggle.isOn,
+      ChatMessageType.Text => toggleRow.TextToggle.GetToggleIsOn(),
+      ChatMessageType.HudCenter => toggleRow.MessageHudToggle.GetToggleIsOn(),
+      ChatMessageType.Say => toggleRow.SayToggle.GetToggleIsOn(),
+      ChatMessageType.Shout => toggleRow.ShoutToggle.GetToggleIsOn(),
+      ChatMessageType.Whisper => toggleRow.WhisperToggle.GetToggleIsOn(),
+      ChatMessageType.Ping => toggleRow.PingToggle.GetToggleIsOn(),
       _ => true,
     };
   }

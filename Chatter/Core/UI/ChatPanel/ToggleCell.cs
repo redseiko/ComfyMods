@@ -24,9 +24,11 @@ public sealed class ToggleCell {
     Toggle
         .SetNavigationMode(Navigation.Mode.None)
         .SetTargetGraphic(Background)
-        .SetIsOn(false);
+        .SetIsOnWithoutNotify(false);
 
     Cell.AddComponent<DummyIgnoreDrag>();
+
+    OnToggleValueChanged(false);
   }
 
   GameObject CreateChildCell(Transform parentTransform) {
@@ -39,7 +41,7 @@ public sealed class ToggleCell {
     cell.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
         .SetSprite(UIResources.GetSprite("button"))
-        .SetColor(new(1f, 1f, 1f, 0.95f));
+        .SetColor(BackgroundColorOn);
 
     return cell;
   }
@@ -47,10 +49,11 @@ public sealed class ToggleCell {
   TextMeshProUGUI CreateChildLabel(Transform parentTransform) {
     TextMeshProUGUI label = UIBuilder.CreateLabel(parentTransform);
 
-    label.alignment = TextAlignmentOptions.Center;
-    label.fontSize = 14f;
-    label.color = new(1f, 1f, 1f, 0.9f);
-    label.text = "Toggle";
+    label
+        .SetAlignment(TextAlignmentOptions.Center)
+        .SetFontSize(14f)
+        .SetColor(LabelColorOn)
+        .SetText("Toggle");
 
     label.rectTransform
         .SetAnchorMin(Vector2.zero)
@@ -61,8 +64,22 @@ public sealed class ToggleCell {
     return label;
   }
 
+  public static readonly Color BackgroundColorOn = new(1f, 1f, 1f, 0.95f);
+  public static readonly Color BackgroundColorOff = new(0.5f, 0.5f, 0.5f, 0.95f);
+
+  public static readonly Color LabelColorOn = Color.white;
+  public static readonly Color LabelColorOff = Color.gray;
+
+  public void SetToggleIsOn(bool isOn) {
+    Toggle.isOn = isOn;
+  }
+
+  public bool GetToggleIsOn() {
+    return Toggle.isOn;
+  }
+
   void OnToggleValueChanged(bool isOn) {
-    Background.color = isOn ? new(1f, 1f, 1f, 0.95f) : new(0.5f, 0.5f, 0.5f, 0.95f);
-    Label.color = isOn ? Color.white : Color.gray;
+    Background.color = isOn ? BackgroundColorOn : BackgroundColorOff;
+    Label.color = isOn ? LabelColorOn : LabelColorOff;
   }
 }
