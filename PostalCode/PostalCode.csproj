@@ -109,6 +109,7 @@
     <Compile Include="ComfyLib\Commands\ComfyArgs.cs" />
     <Compile Include="ComfyLib\Commands\ComfyCommand.cs" />
     <Compile Include="ComfyLib\Extensions\StringExtensions.cs" />
+    <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="Core\Commands\DeregisterLocationCommand.cs" />
     <Compile Include="Core\Commands\ListLocationCommand.cs" />
     <Compile Include="Core\Commands\RegisterLocationCommand.cs" />

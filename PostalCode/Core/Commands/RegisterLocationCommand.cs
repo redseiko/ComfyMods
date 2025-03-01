@@ -41,7 +41,7 @@ public static class RegisterLocationCommand {
       return false;
     }
 
-    Vector2i sector = zoneSystem.GetZone(position);
+    Vector2i sector = ZoneSystem.GetZone(position);
 
     if (zoneSystem.m_locationInstances.TryGetValue(sector, out ZoneSystem.LocationInstance instance)) {
       PostalCode.LogInfo(

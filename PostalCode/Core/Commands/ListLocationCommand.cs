@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 using ComfyLib;
 
-using UnityEngine;
-
 public static class ListLocationCommand {
   [ComfyCommand]
   public static Terminal.ConsoleCommand Register() {
@@ -26,11 +24,11 @@ public static class ListLocationCommand {
     }
 
     ZoneSystem zoneSystem = ZoneSystem.m_instance;
-    List<Vector3> positions = [];
+    List<string> positions = [];
 
     foreach (ZoneSystem.LocationInstance locationInstance in zoneSystem.m_locationInstances.Values) {
       if (locationInstance.m_location.m_prefab.Name == prefabName) {
-        positions.Add(locationInstance.m_position);
+        positions.Add(locationInstance.m_position.ToString("F0"));
       }
     }
 

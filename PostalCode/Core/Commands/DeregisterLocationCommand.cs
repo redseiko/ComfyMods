@@ -24,7 +24,7 @@ public static class DeregisterLocationCommand {
     }
 
     ZoneSystem zoneSystem = ZoneSystem.m_instance;
-    Vector2i sector = zoneSystem.GetZone(position);
+    Vector2i sector = ZoneSystem.GetZone(position);
 
     if (zoneSystem.m_locationInstances.TryGetValue(sector, out ZoneSystem.LocationInstance instance)) {
       PostalCode.LogInfo(
