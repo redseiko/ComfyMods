@@ -13,7 +13,11 @@ public static class PluginConfig {
 
   public static void BindConfig(ConfigFile config) {
     IsModEnabled =
-        config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod (restart required).");
+        config.BindInOrder(
+            "_Global",
+            "isModEnabled",
+            true,
+            "Globally enable or disable this mod (restart required).");
 
     RemoveStackTraceForNonErrorLogType =
         config.BindInOrder(

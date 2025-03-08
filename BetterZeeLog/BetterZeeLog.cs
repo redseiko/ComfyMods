@@ -14,7 +14,7 @@ using static PluginConfig;
 public sealed class BetterZeeLog : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.betterzeelog";
   public const string PluginName = "BetterZeeLog";
-  public const string PluginVersion = "1.11.0";
+  public const string PluginVersion = "1.12.0";
     
   void Awake() {
     BindConfig(Config);

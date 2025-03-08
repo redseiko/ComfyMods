@@ -3,6 +3,8 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
+using ComfyLib;
+
 using HarmonyLib;
 
 using static PluginConfig;
@@ -29,11 +31,5 @@ static class ZSteamSocketPatch {
     }
 
     return instructions;
-  }
-
-  public static CodeMatcher ExtractLabels(this CodeMatcher matcher, out List<Label> labels) {
-    labels = new(matcher.Labels);
-    matcher.Labels.Clear();
-    return matcher;
   }
 }

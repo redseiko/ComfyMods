@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.12.0
+
+  * Updated for the `v0.220.3` patch.
+  * Added a `PlatformUserID.Constructor()` transpiler patch to filter out all the failed parsing log spam.
+  * Copied the `Container.RPC_RequestOpen()` transpiler patches for `RPC_RequestStack()` and `RPC_RequestTakeAll()`._
+
 ### 1.11.0
 
   * Updated for the `v0.219.10` PTB patch.

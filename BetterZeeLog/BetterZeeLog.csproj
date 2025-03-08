@@ -73,6 +73,9 @@
     <Reference Include="com.rlabrecque.steamworks.net_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\com.rlabrecque.steamworks.net_publicized.dll</HintPath>
     </Reference>
+    <Reference Include="Splatform">
+      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\Splatform_publicized.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -86,9 +89,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BetterZeeLog.cs" />
+    <Compile Include="ComfyLib\Extensions\CodeMatcherExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="Patches\ContainerPatch.cs" />
     <Compile Include="Patches\ProjectilePatch.cs" />
+    <Compile Include="Patches\PlatformUserIDPatch.cs" />
     <Compile Include="Patches\UIGroupHandlerPatch.cs" />
     <Compile Include="Patches\ZLogPatch.cs" />
     <Compile Include="Patches\ZSteamSocketPatch.cs" />
