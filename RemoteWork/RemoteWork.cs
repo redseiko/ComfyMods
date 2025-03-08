@@ -1,4 +1,6 @@
-﻿using System;
+﻿namespace RemoteWork;
+
+using System;
 using System.Globalization;
 using System.Reflection;
 
@@ -7,31 +9,24 @@ using BepInEx.Logging;
 
 using HarmonyLib;
 
-using static RemoteWork.PluginConfig;
+using static PluginConfig;
 
-namespace RemoteWork {
-  [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
-  public sealed class RemoteWork : BaseUnityPlugin {
-    public const string PluginGuid = "redseiko.valheim.remotework";
-    public const string PluginName = "RemoteWork";
-    public const string PluginVersion = "1.0.0";
+[BepInPlugin(PluginGuid, PluginName, PluginVersion)]
+public sealed class RemoteWork : BaseUnityPlugin {
+  public const string PluginGuid = "redseiko.valheim.remotework";
+  public const string PluginName = "RemoteWork";
+  public const string PluginVersion = "1.1.0";
 
-    static ManualLogSource _logger;
-    Harmony _harmony;
+  static ManualLogSource _logger;
 
-    void Awake() {
-      _logger = Logger;
-      BindConfig(Config);
+  void Awake() {
+    _logger = Logger;
+    BindConfig(Config);
 
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
-    }
+    Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
+  }
 
-    void OnDestroy() {
-      _harmony?.UnpatchSelf();
-    }
-
-    public static void LogInfo(object obj) {
-      _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
-    }
+  public static void LogInfo(object obj) {
+    _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
   }
 }

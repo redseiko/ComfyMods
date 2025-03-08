@@ -1,24 +1,26 @@
-﻿using System.IO;
+﻿namespace RemoteWork;
 
-using static RemoteWork.PluginConfig;
+using System.IO;
 
-namespace RemoteWork {
-  public static class AccessUtils {
-    static SyncedList _accessList;
+using ComfyLib;
 
-    public static SyncedList AccessList {
-      get {
-        _accessList ??=
-            new SyncedList(
-                Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), AccessListFilename.Value),
-                "RemoteWork access list.");
+using static PluginConfig;
 
-        return _accessList;
-      }
+public static class AccessUtils {
+  static SyncedAuthList _accessList;
+
+  public static SyncedAuthList AccessList {
+    get {
+      _accessList ??=
+          new SyncedAuthList(
+              Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), AccessListFilename.Value),
+              "RemoteWork access list.");
+
+      return _accessList;
     }
+  }
 
-    public static bool HasAccess(string steamId) {
-      return AccessList.Contains(steamId) || ZNet.m_instance.m_adminList.Contains(steamId);
-    }
+  public static bool HasAccess(string steamId) {
+    return AccessList.Contains(steamId) || ZNet.m_instance.m_adminList.Contains(steamId);
   }
 }
