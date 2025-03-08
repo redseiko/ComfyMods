@@ -107,7 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\PluginConfig.cs" />
-    <Compile Include="Core\ExternalInputFile.cs" />
+    <Compile Include="Core\ConsoleManager.cs" />
     <Compile Include="ExternalConsole.cs" />
     <Compile Include="Patches\ConsolePatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
