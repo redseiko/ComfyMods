@@ -19,7 +19,7 @@ static class ContainerPatch {
           .MatchStartForward(
               new CodeMatch(OpCodes.Ldarg_0),
               new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Container), nameof(Container.m_nview))))
-          .ThrowIfInvalid("Could not patch Container.RPC_RequestOpen()! (is-owner)")
+          .ThrowIfNotMatch("Could not patch Container.RPC_RequestOpen()! (is-owner)")
           .CreateLabel(out Label isOwnerLabel)
           .Start()
           .InsertAndAdvance(
@@ -27,19 +27,19 @@ static class ContainerPatch {
           .MatchStartForward(
               new CodeInstruction(OpCodes.Ldstr, "  but im not the owner"),
               new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
-          .ThrowIfInvalid("Could not patch Container.RPC_RequestOpen()! (not-owner-log)")
+          .ThrowIfNotMatch("Could not patch Container.RPC_RequestOpen()! (not-owner-log)")
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .MatchStartForward(
               new CodeInstruction(OpCodes.Ldstr, "  in use"),
               new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
-          .ThrowIfInvalid("Could not patch Container.RPC_RequestOpen()! (in-use-log)")
+          .ThrowIfNotMatch("Could not patch Container.RPC_RequestOpen()! (in-use-log)")
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .MatchStartForward(
               new CodeInstruction(OpCodes.Ldstr, "  not yours"),
               new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
-          .ThrowIfInvalid("Could not patch Container.RPC_RequestOpen()! (not-yours-log)")
+          .ThrowIfNotMatch("Could not patch Container.RPC_RequestOpen()! (not-yours-log)")
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .InstructionEnumeration();
@@ -58,7 +58,7 @@ static class ContainerPatch {
           .MatchStartForward(
               new CodeMatch(OpCodes.Ldarg_0),
               new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Container), nameof(Container.m_nview))))
-          .ThrowIfInvalid("Could not patch Container.RPC_RequestStack()! (is-owner)")
+          .ThrowIfNotMatch("Could not patch Container.RPC_RequestStack()! (is-owner)")
           .CreateLabel(out Label isOwnerLabel)
           .Start()
           .InsertAndAdvance(
@@ -66,19 +66,19 @@ static class ContainerPatch {
           .MatchStartForward(
               new CodeInstruction(OpCodes.Ldstr, "  but im not the owner"),
               new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
-          .ThrowIfInvalid("Could not patch Container.RPC_RequestStack()! (not-owner-log)")
+          .ThrowIfNotMatch("Could not patch Container.RPC_RequestStack()! (not-owner-log)")
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .MatchStartForward(
               new CodeInstruction(OpCodes.Ldstr, "  in use"),
               new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
-          .ThrowIfInvalid("Could not patch Container.RPC_RequestStack()! (in-use-log)")
+          .ThrowIfNotMatch("Could not patch Container.RPC_RequestStack()! (in-use-log)")
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .MatchStartForward(
               new CodeInstruction(OpCodes.Ldstr, "  not yours"),
               new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
-          .ThrowIfInvalid("Could not patch Container.RPC_RequestStack()! (not-yours-log)")
+          .ThrowIfNotMatch("Could not patch Container.RPC_RequestStack()! (not-yours-log)")
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .InstructionEnumeration();
@@ -97,7 +97,7 @@ static class ContainerPatch {
           .MatchStartForward(
               new CodeMatch(OpCodes.Ldarg_0),
               new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Container), nameof(Container.m_nview))))
-          .ThrowIfInvalid("Could not patch Container.RPC_RequestTakeAll()! (is-owner)")
+          .ThrowIfNotMatch("Could not patch Container.RPC_RequestTakeAll()! (is-owner)")
           .CreateLabel(out Label isOwnerLabel)
           .Start()
           .InsertAndAdvance(
@@ -105,19 +105,19 @@ static class ContainerPatch {
           .MatchStartForward(
               new CodeInstruction(OpCodes.Ldstr, "  but im not the owner"),
               new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
-          .ThrowIfInvalid("Could not patch Container.RPC_RequestTakeAll()! (not-owner-log)")
+          .ThrowIfNotMatch("Could not patch Container.RPC_RequestTakeAll()! (not-owner-log)")
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .MatchStartForward(
               new CodeInstruction(OpCodes.Ldstr, "  in use"),
               new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
-          .ThrowIfInvalid("Could not patch Container.RPC_RequestTakeAll()! (in-use-log)")
+          .ThrowIfNotMatch("Could not patch Container.RPC_RequestTakeAll()! (in-use-log)")
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .MatchStartForward(
               new CodeInstruction(OpCodes.Ldstr, "  not yours"),
               new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
-          .ThrowIfInvalid("Could not patch Container.RPC_RequestTakeAll()! (not-yours-log)")
+          .ThrowIfNotMatch("Could not patch Container.RPC_RequestTakeAll()! (not-yours-log)")
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
           .InstructionEnumeration();

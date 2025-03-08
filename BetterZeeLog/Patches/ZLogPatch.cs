@@ -28,12 +28,12 @@ static class ZLogPatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, ": "))
-        .ThrowIfInvalid("Could not patch ZLog.Log()! (colon)")
+        .ThrowIfNotMatch("Could not patch ZLog.Log()! (colon)")
         .InsertAndAdvance(Transpilers.EmitDelegate(DateTimeNowDelegate))
         .SetOperandAndAdvance(string.Empty)
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, "\n"))
-        .ThrowIfInvalid("Could not patch ZLog.Log()! (newline)")
+        .ThrowIfNotMatch("Could not patch ZLog.Log()! (newline)")
         .SetOperandAndAdvance(string.Empty)
         .InstructionEnumeration();
   }
@@ -45,12 +45,12 @@ static class ZLogPatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, ": "))
-        .ThrowIfInvalid("Could not patch ZLog.LogWarning()! (colon)")
+        .ThrowIfNotMatch("Could not patch ZLog.LogWarning()! (colon)")
         .InsertAndAdvance(Transpilers.EmitDelegate(DateTimeNowDelegate))
         .SetOperandAndAdvance(string.Empty)
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, "\n"))
-        .ThrowIfInvalid("Could not patch ZLog.LogWarning()! (newline)")
+        .ThrowIfNotMatch("Could not patch ZLog.LogWarning()! (newline)")
         .SetOperandAndAdvance(string.Empty)
         .InstructionEnumeration();
   }
@@ -62,12 +62,12 @@ static class ZLogPatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, ": "))
-        .ThrowIfInvalid("Could not patch ZLog.LogError()! (colon)")
+        .ThrowIfNotMatch("Could not patch ZLog.LogError()! (colon)")
         .InsertAndAdvance(Transpilers.EmitDelegate(DateTimeNowDelegate))
         .SetOperandAndAdvance(string.Empty)
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, "\n"))
-        .ThrowIfInvalid("Could not patch ZLog.LogError()! (newline)")
+        .ThrowIfNotMatch("Could not patch ZLog.LogError()! (newline)")
         .SetOperandAndAdvance(string.Empty)
         .InstructionEnumeration();
   }
@@ -79,12 +79,12 @@ static class ZLogPatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, ": "))
-        .ThrowIfInvalid("Could not patch ZLog.DevLog()! (colon)")
+        .ThrowIfNotMatch("Could not patch ZLog.DevLog()! (colon)")
         .InsertAndAdvance(Transpilers.EmitDelegate(DateTimeNowDelegate))
         .SetOperandAndAdvance(string.Empty)
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, "\n"))
-        .ThrowIfInvalid("Could not patch ZLog.DevLog()! (newline)")
+        .ThrowIfNotMatch("Could not patch ZLog.DevLog()! (newline)")
         .SetOperandAndAdvance(string.Empty)
         .InstructionEnumeration();
   }

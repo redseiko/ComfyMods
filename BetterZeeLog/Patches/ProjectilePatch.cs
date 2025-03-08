@@ -24,9 +24,11 @@ static class ProjectilePatch {
                   AccessTools.Method(typeof(Quaternion), nameof(Quaternion.LookRotation), [typeof(Vector3)])),
               new CodeMatch(
                   OpCodes.Callvirt, AccessTools.PropertySetter(typeof(Transform), nameof(Transform.rotation))))
-          .ThrowIfInvalid($"Could not patch Projectile.FixedUpdate()! (LookRotation)")
+          .ThrowIfNotMatch($"Could not patch Projectile.FixedUpdate()! (look-rotation)")
           .Advance(offset: 1)
-          .SetInstructionAndAdvance(Transpilers.EmitDelegate(LookRotationDelegate))
+          .SetInstructionAndAdvance(
+              new CodeInstruction(
+                  OpCodes.Call, AccessTools.Method(typeof(ProjectilePatch), nameof(LookRotationDelegate))))
           .InstructionEnumeration();
     }
 

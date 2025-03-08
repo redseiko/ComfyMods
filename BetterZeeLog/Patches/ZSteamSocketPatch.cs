@@ -20,11 +20,11 @@ static class ZSteamSocketPatch {
           .Start()
           .MatchStartForward(
               new CodeMatch(OpCodes.Ldstr, "Failed to send data "))
-          .ThrowIfInvalid($"Could not patch ZSteamSocket.SendQueuedPackages()! (Ldstr-Log)")
+          .ThrowIfNotMatch($"Could not patch ZSteamSocket.SendQueuedPackages()! (ldstr-Log)")
           .ExtractLabels(out List<Label> logLabels)
           .MatchStartForward(
               new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
-          .ThrowIfInvalid($"Could not patch ZSteamSocket.SendQueuedPackages()! (ZLog-Log)")
+          .ThrowIfNotMatch($"Could not patch ZSteamSocket.SendQueuedPackages()! (zLog-Log)")
           .Advance(offset: 1)
           .AddLabels(logLabels)
           .InstructionEnumeration();

@@ -17,24 +17,24 @@ static class UIGroupHandlerPatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
-        .ThrowIfInvalid("Could not patch UIGroupHandler.Update()! (Log-Right-Stick)")
+        .ThrowIfNotMatch("Could not patch UIGroupHandler.Update()! (log-right-stick)")
         .Advance(offset: 1)
         .CreateLabel(out Label activateRightStickLabel)
         .MatchStartForward(
             new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
-        .ThrowIfInvalid("Could not patch UIGroupHandler.Update()! (Log-Default)")
+        .ThrowIfNotMatch("Could not patch UIGroupHandler.Update()! (log-default)")
         .Advance(offset: 1)
         .CreateLabel(out Label activeDefaultLabel)
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, "Activating right stick element "))
-        .ThrowIfInvalid($"Could not patch UIGroupHandler.Update()! (Ldstr-Right-Stick)")
+        .ThrowIfNotMatch($"Could not patch UIGroupHandler.Update()! (ldstr-right-stick)")
         .InsertAndAdvance(
             Transpilers.EmitDelegate(ShouldLogDelegate),
             new CodeInstruction(OpCodes.Brfalse, activateRightStickLabel))
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, "Activating default element "))
-        .ThrowIfInvalid($"Could not patch UIGroupHandler.Update()! (Ldstr-Default)")
+        .ThrowIfNotMatch($"Could not patch UIGroupHandler.Update()! (ldstr-default)")
         .InsertAndAdvance(
             Transpilers.EmitDelegate(ShouldLogDelegate),
             new CodeInstruction(OpCodes.Brfalse, activeDefaultLabel))
