@@ -8,8 +8,8 @@ using UnityEngine;
 
 public static class TeleportPlayerCommand {
   [ComfyCommand]
-  public static IEnumerable<Terminal.ConsoleCommand> Register() {
-    yield return new Terminal.ConsoleCommand(
+  public static Terminal.ConsoleCommand Register() {
+    return new Terminal.ConsoleCommand(
         "teleport-player",
         "(Transporter) teleport-player --player-id=<123> --destination=<x,y,z>",
         Run);

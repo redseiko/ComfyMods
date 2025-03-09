@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 
 public static class PlayerUtils {
-  public static readonly Dictionary<long, ZDO> PlayerZDOsByPlayerId = new();
+  public static readonly Dictionary<long, ZDO> PlayerZDOsByPlayerId = [];
 
   public static void RefreshPlayerIdMapping() {
     Dictionary<ZDOID, ZDO> zdosById = ZDOMan.s_instance.m_objectsByID;
@@ -38,8 +38,8 @@ public static class PlayerUtils {
 
   public static List<ZDO> GetPlayerZDOs(List<long> playerIds) {
     Dictionary<ZDOID, ZDO> zdosById = ZDOMan.s_instance.m_objectsByID;
-    HashSet<long> ids = new(playerIds);
-    List<ZDO> zdos = new();
+    HashSet<long> ids = [.. playerIds];
+    List<ZDO> zdos = [];
 
     foreach (ZNetPeer netPeer in ZNet.m_instance.m_peers) {
       if (netPeer.m_characterID == ZDOID.None

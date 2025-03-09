@@ -15,20 +15,15 @@ using static PluginConfig;
 public sealed class Transporter : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.transporter";
   public const string PluginName = "Transporter";
-  public const string PluginVersion = "1.4.0";
+  public const string PluginVersion = "1.5.0";
 
   static ManualLogSource _logger;
-  Harmony _harmony;
 
   void Awake() {
     _logger = Logger;
     BindConfig(Config);
 
-    _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
-  }
-
-  void OnDestroy() {
-    _harmony?.UnpatchSelf();
+    Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
   }
 
   public static void LogInfo(object obj) {

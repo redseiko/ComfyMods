@@ -11,7 +11,7 @@
     <AssemblyName>Transporter</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <LangVersion>10</LangVersion>
+    <LangVersion>12</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -107,6 +107,7 @@
     <Compile Include="ComfyLib\Commands\ComfyCommand.cs" />
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\StringExtensions.cs" />
+    <Compile Include="ComfyLib\Utils\SyncedAuthList.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Core\AccessUtils.cs" />
     <Compile Include="Core\Commands\CancelTeleportPlayerCommand.cs" />

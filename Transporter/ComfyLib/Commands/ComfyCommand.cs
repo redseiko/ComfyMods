@@ -11,7 +11,7 @@ public sealed class ComfyCommand : Attribute {
 }
 
 public static class ComfyCommandUtils {
-  static readonly List<Terminal.ConsoleCommand> _commands = new();
+  static readonly List<Terminal.ConsoleCommand> _commands = [];
 
   public static void ToggleCommands(bool toggleOn) {
     DeregisterCommands(_commands);
@@ -40,10 +40,9 @@ public static class ComfyCommandUtils {
 
   static IEnumerable<Terminal.ConsoleCommand> RegisterCommands(Assembly assembly) {
     return assembly.GetTypes()
-        .SelectMany(type => type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
-        .Where(method => method.GetCustomAttributes(typeof(ComfyCommand), inherit: false).Length > 0)
-        .Where(method => IsRegisterCommandMethod(method) || IsRegisterCommandsMethod(method))
-        .SelectMany(method => RegisterCommands(method));
+        .SelectMany(static type => type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+        .Where(static method => method.GetCustomAttributes(typeof(ComfyCommand), inherit: false).Length > 0)
+        .SelectMany(RegisterCommands);
   }
 
   static IEnumerable<Terminal.ConsoleCommand> RegisterCommands(MethodInfo method) {

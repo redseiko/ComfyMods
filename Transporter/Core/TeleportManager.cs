@@ -65,7 +65,7 @@ public static class TeleportManager {
     return false;
   }
 
-  static readonly List<TeleportRequest> _requests = new();
+  static readonly List<TeleportRequest> _requests = [];
 
   public static void ProcessPendingTeleports() {
     int count = RequestManager.Instance.PendingRequests.Count;

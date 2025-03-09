@@ -4,13 +4,15 @@ using System;
 using System.Globalization;
 using System.IO;
 
+using ComfyLib;
+
 using UnityEngine;
 
 using static PluginConfig;
 
 public static class AccessUtils {
-  public static SyncedList AccessList { get; } =
-      new SyncedList(
+  public static SyncedAuthList AccessList { get; } =
+      new SyncedAuthList(
           Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), AccessListFilename.Value),
           "Transporter access list. One SteamId per line.");
 

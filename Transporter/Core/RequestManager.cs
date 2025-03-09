@@ -18,11 +18,13 @@ public sealed class RequestManager {
   public SyncedList RequestList { get; }
 
   RequestManager() {
-    PendingRequests = new();
+    PendingRequests = [];
 
     RequestList =
         new SyncedList(
-            Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), RequestListFilename.Value),
+            new FileHelpers.FileLocation(
+                FileHelpers.FileSource.Local,
+                Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), RequestListFilename.Value)),
             "Transporter teleport request list. Request per line: <playerId>,<destination>,<epochTimestamp>");
   }
 

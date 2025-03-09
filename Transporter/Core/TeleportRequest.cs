@@ -23,7 +23,7 @@ public sealed class TeleportRequest {
     return $"{PlayerId},{Destination.x:F0},{Destination.y:F0},{Destination.z:F0},{EpochTimestamp:F0}";
   }
 
-  public static char[] CommaDelimiter = new char[] { ',' };
+  public static char[] CommaDelimiter = [','];
 
   public static bool TryParse(string text, out TeleportRequest request) {
     string[] parts = text.Split(CommaDelimiter, count: 5, StringSplitOptions.RemoveEmptyEntries);

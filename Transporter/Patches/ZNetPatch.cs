@@ -1,6 +1,5 @@
 ﻿namespace Transporter;
 
-using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
@@ -24,13 +23,16 @@ static class ZNetPatch {
   [HarmonyPatch(nameof(ZNet.RPC_PeerInfo))]
   static IEnumerable<CodeInstruction> RPC_PeerInfoTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-          .MatchForward(
-              useEnd: false,
+          .Start()
+          .MatchStartForward(
+              new CodeMatch(OpCodes.Ldloc_1),
               new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(ZDOMan), nameof(ZDOMan.AddPeer))))
-          .Advance(offset: 1)
+          .ThrowIfNotMatch($"Could not patch ZNet.RPC_PeerInfo()! (zdoman-add-peer)")
+          .Advance(offset: 2)
           .InsertAndAdvance(
-              new CodeInstruction(OpCodes.Ldloc_0),
-              Transpilers.EmitDelegate(AccessUtils.RegisterRPCs))
+              new CodeInstruction(OpCodes.Ldloc_1),
+              new CodeInstruction(
+                  OpCodes.Call, AccessTools.Method(typeof(AccessUtils), nameof(AccessUtils.RegisterRPCs))))
           .InstructionEnumeration();
   }
 
