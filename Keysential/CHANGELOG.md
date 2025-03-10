@@ -1,5 +1,11 @@
 ## Changelog
 
+## 1.9.0
+
+  * Fixed for the `v0.220.3` patch.
+  * Bumped up `<LangVersion>` to C# 12.
+  * Code clean-up and refactoring.
+
 ### 1.8.0
 
   * Moved changelog into `CHANGELOG.md`.

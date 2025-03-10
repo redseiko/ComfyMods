@@ -6,9 +6,9 @@ using System.Globalization;
 using UnityEngine;
 
 public static class StringExtensions {
-  public static readonly char[] CommaSeparator = { ',' };
+  public static readonly char[] CommaSeparator = [','];
 
-  public static bool TryParseVector(this string text, out Vector2i vector) {
+  public static bool TryParseVector2i(this string text, out Vector2i vector) {
     string[] parts = text.Split(CommaSeparator, 2, StringSplitOptions.RemoveEmptyEntries);
 
     if (parts.Length == 2
@@ -22,7 +22,7 @@ public static class StringExtensions {
     return false;
   }
 
-  public static bool TryParseVector(this string text, out Vector3 vector) {
+  public static bool TryParseVector3(this string text, out Vector3 vector) {
     string[] parts = text.Split(CommaSeparator, 3, StringSplitOptions.RemoveEmptyEntries);
 
     if (parts.Length == 3

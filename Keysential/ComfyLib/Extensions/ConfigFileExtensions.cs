@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using BepInEx.Configuration;
 
 public static class ConfigFileExtensions {
-  static readonly Dictionary<string, int> _sectionToSettingOrder = new();
+  static readonly Dictionary<string, int> _sectionToSettingOrder = [];
 
   static int GetSettingOrder(string section) {
     if (!_sectionToSettingOrder.TryGetValue(section, out int order)) {
@@ -23,7 +23,12 @@ public static class ConfigFileExtensions {
       string key,
       T defaultValue,
       string description,
-      AcceptableValueBase acceptableValues) {
+      AcceptableValueBase acceptableValues,
+      bool browsable = true,
+      bool hideDefaultButton = false,
+      bool hideSettingName = false,
+      bool isAdvanced = false,
+      bool readOnly = false) {
     return config.Bind(
         section,
         key,
@@ -32,7 +37,13 @@ public static class ConfigFileExtensions {
             description,
             acceptableValues,
             new ConfigurationManagerAttributes {
-              Order = GetSettingOrder(section)
+              Browsable = browsable,
+              CustomDrawer = default,
+              HideDefaultButton = hideDefaultButton,
+              HideSettingName = hideSettingName,
+              IsAdvanced = isAdvanced,
+              Order = GetSettingOrder(section),
+              ReadOnly = readOnly,
             }));
   }
 
@@ -45,19 +56,24 @@ public static class ConfigFileExtensions {
       Action<ConfigEntryBase> customDrawer = null,
       bool browsable = true,
       bool hideDefaultButton = false,
-      bool hideSettingName = false) {
+      bool hideSettingName = false,
+      bool isAdvanced = false,
+      bool readOnly = false) {
     return config.Bind(
         section,
         key,
         defaultValue,
         new ConfigDescription(
             description,
-            null,
+            acceptableValues: default,
             new ConfigurationManagerAttributes {
               Browsable = browsable,
               CustomDrawer = customDrawer,
               HideDefaultButton = hideDefaultButton,
-              Order = GetSettingOrder(section)
+              HideSettingName = hideSettingName,
+              IsAdvanced = isAdvanced,
+              Order = GetSettingOrder(section),
+              ReadOnly = readOnly,
             }));
   }
 
@@ -67,19 +83,17 @@ public static class ConfigFileExtensions {
 
   public static void OnSettingChanged<T>(this ConfigEntry<T> configEntry, Action<T> settingChangedHandler) {
     configEntry.SettingChanged +=
-        (_, eventArgs) =>
-            settingChangedHandler.Invoke((T) ((SettingChangedEventArgs) eventArgs).ChangedSetting.BoxedValue);
+        (_, eventArgs) => settingChangedHandler((T) ((SettingChangedEventArgs) eventArgs).ChangedSetting.BoxedValue);
   }
 
   public static void OnSettingChanged<T>(
       this ConfigEntry<T> configEntry, Action<ConfigEntry<T>> settingChangedHandler) {
     configEntry.SettingChanged +=
         (_, eventArgs) =>
-            settingChangedHandler.Invoke(
-                (ConfigEntry<T>) ((SettingChangedEventArgs) eventArgs).ChangedSetting.BoxedValue);
+            settingChangedHandler((ConfigEntry<T>) ((SettingChangedEventArgs) eventArgs).ChangedSetting.BoxedValue);
   }
 
-  public static readonly char[] CommaSeparator = new char[] { ',' };
+  public static readonly char[] CommaSeparator = [','];
 
   public static List<string> GetStringList(this ConfigEntry<string> configEntry) {
     string[] entries = configEntry.Value.Split(CommaSeparator, StringSplitOptions.RemoveEmptyEntries);
@@ -92,7 +106,7 @@ public static class ConfigFileExtensions {
     return stringList;
   }
 
-  static readonly Dictionary<ConfigEntry<string>, List<string>> _cachedStringLists = new();
+  static readonly Dictionary<ConfigEntry<string>, List<string>> _cachedStringLists = [];
 
   public static List<string> GetCachedStringList(this ConfigEntry<string> configEntry) {
     if (!_cachedStringLists.TryGetValue(configEntry, out List<string> stringList)) {
@@ -127,6 +141,9 @@ public static class ConfigFileExtensions {
     public Action<ConfigEntryBase> CustomDrawer;
     public bool? Browsable;
     public bool? HideDefaultButton;
+    public bool? HideSettingName;
+    public bool? IsAdvanced;
     public int? Order;
+    public bool? ReadOnly;
   }
 }

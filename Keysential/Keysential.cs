@@ -15,31 +15,26 @@ using static PluginConfig;
 public sealed class Keysential : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.keysential";
   public const string PluginName = "Keysential";
-  public const string PluginVersion = "1.8.0";
+  public const string PluginVersion = "1.9.0";
 
   static ManualLogSource _logger;
-  Harmony _harmony;
 
   void Awake() {
     _logger = Logger;
     BindConfig(Config);
 
-    _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
+    Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
   }
 
-  void OnDestroy() {
-    _harmony?.UnpatchSelf();
+  public static void LogInfo(object obj) {
+    _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
   }
 
-  public static void LogInfo(object o) {
-    _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {o}");
+  public static void LogWarning(object obj) {
+    _logger.LogWarning($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
   }
 
-  public static void LogWarning(object o) {
-    _logger.LogWarning($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {o}");
-  }
-
-  public static void LogError(object o) {
-    _logger.LogError($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {o}");
+  public static void LogError(object obj) {
+    _logger.LogError($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
   }
 }
