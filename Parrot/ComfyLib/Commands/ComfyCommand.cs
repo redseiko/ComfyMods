@@ -40,8 +40,8 @@ public static class ComfyCommandUtils {
 
   static IEnumerable<Terminal.ConsoleCommand> RegisterCommands(Assembly assembly) {
     return assembly.GetTypes()
-        .SelectMany(type => type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
-        .Where(method => method.GetCustomAttributes(typeof(ComfyCommand), inherit: false).Length > 0)
+        .SelectMany(static type => type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+        .Where(static method => method.GetCustomAttributes(typeof(ComfyCommand), inherit: false).Length > 0)
         .SelectMany(RegisterCommands);
   }
 

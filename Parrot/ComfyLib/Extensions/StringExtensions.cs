@@ -1,7 +1,6 @@
 ﻿namespace ComfyLib;
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 
 using UnityEngine;
@@ -18,6 +17,8 @@ public static class StringExtensions {
         value = (T) (object) valueVector2;
       } else if (typeof(T) == typeof(Vector3) && text.TryParseVector3(out Vector3 valueVector3)) {
         value = (T) (object) valueVector3;
+      } else if (typeof(T) == typeof(Quaternion) && text.TryParseQuaternion(out Quaternion valueQuaternion)) {
+        value = (T) (object) valueQuaternion;
       } else if (typeof(T) == typeof(ZDOID) && text.TryParseZDOID(out ZDOID valueZDOID)) {
         value = (T) (object) valueZDOID;
       } else if (typeof(T).IsEnum) {
@@ -57,6 +58,22 @@ public static class StringExtensions {
         && float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out float y)
         && float.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out float z)) {
       value = new(x, y, z);
+      return true;
+    }
+
+    value = default;
+    return false;
+  }
+
+  public static bool TryParseQuaternion(this string text, out Quaternion value) {
+    string[] parts = text.Split(CommaSeparator, 4, StringSplitOptions.RemoveEmptyEntries);
+
+    if (parts.Length == 4
+        && float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out float x)
+        && float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out float y)
+        && float.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out float z)
+        && float.TryParse(parts[3], NumberStyles.Float, CultureInfo.InvariantCulture, out float w)) {
+      value = new(x, y, z, w);
       return true;
     }
 

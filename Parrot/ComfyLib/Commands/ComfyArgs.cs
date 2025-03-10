@@ -73,7 +73,7 @@ public sealed class ComfyArgs {
 
   public bool TryGetListValue<T>(string argName, string argShortName, out List<T> argListValue) {
     if (!ArgsValueByName.TryGetValue(argName, out string argStringValue)
-        && !ArgsValueByName.TryGetValue(argName, out argStringValue)) {
+        && !ArgsValueByName.TryGetValue(argShortName, out argStringValue)) {
       argListValue = default;
       return false;
     }

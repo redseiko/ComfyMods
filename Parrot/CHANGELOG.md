@@ -1,8 +1,11 @@
 ## Changelog
 
-### 1.5.0 (WIP)
+### 1.5.0
 
-  * Updated for the `v0.218.15` Ashlands patch.
+  * Updated for the `v0.220.3` patch.
+  * Removed `suppressSayGamertag` and `suppressChatMessageGamertag` feature as this no longer happens in vanilla.
+  * Added new config-option `addServersToPlayerList` to add a PlayerInfo entry for the server.
+  * Added new config-option `allowParrotServerConnections` for experimental WIP server-to-server messaging.
 
 ### 1.4.0
 

@@ -21,6 +21,7 @@ public static class SendParrotLogCommand {
     }
 
     ConnectionManager.SendParrotLog(logMessage);
+
     return true;
   }
 }

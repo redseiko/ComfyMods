@@ -3,22 +3,22 @@
 using BepInEx.Configuration;
 
 public static class PluginConfig {
-  public static ConfigEntry<bool> SuppressChatMessageGamertag { get; private set; }
-  public static ConfigEntry<bool> SuppressSayGamertag { get; private set; }
+  public static ConfigEntry<bool> AddServerToPlayerList { get; private set; }
+  public static ConfigEntry<bool> AllowParrotServerConnections { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
-    SuppressChatMessageGamertag =
+    AddServerToPlayerList =
         config.Bind(
-            "RPC.ChatMessage",
-            "suppressChatMessageGamertag",
+            "PlayerList",
+            "addServerToPlayerList",
             true,
-            "If set, will suppress UserINfo.Gamertag from ChatMessage RPCs.");
+            "If set, will add the current server to the ZNet.PlayerInfo list sent in ZNet.SendPlayerList().");
 
-    SuppressSayGamertag =
+    AllowParrotServerConnections =
         config.Bind(
-            "RPC.Say",
-            "suppressSayGamertag",
-            true,
-            "If set, will suppress UserInfo.Gamertag from Say RPCs.");
+            "ParrotServer",
+            "allowParrotServerConnections",
+            false,
+            "Allows incoming Parrot-server connections (experimental).");
   }
 }

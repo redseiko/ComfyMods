@@ -13,12 +13,12 @@ static class ZSteamSocketPatch {
   [HarmonyPatch(typeof(ZSteamSocket), MethodType.Constructor, [typeof(SteamNetworkingIPAddr)])]
   static IEnumerable<CodeInstruction> ConstructorTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: false,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldc_I4_0),
             new CodeMatch(OpCodes.Ldnull),
             new CodeMatch(OpCodes.Call))
-        .ThrowIfInvalid($"Could not patch ZSteamSocket.Constructor()! (ConnectByIPAddress")
+        .ThrowIfInvalid($"Could not patch ZSteamSocket.Constructor()! (connect-by-ip-address")
         .Advance(offset: 2)
         .SetOperandAndAdvance(
             AccessTools.Method(
@@ -31,12 +31,12 @@ static class ZSteamSocketPatch {
   [HarmonyPatch(nameof(ZSteamSocket.GetConnectionQuality))]
   static IEnumerable<CodeInstruction> GetConnectionQualityTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: false,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldc_I4_0),
             new CodeMatch(OpCodes.Ldloca_S),
             new CodeMatch(OpCodes.Call))
-        .ThrowIfInvalid($"Could not patch ZSteamSocket.GetConnectionQuality()! (GetConnectionRealTimeStatus)")
+        .ThrowIfInvalid($"Could not patch ZSteamSocket.GetConnectionQuality()! (get-connection-real-time-status)")
         .Advance(offset: 2)
         .SetOperandAndAdvance(
             AccessTools.Method(
