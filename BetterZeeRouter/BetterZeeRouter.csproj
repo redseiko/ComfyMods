@@ -10,7 +10,7 @@
     <AssemblyName>BetterZeeRouter</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <LangVersion>10</LangVersion>
+    <LangVersion>12</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BetterZeeRouter.cs" />
+    <Compile Include="ComfyLib\Utils\SyncedAuthList.cs" />
     <Compile Include="Core\Handlers\DamageTextHandler.cs" />
     <Compile Include="Core\Handlers\SetTargetHandler.cs" />
     <Compile Include="Core\Handlers\TeleportPlayerHandler.cs" />

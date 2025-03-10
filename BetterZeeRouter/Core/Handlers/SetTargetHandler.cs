@@ -15,15 +15,17 @@ public sealed class SetTargetHandler : RpcMethodHandler {
     // ...
   }
 
-  static readonly int _playerHashCode = "Player".GetStableHashCode();
+  public static readonly int PlayerHashCode = "Player".GetStableHashCode();
 
   public override bool Process(ZRoutedRpc.RoutedRPCData routedRpcData) {
-    routedRpcData.m_parameters.SetPos(0);
-    ZDOID targetZdoid = routedRpcData.m_parameters.ReadZDOID();
-    routedRpcData.m_parameters.SetPos(0);
+    ZPackage parameters = routedRpcData.m_parameters;
 
-    if (targetZdoid == ZDOID.None
-        || !ZDOMan.s_instance.m_objectsByID.TryGetValue(targetZdoid, out ZDO targetZDO)) {
+    parameters.SetPos(0);
+    ZDOID targetZDOID = parameters.ReadZDOID();
+    parameters.SetPos(0);
+
+    if (targetZDOID == ZDOID.None
+        || !ZDOMan.s_instance.m_objectsByID.TryGetValue(targetZDOID, out ZDO targetZDO)) {
       return true;
     }
 
@@ -32,12 +34,12 @@ public sealed class SetTargetHandler : RpcMethodHandler {
       return true;
     }
 
-    if (targetZDO.m_prefab == _playerHashCode || targetZDO.GetBool(ZDOVars.s_tamed)) {
-      routedRpcData.m_parameters.Clear();
-      routedRpcData.m_parameters.Write(ZDOID.None);
-      routedRpcData.m_parameters.m_writer.Flush();
-      routedRpcData.m_parameters.m_stream.Flush();
-      routedRpcData.m_parameters.SetPos(0);
+    if (targetZDO.m_prefab == PlayerHashCode || targetZDO.GetBool(ZDOVars.s_tamed)) {
+      parameters.Clear();
+      parameters.Write(ZDOID.None);
+      parameters.m_writer.Flush();
+      parameters.m_stream.Flush();
+      parameters.SetPos(0);
 
       // TODO(redseiko): temporarily needed for RouteRPC to force it to send back to the original sender.
       // Proper fix is to just provide a means of indicating this should be routed to all clients.

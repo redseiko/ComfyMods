@@ -1,6 +1,6 @@
 {
   "name": "BetterZeeRouter",
-  "version_number": "1.9.0",
+  "version_number": "1.10.0",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/BetterZeeRouter",
   "author": "ComfyMods",
   "description": "Framework for custom ZRoutedRpc handling.",

@@ -3,9 +3,9 @@
 using System.Collections.Generic;
 
 public static class RoutedRpcManager {
-  public static readonly Dictionary<int, string> HashCodeToMethodNameCache = new();
+  public static readonly Dictionary<int, string> HashCodeToMethodNameCache = [];
 
-  static readonly Dictionary<int, List<RpcMethodHandler>> _rpcMethodHandlers = new();
+  static readonly Dictionary<int, List<RpcMethodHandler>> _rpcMethodHandlers = [];
   static readonly ZRoutedRpc.RoutedRPCData _routedRpcData = new();
 
   public static void AddHandler(string methodName, RpcMethodHandler handler) {
@@ -15,7 +15,7 @@ public static class RoutedRpcManager {
     BetterZeeRouter.LogInfo($"Adding handler for {methodName} ({methodHashCode}): {handler.GetType().FullName}");
 
     if (!_rpcMethodHandlers.TryGetValue(methodHashCode, out List<RpcMethodHandler> handlers)) {
-      handlers = new();
+      handlers = [];
       _rpcMethodHandlers[methodHashCode] = handlers;
     }
 
@@ -49,5 +49,13 @@ public static class RoutedRpcManager {
     }
 
     return result;
+  }
+
+  public static string MethodHashToString(int methodHash) {
+    if (HashCodeToMethodNameCache.TryGetValue(methodHash, out string methodName)) {
+      return methodName;
+    }
+
+    return $"RPC_{methodHash}";
   }
 }

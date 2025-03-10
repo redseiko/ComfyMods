@@ -3,6 +3,8 @@
 using System;
 using System.IO;
 
+using ComfyLib;
+
 public sealed class TeleportPlayerHandler : RpcMethodHandler {
   public static void Register() {
     RoutedRpcManager.AddHandler("RPC_TeleportTo", _instance);
@@ -11,7 +13,7 @@ public sealed class TeleportPlayerHandler : RpcMethodHandler {
 
   static readonly TeleportPlayerHandler _instance = new();
 
-  readonly SyncedList _teleportPlayerAccess;
+  readonly SyncedAuthList _teleportPlayerAccess;
   readonly StreamWriter _teleportPlayerLog;
 
   TeleportPlayerHandler() {
@@ -29,7 +31,7 @@ public sealed class TeleportPlayerHandler : RpcMethodHandler {
     long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
     long senderId = routedRpcData.m_senderPeerID;
     long targetId = routedRpcData.m_targetPeerID;
-    string rpcMethod = MethodHashToString(routedRpcData.m_methodHash);
+    string rpcMethod = RoutedRpcManager.MethodHashToString(routedRpcData.m_methodHash);
     bool isPermitted = IsPermitted(senderId);
 
     _teleportPlayerLog.WriteLine($"{timestamp},{senderId},{targetId},{rpcMethod},{isPermitted}");
@@ -49,13 +51,5 @@ public sealed class TeleportPlayerHandler : RpcMethodHandler {
     }
 
     return false;
-  }
-
-  static string MethodHashToString(int methodHash) {
-    if (RoutedRpcManager.HashCodeToMethodNameCache.TryGetValue(methodHash, out string methodName)) {
-      return methodName;
-    }
-
-    return $"RPC_{methodHash}";
   }
 }
