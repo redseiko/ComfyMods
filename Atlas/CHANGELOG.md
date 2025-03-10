@@ -1,11 +1,15 @@
 ## Changelog
 
-## 1.14.0
+### 1.15.0
+
+  * Updated for the `v0.220.3` patch.
+
+### 1.14.0
 
   * Removed destroy ZDOs matching specific prefabs logic as it is now in a new mod `Unbuildable`.
   * Removed `PrefabUtils` and `CustomFieldUtils` as this is no longer needed.
 
-## 1.13.1
+### 1.13.1
 
   * Added `ZDOMan.setCustomFieldsForAshlandsZDOs` config option to gate the specific custom fields logic.
 

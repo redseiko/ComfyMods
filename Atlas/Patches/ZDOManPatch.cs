@@ -34,9 +34,10 @@ static class ZDOManPatch {
             new CodeMatch(
                 OpCodes.Callvirt,
                 AccessTools.Method(typeof(Dictionary<ZDOID, ZDO>), nameof(Dictionary<ZDOID, ZDO>.Add))))
-        .ThrowIfInvalid("Could not patch ZDOMan.Load()! (AddObjectsByIdDelegate)")
+        .ThrowIfInvalid("Could not patch ZDOMan.Load()! (add-objects-by-id)")
         .Advance(offset: 5)
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(AddObjectsByIdDelegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ZDOManPatch), nameof(AddObjectsByIdDelegate))))
         .InstructionEnumeration();
   }
 
@@ -62,7 +63,8 @@ static class ZDOManPatch {
         .Advance(offset: 3)
         .InsertAndAdvance(
             ldLocS12,
-            Transpilers.EmitDelegate(ZDOManUtils.SetTimeCreatedDelegate))
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(ZDOManUtils), nameof(ZDOManUtils.SetTimeCreatedDelegate))))
         .InstructionEnumeration();
   }
 
@@ -80,7 +82,7 @@ static class ZDOManPatch {
 
   [HarmonyPrefix]
   [HarmonyPatch(nameof(ZDOMan.ConnectSpawners))]
-  static bool ConnectSpawnersPrefix(ref ZDOMan __instance) {
+  static bool ConnectSpawnersPrefix(ZDOMan __instance) {
     PluginLogger.LogInfo($"Starting ConnectSpawners with caching.");
 
     Dictionary<ZDOID, ZDOConnectionHashData> spawned = [];
@@ -99,20 +101,21 @@ static class ZDOManPatch {
 
     PluginLogger.LogInfo($"Connecting {spawned.Count} spawners against {targetsByHash.Count} targets.");
 
+    Dictionary<ZDOID, ZDO> objectsById = __instance.m_objectsByID;
     long sessionId = __instance.m_sessionID;
     int connectedCount = 0;
     int doneCount = 0;
 
     foreach (KeyValuePair<ZDOID, ZDOConnectionHashData> pair in spawned) {
-      if (pair.Key.IsNone() || !__instance.m_objectsByID.TryGetValue(pair.Key, out ZDO zdo) || zdo == null) {
+      if (pair.Key.IsNone() || !objectsById.TryGetValue(pair.Key, out ZDO zdo) || zdo == null) {
         continue;
       }
 
       zdo.SetOwner(sessionId);
 
-      if (targetsByHash.TryGetValue(pair.Value.m_hash, out ZDOID targetZdoId) && pair.Key != targetZdoId) {
+      if (targetsByHash.TryGetValue(pair.Value.m_hash, out ZDOID targetZDOID) && pair.Key != targetZDOID) {
         connectedCount++;
-        zdo.SetConnection(ZDOExtraData.ConnectionType.Spawned, targetZdoId);
+        zdo.SetConnection(ZDOExtraData.ConnectionType.Spawned, targetZDOID);
       } else {
         doneCount++;
         zdo.SetConnection(ZDOExtraData.ConnectionType.Spawned, ZDOID.None);
