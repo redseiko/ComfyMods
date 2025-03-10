@@ -13,7 +13,7 @@ using HarmonyLib;
 public sealed class CriticalDice : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.criticaldice";
   public const string PluginName = "CriticalDice";
-  public const string PluginVersion = "1.7.0";
+  public const string PluginVersion = "1.8.0";
 
   void Awake() {
     Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 using BetterZeeRouter;
 
+using Steamworks;
+
 using UnityEngine;
 
 public sealed class SayHandler : RpcMethodHandler {
@@ -21,18 +23,18 @@ public sealed class SayHandler : RpcMethodHandler {
   }
   
   public override bool Process(ZRoutedRpc.RoutedRPCData routedRpcData) {
-    routedRpcData.m_parameters.SetPos(0);
+    ZPackage parameters = routedRpcData.m_parameters;
+    parameters.SetPos(0);
 
-    routedRpcData.m_parameters.ReadInt(); // Talker.Type
-    string playerName = routedRpcData.m_parameters.ReadString();
-    routedRpcData.m_parameters.ReadString(); // UserInfo.Gamertag
-    routedRpcData.m_parameters.ReadString(); // UserInfo.NetworkUserId
-    string messageText = routedRpcData.m_parameters.ReadString();
+    parameters.ReadInt();                         // Talker.Type
+    string playerName = parameters.ReadString();  // UserInfo.Name
+    parameters.ReadString();                      // UserInfo.UserId
+    string messageText = parameters.ReadString();
 
-    routedRpcData.m_parameters.SetPos(0);
+    parameters.SetPos(0);
 
-    if (messageText.StartsWith("!roll", StringComparison.Ordinal)) {
-      ZNet.m_instance.StartCoroutine(ParseRpcSayDataCoroutine(playerName, messageText, routedRpcData.m_targetZDO));
+    if (messageText.Length >= 5 && messageText.StartsWith("!roll", StringComparison.Ordinal)) {
+      ZNet.m_instance.StartCoroutine(ParseSayDataCoroutine(playerName, messageText, routedRpcData.m_targetZDO));
     }
 
     return true;
@@ -42,7 +44,7 @@ public sealed class SayHandler : RpcMethodHandler {
   static readonly Regex _htmlTagsRegex = new("<.*?>");
   static readonly System.Random _random = new();
 
-  static IEnumerator ParseRpcSayDataCoroutine(string playerName, string messageText, ZDOID targetZdo) {
+  static IEnumerator ParseSayDataCoroutine(string playerName, string messageText, ZDOID targetZDOID) {
     yield return _waitInterval;
 
     long result = 0L;
@@ -58,35 +60,32 @@ public sealed class SayHandler : RpcMethodHandler {
 
     SendDiceRollResponse(
         _htmlTagsRegex.Replace(playerName, string.Empty),
-        targetZdo,
+        targetZDOID,
         result,
-        "<color=#AEC6D3><b>Server</b></color>",
-        PrivilegeManager.GetNetworkUserId());
+        "<color=#aec6d3><b>Server</b></color>");
   }
 
   static void SendDiceRollResponse(
-      string playerName, ZDOID targetZdoId, long result, string senderName, string networkUserId) {
+      string playerName, ZDOID targetZDOID, long result, string senderName) {
     ZRoutedRpc.s_instance.InvokeRoutedRPC(
         ZRoutedRpc.Everybody,
-        targetZdoId,
+        targetZDOID,
         "Say",
         (int) Talker.Type.Normal,
         new UserInfo() {
           Name = senderName,
-          Gamertag = senderName,
-          NetworkUserId = networkUserId
+          UserId = new(ZNet.m_instance.m_steamPlatform, SteamGameServer.GetSteamID().ToString())
         },
-        $"{playerName} rolled... {result}",
-        networkUserId);
+        $"{playerName} rolled... {result}");
   }
 
-  static readonly Regex _diceRollRegex =
+  public static readonly Regex DiceRollRegex =
       new(@"^!roll\s+(?:(?<simple>\d+)(?:\s+.*)?$|(?<count>\d*)d(?<faces>\d+)\s*(?<modifier>[\+-]\d+)?(?:\s+.*)?$)");
 
   static bool ParseDiceRoll(string input, out long result) {
     result = 0;
 
-    MatchCollection matches = _diceRollRegex.Matches(input);
+    MatchCollection matches = DiceRollRegex.Matches(input);
 
     if (matches.Count <= 0) {
       return false;
