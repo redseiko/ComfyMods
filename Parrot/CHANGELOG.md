@@ -4,7 +4,8 @@
 
   * Updated for the `v0.220.3` patch.
   * Removed `suppressSayGamertag` and `suppressChatMessageGamertag` feature as this no longer happens in vanilla.
-  * Added new config-option `addServersToPlayerList` to add a PlayerInfo entry for the server.
+  * Added new logic to handle annoying `Say`/`ChatMessage` RPC logic in clients.
+  * Added new config-option `addServerToPlayerList` to add a PlayerInfo entry for the server.
   * Added new config-option `allowParrotServerConnections` for experimental WIP server-to-server messaging.
 
 ### 1.4.0

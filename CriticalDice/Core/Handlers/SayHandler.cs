@@ -23,6 +23,10 @@ public sealed class SayHandler : RpcMethodHandler {
   }
   
   public override bool Process(ZRoutedRpc.RoutedRPCData routedRpcData) {
+    if (routedRpcData.m_targetPeerID != 0L && routedRpcData.m_targetPeerID != RoutedRpcManager.ServerPeerId) {
+      return true;
+    }
+
     ZPackage parameters = routedRpcData.m_parameters;
     parameters.SetPos(0);
 

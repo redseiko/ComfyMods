@@ -8,13 +8,18 @@ using static PluginConfig;
 
 public static class ZNetManager {
   public static string ServerName { get; private set; } = "Server";
+  public static long ServerPeerId { get; private set; } = 0L;
+  public static ZDOID ServerCharacterID { get; private set; } = ZDOID.None;
   public static PlatformUserID ServerPlatformUserId { get; private set; } = PlatformUserID.None;
 
   public static void SetupServerPlayer(ZNet net) {
     ServerName = "Server";
+    ServerPeerId = ZDOMan.s_instance.m_sessionID;
+    ServerCharacterID = new(ServerPeerId, uint.MaxValue);
     ServerPlatformUserId = new(net.m_steamPlatform, SteamGameServer.GetSteamID().ToString());
 
     Parrot.LogInfo($"Parrot current server PlatformUserID: {ServerPlatformUserId}");
+    Parrot.LogInfo($"Parrot current CharacterID: {ServerCharacterID}");
   }
 
   public static void AddServerPlayers(ZNet net, ZPackage package) {
@@ -29,8 +34,7 @@ public static class ZNetManager {
     package.Write(playersCount + 1);
 
     package.Write(ServerName);                      // m_name
-    package.Write(ZDOMan.s_instance.m_sessionID);   // m_characterID.UserKey
-    package.Write(uint.MaxValue);                   // m_characterID.ID
+    package.Write(ServerCharacterID);               // m_characterID
     package.Write(ServerPlatformUserId.ToString()); // m_userInfo.m_id
     package.Write(ServerName);                      // m_userInfo.m_displayName
     package.Write(ServerName);                      // m_serverAssignedDisplayName

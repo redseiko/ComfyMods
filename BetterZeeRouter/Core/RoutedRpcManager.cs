@@ -8,6 +8,13 @@ public static class RoutedRpcManager {
   static readonly Dictionary<int, List<RpcMethodHandler>> _rpcMethodHandlers = [];
   static readonly ZRoutedRpc.RoutedRPCData _routedRpcData = new();
 
+  public static long ServerPeerId { get => _serverPeerId; }
+  static long _serverPeerId = 0L;
+
+  public static void SetupServerPeer() {
+    _serverPeerId = ZDOMan.s_instance.m_sessionID;
+  }
+
   public static void AddHandler(string methodName, RpcMethodHandler handler) {
     int methodHashCode = methodName.GetStableHashCode();
     HashCodeToMethodNameCache[methodHashCode] = methodName;
@@ -32,7 +39,7 @@ public static class RoutedRpcManager {
       routedRpc.HandleRoutedRPC(_routedRpcData);
     }
 
-    if (targetPeerId != routedRpcId && ProcessHandlers(_routedRpcData)) {
+    if ((targetPeerId != routedRpcId || targetPeerId == _serverPeerId) && ProcessHandlers(_routedRpcData)) {
       routedRpc.RouteRPC(_routedRpcData);
     }
   }

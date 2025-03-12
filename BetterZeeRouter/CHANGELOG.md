@@ -5,6 +5,7 @@
   * Fixed for the `v0.220.3` patch.
   * Bumped up `<LangVersion>` to C# 12.
   * Code clean-up and refactoring.
+  * `RoutedRpcManager.ProcessRoutedRPC()` will now also perform RPC routing if `targetPeerId == serverPeerId`.
 
 ### 1.9.0
 

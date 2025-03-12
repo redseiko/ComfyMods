@@ -5,6 +5,7 @@
   * Fixed for the `v0.220.3` patch.
   * Bumped up `<LangVersion>` to C# 12.
   * Code clean-up and refactoring.
+  * `SayHandler` now checks if `targetPeerId` is equal to `0L` or `serverPeerId` to execute.
 
 ### 1.7.0
 

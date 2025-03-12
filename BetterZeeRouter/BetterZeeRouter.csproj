@@ -87,6 +87,7 @@
     <Compile Include="Core\Handlers\SetTargetHandler.cs" />
     <Compile Include="Core\Handlers\TeleportPlayerHandler.cs" />
     <Compile Include="Core\Handlers\HealthChangedHandler.cs" />
+    <Compile Include="Patches\ZNetPatch.cs" />
     <Compile Include="Patches\ZRoutedRpcPatch.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
