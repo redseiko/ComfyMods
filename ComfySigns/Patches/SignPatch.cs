@@ -41,7 +41,7 @@ static class SignPatch {
   }
 
   [HarmonyPostfix]
-  [HarmonyPatch(nameof(Sign.CanAccessResultFunc))]
+  [HarmonyPatch(nameof(Sign.OnCheckPermissionCompleted))]
   static void CanAccessResultFuncPostfix(Sign __instance) {
     if (IsModEnabled.Value) {
       SignUtils.ProcessSignText(__instance);
