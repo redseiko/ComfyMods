@@ -50,10 +50,10 @@ static class ChatPatch {
 
     [HarmonyTargetMethod]
     static MethodBase DelegateMethod() {
-      _delegateType = AccessTools.Inner(typeof(Chat), "<>c__DisplayClass11_0");
+      _delegateType = AccessTools.Inner(typeof(Chat), "<>c__DisplayClass12_0");
       _chatField = AccessTools.Field(_delegateType, "<>4__this");
 
-      return AccessTools.Method(_delegateType, "<OnNewChatMessage>b__2");
+      return AccessTools.Method(_delegateType, "<OnNewChatMessage>b__0");
     }
 
     [HarmonyPostfix]

@@ -42,8 +42,7 @@ public static class SilenceManager {
       ChatInstance.m_input.gameObject.SetActive(false);
     }
 
-
-    ChatInstance.m_chatWindow.gameObject.SetActive(isSilenced);
+    ChatInstance.m_chatWindow.gameObject.SetActive(!isSilenced);
   }
 
   static void ToggleInWorldTexts(bool isSilenced) {

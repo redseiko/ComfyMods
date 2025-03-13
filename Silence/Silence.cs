@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class Silence : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.silence";
   public const string PluginName = "Silence";
-  public const string PluginVersion = "1.7.0";
+  public const string PluginVersion = "1.8.0";
 
   static ManualLogSource _logger;
 
@@ -28,7 +28,7 @@ public sealed class Silence : BaseUnityPlugin {
     }
   }
 
-  public static void LogInfo(object o) {
-    _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {o}");
+  public static void LogInfo(object obj) {
+    _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
   }
 }
