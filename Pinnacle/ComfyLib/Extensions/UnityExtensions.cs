@@ -3,7 +3,7 @@
 public static class ChatExtensions {
   public static void AddMessage(this Chat chat, object obj) {
     if (chat) {
-      chat.AddString($"{obj}");
+      chat.AddString(obj.ToString());
       chat.m_hideTimer = 0f;
     }
   }

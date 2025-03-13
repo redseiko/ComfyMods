@@ -63,7 +63,7 @@ public static class PinImportExport {
         writer.Write((int) pin.m_type);
         writer.Write(pin.m_checked);
         writer.Write(pin.m_ownerID);
-        writer.Write(pin.m_author);
+        writer.Write(pin.m_author.ToString());
 
         pinsExported++;
       }
@@ -126,7 +126,7 @@ public static class PinImportExport {
         m_type = (Minimap.PinType) reader.ReadInt32(),
         m_checked = reader.ReadBoolean(),
         m_ownerID = reader.ReadInt64(),
-        m_author = reader.ReadString(),
+        m_author = new Splatform.PlatformUserID(reader.ReadString()),
         m_save = true
       };
 

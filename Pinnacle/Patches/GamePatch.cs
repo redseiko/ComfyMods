@@ -19,7 +19,7 @@ static class GamePatch {
             new CodeMatch(OpCodes.Br),
             new CodeMatch(OpCodes.Ldc_I4_0),
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(Minimap), nameof(Minimap.SetMapMode))))
-        .ThrowIfInvalid("Could not patch Game.UpdateNoMap()! (SetMapMode)")
+        .ThrowIfInvalid("Could not patch Game.UpdateNoMap()! (set-map-mode)")
         .Advance(offset: 1)
         .InsertAndAdvance(
             new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(GamePatch), nameof(SetMapModeDelegate))))

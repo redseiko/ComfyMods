@@ -36,9 +36,11 @@ static class MinimapPatch {
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Minimap), nameof(Minimap.m_selectedType))),
             new CodeMatch(OpCodes.Ldc_I4_4))
-        .ThrowIfInvalid($"Could not patch Minimap.OnMapDblClick()! (m_selectedType)")
+        .ThrowIfInvalid($"Could not patch Minimap.OnMapDblClick()! (m-selected-type)")
         .Advance(offset: 2)
-        .InsertAndAdvance(Transpilers.EmitDelegate(OnMapDblClickSelectedTypeDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(MinimapPatch), nameof(OnMapDblClickSelectedTypeDelegate))))
         .InstructionEnumeration();
   }
 
@@ -78,9 +80,10 @@ static class MinimapPatch {
         .MatchStartForward(
             new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Minimap), nameof(Minimap.GetClosestPin))),
             new CodeMatch(OpCodes.Stloc_1))
-        .ThrowIfInvalid($"Could not patch Minimap.OnMapLeftClick()! (GetClosestPin)")
+        .ThrowIfInvalid($"Could not patch Minimap.OnMapLeftClick()! (get-closest-pin)")
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(GetClosestPinDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(MinimapPatch), nameof(GetClosestPinDelegate))))
         .InstructionEnumeration();
   }
 
@@ -100,10 +103,10 @@ static class MinimapPatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Minimap), nameof(Minimap.InTextInput))))
-        .ThrowIfInvalid("Could not patch Minimap.Update()! (InTextInput)")
+        .ThrowIfInvalid("Could not patch Minimap.Update()! (in-text-input)")
         .InsertAndAdvance(
             new CodeInstruction(OpCodes.Ldarg_0),
-            Transpilers.EmitDelegate(InTextInputPreDelegate))
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(MinimapPatch), nameof(InTextInputPreDelegate))))
         .InstructionEnumeration();
   }
 
