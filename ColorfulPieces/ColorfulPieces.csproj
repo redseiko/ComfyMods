@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -73,6 +73,9 @@
     <Reference Include="gui_framework_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\gui_framework_publicized.dll</HintPath>
     </Reference>
+    <Reference Include="Splatform_publicized">
+      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\Splatform_publicized.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -109,12 +112,12 @@
     <Compile Include="ColorfulPieces.cs" />
     <Compile Include="ComfyLib\Commands\ComfyArgs.cs" />
     <Compile Include="ComfyLib\Commands\ComfyCommand.cs" />
-    <Compile Include="ComfyLib\Extensions\StringExtensions.cs" />
-    <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="ComfyLib\Config\ExtendedColorConfigEntry.cs" />
     <Compile Include="ComfyLib\Config\GUI\GUIBuilder.cs" />
     <Compile Include="ComfyLib\Config\GUI\GUIFocus.cs" />
     <Compile Include="ComfyLib\Config\GUI\GUIHelper.cs" />
+    <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
+    <Compile Include="ComfyLib\Extensions\StringExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\ZDOExtensions.cs" />
     <Compile Include="ComfyLib\UI\Builder\ColorSlider.cs" />
@@ -124,33 +127,33 @@
     <Compile Include="ComfyLib\UI\Core\UIBuilder.cs" />
     <Compile Include="ComfyLib\UI\Core\UIExtensions.cs" />
     <Compile Include="ComfyLib\UI\Core\UIResources.cs" />
-    <Compile Include="Core\Commands\ToggleColorPickerCommand.cs" />
-    <Compile Include="Core\Components\PieceColorRenderer.cs" />
-    <Compile Include="Core\Controllers\ColorPickerController.cs" />
-    <Compile Include="Core\ShortcutUtils.cs" />
+    <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Core\ColorfulConstants.cs" />
     <Compile Include="Core\ColorfulUtils.cs" />
     <Compile Include="Core\Commands\ChangeColorCommand.cs" />
     <Compile Include="Core\Commands\ClearColorCommand.cs" />
+    <Compile Include="Core\Commands\ToggleColorPickerCommand.cs" />
     <Compile Include="Core\Components\PieceColor.cs" />
+    <Compile Include="Core\Components\PieceColorRenderer.cs" />
     <Compile Include="Core\Components\PieceColorUpdater.cs" />
-    <Compile Include="Config\PluginConfig.cs" />
+    <Compile Include="Core\Controllers\ColorPickerController.cs" />
     <Compile Include="Core\Extensions\MaterialManExtensions.cs" />
+    <Compile Include="Core\ShortcutUtils.cs" />
     <Compile Include="Core\UI\ColorPickerPanel.cs" />
+    <Compile Include="Patches\GamePatch.cs" />
     <Compile Include="Patches\HudPatch.cs" />
     <Compile Include="Patches\PlayerPatch.cs" />
     <Compile Include="Patches\StaticPhysicsPatch.cs" />
     <Compile Include="Patches\TerminalPatch.cs" />
-    <Compile Include="Patches\GamePatch.cs" />
     <Compile Include="Patches\TextInputPatch.cs" />
     <Compile Include="Patches\WearNTearPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="manifest.json" />
     <None Include="CHANGELOG.md" />
-    <None Include="README.md" />
     <None Include="icon.png" />
+    <None Include="manifest.json" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

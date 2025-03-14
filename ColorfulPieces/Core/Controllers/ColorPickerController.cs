@@ -14,7 +14,7 @@ public sealed class ColorPickerController {
     get {
       if (!_instance?.ColorPicker?.Panel) {
         ColorfulPieces.LogInfo($"Creating new ColorPicker.");
-        _instance = new(UnifiedPopup.instance.gameObject.transform.parent);
+        _instance = new(UnifiedPopup.instance.gameObject.transform);
         _instance.HideColorPicker();
       }
 

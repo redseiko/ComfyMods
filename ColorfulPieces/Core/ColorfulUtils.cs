@@ -6,6 +6,8 @@ using System.Linq;
 
 using ComfyLib;
 
+using Splatform;
+
 using UnityEngine;
 
 using static ColorfulConstants;
@@ -38,7 +40,7 @@ public static class ColorfulUtils {
     zdo.Set(PieceColorHashCode, colorVector3);
     zdo.Set(PieceEmissionColorFactorHashCode, emissionColorFactor);
     zdo.Set(PieceLastColoredByHashCode, Player.m_localPlayer.GetPlayerID());
-    zdo.Set(PieceLastColoredByHostHashCode, PrivilegeManager.GetNetworkUserId());
+    zdo.Set(PieceLastColoredByHostHashCode, PlatformManager.DistributionPlatform.LocalUser.PlatformUserID.m_userID);
   }
 
   public static bool TryClaimOwnership(ZNetView netView) {

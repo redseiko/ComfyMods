@@ -2,7 +2,8 @@
 
 ### 1.18.0
 
-  * ???
+  * Fixed for the `v0.220.3` patch.
+  * Experimental WIP ColorPicker panel added, can be toggled on/off with command `/toggle-color-picker`.
 
 ### 1.17.0
 

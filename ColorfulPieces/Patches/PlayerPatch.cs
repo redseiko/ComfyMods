@@ -16,7 +16,7 @@ static class PlayerPatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Player), nameof(Player.UpdateHover))))
-        .ThrowIfInvalid($"Could not patch Player.Update()! (UpdateHover)")
+        .ThrowIfInvalid($"Could not patch Player.Update()! (update-hover)")
         .Advance(offset: 1)
         .InsertAndAdvance(
             new CodeInstruction(OpCodes.Ldarg_0),
