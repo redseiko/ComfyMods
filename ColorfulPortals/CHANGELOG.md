@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.9.0
+
+  * Updated for the `v0.220.3` patch.
+  * Bumped up `<LangVersion>` to C# 12.
+  * Code clean-up and refactoring.
+
 ### 1.8.0
 
   * Updated for `v0.217.38` patch.

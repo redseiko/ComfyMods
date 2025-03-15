@@ -1,16 +1,16 @@
-﻿using HarmonyLib;
+﻿namespace ColorfulPortals;
 
-using static ColorfulPortals.PluginConfig;
+using HarmonyLib;
 
-namespace ColorfulPortals {
-  [HarmonyPatch(typeof(Game))]
-  static class GamePatch {
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Game.Start))]
-    static void StartPostfix(ref Game __instance) {
-      if (IsModEnabled.Value) {
-        __instance.gameObject.AddComponent<TeleportWorldColorUpdater>();
-      }
+using static PluginConfig;
+
+[HarmonyPatch(typeof(Game))]
+static class GamePatch {
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Game.Start))]
+  static void StartPostfix(Game __instance) {
+    if (IsModEnabled.Value) {
+      __instance.gameObject.AddComponent<TeleportWorldColorUpdater>();
     }
   }
 }

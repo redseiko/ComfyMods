@@ -1,25 +1,25 @@
-﻿using UnityEngine;
+﻿namespace ComfyLib;
 
-namespace ComfyLib {
-  public static class ZDOExtensions {
-    public static bool TryGetFloat(this ZDO zdo, int keyHashCode, out float value) {
-      if (ZDOExtraData.s_floats.TryGetValue(zdo.m_uid, out BinarySearchDictionary<int, float> values)
-          && values.TryGetValue(keyHashCode, out value)) {
-        return true;
-      }
+using UnityEngine;
 
-      value = default;
-      return false;
+public static class ZDOExtensions {
+  public static bool TryGetVector3(this ZDO zdo, int keyHashCode, out Vector3 value) {
+    if (ZDOExtraData.s_vec3.TryGetValue(zdo.m_uid, out BinarySearchDictionary<int, Vector3> values)
+        && values.TryGetValue(keyHashCode, out value)) {
+      return true;
     }
 
-    public static bool TryGetVector3(this ZDO zdo, int hash, out Vector3 value) {
-      if (ZDOExtraData.s_vec3.TryGetValue(zdo.m_uid, out BinarySearchDictionary<int, Vector3> values)
-          && values.TryGetValue(hash, out value)) {
-        return true;
-      }
+    value = default;
+    return false;
+  }
 
-      value = default;
-      return false;
+  public static bool TryGetFloat(this ZDO zdo, int keyHashCode, out float value) {
+    if (ZDOExtraData.s_floats.TryGetValue(zdo.m_uid, out BinarySearchDictionary<int, float> values)
+        && values.TryGetValue(keyHashCode, out value)) {
+      return true;
     }
+
+    value = default;
+    return false;
   }
 }
