@@ -28,7 +28,7 @@ public static class FireplaceManager {
 
     ZNetView netView = targetFireplace.m_nview;
 
-    if (!netView || !netView.IsValid() || !TryClaimOwnership(netView)) {
+    if (!TryClaimOwnership(netView)) {
       return false;
     }
 

@@ -37,7 +37,7 @@ public static class TeleportWorldManager {
 
     ZNetView netView = targetTeleportWorld.m_nview;
 
-    if (!netView || !netView.IsValid() || !TryClaimOwnership(netView)) {
+    if (!TryClaimOwnership(netView)) {
       return false;
     }
 
@@ -73,7 +73,7 @@ public static class TeleportWorldManager {
   public static void SetTeleportWorldColorZDO(ZDO zdo, Vector3 colorVector3, float colorAlpha) {
     zdo.Set(TeleportWorldColorHashCode, colorVector3);
     zdo.Set(TeleportWorldColorAlphaHashCode, colorAlpha);
-    zdo.Set(PortalLastColoredByHashCode, Player.m_localPlayer.Ref()?.GetPlayerID() ?? 0L);
+    zdo.Set(PortalLastColoredByHashCode, Player.m_localPlayer.GetPlayerID());
     zdo.Set(PortalLastColoredByHostHashCode, PlatformManager.DistributionPlatform.LocalUser.PlatformUserID.m_userID);
   }
 }
