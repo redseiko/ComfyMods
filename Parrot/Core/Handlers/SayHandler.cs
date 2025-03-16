@@ -16,7 +16,7 @@ public sealed class SayHandler : RpcMethodHandler {
   }
 
   public override bool Process(ZRoutedRpc.RoutedRPCData routedRpcData) {
-    if (!AddServerToPlayerList.Value) {
+    if (!AddServerToPlayerList.Value || routedRpcData.m_targetPeerID == 0) {
       return true;
     }
 

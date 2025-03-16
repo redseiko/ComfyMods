@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.5.1
+
+  * Hot-fix to handle missed case that `Chat.SendPing()` remains on original pre-patch logic.
+
 ### 1.5.0
 
   * Updated for the `v0.220.3` patch.
