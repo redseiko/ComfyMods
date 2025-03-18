@@ -9,7 +9,7 @@ static class TextInputPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(TextInput.IsVisible))]
   static void IsVisiblePostfix(ref bool __result) {
-    if (!__result && IsModEnabled.Value && ColorPickerController.Instance.IsVisible()) {
+    if (!__result && IsModEnabled.Value && ColorPickerController.HasVisibleInstance()) {
       __result = true;
     }
   }

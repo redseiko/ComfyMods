@@ -22,6 +22,11 @@ public sealed class ColorPickerController {
     }
   }
 
+  public static bool HasVisibleInstance() {
+    GameObject panel = _instance?.ColorPicker?.Panel;
+    return panel && panel.activeSelf;
+  }
+
   public ColorPickerPanel ColorPicker { get; }
 
   ColorPickerController(Transform parentTransform) {

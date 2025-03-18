@@ -55,7 +55,7 @@ public static class ShortcutUtils {
   }
 
   public static void OnToggleColorPickerShortcut() {
-    if (!ColorPickerController.Instance.IsVisible()) {
+    if (!ColorPickerController.HasVisibleInstance() && Game.instance) {
       ColorPickerController.Instance.ShowColorPicker(
           currentColor: TargetPieceColor.Value,
           onColorSelectedCallback: SetTargetPieceColorConfigValue);

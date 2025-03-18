@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.18.1
+
+  * Hot-fix to only allow ColorPicker panel to be created in-game (and not on start-screen) to prevent NPE.
+
 ### 1.18.0
 
   * Fixed for the `v0.220.3` patch.
