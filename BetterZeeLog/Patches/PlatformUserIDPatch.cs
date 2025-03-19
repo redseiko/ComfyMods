@@ -20,24 +20,10 @@ static class PlatformUserIDPatch {
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, "PlatformUserID \""),
             new CodeMatch(OpCodes.Ldarg_1),
-            new CodeMatch(OpCodes.Ldstr, "\" failed to parse because it didn't contain a separator!"))
-        .ThrowIfNotMatch($"Could not patch PlatformUserID.Constructor()! (log-no-separator)")
+            new CodeMatch(OpCodes.Ldstr, "\" failed to parse!"))
+        .ThrowIfNotMatch($"Could not patch PlatformUserID.Constructor()! (log-failed-to-parse)")
         .CreateLabelOffset(offset: 5, out Label logNoSeparatorLabel)
         .InsertAndAdvance(new CodeInstruction(OpCodes.Br, logNoSeparatorLabel))
-        .MatchStartForward(
-            new CodeMatch(OpCodes.Ldstr, "PlatformUserID \""),
-            new CodeMatch(OpCodes.Ldarg_1),
-            new CodeMatch(OpCodes.Ldstr, "\" failed to parse because it had no platform before the separator!"))
-        .ThrowIfNotMatch($"Could not patch PlatformUserID.Constructor()! (log-no-platform)")
-        .CreateLabelOffset(offset: 5, out Label logNoPlatformLabel)
-        .InsertAndAdvance(new CodeInstruction(OpCodes.Br, logNoPlatformLabel))
-        .MatchStartForward(
-            new CodeMatch(OpCodes.Ldstr, "PlatformUserID \""),
-            new CodeMatch(OpCodes.Ldarg_1),
-            new CodeMatch(OpCodes.Ldstr, "\" failed to parse because it had no ID after the separator!"))
-        .ThrowIfNotMatch($"Could not patch PlatformUserID.Constructor()! (log-no-id)")
-        .CreateLabelOffset(offset: 5, out Label logNoIdLabel)
-        .InsertAndAdvance(new CodeInstruction(OpCodes.Br, logNoIdLabel))
         .InstructionEnumeration();
   }
 }

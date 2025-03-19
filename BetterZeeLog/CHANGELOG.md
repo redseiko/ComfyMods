@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.13.0
+
+  * Fixed for the `v0.220.4` patch.
+  * Simplified `PlatformUserID.Constructor()` transpiler patch due to changes in this update.
+
 ### 1.12.0
 
   * Updated for the `v0.220.3` patch.
