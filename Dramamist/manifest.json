@@ -1,8 +1,8 @@
 {
   "name": "Dramamist",
-  "version_number": "1.0.0",
+  "version_number": "1.1.0",
   "author": "ComfyMods",
   "description": "Mistlands ParticleMist effect reduction.",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Dramamist",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.1901" ]
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }
