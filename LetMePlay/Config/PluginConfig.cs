@@ -1,44 +1,58 @@
-﻿using BepInEx.Configuration;
+﻿namespace LetMePlay;
 
-namespace LetMePlay {
-  public class PluginConfig {
-    public static ConfigEntry<bool> IsModEnabled { get; private set; }
-    public static ConfigEntry<bool> DisableWardShieldFlash { get; private set; }
-    public static ConfigEntry<bool> DisableCameraSwayWhileSitting { get; private set; }
-    public static ConfigEntry<bool> DisableBuildPlacementMarker { get; private set; }
+using BepInEx.Configuration;
 
-    public static ConfigEntry<bool> DisableWeatherSnowParticles { get; private set; }
-    public static ConfigEntry<bool> DisableWeatherAshParticles { get; private set; }
+using ComfyLib;
 
-    public static void BindConfig(ConfigFile config) {
-      IsModEnabled = config.Bind("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
+public static class PluginConfig {
+  public static ConfigEntry<bool> IsModEnabled { get; private set; }
 
-      DisableWardShieldFlash =
-          config.Bind("Effects", "disableWardShieldFlash", false, "Disable wards from flashing their blue shield.");
+  public static ConfigEntry<bool> DisableWardShieldFlash { get; private set; }
+  public static ConfigEntry<bool> DisableBuildPlacementMarker { get; private set; }
 
-      DisableCameraSwayWhileSitting =
-          config.Bind("Camera", "disableCameraSwayWhileSitting", false, "Disables the camera sway while sitting.");
+  public static ConfigEntry<bool> DisableWeatherSnowParticles { get; private set; }
+  public static ConfigEntry<bool> DisableWeatherAshParticles { get; private set; }
 
-      DisableBuildPlacementMarker =
-          config.Bind(
-              "Build",
-              "disableBuildPlacementMarker",
-              false,
-              "Disables the yellow placement marker (and gizmo indicator) when building.");
+  public static void BindConfig(ConfigFile config) {
+    IsModEnabled =
+        config.BindInOrder(
+            "_Global",
+            "isModEnabled",
+            true,
+            "Globally enable or disable this mod.");
 
-      DisableWeatherSnowParticles =
-          config.Bind(
-              "Weather",
-              "disableWeatherSnowParticles",
-              false,
-              "Disables ALL snow particles during snow/snowstorm weather.");
+    IsModEnabled.OnSettingChanged(EnvManagerUtils.SetupCurrentWeather);
 
-      DisableWeatherAshParticles =
-          config.Bind(
-              "Weather",
-              "disableWeatherAshParticles",
-              false,
-              "Disables ALL ash particles during ash rain weather.");
-    }
+    DisableWardShieldFlash =
+        config.BindInOrder(
+            "Effects",
+            "disableWardShieldFlash",
+            false,
+            "Disable wards from flashing their blue shield.");
+
+    DisableBuildPlacementMarker =
+        config.BindInOrder(
+            "Build",
+            "disableBuildPlacementMarker",
+            false,
+            "Disables the yellow placement marker (and gizmo indicator) when building.");
+
+    DisableWeatherSnowParticles =
+        config.BindInOrder(
+            "Weather",
+            "disableWeatherSnowParticles",
+            false,
+            "Disables ALL snow particles during snow/snowstorm weather.");
+
+    DisableWeatherSnowParticles.OnSettingChanged(EnvManagerUtils.SetupCurrentWeather);
+
+    DisableWeatherAshParticles =
+        config.BindInOrder(
+            "Weather",
+            "disableWeatherAshParticles",
+            false,
+            "Disables ALL ash particles during ash rain weather.");
+
+    DisableWeatherAshParticles.OnSettingChanged(EnvManagerUtils.SetupCurrentWeather);
   }
 }

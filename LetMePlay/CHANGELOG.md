@@ -1,12 +1,19 @@
 ## Changelog
 
+### 1.6.0
+
+  * Fixed for the `v0.220.4` patch.
+  * Code clean-up and refactoring.
+  * Removed `[Camera] disableCameraSwayWhileSitting` config-option as the camera sway is no-longer in vanilla.
+
 ### 1.5.0
-  * Updated `Ashrain` to `Ashlands_ashrain`
-  * Added `Ashlands_Storm`
-  * Moved the Changelog out of README and into a separate CHANGELOG file
-  * Bumped <LangVersion> to C# 12
-  * Bumped BepIn Dependancy to `5.4.2202`
-  * Recompiled against game version `0.218.19`
+
+  * Updated `Ashrain` to `Ashlands_ashrain`.
+  * Added `Ashlands_Storm`.
+  * Moved changelog into `CHANGELOG.md`.
+  * Bumped <LangVersion> to C# 12.
+  * Bumped BepIn Dependancy to `5.4.2202`.
+  * Recompiled against game version `0.218.19`.
 
 ### 1.4.0
 

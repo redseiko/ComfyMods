@@ -1,18 +1,24 @@
-﻿using HarmonyLib;
+﻿namespace LetMePlay;
 
-using static LetMePlay.PluginConfig;
+using System;
 
-namespace LetMePlay {
-  [HarmonyPatch(typeof(SpawnArea))]
-  public class SpawnareaPatch {
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(SpawnArea.Awake))]
-    static void AwakePostfix(ref SpawnArea __instance) {
-      if (!IsModEnabled.Value) {
-        return;
-      }
+using HarmonyLib;
 
-      __instance.m_prefabs?.RemoveAll(spawnData => !spawnData?.m_prefab);
+using static PluginConfig;
+
+[HarmonyPatch(typeof(SpawnArea))]
+static class SpawnAreaPatch {
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(SpawnArea.Awake))]
+  static void AwakePostfix(SpawnArea __instance) {
+    if (IsModEnabled.Value && __instance.m_prefabs != null) {
+      __instance.m_prefabs.RemoveAll(_hasValidPrefabPredicate);
     }
+  }
+
+  static readonly Predicate<SpawnArea.SpawnData> _hasValidPrefabPredicate = HasValidPrefab;
+
+  static bool HasValidPrefab(SpawnArea.SpawnData spawnData) {
+    return spawnData.m_prefab;
   }
 }

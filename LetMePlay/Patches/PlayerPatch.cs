@@ -1,20 +1,24 @@
-﻿using HarmonyLib;
+﻿namespace LetMePlay;
 
-using static LetMePlay.PluginConfig;
+using HarmonyLib;
 
-namespace LetMePlay {
-  [HarmonyPatch(typeof(Player))]
-  public class PlayerPatch {
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Player.UpdatePlacementGhost))]
-    static void UpdatePlacementGhostPostfix(ref Player __instance) {
-      if (__instance
-          && __instance.m_placementMarkerInstance
-          && __instance.m_placementMarkerInstance.activeSelf
-          && IsModEnabled.Value
-          && DisableBuildPlacementMarker.Value) {
-        __instance.m_placementMarkerInstance.SetActive(false);
-      }
+using UnityEngine;
+
+using static PluginConfig;
+
+[HarmonyPatch(typeof(Player))]
+static class PlayerPatch {
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Player.UpdatePlacementGhost))]
+  static void UpdatePlacementGhostPostfix(Player __instance) {
+    if (__instance) {
+      SetupPlacementMarker(__instance.m_placementMarkerInstance);
+    }
+  }
+
+  public static void SetupPlacementMarker(GameObject placementMarker) {
+    if (placementMarker && IsModEnabled.Value && DisableBuildPlacementMarker.Value) {
+      placementMarker.SetActive(false);
     }
   }
 }

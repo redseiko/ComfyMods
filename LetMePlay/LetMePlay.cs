@@ -1,28 +1,22 @@
-﻿using System.Reflection;
+﻿namespace LetMePlay;
+
+using System.Reflection;
 
 using BepInEx;
 
 using HarmonyLib;
 
-using static LetMePlay.PluginConfig;
+using static PluginConfig;
 
-namespace LetMePlay {
-  [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
-  public class LetMePlay : BaseUnityPlugin {
-    public const string PluginGUID = "redseiko.valheim.letmeplay";
-    public const string PluginName = "LetMePlay";
-    public const string PluginVersion = "1.5.0";
-    
-    Harmony _harmony;
+[BepInPlugin(PluginGUID, PluginName, PluginVersion)]
+public sealed class LetMePlay : BaseUnityPlugin {
+  public const string PluginGUID = "redseiko.valheim.letmeplay";
+  public const string PluginName = "LetMePlay";
+  public const string PluginVersion = "1.6.0";
 
-    public void Awake() {
-      BindConfig(Config);
+  public void Awake() {
+    BindConfig(Config);
 
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
-    }
-
-    public void OnDestroy() {
-      _harmony?.UnpatchSelf();
-    }
+    Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);
   }
 }

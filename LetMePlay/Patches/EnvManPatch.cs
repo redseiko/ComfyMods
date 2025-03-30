@@ -1,47 +1,50 @@
-﻿using HarmonyLib;
+﻿namespace LetMePlay;
 
-using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
-using static LetMePlay.PluginConfig;
+using HarmonyLib;
 
-namespace LetMePlay {
-  [HarmonyPatch(typeof(EnvMan))]
-  public class EnvManPatch {
-    [HarmonyTranspiler]
-    [HarmonyPatch(nameof(EnvMan.SetEnv))]
-    static IEnumerable<CodeInstruction> SetEnvTranspiler(IEnumerable<CodeInstruction> instructions) {
-      return new CodeMatcher(instructions)
-          .MatchForward(
-              useEnd: false,
-              new CodeMatch(OpCodes.Stfld),
-              new CodeMatch(OpCodes.Ldarg_1),
-              new CodeMatch(OpCodes.Ldfld, typeof(EnvSetup).GetField(nameof(EnvSetup.m_psystems))))
-          .Advance(offset: 2)
-          .SetInstructionAndAdvance(Transpilers.EmitDelegate<Func<EnvSetup, bool>>(SetEnvDelegate))
-          .InstructionEnumeration();
-    }
+using ComfyLib;
 
-    static bool SetEnvDelegate(EnvSetup envSetup) {
-      if (IsModEnabled.Value) {
-        if (DisableWeatherSnowParticles.Value
-            && (envSetup.m_name == "Snow"
-                || envSetup.m_name == "SnowStorm"
-                || envSetup.m_name == "Twilight_Snow"
-                || envSetup.m_name == "Twilight_SnowStorm")) {
-          return false;
-        }
+using static PluginConfig;
 
-        if (DisableWeatherAshParticles.Value
-            && (envSetup.m_name == "Ashlands_ashrain"
-                || envSetup.m_name == "Ashlands_storm"))
-        {
-          return false;
-        }
+[HarmonyPatch(typeof(EnvMan))]
+static class EnvManPatch {
+  [HarmonyTranspiler]
+  [HarmonyPatch(nameof(EnvMan.SetEnv))]
+  static IEnumerable<CodeInstruction> SetEnvTranspiler(
+      IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
+    return new CodeMatcher(instructions, generator)
+        .Start()
+        .MatchStartForward(
+            new(OpCodes.Ldarg_0),
+            new(OpCodes.Ldarg_1),
+            new(OpCodes.Ldfld, AccessTools.Field(typeof(EnvSetup), nameof(EnvSetup.m_psystems))),
+            new(OpCodes.Ldc_I4_1),
+            new(OpCodes.Call, AccessTools.Method(typeof(EnvMan), nameof(EnvMan.SetParticleArrayEnabled))))
+        .ThrowIfInvalid($"Could not patch EnvMan.SetEnv()! (set-particle-array-enabled-true")
+        .ExtractLabels(out List<Label> setLabels)
+        .CreateLabelOffset(offset: 5, out Label skipLabel)
+        .Insert(
+            new(OpCodes.Ldarg_1),
+            new(OpCodes.Call, AccessTools.Method(typeof(EnvManPatch), nameof(SetEnvDelegate))),
+            new(OpCodes.Brfalse, skipLabel))
+        .AddLabels(setLabels)
+        .InstructionEnumeration();
+  }
+
+  static bool SetEnvDelegate(EnvSetup envSetup) {
+    if (IsModEnabled.Value) {
+      if (DisableWeatherSnowParticles.Value && EnvManagerUtils.IsSnowWeather(envSetup.m_name)) {
+        return false;
       }
 
-      return envSetup.m_psystems != null;
+      if (DisableWeatherAshParticles.Value && EnvManagerUtils.IsAshWeather(envSetup.m_name)) {
+        return false;
+      }
     }
+
+    return true;
   }
 }

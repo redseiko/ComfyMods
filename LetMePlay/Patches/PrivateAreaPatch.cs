@@ -1,18 +1,18 @@
-﻿using HarmonyLib;
+﻿namespace LetMePlay;
 
-using static LetMePlay.PluginConfig;
+using HarmonyLib;
 
-namespace LetMePlay {
-  [HarmonyPatch(typeof(PrivateArea))]
-  public class PrivateAreaPatch {
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(PrivateArea.RPC_FlashShield))]
-    static bool PrivateAreaRpcFlashShield() {
-      if (IsModEnabled.Value && DisableWardShieldFlash.Value) {
-        return false;
-      }
+using static PluginConfig;
 
-      return true;
+[HarmonyPatch(typeof(PrivateArea))]
+static class PrivateAreaPatch {
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(PrivateArea.RPC_FlashShield))]
+  static bool PrivateAreaRpcFlashShield() {
+    if (IsModEnabled.Value && DisableWardShieldFlash.Value) {
+      return false;
     }
+
+    return true;
   }
 }
