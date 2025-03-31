@@ -12,13 +12,13 @@ static class SpawnAreaPatch {
   [HarmonyPatch(nameof(SpawnArea.Awake))]
   static void AwakePostfix(SpawnArea __instance) {
     if (IsModEnabled.Value && __instance.m_prefabs != null) {
-      __instance.m_prefabs.RemoveAll(_hasValidPrefabPredicate);
+      __instance.m_prefabs.RemoveAll(_hasInvalidPrefab);
     }
   }
 
-  static readonly Predicate<SpawnArea.SpawnData> _hasValidPrefabPredicate = HasValidPrefab;
+  static readonly Predicate<SpawnArea.SpawnData> _hasInvalidPrefab = HasInvalidPrefab;
 
-  static bool HasValidPrefab(SpawnArea.SpawnData spawnData) {
-    return spawnData.m_prefab;
+  static bool HasInvalidPrefab(SpawnArea.SpawnData spawnData) {
+    return !spawnData.m_prefab;
   }
 }

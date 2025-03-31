@@ -12,7 +12,7 @@ using static PluginConfig;
 public sealed class LetMePlay : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.letmeplay";
   public const string PluginName = "LetMePlay";
-  public const string PluginVersion = "1.6.0";
+  public const string PluginVersion = "1.6.1";
 
   public void Awake() {
     BindConfig(Config);

@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.6.1
+
+  * Hot-fix for `SpawnArea` patch missing a negation on `HasValidPrefab()` check.
+
 ### 1.6.0
 
   * Fixed for the `v0.220.4` patch.
