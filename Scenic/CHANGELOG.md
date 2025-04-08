@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.5.0
+
+  * Updated for the `v0.220.4` patch.
+  * Bumped up `<LangVersion>` to C# 12.
+  * Code clean-up and refactoring.
+
 ### 1.4.0
 
   * Moved mod to public `ComfyMods` repo and changed GUID to `redseiko.valheim.scenic`.
@@ -23,7 +29,7 @@
 ### 1.1.0
 
   * Added `manifest.json`, `icon.png` and `README.md`.
-    * Modified the project file to automatically package the above files into a versioned Thunderstore package.
+  * Modified the project file to automatically package the above files into a versioned Thunderstore package.
 
 ### 1.0.0
 
