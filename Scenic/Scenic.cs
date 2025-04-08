@@ -12,17 +12,11 @@ using static PluginConfig;
 public sealed class Scenic : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.scenic";
   public const string PluginName = "Scenic";
-  public const string PluginVersion = "1.4.0";
-
-  Harmony _harmony;
+  public const string PluginVersion = "1.5.0";
 
   void Awake() {
     BindConfig(Config);
 
-    _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
-  }
-
-  void OnDestroy() {
-    _harmony?.UnpatchSelf();
+    Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
   }
 }
