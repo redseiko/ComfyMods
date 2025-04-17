@@ -1,0 +1,8 @@
+{
+  "name": "FabulousSteam",
+  "version_number": "1.0.0",
+  "author": "ComfyMods",
+  "description": "Steam made (Play)Fabulous.",
+  "website_url": "https://github.com/redseiko/ComfyMods/tree/main/FabulousSteam",
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
+}
