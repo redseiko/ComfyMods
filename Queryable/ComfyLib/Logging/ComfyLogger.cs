@@ -1,6 +1,7 @@
 ﻿namespace ComfyLib;
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 using BepInEx.Logging;
@@ -12,19 +13,33 @@ public static class ComfyLogger {
     CurrentLogger = logger;
   }
 
-  public static void LogInfo(object obj, Terminal context = default) {
-    CurrentLogger.Log(LogLevel.Info, $"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
+  static readonly Stack<Terminal> _contextStack = [];
+  static Terminal _currentContext = default;
 
-    if (context) {
-      context.AddString($"{obj}");
-    }
+  public static void PushContext(Terminal context) {
+    _contextStack.Push(context);
+    _currentContext = context;
+  }
+
+  public static void PopContext() {
+    _currentContext = _contextStack.Count > 0 ? _contextStack.Pop() : default;
+  }
+
+  public static void LogInfo(object obj, Terminal context = default) {
+    LogMessage(LogLevel.Info, obj.ToString(), context);
   }
 
   public static void LogError(object obj, Terminal context = default) {
-    CurrentLogger.Log(LogLevel.Error, $"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
+    LogMessage(LogLevel.Error, obj.ToString(), context);
+  }
+
+  static void LogMessage(LogLevel logLevel, string message, Terminal context) {
+    CurrentLogger.Log(logLevel, $"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {message}");
 
     if (context) {
-      context.AddString($"{obj}");
+      context.AddString(message);
+    } else if (_currentContext) {
+      _currentContext.AddString(message);
     }
   }
 }
