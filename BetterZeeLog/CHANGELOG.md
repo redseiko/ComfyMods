@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.14.0
+
+  * Added a prefix-patch to skip `FejdStartup.UpdateKeyboard()` if `Console.IsVisible()` is true.
+
 ### 1.13.0
 
   * Fixed for the `v0.220.4` patch.
