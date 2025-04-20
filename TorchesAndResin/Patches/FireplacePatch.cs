@@ -1,48 +1,46 @@
-﻿using System;
+﻿namespace TorchesAndResin;
+
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
+using ComfyLib;
+
 using HarmonyLib;
 
-using static TorchesAndResin.PluginConfig;
-using static TorchesAndResin.TorchesAndResin;
+using static PluginConfig;
 
-namespace TorchesAndResin {
-  [HarmonyPatch(typeof(Fireplace))]
-  static class FireplacePatch {
-    [HarmonyTranspiler]
-    [HarmonyPatch(nameof(Fireplace.Awake))]
-    static IEnumerable<CodeInstruction> AwakeTranspiler(IEnumerable<CodeInstruction> instructions) {
-      return new CodeMatcher(instructions)
-          .MatchForward(
-              useEnd: false,
-              new CodeMatch(OpCodes.Ldstr, "UpdateFireplace"),
-              new CodeMatch(OpCodes.Ldc_R4, 0f),
-              new CodeMatch(OpCodes.Ldc_R4, 2f))
-          .Advance(offset: 1)
-          .SetOperandAndAdvance(0.5f)
-          .InstructionEnumeration();
-    }
+[HarmonyPatch(typeof(Fireplace))]
+static class FireplacePatch {
+  [HarmonyTranspiler]
+  [HarmonyPatch(nameof(Fireplace.Awake))]
+  static IEnumerable<CodeInstruction> AwakeTranspiler(
+      IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
+    return new CodeMatcher(instructions, generator)
+        .Start()
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldarg_0),
+            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Fireplace), nameof(Fireplace.m_nview))),
+            new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(ZNetView), nameof(ZNetView.IsOwner))))
+        .ThrowIfInvalid($"Could not patch Fireplace.Awake()! (check-is-owner")
+        .ExtractLabels(out List<Label> checkIsOwnerLabels)
+        .Insert(
+            new CodeInstruction(OpCodes.Ldarg_0),
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(FireplacePatch), nameof(CheckIsOwnerPreDelegate))))
+        .AddLabels(checkIsOwnerLabels)
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldstr, "UpdateFireplace"),
+            new CodeMatch(OpCodes.Ldc_R4, 0f),
+            new CodeMatch(OpCodes.Ldc_R4, 2f))
+        .ThrowIfInvalid($"Could not patch Fireplace.Awake()! (invoke-update-fireplace)")
+        .Advance(offset: 1)
+        .SetOperandAndAdvance(0.5f)
+        .InstructionEnumeration();
+  }
 
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(Fireplace.Awake))]
-    static void AwakePrefix(ref Fireplace __instance, ref bool __state) {
-      if (IsModEnabled.Value) {
-        __state = Array.IndexOf(EligibleTorchItemNames, Utils.GetPrefabName(__instance.gameObject.name)) >= 0;
-
-        if (__state) {
-          __instance.m_startFuel = TorchStartingFuel.Value;
-        }
-      }
-    }
-
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Fireplace.Awake))]
-    static void AwakePostfix(ref Fireplace __instance, bool __state) {
-      if (IsModEnabled.Value && __state && __instance.m_nview && __instance.m_nview.IsOwner()) {
-        __instance.m_startFuel = TorchStartingFuel.Value;
-        __instance.m_nview.m_zdo.Set(ZDOVars.s_fuel, (float) TorchStartingFuel.Value);
-      }
+  static void CheckIsOwnerPreDelegate(Fireplace fireplace) {
+    if (IsModEnabled.Value) {
+      FireplaceManager.SetEligibleFireplaceFuel(fireplace, TorchStartingFuel.Value);
     }
   }
 }
