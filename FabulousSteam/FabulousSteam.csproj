@@ -55,62 +55,48 @@
     <PluginOutputPath Condition=" '$(PluginOutputPath)' == ''">$(GamePath)\BepInEx\plugins</PluginOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
+    <Reference Include="0Harmony" Private="false">
       <HintPath>$(GamePath)\BepInEx\core\0Harmony.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="assembly_guiutils">
+    <Reference Include="assembly_guiutils_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\assembly_guiutils_publicized.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="assembly_utils">
+    <Reference Include="assembly_utils_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="assembly_valheim">
+    <Reference Include="assembly_valheim_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\assembly_valheim_publicized.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="BepInEx">
+    <Reference Include="BepInEx" Private="false">
       <HintPath>$(GamePath)\BepInEx\core\BepInEx.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="com.rlabrecque.steamworks.net">
+    <Reference Include="com.rlabrecque.steamworks.net_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\com.rlabrecque.steamworks.net_publicized.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="gui_framework">
+    <Reference Include="gui_framework_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\gui_framework_publicized.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="PlayFab">
+    <Reference Include="PlayFab_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\PlayFab_publicized.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="SoftReferenceableAssets">
+    <Reference Include="SoftReferenceableAssets_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\SoftReferenceableAssets_publicized.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="Splatform">
+    <Reference Include="Splatform_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\Splatform_publicized.dll</HintPath>
-      <Private>false</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Unity.TextMeshPro">
+    <Reference Include="Unity.TextMeshPro" Private="false">
       <HintPath>$(GamePath)\valheim_server_Data\Managed\Unity.TextMeshPro.dll</HintPath>
-      <Private>false</Private>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="UnityEngine">
+    <Reference Include="UnityEngine" Private="false">
       <HintPath>$(GamePath)\valheim_server_Data\Managed\UnityEngine.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule">
+    <Reference Include="UnityEngine.CoreModule" Private="false">
       <HintPath>$(GamePath)\valheim_server_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-      <Private>false</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -119,15 +105,15 @@
     <Compile Include="FabulousSteam.cs" />
     <Compile Include="Patches\FejdStartupPatch.cs" />
     <Compile Include="Patches\ZNetPatch.cs" />
+    <Compile Include="Patches\ZPlayFabMatchmakingPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CHANGELOG.md" />
-    <None Include="icon.png" />
-    <None Include="manifest.json" />
-    <None Include="README.md" />
+    <None Include="CHANGELOG.md" ThunderstorePackage="true" />
+    <None Include="icon.png" ThunderstorePackage="true" />
+    <None Include="manifest.json" ThunderstorePackage="true" />
+    <None Include="README.md" ThunderstorePackage="true" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyAssembly" AfterTargets="Build">
     <Copy SourceFiles="$(TargetDir)$(AssemblyName).dll" DestinationFolder="$(PluginOutputPath)" />
@@ -150,7 +136,8 @@
   </Target>
   <Target Name="MakeThunderstorePackage" AfterTargets="GetAssemblyVersion">
     <ItemGroup>
-      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; CHANGELOG.md; README.md; manifest.json; icon.png" />
+      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll" />
+      <PackageFiles Include="@(None)" Condition="'%(None.ThunderstorePackage)' == 'true'" />
     </ItemGroup>
     <MakeDir Directories="$(PackageDir)" />
     <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageDir)" />

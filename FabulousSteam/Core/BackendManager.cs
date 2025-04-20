@@ -61,11 +61,11 @@ public static class BackendManager {
   }
 
   public static void ProcessIncomingServerConnections(ZNet net) {
-    ProcessIncomingServerConnection(net, SteamHostSocket);
-    ProcessIncomingServerConnection(net, PlayFabHostSocket);
+    ProcessIncomingServerConnection(net, SteamHostSocket, OnlineBackendType.Steamworks);
+    ProcessIncomingServerConnection(net, PlayFabHostSocket, OnlineBackendType.PlayFab);
   }
 
-  static void ProcessIncomingServerConnection(ZNet net, ISocket hostSocket) {
+  static void ProcessIncomingServerConnection(ZNet net, ISocket hostSocket, OnlineBackendType backendType) {
     if (hostSocket == default) {
       return;
     }
@@ -80,6 +80,8 @@ public static class BackendManager {
       socket.Dispose();
       return;
     }
+
+    FabulousSteam.LogInfo($"Incoming connection ({backendType:F}): {socket.GetHostName()}");
 
     ZNetPeer netPeer = new(socket, server: false);
     net.OnNewConnection(netPeer);

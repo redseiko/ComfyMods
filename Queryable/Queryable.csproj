@@ -170,7 +170,7 @@
       <PackageFiles Include="@(None)" Condition="'%(None.ThunderstorePackage)' == 'true'" />
     </ItemGroup>
     <MakeDir Directories="$(PackageDir)" />
-    <Copy SourceFiles="@(TargetAssembly); @(PackageFiles)" DestinationFolder="$(PackageDir)" />
+    <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageDir)" />
     <ZipDirectory SourceDirectory="$(PackageDir)" DestinationFile="$(OutDir)$(PackageName).zip" Overwrite="true" />
     <RemoveDir Directories="$(PackageDir)" />
   </Target>
