@@ -23,13 +23,13 @@ public static class WorldUtils {
 
     try {
       FileReader fileReader = new(worldPath, FileHelpers.FileSource.Local, FileHelpers.FileHelperType.Binary);
+
       ParseWorldData(worldData, fileReader.m_binary);
+      ComfyLogger.LogInfo(worldData);
     } catch (Exception exception) {
       ComfyLogger.LogError($"Exception while parsing world file: {worldPath}\n{exception}");
       return false;
     }
-
-    ComfyLogger.LogInfo(worldData);
 
     return true;
   }
@@ -45,8 +45,6 @@ public static class WorldUtils {
     reader.ReadInt64();
     worldData.NextUid = reader.ReadUInt32();
     worldData.ZDOCount = reader.ReadInt32();
-
-    // TODO: redseiko@ - continue parsing ZDOs here.
   }
 }
 

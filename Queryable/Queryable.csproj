@@ -131,9 +131,16 @@
     <Compile Include="ComfyLib\Extensions\StringExtensions.cs" />
     <Compile Include="ComfyLib\Logging\ComfyLogger.cs" />
     <Compile Include="Config\PluginConfig.cs" />
+    <Compile Include="Core\Commands\DumpContainersCommand.cs" />
     <Compile Include="Core\Commands\QueryWorldCommand.cs" />
+    <Compile Include="Core\DatabaseUtils.cs" />
     <Compile Include="Core\PrefabUtils.cs" />
     <Compile Include="Core\WorldUtils.cs" />
+    <Compile Include="Core\ZDOUtils.cs" />
+    <Compile Include="Database\SQLite\SQLite.cs" />
+    <Compile Include="Database\Tables\ContainerItem.cs" />
+    <Compile Include="Database\Tables\Container.cs" />
+    <Compile Include="Database\Tables\PrefabHash.cs" />
     <Compile Include="Patches\TerminalPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queryable.cs" />
@@ -143,6 +150,9 @@
     <None Include="icon.png" ThunderstorePackage="true" />
     <None Include="manifest.json" ThunderstorePackage="true" />
     <None Include="README.md" ThunderstorePackage="true" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Database\SQLite\gilzoide-sqlite-net.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyAssembly" AfterTargets="Build">

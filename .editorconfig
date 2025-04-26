@@ -2,6 +2,14 @@
 
 guidelines = 120
 
+[SQLite.cs]
+
+# External library, no analysis should be done
+dotnet_analyzer_diagnostic.severity = none
+
+# IDE0079: Remove unnecessary suppression
+dotnet_diagnostic.IDE0079.severity = none
+
 [*.cs]
 
 # IDE0003: Remove qualification
