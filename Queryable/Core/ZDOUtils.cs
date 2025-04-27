@@ -7,7 +7,21 @@ using System.Text;
 
 using Database;
 
+using UnityEngine;
+
 public static class ZDOUtils {
+  public static Container CreateContainer(ZDO zdo) {
+    Vector3 position = zdo.m_position;
+
+    return new Container() {
+      PrefabHash = zdo.m_prefab,
+      PositionX = Mathf.RoundToInt(position.x),
+      PositionY = Mathf.RoundToInt(position.y),
+      PositionZ = Mathf.RoundToInt(position.z),
+      CreatorId = zdo.GetLong(ZDOVars.s_creator, 0),
+    };
+  }
+
   public static bool TryReadContainerItems(ZDO zdo, List<ContainerItem> items) {
     if (!zdo.GetString(ZDOVars.s_items, out string itemsInBase64) || string.IsNullOrEmpty(itemsInBase64)) {
       return false;
@@ -98,6 +112,91 @@ public static class ZDOUtils {
 
     for (int i = 1; i < count; i++) {
       _jsonBuilder.Append($",\"{reader.ReadString()}\": \"{reader.ReadString()}\"");
+    }
+
+    _jsonBuilder.Append("}");
+
+    string jsonResult = _jsonBuilder.ToString();
+
+    _jsonBuilder.Clear();
+
+    return jsonResult;
+  }
+
+  public static bool TryReadItemDropItem(ZDO zdo, out ItemDropItem item) {
+    ZDOID zid = zdo.m_uid;
+    Vector3 position = zdo.m_position;
+
+    item = new ItemDropItem() {
+      PrefabHash = zdo.m_prefab,
+      PositionX = Mathf.RoundToInt(position.x),
+      PositionY = Mathf.RoundToInt(position.y),
+      PositionZ = Mathf.RoundToInt(position.z),
+    };
+
+    if (ZDOExtraData.GetFloat(zid, ZDOVars.s_durability, out float durability)) {
+      item.Durability = durability;
+    }
+
+    if (ZDOExtraData.GetInt(zid, ZDOVars.s_stack, out int stack)) {
+      item.Stack = stack;
+    }
+
+    if (ZDOExtraData.GetInt(zid, ZDOVars.s_quality, out int quality)) {
+      item.Quality = quality;
+    }
+
+    if (ZDOExtraData.GetInt(zid, ZDOVars.s_variant, out int variant)) {
+      item.Variant = variant;
+    }
+
+    if (ZDOExtraData.GetLong(zid, ZDOVars.s_crafterID, out long crafterId)) {
+      item.CrafterId = crafterId;
+    }
+
+    if (ZDOExtraData.GetString(zid, ZDOVars.s_crafterName, out string crafterName)) {
+      item.CrafterName = crafterName;
+    }
+
+    if (ZDOExtraData.GetInt(zid, ZDOVars.s_dataCount, out int dataCount) && dataCount > 0) {
+      item.CustomDataJson = ReadItemCustomDataToJson(zid, dataCount);
+    }
+
+    if (ZDOExtraData.GetInt(zid, ZDOVars.s_worldLevel, out int worldLevel)) {
+      item.WorldLevel = worldLevel;
+    }
+
+    if (ZDOExtraData.GetBool(zid, ZDOVars.s_pickedUp, out bool isPickedUp)) {
+      item.IsPickedUp = isPickedUp;
+    }
+
+    return !item.IsNull();
+  }
+
+  public static readonly int CustomDataKey0HashCode = "data_0".GetStableHashCode();
+  public static readonly int CustomDataValue0HashCode = "data__0".GetStableHashCode();
+
+  public static string ReadItemCustomDataToJson(ZDOID zid, int dataCount) {
+    if (dataCount <= 0) {
+      return string.Empty;
+    }
+
+    _jsonBuilder
+        .Clear()
+        .Append("{")
+        .Append("\"")
+        .Append(ZDOExtraData.GetString(zid, CustomDataKey0HashCode, string.Empty))
+        .Append("\":\"")
+        .Append(ZDOExtraData.GetString(zid, CustomDataValue0HashCode, string.Empty))
+        .Append("\"");
+
+
+    for (int i = 1; i < dataCount; i++) {
+      _jsonBuilder.Append($",\"")
+          .Append(ZDOExtraData.GetString(zid, $"data_{i}".GetStableHashCode(), string.Empty))
+          .Append("\": \"")
+          .Append(ZDOExtraData.GetString(zid, $"data__{i}".GetStableHashCode(), string.Empty))
+          .Append("\"");
     }
 
     _jsonBuilder.Append("}");

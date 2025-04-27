@@ -14,6 +14,7 @@ public static class DatabaseUtils {
 
     database.CreateTable<Container>();
     database.CreateTable<ContainerItem>();
+    database.CreateTable<ItemDropItem>();
     database.CreateTable<PrefabHash>();
 
     return database;
@@ -27,5 +28,16 @@ public static class DatabaseUtils {
             PrefabName = pair.Value.name,
           });
     }
+  }
+
+  public static void InsertContainerAndItems(SQLiteConnection database, ZDO zdo, List<ContainerItem> items) {
+    Container container = ZDOUtils.CreateContainer(zdo);
+    database.Insert(container);
+
+    for (int i = 0, count = items.Count; i < count; i++) {
+      items[0].ContainerId = container.ContainerId;
+    }
+
+    database.InsertAll(items, runInTransaction: false);
   }
 }
