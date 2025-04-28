@@ -49,11 +49,9 @@ public static class DumpItemsCommand {
       }
     }
 
-
     ComfyLogger.LogInfo($"Parsing {zdos.Count} ZDOs and dumping items to: {databaseName}", context);
 
-    using SQLiteConnection database1 = DatabaseUtils.CreateDatabase(databaseName);
-    using SQLiteConnection database2 = DatabaseUtils.CreateDatabase(databaseName);
+    using SQLiteConnection database = DatabaseUtils.CreateDatabase(databaseName);
 
     DumpReport report = new();
 
@@ -61,10 +59,9 @@ public static class DumpItemsCommand {
     int tenPercentMod = Mathf.CeilToInt(zdoCount / 10);
     int nextCount = zdoCount - tenPercentMod;
 
-    Task task1 = Task.Run(() => RunThread(database1, zdos, report));
-    Task task2 = Task.Run(() => RunThread(database2, zdos, report));
+    Task task = Task.Run(() => RunThread(database, zdos, report));
 
-    while (!task1.IsCompleted && !task2.IsCompleted) {
+    while (!task.IsCompleted) {
       yield return null;
 
       if (zdos.Count < nextCount) {
@@ -77,7 +74,7 @@ public static class DumpItemsCommand {
     TimeSpan elapsedTime = TimeSpan.FromSeconds(DateTimeOffset.UtcNow.ToUnixTimeSeconds() - startTimeSeconds);
 
     ComfyLogger.LogInfo(
-            $"Finisheh dumping items, elapsed time: {elapsedTime}\n"
+        $"Finished dumping items, elapsed time: {elapsedTime}\n"
             + $"Parsed {zdoCount} ZDOs and found...\n"
             + $"  * {report.ContainerCount} containers\n"
             + $"  * {report.ItemCount} items in containers\n"
