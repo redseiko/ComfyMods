@@ -1,6 +1,8 @@
 ﻿namespace Queryable;
 
+using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -34,22 +36,49 @@ public static class DumpItemsCommand {
   }
 
   public static IEnumerator RunCoroutine(Terminal context) {
-    List<ZDO> zdos = [.. ZDOMan.s_instance.m_objectsByID.Values];
+    ConcurrentQueue<ZDO> zdos = new(ZDOMan.s_instance.m_objectsByID.Values);
+    long startTimeSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    string databaseName = $"{ZNet.m_world.m_fileName}-items-{startTimeSeconds}.db";
 
-    string databaseName = $"{ZNet.m_world.m_fileName}-items-{System.DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.db";
-    ComfyLogger.LogInfo($"Parsing {zdos.Count} ZDOs and dumping items to: {databaseName}", context);
+    using (SQLiteConnection populateDatabase = DatabaseUtils.CreateDatabaseAndTables(databaseName)) {
+      Task populateTask =
+          Task.Run(() => DatabaseUtils.InsertPrefabHashes(populateDatabase, ZNetScene.s_instance.m_namedPrefabs));
 
-    using SQLiteConnection database = DatabaseUtils.CreateDatabaseAndTables(databaseName);
-    DumpReport report = new();
-
-    Task task = Task.Run(() => RunThread(database, zdos, report));
-
-    while (!task.IsCompleted) {
-      yield return null;
+      while (!populateTask.IsCompleted) {
+        yield return null;
+      }
     }
 
+
+    ComfyLogger.LogInfo($"Parsing {zdos.Count} ZDOs and dumping items to: {databaseName}", context);
+
+    using SQLiteConnection database1 = DatabaseUtils.CreateDatabase(databaseName);
+    using SQLiteConnection database2 = DatabaseUtils.CreateDatabase(databaseName);
+
+    DumpReport report = new();
+
+    int zdoCount = zdos.Count;
+    int tenPercentMod = Mathf.CeilToInt(zdoCount / 10);
+    int nextCount = zdoCount - tenPercentMod;
+
+    Task task1 = Task.Run(() => RunThread(database1, zdos, report));
+    Task task2 = Task.Run(() => RunThread(database2, zdos, report));
+
+    while (!task1.IsCompleted && !task2.IsCompleted) {
+      yield return null;
+
+      if (zdos.Count < nextCount) {
+        int parsedCount = zdoCount - zdos.Count;
+        nextCount = zdos.Count - tenPercentMod;
+        ComfyLogger.LogInfo($"Parsed {parsedCount}/{zdoCount} ({parsedCount * 1f / zdoCount:P2}) ZDOs.");
+      }
+    }
+
+    TimeSpan elapsedTime = TimeSpan.FromSeconds(DateTimeOffset.UtcNow.ToUnixTimeSeconds() - startTimeSeconds);
+
     ComfyLogger.LogInfo(
-        $"Parsed {zdos.Count} ZDOs and found...\n"
+            $"Finisheh dumping items, elapsed time: {elapsedTime}\n"
+            + $"Parsed {zdoCount} ZDOs and found...\n"
             + $"  * {report.ContainerCount} containers\n"
             + $"  * {report.ItemCount} items in containers\n"
             + $"  * {report.ItemDropCount} item drops",
@@ -62,19 +91,11 @@ public static class DumpItemsCommand {
     public int ItemDropCount = 0;
   }
 
-  public static void RunThread(SQLiteConnection database, List<ZDO> zdos, DumpReport report) {
-    DatabaseUtils.InsertPrefabHashes(database, ZNetScene.s_instance.m_namedPrefabs);
-
+  public static void RunThread(SQLiteConnection database, ConcurrentQueue<ZDO> zdos, DumpReport report) {
     List<ContainerItem> items = [];
-    int zdoCount = zdos.Count;
-    int tenPercentMod = Mathf.CeilToInt(zdoCount / 10);
 
-    for (int i = 0; i < zdoCount; i++) {
-      if (i % tenPercentMod == 0) {
-        ComfyLogger.LogInfo($"Parsed {i}/{zdoCount} ZDOs.");
-      }
-
-      ZDO zdo = zdos[i];
+    while (zdos.TryDequeue(out ZDO zdo)) {
+      database.BeginTransaction();
 
       if (ZDOUtils.TryReadContainerItems(zdo, items)) {
         report.ContainerCount++;
@@ -88,6 +109,8 @@ public static class DumpItemsCommand {
         report.ItemDropCount++;
         database.Insert(item);
       }
+
+      database.Commit();
     }
   }
 }

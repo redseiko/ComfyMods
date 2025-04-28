@@ -9,8 +9,15 @@ using SQLite;
 using UnityEngine;
 
 public static class DatabaseUtils {
-  public static SQLiteConnection CreateDatabaseAndTables(string databaseName) {
+  public static SQLiteConnection CreateDatabase(string databaseName) {
     SQLiteConnection database = new SQLiteConnection(databaseName);
+    return database;
+  }
+
+  public static SQLiteConnection CreateDatabaseAndTables(string databaseName) {
+    SQLiteConnection database = CreateDatabase(databaseName);
+
+    database.EnableWriteAheadLogging();
 
     database.CreateTable<Container>();
     database.CreateTable<ContainerItem>();
