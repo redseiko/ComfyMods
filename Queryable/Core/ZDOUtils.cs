@@ -10,6 +10,17 @@ using Database;
 using UnityEngine;
 
 public static class ZDOUtils {
+  public static DataObject CreateDataObject(ZDO zdo) {
+    Vector3 position = zdo.m_position;
+
+    return new DataObject() {
+      PrefabHash = zdo.m_prefab,
+      PositionX = Mathf.RoundToInt(position.x),
+      PositionY = Mathf.RoundToInt(position.y),
+      PositionZ = Mathf.RoundToInt(position.z),
+    };
+  }
+
   public static Container CreateContainer(ZDO zdo) {
     Vector3 position = zdo.m_position;
 
@@ -123,16 +134,21 @@ public static class ZDOUtils {
     return jsonResult;
   }
 
+  public static bool TryReadItemStandItem(ZDO zdo, out ItemDropItem item) {
+    if (!TryReadItemDropItem(zdo, out item)) {
+      return false;
+    }
+
+    if (ZDOExtraData.GetString(zdo.m_uid, ZDOVars.s_item, out string itemName)) {
+      item.ItemName = itemName;
+    }
+
+    return true;
+  }
+
   public static bool TryReadItemDropItem(ZDO zdo, out ItemDropItem item) {
     ZDOID zid = zdo.m_uid;
-    Vector3 position = zdo.m_position;
-
-    item = new ItemDropItem() {
-      PrefabHash = zdo.m_prefab,
-      PositionX = Mathf.RoundToInt(position.x),
-      PositionY = Mathf.RoundToInt(position.y),
-      PositionZ = Mathf.RoundToInt(position.z),
-    };
+    item = new ItemDropItem();
 
     if (ZDOExtraData.GetFloat(zid, ZDOVars.s_durability, out float durability)) {
       item.Durability = durability;

@@ -78,7 +78,8 @@ public static class DumpItemsCommand {
             + $"Parsed {zdoCount} ZDOs and found...\n"
             + $"  * {report.ContainerCount} containers\n"
             + $"  * {report.ItemCount} items in containers\n"
-            + $"  * {report.ItemDropCount} item drops",
+            + $"  * {report.ItemDropCount} ItemDrop items\n"
+            + $"  * {report.ItemStandItemCount} ItemStand items\n",
         context);
   }
 
@@ -86,14 +87,13 @@ public static class DumpItemsCommand {
     public int ContainerCount = 0;
     public int ItemCount = 0;
     public int ItemDropCount = 0;
+    public int ItemStandItemCount = 0;
   }
 
   public static void RunThread(SQLiteConnection database, ConcurrentQueue<ZDO> zdos, DumpReport report) {
     List<ContainerItem> items = [];
 
     while (zdos.TryDequeue(out ZDO zdo)) {
-      database.BeginTransaction();
-
       if (ZDOUtils.TryReadContainerItems(zdo, items)) {
         report.ContainerCount++;
         report.ItemCount += items.Count;
@@ -102,12 +102,32 @@ public static class DumpItemsCommand {
         items.Clear();
       }
 
-      if (PrefabUtils.HasItemDropComponent(zdo) && ZDOUtils.TryReadItemDropItem(zdo, out ItemDropItem item)) {
+      DataObject dataObject = default;
+
+      if (PrefabUtils.HasItemDropComponent(zdo) && ZDOUtils.TryReadItemDropItem(zdo, out ItemDropItem itemDropItem)) {
         report.ItemDropCount++;
-        database.Insert(item);
+
+        if (dataObject == default) {
+          dataObject = ZDOUtils.CreateDataObject(zdo);
+          database.Insert(dataObject);
+        }
+
+        itemDropItem.ItemDropId = dataObject.ObjectId;
+        database.Insert(itemDropItem);
       }
 
-      database.Commit();
+      if (PrefabUtils.HasItemStandComponent(zdo)
+          && ZDOUtils.TryReadItemStandItem(zdo, out ItemDropItem itemStandItem)) {
+        report.ItemStandItemCount++;
+
+        if (dataObject == default) {
+          dataObject = ZDOUtils.CreateDataObject(zdo);
+          database.Insert(dataObject);
+        }
+
+        itemStandItem.ItemStandId = dataObject.ObjectId;
+        database.Insert(itemStandItem);
+      }
     }
   }
 }

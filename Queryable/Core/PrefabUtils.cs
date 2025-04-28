@@ -40,49 +40,49 @@ public static class PrefabUtils {
     return netScene;
   }
 
-  static readonly HashSet<int> ArmorStandPrefabHashes = [];
-  static readonly HashSet<int> ItemStandPrefabHashes = [];
-  static readonly HashSet<int> ItemDropPrefabHashes = [];
+  public static readonly Dictionary<int, ArmorStand> ArmorStandPrefabs = [];
+  public static readonly Dictionary<int, ItemStand> ItemStandPrefabs = [];
+  public static readonly Dictionary<int, ItemDrop> ItemDropPrefabs = [];
 
   public static void ProcessPrefabCache(Dictionary<int, GameObject> prefabCache) {
-    ArmorStandPrefabHashes.Clear();
-    ItemStandPrefabHashes.Clear();
-    ItemDropPrefabHashes.Clear();
+    ArmorStandPrefabs.Clear();
+    ItemStandPrefabs.Clear();
+    ItemDropPrefabs.Clear();
 
     foreach (KeyValuePair<int, GameObject> pair in prefabCache) {
       int prefabHash = pair.Key;
       GameObject prefab = pair.Value;
 
-      if (prefab.TryGetComponent(out ArmorStand _)) {
-        ArmorStandPrefabHashes.Add(prefabHash);
+      if (prefab.TryGetComponent(out ArmorStand armorStand)) {
+        ArmorStandPrefabs[prefabHash] = armorStand;
       }
 
-      if (prefab.TryGetComponent(out ItemStand _)) {
-        ItemStandPrefabHashes.Add(prefabHash);
+      if (prefab.TryGetComponent(out ItemStand itemStand)) {
+        ItemStandPrefabs[prefabHash] = itemStand;
       }
 
-      if (prefab.TryGetComponent(out ItemDrop _)) {
-        ItemDropPrefabHashes.Add(prefabHash);
+      if (prefab.TryGetComponent(out ItemDrop itemDrop)) {
+        ItemDropPrefabs[prefabHash] = itemDrop;
       }
     }
 
     ComfyLogger.LogInfo(
         $"Processed prefab-cache.\n"
             + $"Cached prefab-hashes by type:\n"
-            + $"  * ArmorStand: {ArmorStandPrefabHashes.Count}\n"
-            + $"  * ItemStand: {ItemStandPrefabHashes.Count}\n"
-            + $"  * ItemDrop: {ItemDropPrefabHashes.Count}");
+            + $"  * ArmorStand: {ArmorStandPrefabs.Count}\n"
+            + $"  * ItemStand: {ItemStandPrefabs.Count}\n"
+            + $"  * ItemDrop: {ItemDropPrefabs.Count}");
   }
 
   public static bool HasArmorStandComponent(ZDO zdo) {
-    return ArmorStandPrefabHashes.Contains(zdo.m_prefab);
+    return ArmorStandPrefabs.ContainsKey(zdo.m_prefab);
   }
 
   public static bool HasItemStandComponent(ZDO zdo) {
-    return ItemStandPrefabHashes.Contains(zdo.m_prefab);
+    return ItemStandPrefabs.ContainsKey(zdo.m_prefab);
   }
 
   public static bool HasItemDropComponent(ZDO zdo) {
-    return ItemDropPrefabHashes.Contains(zdo.m_prefab);
+    return ItemDropPrefabs.ContainsKey(zdo.m_prefab);
   }
 }

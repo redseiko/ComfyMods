@@ -141,6 +141,7 @@
     <Compile Include="Database\SQLite\SQLite.cs" />
     <Compile Include="Database\Tables\ContainerItem.cs" />
     <Compile Include="Database\Tables\Container.cs" />
+    <Compile Include="Database\Tables\DataObject.cs" />
     <Compile Include="Database\Tables\ItemDropItem.cs" />
     <Compile Include="Database\Tables\PrefabHash.cs" />
     <Compile Include="Patches\TerminalPatch.cs" />

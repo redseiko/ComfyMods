@@ -21,6 +21,7 @@ public static class DatabaseUtils {
 
     database.CreateTable<Container>();
     database.CreateTable<ContainerItem>();
+    database.CreateTable<DataObject>();
     database.CreateTable<ItemDropItem>();
     database.CreateTable<PrefabHash>();
 
@@ -41,10 +42,12 @@ public static class DatabaseUtils {
     Container container = ZDOUtils.CreateContainer(zdo);
     database.Insert(container);
 
+    int containerId = container.ContainerId;
+
     for (int i = 0, count = items.Count; i < count; i++) {
-      items[0].ContainerId = container.ContainerId;
+      items[i].ContainerId = containerId;
     }
 
-    database.InsertAll(items, runInTransaction: false);
+    database.InsertAll(items, runInTransaction: true);
   }
 }
