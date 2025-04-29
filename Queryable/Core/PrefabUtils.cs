@@ -44,6 +44,14 @@ public static class PrefabUtils {
   public static readonly Dictionary<int, ItemStand> ItemStandPrefabs = [];
   public static readonly Dictionary<int, ItemDrop> ItemDropPrefabs = [];
 
+  public static readonly List<ItemSlot> ArmorStandItemSlots = [];
+
+  public static void CacheArmorStandSlots(int slotCount) {
+    for (int i = ArmorStandItemSlots.Count; i < slotCount; i++) {
+      ArmorStandItemSlots.Add(new(i));
+    }
+  }
+
   public static void ProcessPrefabCache(Dictionary<int, GameObject> prefabCache) {
     ArmorStandPrefabs.Clear();
     ItemStandPrefabs.Clear();
@@ -74,8 +82,14 @@ public static class PrefabUtils {
             + $"  * ItemDrop: {ItemDropPrefabs.Count}");
   }
 
-  public static bool HasArmorStandComponent(ZDO zdo) {
-    return ArmorStandPrefabs.ContainsKey(zdo.m_prefab);
+  public static bool HasArmorStandComponent(ZDO zdo, out int slotCount) {
+    if (ArmorStandPrefabs.TryGetValue(zdo.m_prefab, out ArmorStand armorStand)) {
+      slotCount = armorStand.m_slots.Count;
+      return true;
+    }
+
+    slotCount = 0;
+    return false;
   }
 
   public static bool HasItemStandComponent(ZDO zdo) {

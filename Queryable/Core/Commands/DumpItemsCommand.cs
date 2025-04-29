@@ -76,30 +76,35 @@ public static class DumpItemsCommand {
     ComfyLogger.LogInfo(
         $"Finished dumping items, elapsed time: {elapsedTime}\n"
             + $"Parsed {zdoCount} ZDOs and found...\n"
-            + $"  * {report.ContainerCount} containers\n"
-            + $"  * {report.ItemCount} items in containers\n"
+            + $"  * {report.ContainerCount} Containers\n"
+            + $"  * {report.ContainerItemCount} items in Containers\n"
             + $"  * {report.ItemDropCount} ItemDrop items\n"
-            + $"  * {report.ItemStandItemCount} ItemStand items\n",
+            + $"  * {report.ItemStandItemCount} ItemStand items\n"
+            + $"  * {report.ArmorStandCount} ArmorStands\n"
+            + $"  * {report.ArmorStandItemCount} items on ArmorStands",
         context);
   }
 
   public sealed class DumpReport {
     public int ContainerCount = 0;
-    public int ItemCount = 0;
+    public int ContainerItemCount = 0;
     public int ItemDropCount = 0;
     public int ItemStandItemCount = 0;
+    public int ArmorStandCount = 0;
+    public int ArmorStandItemCount = 0;
   }
 
   public static void RunThread(SQLiteConnection database, ConcurrentQueue<ZDO> zdos, DumpReport report) {
-    List<ContainerItem> items = [];
+    List<ContainerItem> containerItems = [];
+    List<ItemDropItem> armorStandItems = [];
 
     while (zdos.TryDequeue(out ZDO zdo)) {
-      if (ZDOUtils.TryReadContainerItems(zdo, items)) {
+      if (ZDOUtils.TryReadContainerItems(zdo, containerItems)) {
         report.ContainerCount++;
-        report.ItemCount += items.Count;
+        report.ContainerItemCount += containerItems.Count;
 
-        DatabaseUtils.InsertContainerAndItems(database, zdo, items);
-        items.Clear();
+        DatabaseUtils.InsertContainerAndItems(database, zdo, containerItems);
+        containerItems.Clear();
       }
 
       DataObject dataObject = default;
@@ -109,11 +114,11 @@ public static class DumpItemsCommand {
 
         if (dataObject == default) {
           dataObject = ZDOUtils.CreateDataObject(zdo);
-          database.Insert(dataObject);
+          database.Insert(dataObject, typeof(DataObject));
         }
 
         itemDropItem.ItemDropId = dataObject.ObjectId;
-        database.Insert(itemDropItem);
+        database.Insert(itemDropItem, typeof(ItemDropItem));
       }
 
       if (PrefabUtils.HasItemStandComponent(zdo)
@@ -122,11 +127,32 @@ public static class DumpItemsCommand {
 
         if (dataObject == default) {
           dataObject = ZDOUtils.CreateDataObject(zdo);
-          database.Insert(dataObject);
+          database.Insert(dataObject, typeof(DataObject));
         }
 
         itemStandItem.ItemStandId = dataObject.ObjectId;
-        database.Insert(itemStandItem);
+        database.Insert(itemStandItem, typeof(ItemDropItem));
+      }
+
+      if (PrefabUtils.HasArmorStandComponent(zdo, out int slotCount)
+          && ZDOUtils.TryReadArmorStandItems(zdo, slotCount, armorStandItems)) {
+        report.ArmorStandCount++;
+        report.ArmorStandItemCount += armorStandItems.Count;
+
+        if (dataObject == default) {
+          dataObject = ZDOUtils.CreateDataObject(zdo);
+          database.Insert(dataObject, typeof(DataObject));
+        }
+
+        int armorStandId = dataObject.ObjectId;
+
+        for (int i = 0, count = armorStandItems.Count; i < count; i++) {
+          armorStandItems[i].ArmorStandId = armorStandId;
+        }
+
+        database.InsertAll(armorStandItems, typeof(ItemDropItem), runInTransaction: true);
+
+        armorStandItems.Clear();
       }
     }
   }

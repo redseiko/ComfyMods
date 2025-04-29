@@ -135,6 +135,7 @@
     <Compile Include="Core\Commands\QueryWorldCommand.cs" />
     <Compile Include="Core\DatabaseUtils.cs" />
     <Compile Include="Core\ItemDropUtils.cs" />
+    <Compile Include="Core\ItemSlot.cs" />
     <Compile Include="Core\PrefabUtils.cs" />
     <Compile Include="Core\WorldUtils.cs" />
     <Compile Include="Core\ZDOUtils.cs" />

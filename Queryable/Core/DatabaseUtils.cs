@@ -28,19 +28,24 @@ public static class DatabaseUtils {
     return database;
   }
 
-  public static void InsertPrefabHashes(SQLiteConnection database, Dictionary<int, GameObject> prefabCache) {   
+  public static void InsertPrefabHashes(SQLiteConnection database, Dictionary<int, GameObject> prefabCache) {
+    database.BeginTransaction();
+
     foreach (KeyValuePair<int, GameObject> pair in prefabCache) {
       database.InsertOrReplace(
           new PrefabHash() {
             Hash = pair.Key,
             PrefabName = pair.Value.name,
-          });
+          },
+          typeof(PrefabHash));
     }
+
+    database.Commit();
   }
 
   public static void InsertContainerAndItems(SQLiteConnection database, ZDO zdo, List<ContainerItem> items) {
     Container container = ZDOUtils.CreateContainer(zdo);
-    database.Insert(container);
+    database.Insert(container, typeof(Container));
 
     int containerId = container.ContainerId;
 
@@ -48,6 +53,6 @@ public static class DatabaseUtils {
       items[i].ContainerId = containerId;
     }
 
-    database.InsertAll(items, runInTransaction: true);
+    database.InsertAll(items, typeof(ContainerItem), runInTransaction: true);
   }
 }

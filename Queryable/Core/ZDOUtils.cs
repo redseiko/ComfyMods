@@ -50,7 +50,6 @@ public static class ZDOUtils {
     }
 
     items.Clear();
-    items.Capacity = count;
 
     if (version == 106) {
       for (int i = 0; i < count; i++) {
@@ -123,6 +122,101 @@ public static class ZDOUtils {
 
     for (int i = 1; i < count; i++) {
       _jsonBuilder.Append($",\"{reader.ReadString()}\": \"{reader.ReadString()}\"");
+    }
+
+    _jsonBuilder.Append("}");
+
+    string jsonResult = _jsonBuilder.ToString();
+
+    _jsonBuilder.Clear();
+
+    return jsonResult;
+  }
+
+  public static bool TryReadArmorStandItems(ZDO zdo, int slotCount, List<ItemDropItem> armorStandItems) {
+    if (slotCount <= 0) {
+      return false;
+    }
+
+    PrefabUtils.CacheArmorStandSlots(slotCount);
+    armorStandItems.Clear();
+    ZDOID zid = zdo.m_uid;
+
+    for (int slotIndex = 0; slotIndex < slotCount; slotIndex++) {
+      ItemSlot itemSlot = PrefabUtils.ArmorStandItemSlots[slotIndex];
+      ItemDropItem item = new();
+
+      if (ZDOExtraData.GetString(zid, itemSlot.ItemHash, out string itemName)) {
+        item.ItemName = itemName;
+      }
+
+      if (ZDOExtraData.GetFloat(zid, itemSlot.DurabiltyHash, out float durability)) {
+        item.Durability = durability;
+      }
+
+      if (ZDOExtraData.GetInt(zid, itemSlot.StackHash, out int stack)) {
+        item.Stack = stack;
+      }
+
+      if (ZDOExtraData.GetInt(zid, itemSlot.QualityHash, out int quality)) {
+        item.Quality = quality;
+      }
+
+      if (ZDOExtraData.GetInt(zid, itemSlot.VariantHash, out int variant)) {
+        item.Variant = variant;
+      }
+
+      if (ZDOExtraData.GetLong(zid, itemSlot.CrafterIdHash, out long crafterId)) {
+        item.CrafterId = crafterId;
+      }
+
+      if (ZDOExtraData.GetString(zid, itemSlot.CrafterNameHash, out string crafterName)) {
+        item.CrafterName = crafterName;
+      }
+
+      if (ZDOExtraData.GetInt(zid, itemSlot.DataCountHash, out int dataCount) && dataCount > 0) {
+        item.CustomDataJson = ReadItemCustomDataToJson(zid, slotIndex, dataCount);
+      }
+
+      if (ZDOExtraData.GetInt(zid, itemSlot.WorldLevelHash, out int worldLevel)) {
+        item.WorldLevel = worldLevel;
+      }
+
+      if (ZDOExtraData.GetBool(zid, itemSlot.PickedUpHash, out bool isPickedUp)) {
+        item.IsPickedUp = isPickedUp;
+      }
+
+      if (!item.IsNull()) {
+        armorStandItems.Add(item);
+      }
+    }
+
+    return true;
+  }
+
+  public static string ReadItemCustomDataToJson(ZDOID zid, int slotIndex, int dataCount) {
+    if (dataCount <= 0) {
+      return string.Empty;
+    }
+
+    string slotIndexStr = slotIndex.ToString();
+
+    _jsonBuilder
+        .Clear()
+        .Append("{")
+        .Append("\"")
+        .Append(ZDOExtraData.GetString(zid, $"{slotIndexStr}_data_0".GetStableHashCode(), string.Empty))
+        .Append("\":\"")
+        .Append(ZDOExtraData.GetString(zid, $"{slotIndexStr}_data__0".GetStableHashCode(), string.Empty))
+        .Append("\"");
+
+
+    for (int i = 1; i < dataCount; i++) {
+      _jsonBuilder.Append($",\"")
+          .Append(ZDOExtraData.GetString(zid, $"{slotIndexStr}_data_{i}".GetStableHashCode(), string.Empty))
+          .Append("\": \"")
+          .Append(ZDOExtraData.GetString(zid, $"{slotIndexStr}_data__{i}".GetStableHashCode(), string.Empty))
+          .Append("\"");
     }
 
     _jsonBuilder.Append("}");
