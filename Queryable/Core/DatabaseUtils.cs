@@ -19,11 +19,10 @@ public static class DatabaseUtils {
 
     database.EnableWriteAheadLogging();
 
-    database.CreateTable<Container>();
-    database.CreateTable<ContainerItem>();
-    database.CreateTable<DataObject>();
-    database.CreateTable<ItemDropItem>();
     database.CreateTable<PrefabHash>();
+    database.CreateTable<DataObject>();
+    database.CreateTable<ContainerItem>();
+    database.CreateTable<ItemDropItem>();
 
     return database;
   }
@@ -41,18 +40,5 @@ public static class DatabaseUtils {
     }
 
     database.Commit();
-  }
-
-  public static void InsertContainerAndItems(SQLiteConnection database, ZDO zdo, List<ContainerItem> items) {
-    Container container = ZDOUtils.CreateContainer(zdo);
-    database.Insert(container, typeof(Container));
-
-    int containerId = container.ContainerId;
-
-    for (int i = 0, count = items.Count; i < count; i++) {
-      items[i].ContainerId = containerId;
-    }
-
-    database.InsertAll(items, typeof(ContainerItem), runInTransaction: true);
   }
 }

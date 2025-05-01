@@ -7,7 +7,7 @@ public sealed class ContainerItem {
   [AutoIncrement]
   public int ItemId { get; set; }
 
-  public int ContainerId { get; set; }
+  public int ObjectId { get; set; }
 
   public string Name { get; set; }
   public int Stack { get; set; }

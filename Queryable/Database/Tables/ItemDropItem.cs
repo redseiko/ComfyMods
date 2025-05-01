@@ -7,11 +7,12 @@ public sealed class ItemDropItem {
   [AutoIncrement]
   public int ItemId { get; set; }
 
+  public int ObjectId { get; set; }
   public int? ItemDropId { get; set; }
   public int? ItemStandId { get; set; }
   public int? ArmorStandId { get; set; }
 
-  public string? ItemName { get; set; }
+  public string? Name { get; set; }
   public float? Durability { get; set; }
   public int? Stack { get; set; }
   public int? Quality { get; set; }

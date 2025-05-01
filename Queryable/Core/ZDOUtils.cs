@@ -10,27 +10,37 @@ using Database;
 using UnityEngine;
 
 public static class ZDOUtils {
+  public static readonly int EpochTimeCreatedHash = "epochTimeCreated".GetStableHashCode();
+  public static readonly int OriginalUidUserHash = "originalUid_u".GetStableHashCode();
+  public static readonly int OriginalUidIdHash = "originalUid_i".GetStableHashCode();
+
   public static DataObject CreateDataObject(ZDO zdo) {
     Vector3 position = zdo.m_position;
 
-    return new DataObject() {
-      PrefabHash = zdo.m_prefab,
-      PositionX = Mathf.RoundToInt(position.x),
-      PositionY = Mathf.RoundToInt(position.y),
-      PositionZ = Mathf.RoundToInt(position.z),
-    };
-  }
+    DataObject dataObject =
+        new DataObject() {
+          PrefabHash = zdo.m_prefab,
+          PositionX = Mathf.RoundToInt(position.x),
+          PositionY = Mathf.RoundToInt(position.y),
+          PositionZ = Mathf.RoundToInt(position.z),
+        };
 
-  public static Container CreateContainer(ZDO zdo) {
-    Vector3 position = zdo.m_position;
+    ZDOID zid = zdo.m_uid;
 
-    return new Container() {
-      PrefabHash = zdo.m_prefab,
-      PositionX = Mathf.RoundToInt(position.x),
-      PositionY = Mathf.RoundToInt(position.y),
-      PositionZ = Mathf.RoundToInt(position.z),
-      CreatorId = zdo.GetLong(ZDOVars.s_creator, 0),
-    };
+    if (ZDOExtraData.GetLong(zid, ZDOVars.s_creator, out long creatorId)) {
+      dataObject.CreatorId = creatorId;
+    }
+
+    if (ZDOExtraData.GetLong(zid, EpochTimeCreatedHash, out long epochTimeCreated)) {
+      dataObject.EpochTimeCreated = epochTimeCreated;
+    }
+
+    if (ZDOExtraData.GetLong(zid, OriginalUidUserHash, out long originalUidUser)
+        && ZDOExtraData.GetLong(zid, OriginalUidIdHash, out long originalUidId)) {
+      dataObject.OriginalUid = $"{originalUidUser}:{originalUidId}";
+    }
+
+    return dataObject;
   }
 
   public static bool TryReadContainerItems(ZDO zdo, List<ContainerItem> items) {
@@ -147,7 +157,7 @@ public static class ZDOUtils {
       ItemDropItem item = new();
 
       if (ZDOExtraData.GetString(zid, itemSlot.ItemHash, out string itemName)) {
-        item.ItemName = itemName;
+        item.Name = itemName;
       }
 
       if (ZDOExtraData.GetFloat(zid, itemSlot.DurabiltyHash, out float durability)) {
@@ -234,7 +244,7 @@ public static class ZDOUtils {
     }
 
     if (ZDOExtraData.GetString(zdo.m_uid, ZDOVars.s_item, out string itemName)) {
-      item.ItemName = itemName;
+      item.Name = itemName;
     }
 
     return true;

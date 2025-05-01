@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 using ComfyLib;
@@ -99,24 +100,27 @@ public static class DumpItemsCommand {
     List<ItemDropItem> armorStandItems = [];
 
     while (zdos.TryDequeue(out ZDO zdo)) {
+      DataObject dataObject = default;
+
       if (ZDOUtils.TryReadContainerItems(zdo, containerItems)) {
         report.ContainerCount++;
         report.ContainerItemCount += containerItems.Count;
 
-        DatabaseUtils.InsertContainerAndItems(database, zdo, containerItems);
+        dataObject ??= InsertDataObject(database, zdo);
+        int containerId = dataObject.ObjectId;
+
+        for (int i = 0, count = containerItems.Count; i < count; i++) {
+          containerItems[i].ObjectId = containerId;
+        }
+
+        database.InsertAll(containerItems, typeof(ContainerItem), runInTransaction: true);
         containerItems.Clear();
       }
-
-      DataObject dataObject = default;
 
       if (PrefabUtils.HasItemDropComponent(zdo) && ZDOUtils.TryReadItemDropItem(zdo, out ItemDropItem itemDropItem)) {
         report.ItemDropCount++;
 
-        if (dataObject == default) {
-          dataObject = ZDOUtils.CreateDataObject(zdo);
-          database.Insert(dataObject, typeof(DataObject));
-        }
-
+        dataObject ??= InsertDataObject(database, zdo);
         itemDropItem.ItemDropId = dataObject.ObjectId;
         database.Insert(itemDropItem, typeof(ItemDropItem));
       }
@@ -125,11 +129,7 @@ public static class DumpItemsCommand {
           && ZDOUtils.TryReadItemStandItem(zdo, out ItemDropItem itemStandItem)) {
         report.ItemStandItemCount++;
 
-        if (dataObject == default) {
-          dataObject = ZDOUtils.CreateDataObject(zdo);
-          database.Insert(dataObject, typeof(DataObject));
-        }
-
+        dataObject ??= InsertDataObject(database, zdo);
         itemStandItem.ItemStandId = dataObject.ObjectId;
         database.Insert(itemStandItem, typeof(ItemDropItem));
       }
@@ -139,11 +139,7 @@ public static class DumpItemsCommand {
         report.ArmorStandCount++;
         report.ArmorStandItemCount += armorStandItems.Count;
 
-        if (dataObject == default) {
-          dataObject = ZDOUtils.CreateDataObject(zdo);
-          database.Insert(dataObject, typeof(DataObject));
-        }
-
+        dataObject ??= InsertDataObject(database, zdo);
         int armorStandId = dataObject.ObjectId;
 
         for (int i = 0, count = armorStandItems.Count; i < count; i++) {
@@ -151,9 +147,15 @@ public static class DumpItemsCommand {
         }
 
         database.InsertAll(armorStandItems, typeof(ItemDropItem), runInTransaction: true);
-
         armorStandItems.Clear();
       }
     }
+  }
+
+  static DataObject InsertDataObject(SQLiteConnection database, ZDO zdo) {
+    DataObject dataObject = ZDOUtils.CreateDataObject(zdo);
+    database.Insert(dataObject, typeof(DataObject));
+
+    return dataObject;
   }
 }
