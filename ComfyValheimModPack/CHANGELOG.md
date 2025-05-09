@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.21.0
+
+  * Updated all dependencies to latest version.
+
 ### 2.20.0
 
   * Added `ComfyMods-ComfyAutoRepair-1.0.0`.
