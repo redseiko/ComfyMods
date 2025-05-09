@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.13.0
+
+  * Updated for the `v0.220.5` patch.
+
 ### 1.12.0
 
   * Fixed for the `v0.220.3` patch.

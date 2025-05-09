@@ -189,7 +189,7 @@ public static class PluginConfig {
             "Keyboard shortcut to add a Minimap.Pin at the mouse position.");
   }
 
-  static readonly Queue<Action<ConfigFile>> _lateBindConfigQueue = new();
+  static readonly System.Collections.Generic.Queue<Action<ConfigFile>> _lateBindConfigQueue = new();
 
   [HarmonyPatch(typeof(FejdStartup))]
   static class FejdStartupPatch {

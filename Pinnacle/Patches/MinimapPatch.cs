@@ -2,10 +2,14 @@
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using System.Text.RegularExpressions;
+
+using ComfyLib;
 
 using HarmonyLib;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 using static PluginConfig;
 
@@ -208,6 +212,69 @@ static class MinimapPatch {
   static void ToggleIconFilterPostfix() {
     if (IsModEnabled.Value) {
       Pinnacle.PinFilterPanel?.UpdatePinIconFilters();
+    }
+  }
+
+  [HarmonyTranspiler]
+  [HarmonyPatch(nameof(Minimap.UpdatePins))]
+  static IEnumerable<CodeInstruction> UpdatePinsTranspiler(
+      IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
+    return new CodeMatcher(instructions, generator)
+        .Start()
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldloca_S),
+            new CodeMatch(OpCodes.Ldc_R4, 0.7f),
+            new CodeMatch(OpCodes.Ldc_R4, 0.7f),
+            new CodeMatch(OpCodes.Ldc_R4, 0.7f),
+            new CodeMatch(OpCodes.Ldc_R4, 0.8f))
+        .ThrowIfInvalid($"Could not patch Minimap.UpdatePins()! (create-shared-map-data-fade-color)")
+        .SaveOperand(out object fadeColorLocal)
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldloc_S),
+            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Minimap.PinData), nameof(Minimap.PinData.m_icon))),
+            new CodeMatch(OpCodes.Callvirt, AccessTools.PropertySetter(typeof(Image), nameof(Image.sprite))))
+        .ThrowIfInvalid("Could not patch Minimap.UpdatePins()! (pin-icon-element-set-sprite)")
+        .SaveOperand(out object pinDataLocal)
+        .Advance(offset: 3)
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Ldloc_S, pinDataLocal),
+            new CodeInstruction(OpCodes.Ldloc_S, fadeColorLocal),
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(MinimapPatch), nameof(SetPinIconColorDelegate))))
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldloc_S),
+            new CodeMatch(
+                OpCodes.Ldfld, AccessTools.Field(typeof(Minimap.PinData), nameof(Minimap.PinData.m_iconElement))),
+            new CodeMatch(OpCodes.Ldloc_S),
+            new CodeMatch(OpCodes.Callvirt, AccessTools.PropertySetter(typeof(Graphic), nameof(Graphic.color))))
+        .ThrowIfInvalid($"Could not ptach Minimap.UpdatePins()! (set-pin-icon-color)")
+        .CreateLabelOffset(offset: 4, out Label skipSetColorLabel)
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Br, skipSetColorLabel))
+        .InstructionEnumeration();
+  }
+
+  static void SetPinIconColorDelegate(Minimap.PinData pinData, Color fadeColor) {
+    if (PinManager.TryGetCustomPinIconColor(pinData.m_name, out Color iconColor)) {
+      pinData.m_iconElement.color = iconColor;
+    } else if (pinData.m_ownerID != 0L) {
+      pinData.m_iconElement.color = fadeColor;
+    } else {
+      pinData.m_iconElement.color = Color.white;
+    }
+  }
+}
+
+[HarmonyPatch(typeof(Minimap.PinNameData))]
+static class PinNameDataPatch {
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Minimap.PinNameData.SetTextAndGameObject))]
+  static void SetTextAndGameObjectPostfix(Minimap.PinNameData __instance) {
+    string pinNameText = __instance.PinNameText.text;
+    Match match = PinManager.PinIconColorTagRegex.Match(pinNameText);
+
+    if (match.Success) {
+      __instance.PinNameText.text = pinNameText.Remove(match.Groups[1].Index, match.Groups[1].Length);
     }
   }
 }
