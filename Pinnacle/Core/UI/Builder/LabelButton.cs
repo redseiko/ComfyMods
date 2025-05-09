@@ -1,5 +1,7 @@
 ﻿namespace Pinnacle;
 
+using ComfyLib;
+
 using TMPro;
 
 using UnityEngine;

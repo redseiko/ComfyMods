@@ -3,6 +3,8 @@
 using System;
 using System.Collections;
 
+using ComfyLib;
+
 using UnityEngine;
 using UnityEngine.EventSystems;
 

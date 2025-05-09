@@ -2,6 +2,8 @@
 
 using System.Collections.Generic;
 
+using ComfyLib;
+
 using TMPro;
 
 using static PluginConfig;

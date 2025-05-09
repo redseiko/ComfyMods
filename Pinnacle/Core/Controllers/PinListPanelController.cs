@@ -40,6 +40,10 @@ public static class PinListPanelController {
 
   public static bool IsPanelValid() => PinListPanel?.Panel;
 
+  public static bool HasFocus() {
+    return PinListPanel != default && PinListPanel.HasFocus();
+  }
+
   public static void SetBackgroundColor(Color color) {
     if (IsPanelValid()) {
       PinListPanel.PanelBackground.color = color;

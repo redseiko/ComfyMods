@@ -20,7 +20,7 @@ using static PluginConfig;
 public sealed class Pinnacle : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.pinnacle";
   public const string PluginName = "Pinnacle";
-  public const string PluginVersion = "1.12.0";
+  public const string PluginVersion = "1.13.0";
 
   static ManualLogSource _logger;
 
@@ -32,9 +32,9 @@ public sealed class Pinnacle : BaseUnityPlugin {
   }
 
   public static void TogglePinnacle(bool toggleOn) {
-    TogglePinEditPanel(pinToEdit: null);
+    PinEditPanelController.TogglePanel(pinToEdit: null);
     PinListPanelController.TogglePanel(toggleOn: false);
-    TogglePinFilterPanel(toggleOn: toggleOn);
+    PinFilterPanelController.TogglePanel(toggleOn: toggleOn);
     ToggleVanillaIconPanels(toggleOn: !toggleOn);
   }
 
@@ -45,48 +45,6 @@ public sealed class Pinnacle : BaseUnityPlugin {
             .Where(child => child.name.StartsWith("IconPanel"))) {
       panel.SetActive(toggleOn);
     }
-  }
-
-  public static PinEditPanel PinEditPanel { get; private set; }
-
-  public static void TogglePinEditPanel(Minimap.PinData pinToEdit = null) {
-    if (!PinEditPanel?.Panel) {
-      PinEditPanel = new(Minimap.m_instance.m_largeRoot.transform);
-      PinEditPanel.Panel.RectTransform()
-          .SetAnchorMin(new(0.5f, 0f))
-          .SetAnchorMax(new(0.5f, 0f))
-          .SetPivot(new(0.5f, 0f))
-          .SetPosition(new(0f, 25f))
-          .SetSizeDelta(new(200f, 200f));
-    }
-
-    if (pinToEdit == null) {
-      PinEditPanel.SetTargetPin(null);
-      PinEditPanel.SetActive(false);
-    } else {
-      CenterMapHelper.CenterMapOnPosition(pinToEdit.m_pos);
-
-      PinEditPanel.SetTargetPin(pinToEdit);
-      PinEditPanel.SetActive(true);
-    }
-  }
-
-  public static PinFilterPanel PinFilterPanel { get; private set; }
-
-  public static void TogglePinFilterPanel(bool toggleOn) {
-    if (!PinFilterPanel?.Panel) {
-      PinFilterPanel = new(Minimap.m_instance.m_largeRoot.transform);
-      PinFilterPanel.Panel.RectTransform()
-          .SetAnchorMin(new(1f, 0.5f))
-          .SetAnchorMax(new(1f, 0.5f))
-          .SetPivot(new(1f, 0.5f))
-          .SetPosition(PinFilterPanelPosition.Value);
-
-      PinFilterPanelGridIconSize.OnSettingChanged(PinFilterPanel.SetPanelStyle);
-      PinFilterPanel.PanelDragger.OnPanelEndDrag += (_, position) => PinFilterPanelPosition.Value = position;
-    }
-
-    PinFilterPanel.Panel.SetActive(toggleOn);
   }
 
   public static void Log(LogLevel logLevel, object o) {

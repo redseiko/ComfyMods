@@ -3,9 +3,12 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
+using ComfyLib;
+
 using HarmonyLib;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 using static PluginConfig;
 
@@ -17,14 +20,12 @@ static class MinimapPatch {
   static void StartPostfix(Minimap __instance) {
     if (IsModEnabled.Value) {
       PinMarkerUtils.SetupPinNamePrefab(__instance);
-
-      Pinnacle.TogglePinEditPanel(pinToEdit: null);
+      PinEditPanelController.TogglePanel(pinToEdit: null);
       PinListPanelController.TogglePanel(toggleOn: false);
-      Pinnacle.TogglePinFilterPanel(toggleOn: true);
+      PinFilterPanelController.TogglePanel(toggleOn: true);
 
       Pinnacle.ToggleVanillaIconPanels(toggleOn: false);
-
-      Pinnacle.PinFilterPanel?.UpdatePinIconFilters();
+      PinFilterPanelController.UpdateIconFilters();
     }
   }
 
@@ -89,7 +90,7 @@ static class MinimapPatch {
 
   static Minimap.PinData GetClosestPinDelegate(Minimap.PinData closestPin) {
     if (IsModEnabled.Value) {
-      Pinnacle.TogglePinEditPanel(closestPin);
+      PinEditPanelController.TogglePanel(closestPin);
       return null;
     }
 
@@ -126,11 +127,7 @@ static class MinimapPatch {
   [HarmonyPatch(nameof(Minimap.InTextInput))]
   static void InTextInputPostfix(ref bool __result) {
     if (IsModEnabled.Value && !__result) {
-      if (Pinnacle.PinEditPanel?.Panel
-          && Pinnacle.PinEditPanel.Panel.activeSelf
-          && Pinnacle.PinEditPanel.HasFocus()) {
-        __result = true;
-      } else if (PinListPanelController.PinListPanel?.Panel && PinListPanelController.PinListPanel.HasFocus()) {
+      if (PinEditPanelController.HasFocus() || PinListPanelController.HasFocus()) {
         __result = true;
       }
     }
@@ -139,7 +136,7 @@ static class MinimapPatch {
   [HarmonyPrefix]
   [HarmonyPatch(nameof(Minimap.UpdateMap))]
   static void UpdateMapPrefix(ref bool takeInput) {
-    if (IsModEnabled.Value && PinListPanelController.PinListPanel?.Panel && PinListPanelController.PinListPanel.HasFocus()) {
+    if (IsModEnabled.Value && PinListPanelController.HasFocus()) {
       takeInput = false;
     }
   }
@@ -147,8 +144,8 @@ static class MinimapPatch {
   [HarmonyPrefix]
   [HarmonyPatch(nameof(Minimap.RemovePin), typeof(Minimap.PinData))]
   static void RemovePinPrefix(ref Minimap.PinData pin) {
-    if (IsModEnabled.Value && Pinnacle.PinEditPanel?.TargetPin == pin) {
-      Pinnacle.TogglePinEditPanel(null);
+    if (IsModEnabled.Value && PinEditPanelController.PinEditPanel?.TargetPin == pin) {
+      PinEditPanelController.TogglePanel(null);
     }
   }
 
@@ -166,8 +163,8 @@ static class MinimapPatch {
   [HarmonyPatch(nameof(Minimap.SetMapMode))]
   static void SetMapModePostfix(ref Minimap.MapMode mode, ref Minimap.MapMode __state) {
     if (IsModEnabled.Value && mode != Minimap.MapMode.Large) {
-      if (Pinnacle.PinEditPanel?.Panel) {
-        Pinnacle.TogglePinEditPanel(null);
+      if (PinEditPanelController.PinEditPanel?.Panel) {
+        PinEditPanelController.TogglePanel(null);
       }
 
       if (PinListPanelController.PinListPanel?.Panel) {
@@ -185,9 +182,8 @@ static class MinimapPatch {
   static bool ShowPinNameInputPrefix(Minimap __instance, Vector3 pos) {
     if (IsModEnabled.Value) {
       __instance.m_namePin = null;
-
-      Pinnacle.TogglePinEditPanel(PinnacleUtils.AddNewPin(__instance, pos));
-      Pinnacle.PinEditPanel?.ActivatePinNameInputField();
+      PinEditPanelController.TogglePanel(PinnacleUtils.AddNewPin(__instance, pos));
+      PinEditPanelController.PinEditPanel?.ActivatePinNameInputField();
 
       return false;
     }
@@ -199,7 +195,7 @@ static class MinimapPatch {
   [HarmonyPatch(nameof(Minimap.SelectIcon))]
   static void SelectIconPostfix() {
     if (IsModEnabled.Value) {
-      Pinnacle.PinFilterPanel?.UpdatePinIconFilters();
+      PinFilterPanelController.UpdateIconFilters();
     }
   }
 
@@ -207,7 +203,63 @@ static class MinimapPatch {
   [HarmonyPatch(nameof(Minimap.ToggleIconFilter))]
   static void ToggleIconFilterPostfix() {
     if (IsModEnabled.Value) {
-      Pinnacle.PinFilterPanel?.UpdatePinIconFilters();
+      PinFilterPanelController.UpdateIconFilters();
+    }
+  }
+
+  [HarmonyTranspiler]
+  [HarmonyPatch(nameof(Minimap.UpdatePins))]
+  static IEnumerable<CodeInstruction> UpdatePinsTranspiler(
+      IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
+    return new CodeMatcher(instructions, generator)
+        .Start()
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldloc_S),
+            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Minimap.PinData), nameof(Minimap.PinData.m_icon))),
+            new CodeMatch(OpCodes.Callvirt, AccessTools.PropertySetter(typeof(Image), nameof(Image.sprite))))
+        .ThrowIfInvalid("Could not patch Minimap.UpdatePins()! (pin-icon-element-set-sprite)")
+        .SaveOperand(out object pinDataLocal)
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldloc_S),
+            new CodeMatch(OpCodes.Ldloc_S),
+            new CodeMatch(
+                OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(GameObject), nameof(GameObject.transform))),
+            new CodeMatch(OpCodes.Ldstr, "Checked"))
+        .ThrowIfInvalid($"Could not patch Minimap.UpdatePins()! (pin-icon-find-checked)")
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Ldloc_S, pinDataLocal),
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(MinimapPatch), nameof(SetIconElementSpriteDelegate))))
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldloc_S),
+            new CodeMatch(
+                OpCodes.Ldfld, AccessTools.Field(typeof(Minimap.PinData), nameof(Minimap.PinData.m_iconElement))),
+            new CodeMatch(OpCodes.Ldloc_S),
+            new CodeMatch(OpCodes.Callvirt, AccessTools.PropertySetter(typeof(Graphic), nameof(Graphic.color))))
+        .ThrowIfInvalid($"Could not ptach Minimap.UpdatePins()! (set-icon-element-color)")
+        .CreateLabelOffset(offset: 4, out Label skipSetColorLabel)
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Ldloc_S, pinDataLocal),
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(PinIconManager), nameof(PinIconManager.HasIconTagFlag))),
+            new CodeInstruction(OpCodes.Brtrue, skipSetColorLabel))
+        .InstructionEnumeration();
+  }
+
+  static void SetIconElementSpriteDelegate(Minimap.PinData pinData) {
+    if (IsModEnabled.Value && PinIconManager.IsValidIconTagName(pinData.m_name)) {
+      PinIconManager.ProcessIconTagsCreated(pinData);
+    }
+  }
+}
+
+[HarmonyPatch(typeof(Minimap.PinNameData))]
+static class PinNameDataPatch {
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Minimap.PinNameData.SetTextAndGameObject))]
+  static void SetTextAndGameObjectPostfix(Minimap.PinNameData __instance) {
+    if (IsModEnabled.Value) {
+      PinIconManager.RemoveIconTagText(__instance);
     }
   }
 }

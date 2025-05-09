@@ -9,15 +9,18 @@ using static PluginConfig;
 
 public sealed class PinFilterPanel {
   public GameObject Panel { get; private set; }
+  public RectTransform RectTransform { get; private set; }
+
   public PanelDragger PanelDragger { get; private set; }
 
   public PinIconSelector PinIconSelector { get; private set; }
 
   public PinFilterPanel(Transform parentTransform) {
     Panel = CreateChildPanel(parentTransform);
+    RectTransform = Panel.GetComponent<RectTransform>();
 
     PanelDragger = CreateChildPanelDragger(Panel.transform).AddComponent<PanelDragger>();
-    PanelDragger.TargetRectTransform = Panel.RectTransform();
+    PanelDragger.TargetRectTransform = RectTransform;
 
     PinIconSelector = new(Panel.transform);
 

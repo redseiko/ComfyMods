@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.13.0
+
+  * Updated for the `v0.220.5` patch.
+  * Added new feature `pin-icon-tags`.
+  * Code clean-up and refactoring for performance improvement.
+
 ### 1.12.0
 
   * Fixed for the `v0.220.3` patch.

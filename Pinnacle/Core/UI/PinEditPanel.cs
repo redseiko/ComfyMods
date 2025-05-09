@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+using ComfyLib;
+
 using TMPro;
 
 using UnityEngine;
@@ -16,6 +18,8 @@ public sealed class PinEditPanel {
   public const long DefaultSharedPinOwnerId = long.MaxValue;
 
   public GameObject Panel { get; private set; }
+  public RectTransform RectTransform { get; private set; }
+
   public LabelValueRow PinName { get; private set; }
 
   public LabelRow PinIconSelectorLabelRow { get; private set; }
@@ -41,6 +45,7 @@ public sealed class PinEditPanel {
 
   public PinEditPanel(Transform parentTransform) {
     Panel = CreatePanel(parentTransform);
+    RectTransform = Panel.GetComponent<RectTransform>();
 
     PinName = new(Panel.transform);
     PinName.Label.SetText("Name");
@@ -150,7 +155,7 @@ public sealed class PinEditPanel {
         && Selectables.Any(s => s == selected)
         && (!selected.TryGetComponent(out InputField inputField)
             || inputField.isFocused
-            || Input.GetKeyDown(KeyCode.Return));
+            || ZInput.GetKeyDown(KeyCode.Return));
   }
 
   public Minimap.PinData TargetPin { get; private set; }
@@ -192,6 +197,8 @@ public sealed class PinEditPanel {
     }
 
     TargetPin.m_NamePinData.PinNameText.SetText(name);
+
+    PinIconManager.ProcessIconTagsModified(TargetPin);
   }
 
   void OnPinTypeValueChange(Minimap.PinType pinType) {

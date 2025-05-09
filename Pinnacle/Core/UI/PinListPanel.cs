@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using ComfyLib;
+
 using TMPro;
 
 using UnityEngine;

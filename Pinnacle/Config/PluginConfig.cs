@@ -45,9 +45,10 @@ public static class PluginConfig {
     BindPinListPanelConfig(config);
     BindPinEditPanelConfig(config);
     BindPinFilterPanelConfig(config);
+    BindPinIconConfig(config);
 
-    _lateBindConfigQueue.Clear();
-    _lateBindConfigQueue.Enqueue(BindMinimapConfig);
+    LateBindConfigQueue.Reset(config);
+    LateBindConfigQueue.Enqueue(BindMinimapConfig);
   }
 
   public static ConfigEntry<KeyboardShortcut> PinListPanelToggleShortcut { get; private set; }
@@ -153,6 +154,8 @@ public static class PluginConfig {
             30f,
             "The size of the PinFilterPanel.Grid icons.",
             new AcceptableValueRange<float>(10f, 100f));
+
+    PinFilterPanelGridIconSize.OnSettingChanged(PinFilterPanelController.UpdateStyle);
   }
 
   public static ConfigEntry<string> PinFont { get; private set; }
@@ -189,15 +192,79 @@ public static class PluginConfig {
             "Keyboard shortcut to add a Minimap.Pin at the mouse position.");
   }
 
-  static readonly Queue<Action<ConfigFile>> _lateBindConfigQueue = new();
+  public static ConfigEntry<bool> ProcessPinIconColorTags { get; private set; }
+  public static ConfigEntry<bool> ProcessPinIconSpriteTags { get; private set; }
+  public static ConfigEntry<bool> ProcessPinIconScaleTags { get; private set; }
+
+  public static ConfigEntry<bool> StripPinIconColorTagText { get; private set; }
+  public static ConfigEntry<bool> StripPinIconSpriteTagText { get; private set; }
+  public static ConfigEntry<bool> StripPinIconScaleTagText { get; private set; }
+
+  static void BindPinIconConfig(ConfigFile config) {
+    ProcessPinIconColorTags =
+        config.BindInOrder(
+            "PinIcon.Tags",
+            "processPinIconColorTags",
+            true,
+            "If set, will process pin-icon-color tags: [#ff00ff]");
+
+    ProcessPinIconSpriteTags =
+        config.BindInOrder(
+            "PinIcon.Tags",
+            "processPinIconSpriteTags",
+            true,
+            "If set, will process pin-icon-sprite tags: [:sprite_name]");
+
+    ProcessPinIconScaleTags =
+        config.BindInOrder(
+            "PinIcon.Tags",
+            "processPinIconScaleTags",
+            true,
+            "If set, will process pin-icon-scale tags: [150%]");
+
+    StripPinIconColorTagText =
+        config.BindInOrder(
+            "PinIcon.Tags",
+            "stripPinIconColorTagText",
+            true,
+            "If set, will strip pin-icon-color tags from the pin-text.");
+
+    StripPinIconSpriteTagText =
+        config.BindInOrder(
+            "PinIcon.Tags",
+            "stripPinIconSpriteTagText",
+            true,
+            "If set, will strip pin-icon-sprite tags from the pin-text.");
+
+    StripPinIconScaleTagText =
+        config.BindInOrder(
+            "PinIcon.Tags",
+            "stripPinIconScaleTagText",
+            true,
+            "If set, will strip pin-icon-scale tags from the pin-text.");
+  }
+}
+
+public static class LateBindConfigQueue {
+  static ConfigFile _currentConfig = default;
+  static readonly Queue<Action<ConfigFile>> _queue = new();
+
+  public static void Reset(ConfigFile currentConfig) {
+    _currentConfig = currentConfig;
+    _queue.Clear();
+  }
+
+  public static void Enqueue(Action<ConfigFile> bindConfigAction) {
+    _queue.Enqueue(bindConfigAction);
+  }
 
   [HarmonyPatch(typeof(FejdStartup))]
   static class FejdStartupPatch {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(FejdStartup.Awake))]
     static void AwakePostfix() {
-      while (_lateBindConfigQueue.Count > 0) {
-        _lateBindConfigQueue.Dequeue()?.Invoke(CurrentConfig);
+      while (_queue.Count > 0) {
+        _queue.Dequeue().Invoke(_currentConfig);
       }
     }
   }

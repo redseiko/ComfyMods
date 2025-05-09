@@ -12,7 +12,7 @@ public static class PinnacleUtils {
         && ZInput.GetKey(KeyCode.LeftShift)) {
       TeleportTo(targetPin);
     } else {
-      Pinnacle.TogglePinEditPanel(PinListPanelEditPinOnRowClick.Value ? targetPin : default);
+      PinEditPanelController.TogglePanel(PinListPanelEditPinOnRowClick.Value ? targetPin : default);
       CenterMapHelper.CenterMapOnPosition(targetPin.m_pos);
     }
   }

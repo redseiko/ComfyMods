@@ -2,7 +2,7 @@
 <Project ToolsVersion="Current" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8D534F00-8286-4B0E-B2BC-A7669730BBCA}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -57,24 +57,31 @@
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>$(GamePath)\BepInEx\core\0Harmony.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="assembly_guiutils_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_guiutils_publicized.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="assembly_utils_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="assembly_valheim_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_valheim_publicized.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="BepInEx">
       <HintPath>$(GamePath)\BepInEx\core\BepInEx.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="gui_framework_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\gui_framework_publicized.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Splatform_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\Splatform_publicized.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -82,44 +89,61 @@
     <Reference Include="System.Xml" />
     <Reference Include="Unity.TextMeshPro">
       <HintPath>$(GamePath)\valheim_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComfyLib\Commands\ComfyCommand.cs" />
     <Compile Include="ComfyLib\Config\AcceptableValueEnumList.cs" />
+    <Compile Include="ComfyLib\Extensions\CodeMatcherExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIBuilder.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIExtensions.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIResources.cs" />
+    <Compile Include="ComfyLib\Utils\ResourceCache.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Core\CenterMapHelper.cs" />
     <Compile Include="Core\Commands\ExportPinsCommand.cs" />
     <Compile Include="Core\Commands\ImportPinsCommand.cs" />
     <Compile Include="Core\Commands\RemoveAllPinsCommand.cs" />
+    <Compile Include="Core\Controllers\PinEditPanelController.cs" />
+    <Compile Include="Core\Controllers\PinFilterPanelController.cs" />
+    <Compile Include="Core\Controllers\PinListPanelController.cs" />
+    <Compile Include="Core\PinIconManager.cs" />
     <Compile Include="Core\PinImportExport.cs" />
-    <Compile Include="Core\PinListPanelController.cs" />
     <Compile Include="Core\PinMarkerUtils.cs" />
     <Compile Include="Core\PinnacleUtils.cs" />
     <Compile Include="Core\UI\Builder\LabelButton.cs" />
@@ -134,9 +158,6 @@
     <Compile Include="Core\UI\Components\PanelResizer.cs" />
     <Compile Include="Core\UI\Components\ParentSizeFitter.cs" />
     <Compile Include="Core\UI\Components\PointerState.cs" />
-    <Compile Include="Core\UI\Core\UIBuilder.cs" />
-    <Compile Include="Core\UI\Core\UIExtensions.cs" />
-    <Compile Include="Core\UI\Core\UIResources.cs" />
     <Compile Include="Core\UI\PinEditPanel.cs" />
     <Compile Include="Core\UI\PinFilterPanel.cs" />
     <Compile Include="Core\UI\PinIconSelector.cs" />
@@ -149,10 +170,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CHANGELOG.md" />
-    <None Include="icon.png" />
-    <None Include="manifest.json" />
-    <None Include="README.md" />
+    <None Include="CHANGELOG.md" ThunderstorePackage="true" />
+    <None Include="icon.png" ThunderstorePackage="true" />
+    <None Include="manifest.json" ThunderstorePackage="true" />
+    <None Include="README.md" ThunderstorePackage="true" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyAssembly" AfterTargets="Build">
@@ -176,7 +197,8 @@
   </Target>
   <Target Name="MakeThunderstorePackage" AfterTargets="GetAssemblyVersion">
     <ItemGroup>
-      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; CHANGELOG.md; README.md; manifest.json; icon.png" />
+      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll" />
+      <PackageFiles Include="@(None)" Condition="'%(None.ThunderstorePackage)' == 'true'" />
     </ItemGroup>
     <MakeDir Directories="$(PackageDir)" />
     <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageDir)" />

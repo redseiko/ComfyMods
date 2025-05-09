@@ -1,7 +1,9 @@
-﻿namespace Pinnacle;
+﻿namespace ComfyLib;
 
 using System;
 using System.Collections.Generic;
+
+using ComfyLib;
 
 using TMPro;
 
@@ -67,7 +69,7 @@ public static class UIBuilder {
 
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        pixels[(y * width) + x] = IsCornerPixel(x, y, width, height, radius) ? ColorClear : ColorWhite;
+        pixels[y * width + x] = IsCornerPixel(x, y, width, height, radius) ? ColorClear : ColorWhite;
       }
     }
 
@@ -141,7 +143,7 @@ public static class UIBuilder {
     Color32[] pixels = new Color32[width * height];
 
     int XYToIndex(int x, int y) {
-      return x + (y * width);
+      return x + y * width;
     }
 
     int mx = width / 2;

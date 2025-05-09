@@ -4,10 +4,49 @@
 
 ![Pinnacle - At a Glance](https://imgur.com/Wabfnru.png)
 
-## New Feature
+## New Features
 
-  * You can now use a keyboard shortcut for adding a Pin!
-  * Set the shortcut in ConfigurationManager under `Minimap.Actions` > `addPinAtMouseShortcut`.
+### Pin Icon Tags
+
+  * You can now use tags at the end of the pin name to customize the pin icon!
+
+    ![Pinnacle - Icon Tags](https://imgur.com/lMivcpW.png)
+
+  - Icon customizations will be visible to those with Pinnacle enabled.
+  - Vanilla players will see the vanilla pin icon without customization.
+  - Tags will be stripped from the displayed pin name underneath the icon.
+
+#### Colorizing Icon
+
+  * Add a hex-code **to the end** of a pin-name in the format of: `[#F9F9F9]`
+    * For example: `Home Base [#ff0000]`
+    * The hex-code must start with `#`, then exactly 6 hexadecimal characters (lower-case or upper-case).
+  * Colorizing icons changes the icon sprite's *shader color* from the default `#ffffff` value.
+    * Colorizing non black-white sprites may not work as intended.
+
+#### Scaling Icon Size
+
+  * Add a percentage **to the end** of a pin-name in the format of : `[150%]` (note the percent at the end)
+    * For example: `Home Base [80%]`
+    * Only two and three-digit values are accepted
+    * All values are *clamped* to a min/max range of 50% to 200%.
+
+#### Changing Icon Sprite
+
+  * Add a sprite-name **to the end** of a pin-name in the format of: `[:sprite_name]` (note the colon at the front)
+    * For example: `Home Base [:egg]`
+    * The full list of sprite names are here: <https://valheim-modding.github.io/Jotunn/data/gui/sprite-list.html>
+    * The sprite name must **match exactly** (case-sensitive) and be at least 3 characters long.
+
+#### Combining Icon Tags
+
+  * You can combine all tags in any order as long as the pin name ends with a `]`.
+    * For example: `Home Base [:egg] [#00ff00] [125%]`
+    * Another example: `Away Base: [#990099] [80%]`
+
+#### Tags Configuration
+
+  * Config-options for icon tags are under the `Pinicon.Tags` section.
 
 ## Features
 
@@ -59,6 +98,11 @@
   * Filter pins on the map by **any icon type** (replaces vanilla panel).
 
     ![Pinnacle - PinFilterPanel](https://imgur.com/fPs7fDd.png)
+
+### Add Pin Shortcut
+
+  * You can now use a keyboard-shortcut for adding a Pin!
+  * Set the shortcut in ConfigurationManager under `Minimap.Actions` > `addPinAtMouseShortcut`.
 
 ### Map Teleporting
 

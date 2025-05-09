@@ -1,22 +1,16 @@
-﻿namespace Pinnacle;
+﻿namespace ComfyLib;
 
 using System.Collections.Generic;
-using System.Linq;
 
 using TMPro;
 
 using UnityEngine;
 
 public static class UIResources {
-  static readonly Dictionary<string, Sprite> SpriteCache = [];
+  public static readonly ResourceCache<Sprite> SpriteCache = new();
 
   public static Sprite GetSprite(string spriteName) {
-    if (!SpriteCache.TryGetValue(spriteName, out Sprite sprite)) {
-      sprite = Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(sprite => sprite.name == spriteName);
-      SpriteCache[spriteName] = sprite;
-    }
-
-    return sprite;
+    return SpriteCache.GetResource(spriteName);
   }
 
   public static Dictionary<string, TMP_FontAsset> FontAssetCache { get; private set; } = [];
