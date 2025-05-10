@@ -2,6 +2,8 @@
 
 using System;
 
+using ComfyLib;
+
 using TMPro;
 
 using UnityEngine;

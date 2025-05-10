@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+using ComfyLib;
+
 using TMPro;
 
 using UnityEngine;
@@ -192,6 +194,9 @@ public sealed class PinEditPanel {
     }
 
     TargetPin.m_NamePinData.PinNameText.SetText(name);
+
+    PinManager.SetPinIconColor(TargetPin);
+    PinManager.RemovePinIconColorText(TargetPin.m_NamePinData);
   }
 
   void OnPinTypeValueChange(Minimap.PinType pinType) {

@@ -153,9 +153,9 @@
     <Compile Include="Core\UI\Components\PanelResizer.cs" />
     <Compile Include="Core\UI\Components\ParentSizeFitter.cs" />
     <Compile Include="Core\UI\Components\PointerState.cs" />
-    <Compile Include="Core\UI\Core\UIBuilder.cs" />
-    <Compile Include="Core\UI\Core\UIExtensions.cs" />
-    <Compile Include="Core\UI\Core\UIResources.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIBuilder.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIExtensions.cs" />
+    <Compile Include="ComfyLib\UI\Core\UIResources.cs" />
     <Compile Include="Core\UI\PinEditPanel.cs" />
     <Compile Include="Core\UI\PinFilterPanel.cs" />
     <Compile Include="Core\UI\PinIconSelector.cs" />
