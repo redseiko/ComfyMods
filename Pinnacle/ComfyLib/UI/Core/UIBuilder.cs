@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 
+using ComfyLib;
+
 using TMPro;
 
 using UnityEngine;

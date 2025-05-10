@@ -15,4 +15,13 @@ public sealed class ResourceCache<T> where T : Object {
 
     return cachedResource;
   }
+
+  public bool TryGetResource(string resourceName, out T cachedResource) {
+    if (!_cache.TryGetValue(resourceName, out cachedResource)) {
+      cachedResource = Resources.FindObjectsOfTypeAll<T>().FirstByName(resourceName);
+      _cache[resourceName] = cachedResource;
+    }
+
+    return cachedResource;
+  }
 }
