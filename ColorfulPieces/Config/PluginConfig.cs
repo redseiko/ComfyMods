@@ -21,7 +21,12 @@ public static class PluginConfig {
   public static ConfigEntry<int> ColorPromptFontSize { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
-    IsModEnabled = config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
+    IsModEnabled =
+        config.BindInOrder(
+            "_Global",
+            "isModEnabled",
+            true,
+            "Globally enable or disable this mod.");
 
     IsModEnabled.OnSettingChanged(ComfyCommandUtils.ToggleCommands);
 

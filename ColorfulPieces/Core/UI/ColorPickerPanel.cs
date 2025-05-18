@@ -48,58 +48,28 @@ public sealed class ColorPickerPanel {
     HexValueInputField = CreateHexValueInputField(RectTransform);
     HexValueInputField.OnInputSubmit.AddListener(OnHexValueChanged);
 
-    RedSlider = CreateRGBSlider(RectTransform);
+    RedSlider = CreateRGBSlider(RectTransform, "R", Color.red);
     RedSlider.RectTransform.SetPosition(new(20f, -75f));
-    RedSlider.NameLabel.text = "R";
-    RedSlider.FillImage.SetColor(Color.red);
-    RedSlider.Slider.onValueChanged.AddListener(OnRGBSliderValueChanged);
 
-    GreenSlider = CreateRGBSlider(RectTransform);
+    GreenSlider = CreateRGBSlider(RectTransform, "G", Color.green);
     GreenSlider.RectTransform.SetPosition(new(20f, -115f));
-    GreenSlider.NameLabel.text = "G";
-    GreenSlider.FillImage.SetColor(Color.green);
-    GreenSlider.Slider.onValueChanged.AddListener(OnRGBSliderValueChanged);
 
-    BlueSlider = CreateRGBSlider(RectTransform);
+    BlueSlider = CreateRGBSlider(RectTransform, "B", Color.blue);
     BlueSlider.RectTransform.SetPosition(new(20f, -155f));
-    BlueSlider.NameLabel.text = "B";
-    BlueSlider.FillImage.SetColor(Color.blue);
-    BlueSlider.Slider.onValueChanged.AddListener(OnRGBSliderValueChanged);
 
-    AlphaSlider = CreateRGBSlider(RectTransform);
+    AlphaSlider = CreateRGBSlider(RectTransform, "A", Color.white);
     AlphaSlider.RectTransform.SetPosition(new(20f, -195f));
-    AlphaSlider.NameLabel.text = "A";
-    AlphaSlider.FillImage.SetColor(Color.white);
-    AlphaSlider.Slider.onValueChanged.AddListener(OnRGBSliderValueChanged);
 
-    HueSlider = CreateHSVSlider(RectTransform);
+    HueSlider = CreateHSVSlider(RectTransform, "H", CreateHueSprite(360));
     HueSlider.RectTransform.SetPosition(new(20f, -235f));
-    HueSlider.NameLabel.text = "H";
-    HueSlider.Slider.onValueChanged.AddListener(OnHSVSliderValueChanged);
 
-    HueSlider.Background
-        .SetSprite(CreateHueSprite(360))
-        .SetColor(Color.white);
-
-    SaturationSlider = CreateHSVSlider(RectTransform);
+    SaturationSlider = CreateHSVSlider(RectTransform, "S", CreateSprite(100));
     SaturationSlider.RectTransform.SetPosition(new(20f, -275f));
-    SaturationSlider.NameLabel.text = "S";
-    SaturationSlider.Slider.onValueChanged.AddListener(OnHSVSliderValueChanged);
-
-    SaturationSlider.Background
-        .SetSprite(CreateSprite(100))
-        .SetColor(Color.white);
 
     SaturationTexture = SaturationSlider.Background.sprite.texture;
 
-    BrightnessSlider = CreateHSVSlider(RectTransform);
+    BrightnessSlider = CreateHSVSlider(RectTransform, "V", CreateSprite(100));
     BrightnessSlider.RectTransform.SetPosition(new(20f, -315f));
-    BrightnessSlider.NameLabel.text = "V";
-    BrightnessSlider.Slider.onValueChanged.AddListener(OnHSVSliderValueChanged);
-
-    BrightnessSlider.Background
-        .SetSprite(CreateSprite(100))
-        .SetColor(Color.white);
 
     BrightnessTexture = BrightnessSlider.Background.sprite.texture;
 
@@ -285,31 +255,30 @@ public sealed class ColorPickerPanel {
     return inputField;
   }
 
-  static ColorSlider CreateRGBSlider(Transform parentTransform) {
-    ColorSlider colorSlider = new(parentTransform);
+  ColorSlider CreateRGBSlider(Transform parentTransform, string sliderLabel, Color fillColor) {
+    ColorSlider rgbSlider = CreateColorSlider(parentTransform);
 
-    colorSlider.RectTransform
-        .SetAnchorMin(Vector2.up)
-        .SetAnchorMax(Vector2.one)
-        .SetPivot(Vector2.up)
-        .SetPosition(Vector2.zero)
-        .SetSizeDelta(new(-40f, 25f));
+    rgbSlider.NameLabel.text = sliderLabel;
+    rgbSlider.FillImage.SetColor(fillColor);
+    rgbSlider.Slider.onValueChanged.AddListener(OnRGBSliderValueChanged);
 
-    colorSlider.ShowValueAsPercent = true;
-
-    colorSlider.Slider
-        .SetInteractable(true)
-        .SetWholeNumbers(false)
-        .SetMinValue(0f)
-        .SetMaxValue(1f)
-        .SetValue(1f);
-
-    colorSlider.FillImage.SetColor(Color.clear);
-
-    return colorSlider;
+    return rgbSlider;
   }
 
-  static ColorSlider CreateHSVSlider(Transform parentTransform) {
+  ColorSlider CreateHSVSlider(Transform parentTransform, string sliderLabel, Sprite backgroundSprite) {
+    ColorSlider hsvSlider = CreateColorSlider(parentTransform);
+
+    hsvSlider.NameLabel.text = sliderLabel;
+    hsvSlider.Slider.onValueChanged.AddListener(OnHSVSliderValueChanged);
+
+    hsvSlider.Background
+        .SetSprite(backgroundSprite)
+        .SetColor(Color.white);
+
+    return hsvSlider;
+  }
+
+  static ColorSlider CreateColorSlider(Transform parentTransform) {
     ColorSlider colorSlider = new(parentTransform);
 
     colorSlider.RectTransform

@@ -20,7 +20,9 @@ public sealed class ExtendedColorConfigEntry {
   public ColorFloatTextField AlphaInput { get; } = new("A");
 
   readonly HexColorTextField _hexInput = new();
-  readonly ColorPalette _colorPalette;
+  readonly ColorPaletteDrawer _colorPalette;
+
+  public IReadOnlyList<Color> PaletteColors => _colorPalette?.PaletteColors ?? [];
 
   bool _showSliders = false;
 
@@ -128,7 +130,7 @@ public sealed class ExtendedColorConfigEntry {
   }
 }
 
-public sealed class ColorPalette {
+public sealed class ColorPaletteDrawer {
   static readonly char[] _partSeparator = [','];
   static readonly string _partJoiner = ",";
   static readonly Texture2D _colorTexture = GUIBuilder.CreateColorTexture(10, 10, Color.white);
@@ -137,7 +139,9 @@ public sealed class ColorPalette {
   readonly ConfigEntry<string> _paletteConfigEntry;
   readonly List<Color> _paletteColors;
 
-  public ColorPalette(ExtendedColorConfigEntry colorConfigEntry, ConfigEntry<string> paletteConfigEntry) {
+  public IReadOnlyList<Color> PaletteColors => _paletteColors;
+
+  public ColorPaletteDrawer(ExtendedColorConfigEntry colorConfigEntry, ConfigEntry<string> paletteConfigEntry) {
     _colorConfigEntry = colorConfigEntry;
     _paletteConfigEntry = paletteConfigEntry;
     _paletteColors = [];
