@@ -124,6 +124,8 @@
     <Compile Include="ComfyLib\UI\Builder\ColorSquare.cs" />
     <Compile Include="ComfyLib\UI\Builder\LabelButton.cs" />
     <Compile Include="ComfyLib\UI\Builder\ListView.cs" />
+    <Compile Include="ComfyLib\UI\Components\IgnoreDragHandler.cs" />
+    <Compile Include="ComfyLib\UI\Components\PanelDragger.cs" />
     <Compile Include="ComfyLib\UI\Core\UIBuilder.cs" />
     <Compile Include="ComfyLib\UI\Core\UIExtensions.cs" />
     <Compile Include="ComfyLib\UI\Core\UIResources.cs" />
@@ -139,6 +141,7 @@
     <Compile Include="Core\Controllers\ColorPickerController.cs" />
     <Compile Include="Core\Extensions\MaterialManExtensions.cs" />
     <Compile Include="Core\ShortcutUtils.cs" />
+    <Compile Include="Core\UI\ColorPalette.cs" />
     <Compile Include="Core\UI\ColorPickerPanel.cs" />
     <Compile Include="Patches\GamePatch.cs" />
     <Compile Include="Patches\HudPatch.cs" />

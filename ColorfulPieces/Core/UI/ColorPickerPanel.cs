@@ -31,6 +31,8 @@ public sealed class ColorPickerPanel {
   public Texture2D BrightnessTexture { get; }
   public Texture2D SaturationTexture { get; }
 
+  public ColorPalette BasicPalette { get; }
+
   public Color CurrentColor { get; private set; } = Color.white;
   public string CurrentHexValue { get; private set; } = string.Empty;
 
@@ -100,6 +102,8 @@ public sealed class ColorPickerPanel {
         .SetColor(Color.white);
 
     BrightnessTexture = BrightnessSlider.Background.sprite.texture;
+
+    BasicPalette = CreateBasicPalette(Panel.transform);
 
     SetCurrentColor(Color.cyan);
     UpdatePanel();
@@ -179,6 +183,8 @@ public sealed class ColorPickerPanel {
     GameObject panel = UIBuilder.CreatePanel(parentTransform);
     panel.name = "ColorPickerPanel";
 
+    panel.AddComponent<PanelDragger>();
+
     return panel;
   }
 
@@ -187,15 +193,17 @@ public sealed class ColorPickerPanel {
     confirmButton.Container.name = "Confirm";
 
     confirmButton.RectTransform
-    .SetAnchorMin(Vector2.zero)
-    .SetAnchorMax(Vector2.zero)
-    .SetPivot(Vector2.zero)
-    .SetPosition(new(20f, 20f))
-    .SetSizeDelta(new(100f, 42.5f));
+        .SetAnchorMin(Vector2.zero)
+        .SetAnchorMax(Vector2.zero)
+        .SetPivot(Vector2.zero)
+        .SetPosition(new(20f, 20f))
+        .SetSizeDelta(new(100f, 42.5f));
 
     confirmButton.Label
         .SetFontSize(18f)
         .SetText("Pick");
+
+    confirmButton.Container.AddComponent<IgnoreDragHandler>();
 
     return confirmButton;
   }
@@ -214,6 +222,8 @@ public sealed class ColorPickerPanel {
     closeButton.Label
         .SetFontSize(18f)
         .SetText("Close");
+
+    closeButton.Container.AddComponent<IgnoreDragHandler>();
 
     return closeButton;
   }
@@ -389,5 +399,19 @@ public sealed class ColorPickerPanel {
     sprite.name = "CheckerboardSprite";
 
     return sprite;
+  }
+
+  static ColorPalette CreateBasicPalette(Transform parentTransform) {
+    ColorPalette basicPalette = new(parentTransform);
+    basicPalette.Container.name = "BasicPalette";
+
+    basicPalette.RectTransform
+        .SetAnchorMin(Vector2.zero)
+        .SetAnchorMax(Vector2.right)
+        .SetPivot(Vector2.zero)
+        .SetPosition(new(20f, 75f))
+        .SetSizeDelta(new(-40f, 90f));
+
+    return basicPalette;
   }
 }

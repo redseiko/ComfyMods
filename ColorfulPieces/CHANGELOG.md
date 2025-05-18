@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.19.0
+
+  * ColorPicker panel can now be moved using drag-and-drop.
+
 ### 1.18.1
 
   * Hot-fix to only allow ColorPicker panel to be created in-game (and not on start-screen) to prevent NPE.

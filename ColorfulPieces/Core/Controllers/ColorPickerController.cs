@@ -41,7 +41,7 @@ public sealed class ColorPickerController {
         .SetAnchorMax(new(0.5f, 0.5f))
         .SetPivot(new(0.5f, 0.5f))
         .SetPosition(Vector2.zero)
-        .SetSizeDelta(new(400f, 500f));
+        .SetSizeDelta(new(400f, 525f));
 
     colorPicker.ConfirmButton.Button.onClick.AddListener(OnConfirmButtonClick);
     colorPicker.CloseButton.Button.onClick.AddListener(OnCloseButtonClick);
