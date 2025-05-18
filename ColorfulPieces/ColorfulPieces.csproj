@@ -2,7 +2,7 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BFAA6B86-51A5-42A3-83A5-AF812A989C5A}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -57,55 +57,71 @@
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>$(GamePath)\BepInEx\core\0Harmony.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="assembly_guiutils_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_guiutils_publicized.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="assembly_utils_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="assembly_valheim_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_valheim_publicized.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="BepInEx">
       <HintPath>$(GamePath)\BepInEx\core\BepInEx.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="gui_framework_publicized">
+      <Private>false</Private>
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\gui_framework_publicized.dll</HintPath>
     </Reference>
     <Reference Include="Splatform_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\Splatform_publicized.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Unity.TextMeshPro">
+    <Reference Include="Unity.TextMeshPro_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\Unity.TextMeshPro_publicized.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.AnimationModule">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +140,8 @@
     <Compile Include="ComfyLib\UI\Builder\ColorSquare.cs" />
     <Compile Include="ComfyLib\UI\Builder\LabelButton.cs" />
     <Compile Include="ComfyLib\UI\Builder\ListView.cs" />
+    <Compile Include="ComfyLib\UI\Components\IgnoreDragHandler.cs" />
+    <Compile Include="ComfyLib\UI\Components\PanelDragger.cs" />
     <Compile Include="ComfyLib\UI\Core\UIBuilder.cs" />
     <Compile Include="ComfyLib\UI\Core\UIExtensions.cs" />
     <Compile Include="ComfyLib\UI\Core\UIResources.cs" />
@@ -139,6 +157,8 @@
     <Compile Include="Core\Controllers\ColorPickerController.cs" />
     <Compile Include="Core\Extensions\MaterialManExtensions.cs" />
     <Compile Include="Core\ShortcutUtils.cs" />
+    <Compile Include="Core\UI\ColorPaletteGrid.cs" />
+    <Compile Include="Core\UI\ColorPalettePanel.cs" />
     <Compile Include="Core\UI\ColorPickerPanel.cs" />
     <Compile Include="Patches\GamePatch.cs" />
     <Compile Include="Patches\HudPatch.cs" />
@@ -150,12 +170,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CHANGELOG.md" />
-    <None Include="icon.png" />
-    <None Include="manifest.json" />
-    <None Include="README.md" />
+    <None Include="CHANGELOG.md" ThunderstorePackage="true" />
+    <None Include="icon.png" ThunderstorePackage="true" />
+    <None Include="manifest.json" ThunderstorePackage="true" />
+    <None Include="README.md" ThunderstorePackage="true" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyAssembly" AfterTargets="Build">
     <Copy SourceFiles="$(TargetDir)$(AssemblyName).dll" DestinationFolder="$(PluginOutputPath)" />
@@ -178,7 +197,8 @@
   </Target>
   <Target Name="MakeThunderstorePackage" AfterTargets="GetAssemblyVersion">
     <ItemGroup>
-      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; CHANGELOG.md; README.md; manifest.json; icon.png" />
+      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll" />
+      <PackageFiles Include="@(None)" Condition="'%(None.ThunderstorePackage)' == 'true'" />
     </ItemGroup>
     <MakeDir Directories="$(PackageDir)" />
     <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageDir)" />

@@ -6,7 +6,25 @@
 
   * You can color any building piece that can be built using the Hammer using RGB or HTML color codes.
   * Coloring is very simple at the moment and will color all materials/textures on the object (to be refined later).
-  * Those without the mod installed will still see the default vanilla materials/textures.
+  * Those without the mod installed will still see the default vanilla materials/textures. 
+
+## ColorPicker
+
+  * A new interface for selecting a color!
+
+    ![ColorPicker & ColorPalette](https://i.imgur.com/ZSDonUOl.png)
+
+  - Toggle the ColorPicker by:
+    - Using the command `/toggle-color-picker`
+    - Using a key-bind by setting the `toggleColorPickerShortcut` config-option.
+    - Press `Escape` when the ColorPicker is open to close it.
+
+  * Using the ColorPalette:
+    * Add the **current color** to the palette using the "Add" button.
+    * Remove the **last palette color** using the "Remove" (trashcan) button.
+    * __Click__ on a palette color to select that color and **__close the ColorPicker panel__**.
+    * __Hold__ `LeftShift` and click on a palette color to select that color.
+    * __Hold__ `LeftControl` and click on a palette color **__to delete that specific color__** from the palette.
 
 ## Instructions
 
@@ -25,6 +43,13 @@
 
   - This prompt can be hidden by disabling the `showChangeRemoveColorPrompt` setting.
   - Prompt font-size can be configured with the `colorPromptFontSize` setting.
+
+## Configuration
+
+  * Configuration options can be accessed in-game using
+    [ConfigurationManager](https://thunderstore.io/c/valheim/p/Azumatt/Official_BepInEx_ConfigurationManager/).
+
+    ![Configuration Options](https://i.imgur.com/f9PLswAl.png)
 
 ## Commands
 

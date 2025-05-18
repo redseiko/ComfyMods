@@ -21,7 +21,9 @@ public static class ShortcutUtils {
         OnCopyPieceColorShortcut(hovering);
       }
     }
+  }
 
+  public static void CheckPickerShortcuts() {
     if (ToggleColorPickerShortcut.Value.IsDown()) {
       OnToggleColorPickerShortcut();
     }
@@ -55,15 +57,27 @@ public static class ShortcutUtils {
   }
 
   public static void OnToggleColorPickerShortcut() {
-    if (!ColorPickerController.HasVisibleInstance() && Game.instance) {
+    if (ColorPickerController.HasVisibleInstance()) {
+      ColorPickerController.Instance.HideColorPicker();
+    } else if (Game.instance) {
       ColorPickerController.Instance.ShowColorPicker(
           currentColor: TargetPieceColor.Value,
-          onColorSelectedCallback: SetTargetPieceColorConfigValue);
+          selectColorCallback: SetTargetPieceColor,
+          selectColorOnClose: SelectColorOnClose.Value,
+          useColorAlpha: false,
+          showEmissionColorFactor: true,
+          currentEmissionColorFactor: TargetPieceEmissionColorFactor.Value,
+          selectEmissionColorFactorCallback: SetTargetPieceEmissionColorFactor,
+          paletteColors: TargetPieceColor.GetPaletteColors(),
+          changePaletteColorsCallback: TargetPieceColor.SetPaletteColors);
     }
   }
 
-  public static void SetTargetPieceColorConfigValue(Color color) {
-    ColorfulPieces.LogInfo($"Setting Color.targetPieceColor config value to: {color}");
+  public static void SetTargetPieceColor(Color color) {
     TargetPieceColor.SetValue(color);
+  }
+
+  public static void SetTargetPieceEmissionColorFactor(float factor) {
+    TargetPieceEmissionColorFactor.Value = factor;
   }
 }

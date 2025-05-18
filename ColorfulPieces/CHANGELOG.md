@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.19.0
+
+  * Finished new ColorPicker panel and ColorPalette panel.
+  * Updated `README.md` with screenshots.
+
 ### 1.18.1
 
   * Hot-fix to only allow ColorPicker panel to be created in-game (and not on start-screen) to prevent NPE.

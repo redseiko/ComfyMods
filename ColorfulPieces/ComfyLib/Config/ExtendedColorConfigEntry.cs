@@ -20,7 +20,10 @@ public sealed class ExtendedColorConfigEntry {
   public ColorFloatTextField AlphaInput { get; } = new("A");
 
   readonly HexColorTextField _hexInput = new();
-  readonly ColorPalette _colorPalette;
+  readonly ColorPaletteDrawer _colorPalette;
+
+  public IReadOnlyList<Color> GetPaletteColors() => _colorPalette?.GetPaletteColors() ?? [];
+  public void SetPaletteColors(IEnumerable<Color> colors) => _colorPalette?.SetPaletteColors(colors);
 
   bool _showSliders = false;
 
@@ -128,7 +131,7 @@ public sealed class ExtendedColorConfigEntry {
   }
 }
 
-public sealed class ColorPalette {
+public sealed class ColorPaletteDrawer {
   static readonly char[] _partSeparator = [','];
   static readonly string _partJoiner = ",";
   static readonly Texture2D _colorTexture = GUIBuilder.CreateColorTexture(10, 10, Color.white);
@@ -137,7 +140,18 @@ public sealed class ColorPalette {
   readonly ConfigEntry<string> _paletteConfigEntry;
   readonly List<Color> _paletteColors;
 
-  public ColorPalette(ExtendedColorConfigEntry colorConfigEntry, ConfigEntry<string> paletteConfigEntry) {
+  public IReadOnlyList<Color> GetPaletteColors() {
+    return _paletteColors;
+  }
+
+  public void SetPaletteColors(IEnumerable<Color> colors) {
+    _paletteColors.Clear();
+    _paletteColors.AddRange(colors);
+
+    SavePalette();
+  }
+
+  public ColorPaletteDrawer(ExtendedColorConfigEntry colorConfigEntry, ConfigEntry<string> paletteConfigEntry) {
     _colorConfigEntry = colorConfigEntry;
     _paletteConfigEntry = paletteConfigEntry;
     _paletteColors = [];
@@ -158,8 +172,7 @@ public sealed class ColorPalette {
   }
 
   void SavePalette() {
-    _paletteConfigEntry.BoxedValue =
-        string.Join(_partJoiner, _paletteColors.Select(color => ColorUtility.ToHtmlStringRGBA(color)));
+    _paletteConfigEntry.BoxedValue = string.Join(_partJoiner, _paletteColors.Select(ColorUtility.ToHtmlStringRGBA));
   }
 
   bool PaletteColorButtons(out int colorIndex) {

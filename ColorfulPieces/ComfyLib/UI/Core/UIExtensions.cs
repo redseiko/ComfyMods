@@ -38,9 +38,43 @@ public static class ContentSizeFitterExtensions {
   }
 }
 
+public static class GridLayoutGroupExtensions {
+  public static GridLayoutGroup SetCellSize(this GridLayoutGroup layoutGroup, Vector2 cellSize) {
+    layoutGroup.cellSize = cellSize;
+    return layoutGroup;
+  }
+
+  public static GridLayoutGroup SetConstraint(
+      this GridLayoutGroup layoutGroup, GridLayoutGroup.Constraint constraint) {
+    layoutGroup.constraint = constraint;
+    return layoutGroup;
+  }
+
+  public static GridLayoutGroup SetConstraintCount(this GridLayoutGroup layoutGroup, int constraintCount) {
+    layoutGroup.constraintCount = constraintCount;
+    return layoutGroup;
+  }
+
+  public static GridLayoutGroup SetStartAxis(this GridLayoutGroup layoutGroup, GridLayoutGroup.Axis startAxis) {
+    layoutGroup.startAxis = startAxis;
+    return layoutGroup;
+  }
+
+  public static GridLayoutGroup SetStartCorner(
+      this GridLayoutGroup layoutGroup, GridLayoutGroup.Corner startCorner) {
+    layoutGroup.startCorner = startCorner;
+    return layoutGroup;
+  }
+
+  public static GridLayoutGroup SetSpacing(this GridLayoutGroup layoutGroup, Vector2 spacing) {
+    layoutGroup.spacing = spacing;
+    return layoutGroup;
+  }
+}
+
 public static class LayoutGroupExtensions {
   public static T SetChildAlignment<T>(
-      this T layoutGroup, TextAnchor alignment) where T : HorizontalOrVerticalLayoutGroup {
+      this T layoutGroup, TextAnchor alignment) where T : LayoutGroup {
     layoutGroup.childAlignment = alignment;
     return layoutGroup;
   }
@@ -241,9 +275,14 @@ public static class LayoutElementExtensions {
 }
 
 public static class RectMask2DExtensions {
-  public static RectMask2D SetSoftness(this RectMask2D rectMask2d, Vector2Int softness) {
-    rectMask2d.softness = softness;
-    return rectMask2d;
+  public static T SetPadding<T>(this T rectMask, Vector4 padding) where T : RectMask2D {
+    rectMask.padding = padding;
+    return rectMask;
+  }
+
+  public static T SetSoftness<T>(this T rectMask, Vector2Int softness) where T : RectMask2D {
+    rectMask.softness = softness;
+    return rectMask;
   }
 }
 

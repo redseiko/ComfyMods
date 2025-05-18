@@ -26,8 +26,12 @@ static class PlayerPatch {
   }
 
   static void UpdateHoverPostDelegate(Player player, bool takeInput) {
-    if (takeInput && IsModEnabled.Value && player) {
-      ShortcutUtils.CheckShortcuts(player.m_hovering);
+    if (IsModEnabled.Value && player) {
+      if (takeInput) {
+        ShortcutUtils.CheckShortcuts(player.m_hovering);
+      }
+
+      ShortcutUtils.CheckPickerShortcuts();
     }
   }
 }

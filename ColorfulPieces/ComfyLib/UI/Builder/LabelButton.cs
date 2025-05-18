@@ -3,13 +3,14 @@
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public sealed class LabelButton {
   public GameObject Container { get; private set; }
   public RectTransform RectTransform { get; }
 
-  public TMP_Text Label { get; private set; }
+  public TextMeshProUGUI Label { get; private set; }
   public Button Button { get; private set; }
 
   public LabelButton(Transform parentTransform) {
@@ -18,6 +19,10 @@ public sealed class LabelButton {
 
     Label = CreateLabel(RectTransform);
     Button = CreateButton(Container);
+  }
+
+  public void AddOnClickListener(UnityAction action) {
+    Button.onClick.AddListener(action);
   }
 
   static GameObject CreateContainer(Transform parentTransform) {
@@ -39,8 +44,8 @@ public sealed class LabelButton {
     return container;
   }
 
-  static TMP_Text CreateLabel(Transform parentTransform) {
-    TMP_Text label = UIBuilder.CreateTMPLabel(parentTransform);
+  static TextMeshProUGUI CreateLabel(Transform parentTransform) {
+    TextMeshProUGUI label = UIBuilder.CreateTMPLabel(parentTransform);
 
     label
         .SetFontSize(16f)
