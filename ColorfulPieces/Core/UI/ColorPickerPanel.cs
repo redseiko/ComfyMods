@@ -77,6 +77,10 @@ public sealed class ColorPickerPanel {
 
     SetCurrentColor(Color.cyan);
     UpdatePanel();
+
+    // TODO: UpdateItems() has to be in the next frame as rect calculations are not done in the current frame.
+    BasicPalette.GenerateRandomItems(10);
+    BasicPalette.UpdateItems();
   }
 
   void OnRGBSliderValueChanged(float value) {
@@ -153,6 +157,8 @@ public sealed class ColorPickerPanel {
     GameObject panel = UIBuilder.CreatePanel(parentTransform);
     panel.name = "ColorPickerPanel";
 
+    panel.AddComponent<Canvas>();
+    panel.AddComponent<GraphicRaycaster>();
     panel.AddComponent<PanelDragger>();
 
     return panel;
@@ -211,7 +217,7 @@ public sealed class ColorPickerPanel {
 
     checkerboard.AddComponent<Image>()
         .SetType(Image.Type.Tiled)
-        .SetSprite(CreateCheckerboardSprite(40, 40, 20))
+        .SetSprite(UIBuilder.CreateCheckerboardSprite(40, 40, 20))
         .SetColor(Color.white);
 
     GameObject color = new("Color", typeof(RectTransform));
@@ -348,26 +354,6 @@ public sealed class ColorPickerPanel {
     }
 
     brightnessTexture.Apply();
-  }
-
-  static Sprite CreateCheckerboardSprite(int width, int height, int length = 10) {
-    Texture2D texture = new(width, height) {
-      name = "CheckerboardTexture"
-    };
-
-    for (int x = 0; x < width; x++) {
-      for (int y = 0; y < height; y++) {
-        texture.SetPixel(x, y, ((x / length + y / length) % 2) == 1 ? Color.black : Color.white);
-      }
-    }
-
-    texture.SetWrapMode(TextureWrapMode.Repeat);
-    texture.Apply();
-
-    Sprite sprite = Sprite.Create(texture, new(0f, 0f, width, height), new(0.5f, 0.5f));
-    sprite.name = "CheckerboardSprite";
-
-    return sprite;
   }
 
   static ColorPalette CreateBasicPalette(Transform parentTransform) {

@@ -1,5 +1,7 @@
 ﻿namespace ComfyLib;
 
+using System.Collections.Generic;
+
 using GUIFramework;
 
 using TMPro;
@@ -142,5 +144,35 @@ public static class UIBuilder {
         .SetSizeDelta(new(120f, 40f));
 
     return inputField;
+  }
+
+  static readonly Dictionary<string, Sprite> _checkerboardSpriteCache = [];
+
+  public static Sprite CreateCheckerboardSprite(int width, int height, int length = 10) {
+    string spriteName = $"CheckerboardSprite-{width}-{height}-{length}";
+
+    if (_checkerboardSpriteCache.TryGetValue(spriteName, out Sprite cachedSprite) && cachedSprite) {
+      return cachedSprite;
+    }
+
+    Texture2D texture = new(width, height) {
+      name = "CheckerboardTexture"
+    };
+
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        texture.SetPixel(x, y, ((x / length + y / length) % 2) == 1 ? Color.black : Color.white);
+      }
+    }
+
+    texture.SetWrapMode(TextureWrapMode.Repeat);
+    texture.Apply();
+
+    Sprite sprite = Sprite.Create(texture, new(0f, 0f, width, height), new(0.5f, 0.5f));
+    sprite.name = spriteName;
+
+    _checkerboardSpriteCache[spriteName] = sprite;
+
+    return sprite;
   }
 }
