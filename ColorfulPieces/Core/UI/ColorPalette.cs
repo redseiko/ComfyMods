@@ -10,12 +10,14 @@ using UnityEngine.UI;
 public sealed class ColorPalette {
   public GameObject Container { get; private set; }
   public RectTransform RectTransform { get; private set; }
+  public GridLayoutGroup LayoutGroup { get; private set; }
   public Image Background { get; private set; }
   public List<PaletteItem> PaletteItems { get; private set; } = [];
 
   public ColorPalette(Transform parentTransform) {
     Container = CreateContainer(parentTransform);
     RectTransform = Container.GetComponent<RectTransform>();
+    LayoutGroup = Container.GetComponent<GridLayoutGroup>();
     Background = Container.GetComponent<Image>();
   }
 
@@ -31,26 +33,6 @@ public sealed class ColorPalette {
     }
   }
 
-  public void UpdateItems() {
-    int itemsPerRow = Mathf.Max(1, Mathf.FloorToInt(RectTransform.rect.width / (ItemWidth + ItemSpacing)));
-    int currentRow = 0;
-    int currentColumn = 0;
-
-    foreach (PaletteItem item in PaletteItems) {
-      float x = currentColumn * (ItemWidth + ItemSpacing);
-      float y = currentRow * (ItemHeight + ItemSpacing);
-
-      item.RectTransform.SetPosition(new(x, y));
-
-      currentColumn++;
-
-      if (currentColumn >= itemsPerRow) {
-        currentRow++;
-        currentColumn = 0;
-      }
-    }
-  }
-
   static GameObject CreateContainer(Transform parentTransform) {
     GameObject container = new("Palette", typeof(RectTransform));
     container.transform.SetParent(parentTransform, worldPositionStays: false);
@@ -61,6 +43,12 @@ public sealed class ColorPalette {
         .SetPivot(Vector2.zero)
         .SetPosition(new(20f, 20f))
         .SetSizeDelta(new(-40f, 140f));
+
+    container.AddComponent<GridLayoutGroup>()
+        .SetStartCorner(GridLayoutGroup.Corner.UpperLeft)
+        .SetStartAxis(GridLayoutGroup.Axis.Horizontal)
+        .SetCellSize(new(30f, 30f))
+        .SetSpacing(new(10f, 10f));
 
     container.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
@@ -74,12 +62,15 @@ public sealed class ColorPalette {
 public sealed class PaletteItem {
   public GameObject Container { get; private set; }
   public RectTransform RectTransform { get; private set; }
+  public LayoutElement LayoutElement { get; private set; }
   public Image Background { get; private set; }
+
   public Image ColorImage { get; private set; }
 
   public PaletteItem(Transform parentTransform) {
     Container = CreateContainer(parentTransform);
     RectTransform = Container.GetComponent<RectTransform>();
+    LayoutElement = Container.GetComponent<LayoutElement>();
     Background = Container.GetComponent<Image>();
     ColorImage = CreateColorImage(Container.transform);
   }
@@ -98,6 +89,9 @@ public sealed class PaletteItem {
         .SetPivot(Vector2.up)
         .SetPosition(Vector2.zero)
         .SetSizeDelta(new(30f, 30f));
+
+    container.AddComponent<LayoutElement>()
+        .SetPreferred(width: 30f, height: 30f);
 
     container.AddComponent<Image>()
         .SetType(Image.Type.Tiled)

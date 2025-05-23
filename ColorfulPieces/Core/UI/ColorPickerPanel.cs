@@ -80,7 +80,6 @@ public sealed class ColorPickerPanel {
 
     // TODO: UpdateItems() has to be in the next frame as rect calculations are not done in the current frame.
     BasicPalette.GenerateRandomItems(10);
-    BasicPalette.UpdateItems();
   }
 
   void OnRGBSliderValueChanged(float value) {

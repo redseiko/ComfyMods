@@ -38,6 +38,40 @@ public static class ContentSizeFitterExtensions {
   }
 }
 
+public static class GridLayoutGroupExtensions {
+  public static GridLayoutGroup SetCellSize(this GridLayoutGroup layoutGroup, Vector2 cellSize) {
+    layoutGroup.cellSize = cellSize;
+    return layoutGroup;
+  }
+
+  public static GridLayoutGroup SetConstraint(
+      this GridLayoutGroup layoutGroup, GridLayoutGroup.Constraint constraint) {
+    layoutGroup.constraint = constraint;
+    return layoutGroup;
+  }
+
+  public static GridLayoutGroup SetConstraintCount(this GridLayoutGroup layoutGroup, int constraintCount) {
+    layoutGroup.constraintCount = constraintCount;
+    return layoutGroup;
+  }
+
+  public static GridLayoutGroup SetStartAxis(this GridLayoutGroup layoutGroup, GridLayoutGroup.Axis startAxis) {
+    layoutGroup.startAxis = startAxis;
+    return layoutGroup;
+  }
+
+  public static GridLayoutGroup SetStartCorner(
+      this GridLayoutGroup layoutGroup, GridLayoutGroup.Corner startCorner) {
+    layoutGroup.startCorner = startCorner;
+    return layoutGroup;
+  }
+
+  public static GridLayoutGroup SetSpacing(this GridLayoutGroup layoutGroup, Vector2 spacing) {
+    layoutGroup.spacing = spacing;
+    return layoutGroup;
+  }
+}
+
 public static class LayoutGroupExtensions {
   public static T SetChildAlignment<T>(
       this T layoutGroup, TextAnchor alignment) where T : HorizontalOrVerticalLayoutGroup {
