@@ -13,6 +13,7 @@ public sealed class ColorPaletteGrid {
   public RectTransform RectTransform { get; private set; }
   public GridLayoutGroup LayoutGroup { get; private set; }
   public Image Background { get; private set; }
+
   public List<PaletteSlot> PaletteSlots { get; private set; } = [];
 
   public ColorPaletteGrid(Transform parentTransform) {
@@ -28,11 +29,10 @@ public sealed class ColorPaletteGrid {
     }
 
     PaletteSlots.Clear();
-  }  
+  }
 
-  public PaletteSlot AddPaletteSlot(Color color) {
+  public PaletteSlot AddSlot() {
     PaletteSlot slot = new(RectTransform);
-    slot.SetColor(color);
     PaletteSlots.Add(slot);
 
     return slot;

@@ -1,6 +1,5 @@
 ﻿namespace ColorfulPieces;
 
-using System.Collections;
 using System.Collections.Generic;
 
 using ComfyLib;
@@ -34,7 +33,8 @@ public sealed class ColorPickerPanel {
   public Texture2D BrightnessTexture { get; }
   public Texture2D SaturationTexture { get; }
 
-  public ColorPaletteGrid BasicPalette { get; }
+  public ColorPaletteGrid ColorPalette { get; }
+  public LabelButton AddColorButton { get; }
 
   public Color CurrentColor { get; private set; } = Color.white;
   public string CurrentHexValue { get; private set; } = string.Empty;
@@ -76,27 +76,10 @@ public sealed class ColorPickerPanel {
 
     BrightnessTexture = BrightnessSlider.Background.sprite.texture;
 
-    BasicPalette = CreateBasicPalette(Panel.transform);
+    ColorPalette = CreateColorPalette(RectTransform);
+    AddColorButton = CreateAddColorButton(RectTransform);
 
     SetColor(Color.cyan);
-  }
-
-  // TODO: redseiko - remove me before releasing new palette feature, this is only for testing.
-  public void GenerateRandomSlots(int count) {
-    for (int i = 0; i < count; i++) {
-      PaletteSlot slot = BasicPalette.AddPaletteSlot(Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
-      slot.OnSelect.AddListener(SetColor);
-    }
-  }
-
-  // TODO: redseiko - instead of clearing ALL slots, re-use existing ones first, then clear the remaining.
-  public void SetPaletteColors(IEnumerable<Color> colors) {
-    BasicPalette.ClearSlots();
-
-    foreach (Color color in colors) {
-      PaletteSlot slot = BasicPalette.AddPaletteSlot(color);
-      slot.OnSelect.AddListener(SetColor);
-    }
   }
 
   void OnRGBSliderValueChanged(float value) {
@@ -159,7 +142,11 @@ public sealed class ColorPickerPanel {
 
   void SetCurrentColor(Color color) {
     CurrentColor = color;
-    CurrentHexValue = "#" + (color.a < 1f ? ColorUtility.ToHtmlStringRGBA(color) : ColorUtility.ToHtmlStringRGB(color));
+
+    CurrentHexValue =
+        color.a < 1f
+            ? "#" + ColorUtility.ToHtmlStringRGBA(color)
+            : "#" + ColorUtility.ToHtmlStringRGB(color);
   }
 
   public void SetColor(Color color) {
@@ -190,7 +177,7 @@ public sealed class ColorPickerPanel {
         .SetAnchorMax(Vector2.zero)
         .SetPivot(Vector2.zero)
         .SetPosition(new(20f, 20f))
-        .SetSizeDelta(new(100f, 42.5f));
+        .SetSizeDelta(new(125f, 42.5f));
 
     confirmButton.Label
         .SetFontSize(18f)
@@ -373,17 +360,37 @@ public sealed class ColorPickerPanel {
     brightnessTexture.Apply();
   }
 
-  static ColorPaletteGrid CreateBasicPalette(Transform parentTransform) {
-    ColorPaletteGrid basicPalette = new(parentTransform);
-    basicPalette.Container.name = "BasicPalette";
+  static ColorPaletteGrid CreateColorPalette(Transform parentTransform) {
+    ColorPaletteGrid colorPalette = new(parentTransform);
+    colorPalette.Container.name = "ColorPalette";
 
-    basicPalette.RectTransform
+    colorPalette.RectTransform
         .SetAnchorMin(Vector2.right)
         .SetAnchorMax(Vector2.one)
         .SetPivot(Vector2.up)
         .SetPosition(new(5f, 0f))
         .SetSizeDelta(new(225f, 0f));
 
-    return basicPalette;
+    return colorPalette;
+  }
+
+  static LabelButton CreateAddColorButton(Transform parentTransform) {
+    LabelButton addColorButton = new(parentTransform);
+    addColorButton.Container.name = "AddColor";
+
+    addColorButton.RectTransform
+        .SetAnchorMin(Vector2.one)
+        .SetAnchorMax(Vector2.one)
+        .SetPivot(Vector2.one)
+        .SetPosition(new(-20f, -360f))
+        .SetSizeDelta(new(100f, 42.5f));
+
+    addColorButton.Label
+        .SetFontSize(18f)
+        .SetText("Add");
+
+    addColorButton.Container.AddComponent<IgnoreDragHandler>();
+
+    return addColorButton;
   }
 }

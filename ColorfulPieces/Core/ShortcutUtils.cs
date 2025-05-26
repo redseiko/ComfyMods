@@ -58,8 +58,9 @@ public static class ShortcutUtils {
     if (!ColorPickerController.HasVisibleInstance() && Game.instance) {
       ColorPickerController.Instance.ShowColorPicker(
           currentColor: TargetPieceColor.Value,
-          onColorSelectedCallback: SetTargetPieceColorConfigValue,
-          paletteColors: TargetPieceColor.PaletteColors);
+          onColorSelectCallback: SetTargetPieceColorConfigValue,
+          paletteColors: TargetPieceColor.GetPaletteColors(),
+          onPaletteColorsChangeCallback: TargetPieceColor.SetPaletteColors);
     }
   }
 
