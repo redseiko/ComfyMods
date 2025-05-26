@@ -1,5 +1,8 @@
 ﻿namespace ColorfulPieces;
 
+using System.Collections;
+using System.Collections.Generic;
+
 using ComfyLib;
 
 using GUIFramework;
@@ -76,12 +79,22 @@ public sealed class ColorPickerPanel {
     BasicPalette = CreateBasicPalette(Panel.transform);
 
     SetColor(Color.cyan);
-    GenerateRandomSlots(6);
   }
 
+  // TODO: redseiko - remove me before releasing new palette feature, this is only for testing.
   public void GenerateRandomSlots(int count) {
     for (int i = 0; i < count; i++) {
       PaletteSlot slot = BasicPalette.AddPaletteSlot(Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
+      slot.OnSelect.AddListener(SetColor);
+    }
+  }
+
+  // TODO: redseiko - instead of clearing ALL slots, re-use existing ones first, then clear the remaining.
+  public void SetPaletteColors(IEnumerable<Color> colors) {
+    BasicPalette.ClearSlots();
+
+    foreach (Color color in colors) {
+      PaletteSlot slot = BasicPalette.AddPaletteSlot(color);
       slot.OnSelect.AddListener(SetColor);
     }
   }
@@ -365,11 +378,11 @@ public sealed class ColorPickerPanel {
     basicPalette.Container.name = "BasicPalette";
 
     basicPalette.RectTransform
-        .SetAnchorMin(Vector2.zero)
-        .SetAnchorMax(Vector2.right)
-        .SetPivot(Vector2.zero)
-        .SetPosition(new(20f, 75f))
-        .SetSizeDelta(new(-40f, 90f));
+        .SetAnchorMin(Vector2.right)
+        .SetAnchorMax(Vector2.one)
+        .SetPivot(Vector2.up)
+        .SetPosition(new(5f, 0f))
+        .SetSizeDelta(new(225f, 0f));
 
     return basicPalette;
   }

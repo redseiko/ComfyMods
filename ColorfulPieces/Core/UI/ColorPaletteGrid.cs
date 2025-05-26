@@ -22,6 +22,14 @@ public sealed class ColorPaletteGrid {
     Background = Container.GetComponent<Image>();
   }
 
+  public void ClearSlots() {
+    for (int i = PaletteSlots.Count - 1; i >= 0; i--) {
+      Object.Destroy(PaletteSlots[i].Container);
+    }
+
+    PaletteSlots.Clear();
+  }  
+
   public PaletteSlot AddPaletteSlot(Color color) {
     PaletteSlot slot = new(RectTransform);
     slot.SetColor(color);
@@ -50,7 +58,7 @@ public sealed class ColorPaletteGrid {
     container.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
         .SetSprite(UIResources.GetSprite("item_background"))
-        .SetColor(new(0f, 0f, 0f, 0.1f));
+        .SetColor(new(0f, 0f, 0f, 0.2f));
 
     return container;
   }

@@ -41,7 +41,7 @@ public sealed class ColorPickerController {
         .SetAnchorMax(new(0.5f, 0.5f))
         .SetPivot(new(0.5f, 0.5f))
         .SetPosition(Vector2.zero)
-        .SetSizeDelta(new(400f, 525f));
+        .SetSizeDelta(new(400f, 500f));
 
     colorPicker.ConfirmButton.Button.onClick.AddListener(OnConfirmButtonClick);
     colorPicker.CloseButton.Button.onClick.AddListener(OnCloseButtonClick);
@@ -53,8 +53,16 @@ public sealed class ColorPickerController {
     return ColorPicker.Panel.activeSelf;
   }
 
-  public void ShowColorPicker(Color currentColor, Action<Color> onColorSelectedCallback = default) {
+  public void ShowColorPicker(
+      Color currentColor,
+      Action<Color> onColorSelectedCallback = default,
+      IEnumerable<Color> paletteColors = default) {
     ColorPicker.SetColor(currentColor);
+
+    if (paletteColors != default) {
+      ColorPicker.SetPaletteColors(paletteColors);
+    }
+
     ShowColorPicker(onColorSelectedCallback);
   }
 
