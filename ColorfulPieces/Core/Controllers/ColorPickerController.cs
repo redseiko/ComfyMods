@@ -28,9 +28,11 @@ public sealed class ColorPickerController {
   }
 
   public ColorPickerPanel ColorPicker { get; }
+  public ColorPaletteGrid ColorPalette { get; }
 
   ColorPickerController(Transform parentTransform) {
     ColorPicker = CreateColorPicker(parentTransform);
+    ColorPalette = ColorPicker.ColorPalette;
   }
 
   ColorPickerPanel CreateColorPicker(Transform parentTransform) {
@@ -44,7 +46,7 @@ public sealed class ColorPickerController {
         .SetSizeDelta(new(400f, 500f));
 
     colorPicker.ConfirmButton.AddOnClickListener(SelectColor);
-    colorPicker.CloseButton.AddOnClickListener(CancelColor);
+    colorPicker.CloseButton.AddOnClickListener(HideColorPicker);
     colorPicker.AddColorButton.AddOnClickListener(AddPaletteColor);
 
     return colorPicker;
@@ -70,14 +72,14 @@ public sealed class ColorPickerController {
     }
 
     SetPaletteColors(paletteColors, onPaletteColorsChangeCallback);
-    ShowColorPicker();
-  }
 
-  public void ShowColorPicker() {
     ColorPicker.Panel.SetActive(true);
   }
 
   public void HideColorPicker() {
+    _onColorSelectCallbacks.Clear();
+    _onPaletteColorsChangeCallbacks.Clear();
+
     ColorPicker.Panel.SetActive(false);
   }
 
@@ -85,21 +87,11 @@ public sealed class ColorPickerController {
   readonly List<Action<IEnumerable<Color>>> _onPaletteColorsChangeCallbacks = [];
 
   void SelectColor() {
-    HideColorPicker();
-
     foreach (Action<Color> callback in _onColorSelectCallbacks) {
       callback(ColorPicker.CurrentColor);
     }
 
-    _onColorSelectCallbacks.Clear();
-    _onPaletteColorsChangeCallbacks.Clear();
-  }
-
-  void CancelColor() {
     HideColorPicker();
-
-    _onColorSelectCallbacks.Clear();
-    _onPaletteColorsChangeCallbacks.Clear();
   }
 
   readonly List<Color> _currentPaletteColors = [];
@@ -107,20 +99,19 @@ public sealed class ColorPickerController {
   void SetPaletteColors(
       IEnumerable<Color> colors, Action<IEnumerable<Color>> onPaletteColorsChangeCallback = default) {
     if (colors == default) {
+      _currentPaletteColors.Clear();
+      _onPaletteColorsChangeCallbacks.Clear();
+
       ColorPicker.AddColorButton.Container.SetActive(false);
-      ColorPicker.ColorPalette.Container.SetActive(false);
+      ColorPalette.Container.SetActive(false);
+
       return;
     }
 
     _currentPaletteColors.Clear();
     _currentPaletteColors.AddRange(colors);
 
-    // TODO: redseiko - instead of clearing ALL slots, re-use existing ones first, then clear the remaining.
-    ColorPicker.ColorPalette.ClearSlots();
-
-    foreach (Color color in _currentPaletteColors) {
-      AddPaletteSlot(color);
-    }
+    SetupPaletteSlots();
 
     if (onPaletteColorsChangeCallback == default) {
       ColorPicker.AddColorButton.Container.SetActive(false);
@@ -139,16 +130,30 @@ public sealed class ColorPickerController {
     Color color = ColorPicker.CurrentColor;
     _currentPaletteColors.Add(color);
 
-    AddPaletteSlot(color);
+    SetupPaletteSlots();
 
     foreach (Action<IEnumerable<Color>> callback in _onPaletteColorsChangeCallbacks) {
       callback(_currentPaletteColors);
     }
   }
 
-  void AddPaletteSlot(Color color) {
-    PaletteSlot slot = ColorPicker.ColorPalette.AddSlot();
-    slot.OnSelect.AddListener(SelectPaletteColor);
-    slot.SetColor(color);
+  void SetupPaletteSlots() {
+    int colorCount = _currentPaletteColors.Count;
+    int slotCount = ColorPalette.PaletteSlots.Count;
+
+    if (colorCount < slotCount) {
+      for (int i = slotCount - 1; i >= colorCount; i--) {
+        ColorPalette.RemoveSlot(i);
+      }
+    } else if (colorCount > slotCount) {
+      for (int i = slotCount; i < colorCount; i++) {
+        PaletteSlot slot = ColorPalette.AddSlot();
+        slot.OnSelect.AddListener(SelectPaletteColor);
+      }
+    }
+
+    for (int i = 0; i < colorCount; i++) {
+      ColorPalette[i].SetColor(_currentPaletteColors[i]);
+    }
   }
 }

@@ -14,7 +14,8 @@ public sealed class ColorPaletteGrid {
   public GridLayoutGroup LayoutGroup { get; private set; }
   public Image Background { get; private set; }
 
-  public List<PaletteSlot> PaletteSlots { get; private set; } = [];
+  public List<PaletteSlot> PaletteSlots { get; } = [];
+  public PaletteSlot this[int index] { get => PaletteSlots[index]; }
 
   public ColorPaletteGrid(Transform parentTransform) {
     Container = CreateContainer(parentTransform);
@@ -36,6 +37,13 @@ public sealed class ColorPaletteGrid {
     PaletteSlots.Add(slot);
 
     return slot;
+  }
+
+  public void RemoveSlot(int slotIndex) {
+    if (slotIndex >= 0 && slotIndex < PaletteSlots.Count) {
+      Object.Destroy(PaletteSlots[slotIndex].Container);
+      PaletteSlots.RemoveAt(slotIndex);
+    }
   }
 
   static GameObject CreateContainer(Transform parentTransform) {
@@ -130,6 +138,8 @@ public sealed class PaletteSlot {
         .SetSizeDelta(Vector2.zero);
 
     selectSlot.Label.SetText(string.Empty);
+
+    selectSlot.Container.AddComponent<IgnoreDragHandler>();
 
     return selectSlot;
   }
