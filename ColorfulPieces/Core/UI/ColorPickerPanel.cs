@@ -31,7 +31,7 @@ public sealed class ColorPickerPanel {
   public Texture2D BrightnessTexture { get; }
   public Texture2D SaturationTexture { get; }
 
-  public ColorPalette BasicPalette { get; }
+  public ColorPaletteGrid BasicPalette { get; }
 
   public Color CurrentColor { get; private set; } = Color.white;
   public string CurrentHexValue { get; private set; } = string.Empty;
@@ -75,11 +75,15 @@ public sealed class ColorPickerPanel {
 
     BasicPalette = CreateBasicPalette(Panel.transform);
 
-    SetCurrentColor(Color.cyan);
-    UpdatePanel();
+    SetColor(Color.cyan);
+    GenerateRandomSlots(6);
+  }
 
-    // TODO: UpdateItems() has to be in the next frame as rect calculations are not done in the current frame.
-    BasicPalette.GenerateRandomItems(10);
+  public void GenerateRandomSlots(int count) {
+    for (int i = 0; i < count; i++) {
+      PaletteSlot slot = BasicPalette.AddPaletteSlot(Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
+      slot.OnSelect.AddListener(SetColor);
+    }
   }
 
   void OnRGBSliderValueChanged(float value) {
@@ -140,12 +144,13 @@ public sealed class ColorPickerPanel {
     ResetBrightnessTexture(BrightnessTexture, hue, saturation);
   }
 
-  public void SetCurrentColor(Color color) {
+  void SetCurrentColor(Color color) {
     CurrentColor = color;
     CurrentHexValue = "#" + (color.a < 1f ? ColorUtility.ToHtmlStringRGBA(color) : ColorUtility.ToHtmlStringRGB(color));
   }
 
-  public void UpdatePanel() {
+  public void SetColor(Color color) {
+    SetCurrentColor(color);
     SetRGBSliderValues(CurrentColor);
     SetHSVSliderValues(CurrentColor);
     SetHexValue(CurrentHexValue);
@@ -355,8 +360,8 @@ public sealed class ColorPickerPanel {
     brightnessTexture.Apply();
   }
 
-  static ColorPalette CreateBasicPalette(Transform parentTransform) {
-    ColorPalette basicPalette = new(parentTransform);
+  static ColorPaletteGrid CreateBasicPalette(Transform parentTransform) {
+    ColorPaletteGrid basicPalette = new(parentTransform);
     basicPalette.Container.name = "BasicPalette";
 
     basicPalette.RectTransform

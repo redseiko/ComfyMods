@@ -54,7 +54,7 @@ public sealed class ColorPickerController {
   }
 
   public void ShowColorPicker(Color currentColor, Action<Color> onColorSelectedCallback = default) {
-    ColorPicker.SetCurrentColor(currentColor);
+    ColorPicker.SetColor(currentColor);
     ShowColorPicker(onColorSelectedCallback);
   }
 

@@ -141,7 +141,7 @@
     <Compile Include="Core\Controllers\ColorPickerController.cs" />
     <Compile Include="Core\Extensions\MaterialManExtensions.cs" />
     <Compile Include="Core\ShortcutUtils.cs" />
-    <Compile Include="Core\UI\ColorPalette.cs" />
+    <Compile Include="Core\UI\ColorPaletteGrid.cs" />
     <Compile Include="Core\UI\ColorPickerPanel.cs" />
     <Compile Include="Patches\GamePatch.cs" />
     <Compile Include="Patches\HudPatch.cs" />
