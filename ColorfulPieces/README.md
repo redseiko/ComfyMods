@@ -6,7 +6,7 @@
 
   * You can color any building piece that can be built using the Hammer using RGB or HTML color codes.
   * Coloring is very simple at the moment and will color all materials/textures on the object (to be refined later).
-  * Those without the mod installed will still see the default vanilla materials/textures.
+  * Those without the mod installed will still see the default vanilla materials/textures. 
 
 ## Instructions
 

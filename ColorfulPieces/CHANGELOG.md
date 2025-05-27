@@ -1,6 +1,6 @@
 ## Changelog
 
-### 1.19.0 (WIP)
+### 1.19.0
 
   * ColorPicker panel can now be moved using drag-and-drop.
   * Added new color palette feature to the ColorPicker panel.

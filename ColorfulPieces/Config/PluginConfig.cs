@@ -14,6 +14,7 @@ public static class PluginConfig {
   public static ConfigEntry<KeyboardShortcut> CopyPieceColorShortcut { get; private set; }
 
   public static ConfigEntry<KeyboardShortcut> ToggleColorPickerShortcut { get; private set; }
+
   public static ExtendedColorConfigEntry TargetPieceColor { get; private set; }
   public static ConfigEntry<float> TargetPieceEmissionColorFactor { get; private set; }
 

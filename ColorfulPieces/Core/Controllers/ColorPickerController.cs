@@ -121,9 +121,21 @@ public sealed class ColorPickerController {
     }
   }
 
-  void SelectPaletteColor(Color color) {
-    ColorPicker.SetColor(color);
-    SelectColor();
+  // TODO: redseiko - make this not use hard-coded keys.
+  void SelectPaletteSlot(PaletteSlot slot) {
+    if (ZInput.GetKey(KeyCode.LeftShift, logWarning: false)) {
+      ColorPicker.SetColor(slot.Color);
+    } else if (ZInput.GetKey(KeyCode.LeftControl, logWarning: false)) {
+      int slotIndex = ColorPalette.PaletteSlots.IndexOf(slot);
+
+      if (slotIndex >= 0 && slotIndex < _currentPaletteColors.Count) {
+        _currentPaletteColors.RemoveAt(slotIndex);
+        SetupPaletteSlots();
+      }
+    } else {
+      ColorPicker.SetColor(slot.Color);
+      SelectColor();
+    }
   }
 
   void AddPaletteColor() {
@@ -148,7 +160,7 @@ public sealed class ColorPickerController {
     } else if (colorCount > slotCount) {
       for (int i = slotCount; i < colorCount; i++) {
         PaletteSlot slot = ColorPalette.AddSlot();
-        slot.OnSelect.AddListener(SelectPaletteColor);
+        slot.OnSelect.AddListener(SelectPaletteSlot);
       }
     }
 

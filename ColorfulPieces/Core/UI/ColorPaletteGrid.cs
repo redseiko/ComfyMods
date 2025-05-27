@@ -83,7 +83,7 @@ public sealed class PaletteSlot {
   public Color Color { get; private set; }
   public string ColorHex { get; private set; }
 
-  public UnityEvent<Color> OnSelect { get; private set; } = new();
+  public UnityEvent<PaletteSlot> OnSelect { get; private set; } = new();
 
   public PaletteSlot(Transform parentTransform) {
     Container = CreateContainer(parentTransform);
@@ -106,7 +106,7 @@ public sealed class PaletteSlot {
   }
 
   void OnSelectButtonClick() {
-    OnSelect?.Invoke(Color);
+    OnSelect.Invoke(this);
   }
 
   static GameObject CreateContainer(Transform parentTransform) {
