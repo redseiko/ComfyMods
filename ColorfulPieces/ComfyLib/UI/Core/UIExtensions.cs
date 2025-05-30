@@ -275,9 +275,14 @@ public static class LayoutElementExtensions {
 }
 
 public static class RectMask2DExtensions {
-  public static RectMask2D SetSoftness(this RectMask2D rectMask2d, Vector2Int softness) {
-    rectMask2d.softness = softness;
-    return rectMask2d;
+  public static T SetPadding<T>(this T rectMask, Vector4 padding) where T : RectMask2D {
+    rectMask.padding = padding;
+    return rectMask;
+  }
+
+  public static T SetSoftness<T>(this T rectMask, Vector2Int softness) where T : RectMask2D {
+    rectMask.softness = softness;
+    return rectMask;
   }
 }
 

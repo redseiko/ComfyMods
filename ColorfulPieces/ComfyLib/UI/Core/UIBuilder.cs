@@ -143,6 +143,9 @@ public static class UIBuilder {
         .SetPosition(Vector2.zero)
         .SetSizeDelta(new(120f, 40f));
 
+    inputField.GetComponentInChildren<RectMask2D>()
+        .SetPadding(Vector4.zero);
+
     return inputField;
   }
 

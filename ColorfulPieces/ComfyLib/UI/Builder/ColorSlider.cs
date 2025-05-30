@@ -73,7 +73,8 @@ public sealed class ColorSlider {
   }
 
   void OnValueInputFieldChanged(string text) {
-    if (float.TryParse(text, out float result) && result != Slider.value) {
+    if (float.TryParse(text, out float result)
+        && Mathf.Clamp(result, Slider.minValue, Slider.maxValue) != Slider.value) {
       Slider.SetValue(result);
     } else {
       SetValueLabelText(Slider.value);
@@ -123,7 +124,7 @@ public sealed class ColorSlider {
         .SetAnchorMax(new(1f, 0.5f))
         .SetPivot(new(1f, 0.5f))
         .SetPosition(Vector2.zero)
-        .SetSizeDelta(new(60f, 35f));
+        .SetSizeDelta(new(65f, 35f));
 
     inputField.textComponent
         .SetFontSize(18f);
@@ -150,7 +151,7 @@ public sealed class ColorSlider {
         .SetAnchorMax(Vector2.one)
         .SetPivot(new(0f, 0.5f))
         .SetPosition(new(25f, 0f))
-        .SetSizeDelta(new(-100f, 0f));
+        .SetSizeDelta(new(-105f, 0f));
 
     return area;
   }

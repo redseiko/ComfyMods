@@ -15,6 +15,8 @@ public sealed class ColorPickerPanel {
   public GameObject Panel { get; }
   public RectTransform RectTransform { get; }
 
+  public TextMeshProUGUI TitleLabel { get; private set; }
+
   public LabelButton ConfirmButton { get; }
   public LabelButton CloseButton { get; }
 
@@ -43,6 +45,8 @@ public sealed class ColorPickerPanel {
     Panel = CreatePanel(parentTransform);
     RectTransform = Panel.GetComponent<RectTransform>();
 
+    TitleLabel = CreateTitleLabel(RectTransform);
+
     ConfirmButton = CreateConfirmButton(RectTransform);
     CloseButton = CreateCloseButton(RectTransform);
 
@@ -52,27 +56,27 @@ public sealed class ColorPickerPanel {
     HexValueInputField.OnInputSubmit.AddListener(OnHexValueChanged);
 
     RedSlider = CreateRGBSlider(RectTransform, "R", Color.red);
-    RedSlider.RectTransform.SetPosition(new(20f, -75f));
+    RedSlider.RectTransform.SetPosition(new(20f, -120f));
 
     GreenSlider = CreateRGBSlider(RectTransform, "G", Color.green);
-    GreenSlider.RectTransform.SetPosition(new(20f, -115f));
+    GreenSlider.RectTransform.SetPosition(new(20f, -160f));
 
     BlueSlider = CreateRGBSlider(RectTransform, "B", Color.blue);
-    BlueSlider.RectTransform.SetPosition(new(20f, -155f));
+    BlueSlider.RectTransform.SetPosition(new(20f, -200f));
 
     AlphaSlider = CreateRGBSlider(RectTransform, "A", Color.white);
-    AlphaSlider.RectTransform.SetPosition(new(20f, -195f));
+    AlphaSlider.RectTransform.SetPosition(new(20f, -245f));
 
     HueSlider = CreateHSVSlider(RectTransform, "H", CreateHueSprite(360));
-    HueSlider.RectTransform.SetPosition(new(20f, -235f));
+    HueSlider.RectTransform.SetPosition(new(20f, -280f));
 
     SaturationSlider = CreateHSVSlider(RectTransform, "S", CreateSprite(100));
-    SaturationSlider.RectTransform.SetPosition(new(20f, -275f));
+    SaturationSlider.RectTransform.SetPosition(new(20f, -320f));
 
     SaturationTexture = SaturationSlider.Background.sprite.texture;
 
     BrightnessSlider = CreateHSVSlider(RectTransform, "V", CreateSprite(100));
-    BrightnessSlider.RectTransform.SetPosition(new(20f, -315f));
+    BrightnessSlider.RectTransform.SetPosition(new(20f, -360f));
 
     BrightnessTexture = BrightnessSlider.Background.sprite.texture;
 
@@ -168,6 +172,24 @@ public sealed class ColorPickerPanel {
     return panel;
   }
 
+  static TextMeshProUGUI CreateTitleLabel(Transform parentTransform) {
+    TextMeshProUGUI titleLabel = UIBuilder.CreateTMPHeaderLabel(parentTransform);
+    titleLabel.name = "Title";
+
+    titleLabel.rectTransform
+        .SetAnchorMin(Vector2.up)
+        .SetAnchorMax(Vector2.one)
+        .SetPivot(new(0.5f, 1f))
+        .SetPosition(new(0f, -15f))
+        .SetSizeDelta(new(0f, 40f));
+
+    titleLabel
+        .SetAlignment(TextAlignmentOptions.Top)
+        .SetText("Color Picker");
+
+    return titleLabel;
+  }
+
   static LabelButton CreateConfirmButton(Transform parentTransform) {
     LabelButton confirmButton = new(parentTransform);
     confirmButton.Container.name = "Confirm";
@@ -216,7 +238,7 @@ public sealed class ColorPickerPanel {
         .SetAnchorMin(Vector2.up)
         .SetAnchorMax(Vector2.up)
         .SetPivot(Vector2.up)
-        .SetPosition(new(20f, -20f))
+        .SetPosition(new(20f, -65f))
         .SetSizeDelta(new(200f, 40f));
 
     checkerboard.AddComponent<Image>()
@@ -247,7 +269,7 @@ public sealed class ColorPickerPanel {
         .SetAnchorMin(Vector2.one)
         .SetAnchorMax(Vector2.one)
         .SetPivot(Vector2.one)
-        .SetPosition(new(-20f, -20f))
+        .SetPosition(new(-20f, -65f))
         .SetSizeDelta(new(150f, 40f));
 
     inputField.textComponent
@@ -306,6 +328,8 @@ public sealed class ColorPickerPanel {
         .SetMinValue(0f)
         .SetMaxValue(1f)
         .SetValue(1f);
+
+    colorSlider.ValueInputField.characterLimit = 4;
 
     colorSlider.FillImage.SetColor(Color.clear);
 
@@ -382,7 +406,7 @@ public sealed class ColorPickerPanel {
         .SetAnchorMin(Vector2.one)
         .SetAnchorMax(Vector2.one)
         .SetPivot(Vector2.one)
-        .SetPosition(new(-20f, -360f))
+        .SetPosition(new(-20f, -400f))
         .SetSizeDelta(new(100f, 42.5f));
 
     addColorButton.Label
