@@ -17,7 +17,7 @@ public sealed class ColorPickerPanel {
 
   public TextMeshProUGUI TitleLabel { get; private set; }
 
-  public LabelButton ConfirmButton { get; }
+  public LabelButton SelectButton { get; }
   public LabelButton CloseButton { get; }
 
   public Image CheckerboardColorImage { get; private set; }
@@ -47,7 +47,7 @@ public sealed class ColorPickerPanel {
 
     TitleLabel = CreateTitleLabel(RectTransform);
 
-    ConfirmButton = CreateConfirmButton(RectTransform);
+    SelectButton = CreateSelectButton(RectTransform);
     CloseButton = CreateCloseButton(RectTransform);
 
     CheckerboardColorImage = CreateCheckerboardColorImage(RectTransform);
@@ -56,27 +56,27 @@ public sealed class ColorPickerPanel {
     HexValueInputField.OnInputSubmit.AddListener(OnHexValueChanged);
 
     RedSlider = CreateRGBSlider(RectTransform, "R", Color.red);
-    RedSlider.RectTransform.SetPosition(new(20f, -120f));
+    RedSlider.RectTransform.SetPosition(new(20f, -125f));
 
     GreenSlider = CreateRGBSlider(RectTransform, "G", Color.green);
-    GreenSlider.RectTransform.SetPosition(new(20f, -160f));
+    GreenSlider.RectTransform.SetPosition(new(20f, -165f));
 
     BlueSlider = CreateRGBSlider(RectTransform, "B", Color.blue);
-    BlueSlider.RectTransform.SetPosition(new(20f, -200f));
+    BlueSlider.RectTransform.SetPosition(new(20f, -205f));
 
     AlphaSlider = CreateRGBSlider(RectTransform, "A", Color.white);
     AlphaSlider.RectTransform.SetPosition(new(20f, -245f));
 
     HueSlider = CreateHSVSlider(RectTransform, "H", CreateHueSprite(360));
-    HueSlider.RectTransform.SetPosition(new(20f, -280f));
+    HueSlider.RectTransform.SetPosition(new(20f, -285f));
 
     SaturationSlider = CreateHSVSlider(RectTransform, "S", CreateSprite(100));
-    SaturationSlider.RectTransform.SetPosition(new(20f, -320f));
+    SaturationSlider.RectTransform.SetPosition(new(20f, -325f));
 
     SaturationTexture = SaturationSlider.Background.sprite.texture;
 
     BrightnessSlider = CreateHSVSlider(RectTransform, "V", CreateSprite(100));
-    BrightnessSlider.RectTransform.SetPosition(new(20f, -360f));
+    BrightnessSlider.RectTransform.SetPosition(new(20f, -365f));
 
     BrightnessTexture = BrightnessSlider.Background.sprite.texture;
 
@@ -180,7 +180,7 @@ public sealed class ColorPickerPanel {
         .SetAnchorMin(Vector2.up)
         .SetAnchorMax(Vector2.one)
         .SetPivot(new(0.5f, 1f))
-        .SetPosition(new(0f, -15f))
+        .SetPosition(new(0f, -20f))
         .SetSizeDelta(new(0f, 40f));
 
     titleLabel
@@ -190,24 +190,24 @@ public sealed class ColorPickerPanel {
     return titleLabel;
   }
 
-  static LabelButton CreateConfirmButton(Transform parentTransform) {
-    LabelButton confirmButton = new(parentTransform);
-    confirmButton.Container.name = "Confirm";
+  static LabelButton CreateSelectButton(Transform parentTransform) {
+    LabelButton selectButton = new(parentTransform);
+    selectButton.Container.name = "Select";
 
-    confirmButton.RectTransform
-        .SetAnchorMin(Vector2.zero)
-        .SetAnchorMax(Vector2.zero)
-        .SetPivot(Vector2.zero)
-        .SetPosition(new(20f, 20f))
+    selectButton.RectTransform
+        .SetAnchorMin(Vector2.right)
+        .SetAnchorMax(Vector2.right)
+        .SetPivot(Vector2.right)
+        .SetPosition(new(-20f, 20f))
         .SetSizeDelta(new(125f, 42.5f));
 
-    confirmButton.Label
+    selectButton.Label
         .SetFontSize(18f)
-        .SetText("Pick");
+        .SetText("Select");
 
-    confirmButton.Container.AddComponent<IgnoreDragHandler>();
+    selectButton.Container.AddComponent<IgnoreDragHandler>();
 
-    return confirmButton;
+    return selectButton;
   }
 
   static LabelButton CreateCloseButton(Transform parentTransform) {
@@ -215,10 +215,10 @@ public sealed class ColorPickerPanel {
     closeButton.Container.name = "Close";
 
     closeButton.RectTransform
-        .SetAnchorMin(Vector2.right)
-        .SetAnchorMax(Vector2.right)
-        .SetPivot(Vector2.right)
-        .SetPosition(new(-20f, 20f))
+        .SetAnchorMin(Vector2.zero)
+        .SetAnchorMax(Vector2.zero)
+        .SetPivot(Vector2.zero)
+        .SetPosition(new(20f, 20f))
         .SetSizeDelta(new(100f, 42.5f));
 
     closeButton.Label
@@ -238,7 +238,7 @@ public sealed class ColorPickerPanel {
         .SetAnchorMin(Vector2.up)
         .SetAnchorMax(Vector2.up)
         .SetPivot(Vector2.up)
-        .SetPosition(new(20f, -65f))
+        .SetPosition(new(20f, -70f))
         .SetSizeDelta(new(200f, 40f));
 
     checkerboard.AddComponent<Image>()
@@ -269,7 +269,7 @@ public sealed class ColorPickerPanel {
         .SetAnchorMin(Vector2.one)
         .SetAnchorMax(Vector2.one)
         .SetPivot(Vector2.one)
-        .SetPosition(new(-20f, -65f))
+        .SetPosition(new(-20f, -70f))
         .SetSizeDelta(new(150f, 40f));
 
     inputField.textComponent
@@ -392,8 +392,8 @@ public sealed class ColorPickerPanel {
         .SetAnchorMin(Vector2.right)
         .SetAnchorMax(Vector2.one)
         .SetPivot(Vector2.up)
-        .SetPosition(new(5f, 0f))
-        .SetSizeDelta(new(225f, 0f));
+        .SetPosition(new(5f, -70f))
+        .SetSizeDelta(new(225f, -70f));
 
     return colorPalette;
   }
@@ -406,7 +406,7 @@ public sealed class ColorPickerPanel {
         .SetAnchorMin(Vector2.one)
         .SetAnchorMax(Vector2.one)
         .SetPivot(Vector2.one)
-        .SetPosition(new(-20f, -400f))
+        .SetPosition(new(-20f, -405f))
         .SetSizeDelta(new(100f, 42.5f));
 
     addColorButton.Label

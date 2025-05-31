@@ -21,7 +21,9 @@ public static class ShortcutUtils {
         OnCopyPieceColorShortcut(hovering);
       }
     }
+  }
 
+  public static void CheckPickerShortcuts() {
     if (ToggleColorPickerShortcut.Value.IsDown()) {
       OnToggleColorPickerShortcut();
     }
@@ -55,12 +57,15 @@ public static class ShortcutUtils {
   }
 
   public static void OnToggleColorPickerShortcut() {
-    if (!ColorPickerController.HasVisibleInstance() && Game.instance) {
+    if (ColorPickerController.HasVisibleInstance()) {
+      ColorPickerController.Instance.HideColorPicker();
+    } else if (Game.instance) {
       ColorPickerController.Instance.ShowColorPicker(
           currentColor: TargetPieceColor.Value,
-          onColorSelectCallback: SetTargetPieceColorConfigValue,
+          selectColorCallback: SetTargetPieceColorConfigValue,
+          selectColorOnClose: SelectColorOnClose.Value,
           paletteColors: TargetPieceColor.GetPaletteColors(),
-          onPaletteColorsChangeCallback: TargetPieceColor.SetPaletteColors);
+          changePaletteColorsCallback: TargetPieceColor.SetPaletteColors);
     }
   }
 

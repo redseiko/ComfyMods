@@ -13,8 +13,6 @@ public static class PluginConfig {
   public static ConfigEntry<KeyboardShortcut> ClearPieceColorShortcut { get; private set; }
   public static ConfigEntry<KeyboardShortcut> CopyPieceColorShortcut { get; private set; }
 
-  public static ConfigEntry<KeyboardShortcut> ToggleColorPickerShortcut { get; private set; }
-
   public static ExtendedColorConfigEntry TargetPieceColor { get; private set; }
   public static ConfigEntry<float> TargetPieceEmissionColorFactor { get; private set; }
 
@@ -52,13 +50,6 @@ public static class PluginConfig {
             new KeyboardShortcut(KeyCode.R, KeyCode.LeftControl),
             "Shortcut to copy the color of the hovered piece.");
 
-    ToggleColorPickerShortcut =
-        config.BindInOrder(
-            "Color",
-            "toggleColorPickerShortcut",
-            new KeyboardShortcut(KeyCode.None),
-            "Shortcut to toggle the new ColorPicker.");
-
     TargetPieceColor =
         new(
             config,
@@ -94,8 +85,28 @@ public static class PluginConfig {
             "Font size for the 'change/remove/copy' color text prompt.",
             new AcceptableValueRange<int>(2, 32));
 
+    BindColorPickerConfig(config);
     BindUpdateColorsConfig(config);
     BindPieceStabilityColorsConfig(config);
+  }
+
+  public static ConfigEntry<KeyboardShortcut> ToggleColorPickerShortcut { get; private set; }
+  public static ConfigEntry<bool> SelectColorOnClose { get; private set; }
+
+  static void BindColorPickerConfig(ConfigFile config) {
+    ToggleColorPickerShortcut =
+        config.BindInOrder(
+            "ColorPicker",
+            "toggleColorPickerShortcut",
+            new KeyboardShortcut(KeyCode.None),
+            "Shortcut to toggle the new ColorPicker.");
+
+    SelectColorOnClose =
+        config.BindInOrder(
+            "ColorPicker",
+            "selectColorOnClose",
+            false,
+            "If set, will select the ColorPicker's current color on close.");
   }
 
   public static ConfigEntry<int> UpdateColorsFrameLimit { get; private set; }

@@ -45,7 +45,7 @@ public sealed class ColorPickerController {
         .SetPosition(Vector2.zero)
         .SetSizeDelta(new(400f, 530f));
 
-    colorPicker.ConfirmButton.AddOnClickListener(SelectColor);
+    colorPicker.SelectButton.AddOnClickListener(SelectCurrentColor);
     colorPicker.CloseButton.AddOnClickListener(HideColorPicker);
     colorPicker.AddColorButton.AddOnClickListener(AddPaletteColor);
 
@@ -56,51 +56,61 @@ public sealed class ColorPickerController {
     return ColorPicker.Panel.activeSelf;
   }
 
-  public void ShowColorPicker(Action<Color> onColorSelectCallback) {
-    ShowColorPicker(ColorPicker.CurrentColor, onColorSelectCallback);
+  bool _selectColorOnClose = false;
+  readonly List<Action<Color>> _selectColorCallbacks = [];
+  readonly List<Action<IEnumerable<Color>>> _changePaletteColorsCallbacks = [];
+  readonly List<Color> _currentPaletteColors = [];
+
+  public void ShowColorPicker(Action<Color> selectColorCallback) {
+    ShowColorPicker(ColorPicker.CurrentColor, selectColorCallback);
   }
 
   public void ShowColorPicker(
       Color currentColor,
-      Action<Color> onColorSelectCallback = default,
+      Action<Color> selectColorCallback = default,
+      bool selectColorOnClose = false,
       IEnumerable<Color> paletteColors = default,
-      Action<IEnumerable<Color>> onPaletteColorsChangeCallback = default) {
-    ColorPicker.SetColor(currentColor);
-
-    if (onColorSelectCallback != default) {
-      _onColorSelectCallbacks.Add(onColorSelectCallback);
-    }
-
-    SetPaletteColors(paletteColors, onPaletteColorsChangeCallback);
+      Action<IEnumerable<Color>> changePaletteColorsCallback = default) {
+    SetupPicker(currentColor, selectColorCallback, selectColorOnClose);
+    SetupPalette(paletteColors, changePaletteColorsCallback);
 
     ColorPicker.Panel.SetActive(true);
   }
 
   public void HideColorPicker() {
-    _onColorSelectCallbacks.Clear();
-    _onPaletteColorsChangeCallbacks.Clear();
+    if (_selectColorOnClose) {
+      foreach (Action<Color> callback in _selectColorCallbacks) {
+        callback(ColorPicker.CurrentColor);
+      }
+    }
+
+    _selectColorCallbacks.Clear();
+    _changePaletteColorsCallbacks.Clear();
+    _currentPaletteColors.Clear();
 
     ColorPicker.Panel.SetActive(false);
   }
 
-  readonly List<Action<Color>> _onColorSelectCallbacks = [];
-  readonly List<Action<IEnumerable<Color>>> _onPaletteColorsChangeCallbacks = [];
-
-  void SelectColor() {
-    foreach (Action<Color> callback in _onColorSelectCallbacks) {
-      callback(ColorPicker.CurrentColor);
-    }
-
+  void SelectCurrentColor() {
+    _selectColorOnClose = true;
     HideColorPicker();
   }
 
-  readonly List<Color> _currentPaletteColors = [];
+  void SetupPicker(Color currentColor, Action<Color> onColorSelectCallback, bool selectColorOnClose) {
+    ColorPicker.SetColor(currentColor);
 
-  void SetPaletteColors(
-      IEnumerable<Color> colors, Action<IEnumerable<Color>> onPaletteColorsChangeCallback = default) {
-    if (colors == default) {
+    if (onColorSelectCallback != default) {
+      _selectColorCallbacks.Add(onColorSelectCallback);
+    }
+
+    _selectColorOnClose = selectColorOnClose;
+    ColorPicker.CloseButton.Container.SetActive(!selectColorOnClose);
+  }
+
+  void SetupPalette(IEnumerable<Color> paletteColors, Action<IEnumerable<Color>> changePaletteColorsCallback) {
+    if (paletteColors == default) {
       _currentPaletteColors.Clear();
-      _onPaletteColorsChangeCallbacks.Clear();
+      _changePaletteColorsCallbacks.Clear();
 
       ColorPicker.AddColorButton.Container.SetActive(false);
       ColorPalette.Container.SetActive(false);
@@ -109,43 +119,15 @@ public sealed class ColorPickerController {
     }
 
     _currentPaletteColors.Clear();
-    _currentPaletteColors.AddRange(colors);
+    _currentPaletteColors.AddRange(paletteColors);
 
     SetupPaletteSlots();
 
-    if (onPaletteColorsChangeCallback == default) {
+    if (changePaletteColorsCallback == default) {
       ColorPicker.AddColorButton.Container.SetActive(false);
     } else {
       ColorPicker.AddColorButton.Container.SetActive(true);
-      _onPaletteColorsChangeCallbacks.Add(onPaletteColorsChangeCallback);
-    }
-  }
-
-  // TODO: redseiko - make this not use hard-coded keys.
-  void SelectPaletteSlot(PaletteSlot slot) {
-    if (ZInput.GetKey(KeyCode.LeftShift, logWarning: false)) {
-      ColorPicker.SetColor(slot.Color);
-    } else if (ZInput.GetKey(KeyCode.LeftControl, logWarning: false)) {
-      int slotIndex = ColorPalette.PaletteSlots.IndexOf(slot);
-
-      if (slotIndex >= 0 && slotIndex < _currentPaletteColors.Count) {
-        _currentPaletteColors.RemoveAt(slotIndex);
-        SetupPaletteSlots();
-      }
-    } else {
-      ColorPicker.SetColor(slot.Color);
-      SelectColor();
-    }
-  }
-
-  void AddPaletteColor() {
-    Color color = ColorPicker.CurrentColor;
-    _currentPaletteColors.Add(color);
-
-    SetupPaletteSlots();
-
-    foreach (Action<IEnumerable<Color>> callback in _onPaletteColorsChangeCallbacks) {
-      callback(_currentPaletteColors);
+      _changePaletteColorsCallbacks.Add(changePaletteColorsCallback);
     }
   }
 
@@ -166,6 +148,34 @@ public sealed class ColorPickerController {
 
     for (int i = 0; i < colorCount; i++) {
       ColorPalette[i].SetColor(_currentPaletteColors[i]);
+    }
+  }
+
+  // TODO: redseiko - make this not use hard-coded keys.
+  void SelectPaletteSlot(PaletteSlot slot) {
+    if (ZInput.GetKey(KeyCode.LeftShift, logWarning: false)) {
+      ColorPicker.SetColor(slot.Color);
+    } else if (ZInput.GetKey(KeyCode.LeftControl, logWarning: false)) {
+      int slotIndex = ColorPalette.PaletteSlots.IndexOf(slot);
+
+      if (slotIndex >= 0 && slotIndex < _currentPaletteColors.Count) {
+        _currentPaletteColors.RemoveAt(slotIndex);
+        SetupPaletteSlots();
+      }
+    } else {
+      ColorPicker.SetColor(slot.Color);
+      SelectCurrentColor();
+    }
+  }
+
+  void AddPaletteColor() {
+    Color color = ColorPicker.CurrentColor;
+    _currentPaletteColors.Add(color);
+
+    SetupPaletteSlots();
+
+    foreach (Action<IEnumerable<Color>> callback in _changePaletteColorsCallbacks) {
+      callback(_currentPaletteColors);
     }
   }
 }
