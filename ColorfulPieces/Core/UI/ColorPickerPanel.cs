@@ -1,7 +1,5 @@
 ﻿namespace ColorfulPieces;
 
-using System.Collections.Generic;
-
 using ComfyLib;
 
 using GUIFramework;
@@ -12,31 +10,31 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public sealed class ColorPickerPanel {
-  public GameObject Panel { get; }
-  public RectTransform RectTransform { get; }
+  public GameObject Panel { get; private set; }
+  public RectTransform RectTransform { get; private set; }
 
   public TextMeshProUGUI TitleLabel { get; private set; }
 
-  public LabelButton SelectButton { get; }
-  public LabelButton CloseButton { get; }
+  public LabelButton SelectButton { get; private set; }
+  public LabelButton CloseButton { get; private set; }
 
   public Image CheckerboardColorImage { get; private set; }
   public GuiInputField HexValueInputField { get; }
 
-  public ColorSlider RedSlider { get; }
-  public ColorSlider GreenSlider { get; }
-  public ColorSlider BlueSlider { get; }
-  public ColorSlider AlphaSlider { get; }
+  public ColorSlider RedSlider { get; private set; }
+  public ColorSlider GreenSlider { get; private set; }
+  public ColorSlider BlueSlider { get; private set; }
+  public ColorSlider AlphaSlider { get; private set; }
 
-  public ColorSlider HueSlider { get; }
-  public ColorSlider SaturationSlider { get; }
-  public ColorSlider BrightnessSlider { get; }
+  public ColorSlider HueSlider { get; private set; }
+  public ColorSlider SaturationSlider { get; private set; }
+  public ColorSlider BrightnessSlider { get; private set; }
 
-  public Texture2D BrightnessTexture { get; }
-  public Texture2D SaturationTexture { get; }
+  public Texture2D BrightnessTexture { get; private set; }
+  public Texture2D SaturationTexture { get; private set; }
 
-  public ColorPaletteGrid ColorPalette { get; }
-  public LabelButton AddColorButton { get; }
+  public ColorPalettePanel PalettePanel { get; private set; }
+  public LabelButton AddColorButton { get => PalettePanel.AddSlotButton; }
 
   public Color CurrentColor { get; private set; } = Color.white;
   public string CurrentHexValue { get; private set; } = string.Empty;
@@ -80,8 +78,7 @@ public sealed class ColorPickerPanel {
 
     BrightnessTexture = BrightnessSlider.Background.sprite.texture;
 
-    ColorPalette = CreateColorPalette(RectTransform);
-    AddColorButton = CreateAddColorButton(RectTransform);
+    PalettePanel = CreatePalettePanel(RectTransform);
 
     SetColor(Color.cyan);
   }
@@ -384,37 +381,16 @@ public sealed class ColorPickerPanel {
     brightnessTexture.Apply();
   }
 
-  static ColorPaletteGrid CreateColorPalette(Transform parentTransform) {
-    ColorPaletteGrid colorPalette = new(parentTransform);
-    colorPalette.Container.name = "ColorPalette";
+  static ColorPalettePanel CreatePalettePanel(Transform parentTransform) {
+    ColorPalettePanel palettePanel = new(parentTransform);
 
-    colorPalette.RectTransform
+    palettePanel.RectTransform
         .SetAnchorMin(Vector2.right)
         .SetAnchorMax(Vector2.one)
         .SetPivot(Vector2.up)
-        .SetPosition(new(5f, -70f))
-        .SetSizeDelta(new(225f, -70f));
+        .SetPosition(new(5f, 0f))
+        .SetSizeDelta(new(270f, 0f));
 
-    return colorPalette;
-  }
-
-  static LabelButton CreateAddColorButton(Transform parentTransform) {
-    LabelButton addColorButton = new(parentTransform);
-    addColorButton.Container.name = "AddColor";
-
-    addColorButton.RectTransform
-        .SetAnchorMin(Vector2.one)
-        .SetAnchorMax(Vector2.one)
-        .SetPivot(Vector2.one)
-        .SetPosition(new(-20f, -405f))
-        .SetSizeDelta(new(100f, 42.5f));
-
-    addColorButton.Label
-        .SetFontSize(18f)
-        .SetText("Add");
-
-    addColorButton.Container.AddComponent<IgnoreDragHandler>();
-
-    return addColorButton;
+    return palettePanel;
   }
 }

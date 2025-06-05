@@ -61,12 +61,7 @@ public sealed class ColorPaletteGrid {
         .SetStartCorner(GridLayoutGroup.Corner.UpperLeft)
         .SetStartAxis(GridLayoutGroup.Axis.Horizontal)
         .SetCellSize(new(50f, 50f))
-        .SetSpacing(new(5f, 5f));
-
-    container.AddComponent<Image>()
-        .SetType(Image.Type.Sliced)
-        .SetSprite(UIResources.GetSprite("item_background"))
-        .SetColor(new(0f, 0f, 0f, 0.2f));
+        .SetSpacing(new(7.5f, 7.5f));
 
     return container;
   }

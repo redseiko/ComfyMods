@@ -27,12 +27,12 @@ public sealed class ColorPickerController {
     return panel && panel.activeSelf;
   }
 
-  public ColorPickerPanel ColorPicker { get; }
-  public ColorPaletteGrid ColorPalette { get; }
+  public ColorPickerPanel ColorPicker { get; private set; }
+  public ColorPaletteGrid ColorPalette { get; private set; }
 
   ColorPickerController(Transform parentTransform) {
     ColorPicker = CreateColorPicker(parentTransform);
-    ColorPalette = ColorPicker.ColorPalette;
+    ColorPalette = ColorPicker.PalettePanel.PaletteGrid;
   }
 
   ColorPickerPanel CreateColorPicker(Transform parentTransform) {
@@ -47,7 +47,7 @@ public sealed class ColorPickerController {
 
     colorPicker.SelectButton.AddOnClickListener(SelectCurrentColor);
     colorPicker.CloseButton.AddOnClickListener(HideColorPicker);
-    colorPicker.AddColorButton.AddOnClickListener(AddPaletteColor);
+    colorPicker.PalettePanel.AddSlotButton.AddOnClickListener(AddPaletteColor);
 
     return colorPicker;
   }
