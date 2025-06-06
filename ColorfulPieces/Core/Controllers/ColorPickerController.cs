@@ -28,11 +28,11 @@ public sealed class ColorPickerController {
   }
 
   public ColorPickerPanel ColorPicker { get; private set; }
-  public ColorPaletteGrid ColorPalette { get; private set; }
+  public ColorPalettePanel ColorPalette { get; private set; }
 
   ColorPickerController(Transform parentTransform) {
     ColorPicker = CreateColorPicker(parentTransform);
-    ColorPalette = ColorPicker.PalettePanel.PaletteGrid;
+    ColorPalette = ColorPicker.PalettePanel;
   }
 
   ColorPickerPanel CreateColorPicker(Transform parentTransform) {
@@ -69,9 +69,10 @@ public sealed class ColorPickerController {
       Color currentColor,
       Action<Color> selectColorCallback = default,
       bool selectColorOnClose = false,
+      bool useColorAlpha = true,
       IEnumerable<Color> paletteColors = default,
       Action<IEnumerable<Color>> changePaletteColorsCallback = default) {
-    SetupPicker(currentColor, selectColorCallback, selectColorOnClose);
+    SetupPicker(currentColor, selectColorCallback, selectColorOnClose, useColorAlpha);
     SetupPalette(paletteColors, changePaletteColorsCallback);
 
     ColorPicker.Panel.SetActive(true);
@@ -96,7 +97,14 @@ public sealed class ColorPickerController {
     HideColorPicker();
   }
 
-  void SetupPicker(Color currentColor, Action<Color> onColorSelectCallback, bool selectColorOnClose) {
+  void SetupPicker(
+      Color currentColor, Action<Color> onColorSelectCallback, bool selectColorOnClose, bool useColorAlpha) {
+    ColorPicker.SetUseColorAlpha(useColorAlpha);
+
+    if (!useColorAlpha) {
+      currentColor.a = 1f;
+    }
+
     ColorPicker.SetColor(currentColor);
 
     if (onColorSelectCallback != default) {
@@ -112,8 +120,7 @@ public sealed class ColorPickerController {
       _currentPaletteColors.Clear();
       _changePaletteColorsCallbacks.Clear();
 
-      ColorPicker.AddColorButton.Container.SetActive(false);
-      ColorPalette.Container.SetActive(false);
+      ColorPalette.Panel.SetActive(false);
 
       return;
     }
@@ -124,30 +131,30 @@ public sealed class ColorPickerController {
     SetupPaletteSlots();
 
     if (changePaletteColorsCallback == default) {
-      ColorPicker.AddColorButton.Container.SetActive(false);
+      ColorPalette.AddSlotButton.Container.SetActive(false);
     } else {
-      ColorPicker.AddColorButton.Container.SetActive(true);
+      ColorPalette.AddSlotButton.Container.SetActive(true);
       _changePaletteColorsCallbacks.Add(changePaletteColorsCallback);
     }
   }
 
   void SetupPaletteSlots() {
     int colorCount = _currentPaletteColors.Count;
-    int slotCount = ColorPalette.PaletteSlots.Count;
+    int slotCount = ColorPalette.PaletteGrid.PaletteSlots.Count;
 
     if (colorCount < slotCount) {
       for (int i = slotCount - 1; i >= colorCount; i--) {
-        ColorPalette.RemoveSlot(i);
+        ColorPalette.PaletteGrid.RemoveSlot(i);
       }
     } else if (colorCount > slotCount) {
       for (int i = slotCount; i < colorCount; i++) {
-        PaletteSlot slot = ColorPalette.AddSlot();
+        PaletteSlot slot = ColorPalette.PaletteGrid.AddSlot();
         slot.OnSelect.AddListener(SelectPaletteSlot);
       }
     }
 
     for (int i = 0; i < colorCount; i++) {
-      ColorPalette[i].SetColor(_currentPaletteColors[i]);
+      ColorPalette.PaletteGrid[i].SetColor(_currentPaletteColors[i]);
     }
   }
 
@@ -156,7 +163,7 @@ public sealed class ColorPickerController {
     if (ZInput.GetKey(KeyCode.LeftShift, logWarning: false)) {
       ColorPicker.SetColor(slot.Color);
     } else if (ZInput.GetKey(KeyCode.LeftControl, logWarning: false)) {
-      int slotIndex = ColorPalette.PaletteSlots.IndexOf(slot);
+      int slotIndex = ColorPalette.PaletteGrid.PaletteSlots.IndexOf(slot);
 
       if (slotIndex >= 0 && slotIndex < _currentPaletteColors.Count) {
         _currentPaletteColors.RemoveAt(slotIndex);

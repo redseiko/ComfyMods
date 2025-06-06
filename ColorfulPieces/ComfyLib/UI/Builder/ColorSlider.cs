@@ -81,6 +81,12 @@ public sealed class ColorSlider {
     }
   }
 
+  public void SetInteractable(bool interactable) {
+    Slider.SetInteractable(interactable);
+    Handle.SetActive(interactable);
+    ValueInputField.SetInteractable(interactable);
+  }
+
   static GameObject CreateContainer(Transform parentTransform) {
     GameObject container = new("ColorSlider", typeof(RectTransform));
     container.transform.SetParent(parentTransform, worldPositionStays: false);

@@ -34,10 +34,11 @@ public sealed class ColorPickerPanel {
   public Texture2D SaturationTexture { get; private set; }
 
   public ColorPalettePanel PalettePanel { get; private set; }
-  public LabelButton AddColorButton { get => PalettePanel.AddSlotButton; }
 
   public Color CurrentColor { get; private set; } = Color.white;
   public string CurrentHexValue { get; private set; } = string.Empty;
+
+  public bool UseColorAlpha { get; private set; } = true;
 
   public ColorPickerPanel(Transform parentTransform) {
     Panel = CreatePanel(parentTransform);
@@ -70,17 +71,28 @@ public sealed class ColorPickerPanel {
 
     SaturationSlider = CreateHSVSlider(RectTransform, "S", CreateSprite(100));
     SaturationSlider.RectTransform.SetPosition(new(20f, -325f));
-
     SaturationTexture = SaturationSlider.Background.sprite.texture;
 
     BrightnessSlider = CreateHSVSlider(RectTransform, "V", CreateSprite(100));
     BrightnessSlider.RectTransform.SetPosition(new(20f, -365f));
-
     BrightnessTexture = BrightnessSlider.Background.sprite.texture;
 
     PalettePanel = CreatePalettePanel(RectTransform);
 
     SetColor(Color.cyan);
+  }
+
+  public void SetColor(Color color) {
+    SetCurrentColor(color);
+    SetRGBSliderValues(CurrentColor);
+    SetHSVSliderValues(CurrentColor);
+    SetHexValue(CurrentHexValue);
+    SetColorTextures(CurrentColor);
+  }
+
+  public void SetUseColorAlpha(bool useColorAlpha) {
+    UseColorAlpha = useColorAlpha;
+    AlphaSlider.SetInteractable(useColorAlpha);
   }
 
   void OnRGBSliderValueChanged(float value) {
@@ -105,6 +117,10 @@ public sealed class ColorPickerPanel {
 
   void OnHexValueChanged(string value) {
     if (ColorUtility.TryParseHtmlString(value, out Color color)) {
+      if (!UseColorAlpha) {
+        color.a = AlphaSlider.PercentValue;
+      }
+
       SetCurrentColor(color);
       SetRGBSliderValues(CurrentColor);
       SetHSVSliderValues(CurrentColor);
@@ -148,14 +164,6 @@ public sealed class ColorPickerPanel {
         color.a < 1f
             ? "#" + ColorUtility.ToHtmlStringRGBA(color)
             : "#" + ColorUtility.ToHtmlStringRGB(color);
-  }
-
-  public void SetColor(Color color) {
-    SetCurrentColor(color);
-    SetRGBSliderValues(CurrentColor);
-    SetHSVSliderValues(CurrentColor);
-    SetHexValue(CurrentHexValue);
-    SetColorTextures(CurrentColor);
   }
 
   static GameObject CreatePanel(Transform parentTransform) {

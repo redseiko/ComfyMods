@@ -64,6 +64,7 @@ public static class ShortcutUtils {
           currentColor: TargetPieceColor.Value,
           selectColorCallback: SetTargetPieceColorConfigValue,
           selectColorOnClose: SelectColorOnClose.Value,
+          useColorAlpha: false,
           paletteColors: TargetPieceColor.GetPaletteColors(),
           changePaletteColorsCallback: TargetPieceColor.SetPaletteColors);
     }
