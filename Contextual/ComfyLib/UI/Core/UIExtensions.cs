@@ -38,9 +38,43 @@ public static class ContentSizeFitterExtensions {
   }
 }
 
+public static class GridLayoutGroupExtensions {
+  public static GridLayoutGroup SetCellSize(this GridLayoutGroup layoutGroup, Vector2 cellSize) {
+    layoutGroup.cellSize = cellSize;
+    return layoutGroup;
+  }
+
+  public static GridLayoutGroup SetConstraint(
+      this GridLayoutGroup layoutGroup, GridLayoutGroup.Constraint constraint) {
+    layoutGroup.constraint = constraint;
+    return layoutGroup;
+  }
+
+  public static GridLayoutGroup SetConstraintCount(this GridLayoutGroup layoutGroup, int constraintCount) {
+    layoutGroup.constraintCount = constraintCount;
+    return layoutGroup;
+  }
+
+  public static GridLayoutGroup SetStartAxis(this GridLayoutGroup layoutGroup, GridLayoutGroup.Axis startAxis) {
+    layoutGroup.startAxis = startAxis;
+    return layoutGroup;
+  }
+
+  public static GridLayoutGroup SetStartCorner(
+      this GridLayoutGroup layoutGroup, GridLayoutGroup.Corner startCorner) {
+    layoutGroup.startCorner = startCorner;
+    return layoutGroup;
+  }
+
+  public static GridLayoutGroup SetSpacing(this GridLayoutGroup layoutGroup, Vector2 spacing) {
+    layoutGroup.spacing = spacing;
+    return layoutGroup;
+  }
+}
+
 public static class LayoutGroupExtensions {
   public static T SetChildAlignment<T>(
-      this T layoutGroup, TextAnchor alignment) where T : HorizontalOrVerticalLayoutGroup {
+      this T layoutGroup, TextAnchor alignment) where T : LayoutGroup {
     layoutGroup.childAlignment = alignment;
     return layoutGroup;
   }
@@ -241,9 +275,14 @@ public static class LayoutElementExtensions {
 }
 
 public static class RectMask2DExtensions {
-  public static RectMask2D SetSoftness(this RectMask2D rectMask2d, Vector2Int softness) {
-    rectMask2d.softness = softness;
-    return rectMask2d;
+  public static T SetPadding<T>(this T rectMask, Vector4 padding) where T : RectMask2D {
+    rectMask.padding = padding;
+    return rectMask;
+  }
+
+  public static T SetSoftness<T>(this T rectMask, Vector2Int softness) where T : RectMask2D {
+    rectMask.softness = softness;
+    return rectMask;
   }
 }
 
@@ -325,6 +364,43 @@ public static class SelectableExtensions {
   }
 }
 
+public static class SliderExtensions {
+  public static T SetDirection<T>(this T slider, Slider.Direction direction) where T : Slider {
+    slider.direction = direction;
+    return slider;
+  }
+
+  public static T SetFillRect<T>(this T slider, RectTransform fillRect) where T : Slider {
+    slider.fillRect = fillRect;
+    return slider;
+  }
+
+  public static T SetHandleRect<T>(this T slider, RectTransform handleRect) where T : Slider {
+    slider.handleRect = handleRect;
+    return slider;
+  }
+
+  public static T SetMaxValue<T>(this T slider, float maxValue) where T : Slider {
+    slider.maxValue = maxValue;
+    return slider;
+  }
+
+  public static T SetMinValue<T>(this T slider, float minValue) where T : Slider {
+    slider.minValue = minValue;
+    return slider;
+  }
+
+  public static T SetValue<T>(this T slider, float value) where T : Slider {
+    slider.value = value;
+    return slider;
+  }
+
+  public static T SetWholeNumbers<T>(this T slider, bool wholeNumbers) where T : Slider {
+    slider.wholeNumbers = wholeNumbers;
+    return slider;
+  }
+}
+
 public static class ScrollRectExtensions {
   public static T SetContent<T>(this T scrollRect, RectTransform content) where T : ScrollRect {
     scrollRect.content = content;
@@ -361,6 +437,12 @@ public static class ScrollRectExtensions {
     return scrollRect;
   }
 
+  public static T SetVerticalScrollbarVisibility<T>(
+      this T scrollRect, ScrollRect.ScrollbarVisibility visibility) where T : ScrollRect {
+    scrollRect.verticalScrollbarVisibility = visibility;
+    return scrollRect;
+  }
+
   public static T SetViewport<T>(this T scrollRect, RectTransform viewport) where T : ScrollRect {
     scrollRect.viewport = viewport;
     return scrollRect;
@@ -370,6 +452,11 @@ public static class ScrollRectExtensions {
 public static class TextMeshProExtensions {
   public static T SetAlignment<T>(this T tmpText, TextAlignmentOptions alignment) where T : TMP_Text {
     tmpText.alignment = alignment;
+    return tmpText;
+  }
+
+  public static T SetCharacterSpacing<T>(this T tmpText, float characterSpacing) where T : TMP_Text {
+    tmpText.characterSpacing = characterSpacing;
     return tmpText;
   }
 
@@ -395,6 +482,11 @@ public static class TextMeshProExtensions {
 
   public static T SetFontMaterial<T>(this T tmpText, Material fontMaterial) where T : TMP_Text {
     tmpText.fontMaterial = fontMaterial;
+    return tmpText;
+  }
+
+  public static T SetLineSpacing<T>(this T tmpText, float lineSpacing) where T : TMP_Text {
+    tmpText.lineSpacing = lineSpacing;
     return tmpText;
   }
 

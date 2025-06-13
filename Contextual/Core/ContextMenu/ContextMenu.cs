@@ -21,7 +21,7 @@ public sealed class ContextMenu {
     container.AddComponent<Image>()
         .SetSprite(UIResources.GetSprite("item_background"))
         .SetType(Image.Type.Sliced)
-        .SetColor(new(0f, 0f, 0f, 0.565f))
+        .SetColor(new(0f, 0f, 0f, 0.95f))
         .SetRaycastTarget(true);
 
     container.GetComponent<RectTransform>()

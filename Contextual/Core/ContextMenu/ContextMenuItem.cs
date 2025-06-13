@@ -43,7 +43,7 @@ public sealed class ContextMenuItem {
     container.AddComponent<Image>()
         .SetSprite(UIResources.GetSprite("item_background"))
         .SetType(Image.Type.Sliced)
-        .SetColor(new(1f, 1f, 1f, 0.759f))
+        .SetColor(new(1f, 1f, 1f, 0.85f))
         .SetRaycastTarget(true);
 
     container.GetComponent<RectTransform>()
@@ -69,10 +69,10 @@ public sealed class ContextMenuItem {
         .SetAnchorMax(Vector2.one)
         .SetPivot(new(0.5f, 0.5f))
         .SetPosition(Vector2.zero)
-        .SetSizeDelta(new(-10f, 0f));
+        .SetSizeDelta(new(-20f, 0f));
 
     label
-        .SetFontSize(16f)
+        .SetFontSize(18f)
         .SetAlignment(TextAlignmentOptions.Left)
         .SetTextWrappingMode(TextWrappingModes.NoWrap)
         .SetOverflowMode(TextOverflowModes.Ellipsis)
