@@ -19,13 +19,26 @@ public sealed class ContextMenuController : MonoBehaviour {
   }
 
   void Update() {
-    if (ZInput.GetMouseButtonDown(1)) {
-      if (_contextMenu.Container.activeSelf) {
-        HideMenu();
-      } else {
-        ShowMenu(ZInput.mousePosition / _contextMenuCanvas.scaleFactor);
-      }
+    if (ZInput.GetButtonDown("MouseLeft")) {
+      HandleLeftClick(ZInput.mousePosition);
+    } else if (ZInput.GetButtonDown("MouseRight")) {
+      HandleRightClick(ZInput.mousePosition);
     }
+  }
+
+  void HandleLeftClick(Vector2 position) {
+    Vector2 scaledPosition = position / _contextMenuCanvas.scaleFactor;
+
+    if (_contextMenu.Container.activeSelf
+        && !RectTransformUtility.RectangleContainsScreenPoint(_contextMenu.RectTransform, scaledPosition)) {
+      HideMenu();
+    }
+  }
+
+  void HandleRightClick(Vector2 position) {
+    Vector2 scaledPosition = position / _contextMenuCanvas.scaleFactor;
+
+    ShowMenu(scaledPosition);
   }
 
   public void ShowMenu(Vector2 position) {
@@ -42,6 +55,7 @@ public sealed class ContextMenuController : MonoBehaviour {
   ContextMenuItem CreateMenuItem(string label) {
     ContextMenuItem menuItem = new(_contextMenu.RectTransform);
     menuItem.SetText(label);
+    menuItem.AddOnClickListener(HideMenu);
 
     return menuItem;
   }

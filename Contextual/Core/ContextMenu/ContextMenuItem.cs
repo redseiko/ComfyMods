@@ -5,6 +5,7 @@ using ComfyLib;
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public sealed class ContextMenuItem {
@@ -12,7 +13,7 @@ public sealed class ContextMenuItem {
   public readonly RectTransform RectTransform;
   public readonly LayoutElement LayoutElement;
   public readonly Image Background;
-  public readonly TMP_Text Label;
+  public readonly TextMeshProUGUI Label;
   public readonly Button Button;
 
   public ContextMenuItem(Transform parentTransform) {
@@ -29,6 +30,10 @@ public sealed class ContextMenuItem {
     Label.ForceMeshUpdate(ignoreActiveState: true);
 
     LayoutElement.SetPreferred(height: Label.preferredHeight + 10f);
+  }
+
+  public void AddOnClickListener(UnityAction action) {
+    Button.onClick.AddListener(action);
   }
 
   static GameObject CreateContainer(Transform parentTransform) {
@@ -55,8 +60,8 @@ public sealed class ContextMenuItem {
     return container;
   }
 
-  static TMP_Text CreateLabel(Transform parentTransform) {
-    TMP_Text label = UIBuilder.CreateTMPLabel(parentTransform);
+  static TextMeshProUGUI CreateLabel(Transform parentTransform) {
+    TextMeshProUGUI label = UIBuilder.CreateTMPLabel(parentTransform);
     label.transform.SetParent(parentTransform, worldPositionStays: false);
 
     label.rectTransform
