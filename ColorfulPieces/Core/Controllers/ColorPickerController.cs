@@ -1,9 +1,13 @@
-﻿namespace ColorfulPieces;
+﻿extern alias Contexual;
+
+namespace ColorfulPieces;
 
 using System;
 using System.Collections.Generic;
 
 using ComfyLib;
+
+using Contexual.Contextual;
 
 using UnityEngine;
 
@@ -51,6 +55,14 @@ public sealed class ColorPickerController {
     colorPicker.PalettePanel.RemoveSlotButton.AddOnClickListener(RemovePaletteSlot);
 
     colorPicker.Panel.AddComponent<ColorPickerPanelController>();
+
+    ContextMenuController colorPanelContextMenu = colorPicker.Panel.AddComponent<ContextMenuController>();
+    //colorPanelContextMenu.SetMenuWidth(260f);
+    
+    colorPanelContextMenu.AddMenuTitle("Color Actions");
+    colorPanelContextMenu.AddMenuItem("Find colors?");
+    colorPanelContextMenu.AddMenuItem("Hide this panel", HideColorPicker);
+    colorPanelContextMenu.AddMenuItem("Remove last color", RemovePaletteSlot);
 
     return colorPicker;
   }
