@@ -1,5 +1,7 @@
 ﻿namespace Contextual;
 
+using System.Collections.Generic;
+
 using ComfyLib;
 
 using UnityEngine;
@@ -11,6 +13,8 @@ public sealed class ContextMenuController :
   RectTransform _parentRectTransform;
   Canvas _parentCanvas;
   ContextMenu _contextMenu;
+
+  public List<ContextMenuItem> MenuItems { get; } = [];
 
   void Awake() {
     _parentRectTransform = (RectTransform) transform;
@@ -69,7 +73,8 @@ public sealed class ContextMenuController :
     _contextMenu.RectTransform.localPosition = position;
     _contextMenu.RectTransform.SetAsLastSibling();
 
-    EventSystem.current.SetSelectedGameObject(_contextMenu.Container);
+    EventSystem.current.SetSelectedGameObject(
+        MenuItems.Count > 0 ? MenuItems[0].Button.gameObject : _contextMenu.Container);
     _contextMenu.Container.SetActive(true);
   }
 
@@ -82,11 +87,7 @@ public sealed class ContextMenuController :
 
     menuTitle.Label.SetColor(new(1f, 0.72f, 0.36f, 1f));
     menuTitle.Background.SetColor(Color.clear);
-
     menuTitle.SetText(label);
-
-    //Contextual.LogInfo($"MenuTitle localScale is: {menuTitle.RectTransform.localScale}");
-    //menuTitle.RectTransform.localScale = Vector3.one;
 
     return menuTitle;
   }
@@ -101,8 +102,7 @@ public sealed class ContextMenuController :
       menuItem.AddOnClickListener(onClickCallback);
     }
 
-    //Contextual.LogInfo($"MenuTitle localScale is: {menuItem.RectTransform.localScale}");
-    //menuItem.RectTransform.localScale = Vector3.one;
+    MenuItems.Add(menuItem);
 
     return menuItem;
   }

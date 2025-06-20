@@ -88,14 +88,15 @@ public sealed class ContextMenuItem {
     Button button = container.AddComponent<Button>();
 
     button
+        .SetNavigationMode(Navigation.Mode.Automatic)
         .SetTransition(Selectable.Transition.ColorTint)
         .SetColors(
             new ColorBlock() {
-              normalColor = new(0.353f, 0.35f, 0.35f, 1f),
-              highlightedColor = new(0.625f, 0.625f, 0.625f, 1f),
-              pressedColor = new(0.890f, 0.890f, 0.890f, 1f),
-              selectedColor = new(0.625f, 0.625f, 0.625f, 1f),
-              disabledColor = new(0.345f, 0.345f, 0.345f, 0.5f),
+              normalColor = new(0.35f, 0.35f, 0.35f, 1f),
+              highlightedColor = new(1f, 0.72f, 0.36f, 1f),
+              pressedColor = new(0.89f, 0.89f, 0.89f, 1f),
+              selectedColor = new(0.63f, 0.63f, 0.63f, 1f),
+              disabledColor = new(0.35f, 0.35f, 0.35f, 0.5f),
               colorMultiplier = 1f,
               fadeDuration = 0.1f
             });
