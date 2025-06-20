@@ -12,8 +12,9 @@ public sealed class ContextMenuController :
     MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IDeselectHandler {
   RectTransform _parentRectTransform;
   Canvas _parentCanvas;
-  ContextMenu _contextMenu;
+  ContextMenuPanel _contextMenu;
 
+  public List<ContextMenuItem> MenuTitles { get; } = [];
   public List<ContextMenuItem> MenuItems { get; } = [];
 
   void Awake() {
@@ -27,7 +28,7 @@ public sealed class ContextMenuController :
   public void OnPointerClick(PointerEventData eventData) {
     switch (eventData.button) {
       case PointerEventData.InputButton.Left:
-        HandleLeftClick(eventData.position);
+        HandleLeftClick(eventData);
         break;
 
       case PointerEventData.InputButton.Right:
@@ -48,7 +49,8 @@ public sealed class ContextMenuController :
     HideMenu();
   }
 
-  void HandleLeftClick(Vector2 position) {
+  void HandleLeftClick(PointerEventData eventData) {
+    Vector2 position = eventData.position;
     Vector2 scaledPosition = position / _parentCanvas.scaleFactor;
 
     if (_contextMenu.Container.activeSelf
@@ -64,22 +66,35 @@ public sealed class ContextMenuController :
     RectTransformUtility.ScreenPointToLocalPointInRectangle(
         _parentRectTransform, scaledPosition, null, out Vector2 localPoint);
 
-    Contextual.LogInfo($"RightClick: {position:F2}, {scaledPosition:F2}, {localPoint:F2}");
-
     ShowMenu(localPoint);
   }
 
   public void ShowMenu(Vector2 position) {
-    _contextMenu.RectTransform.localPosition = position;
-    _contextMenu.RectTransform.SetAsLastSibling();
+    _contextMenu.RectTransform
+        .SetLocalPosition(position)
+        .SetAsLastSibling();
 
     EventSystem.current.SetSelectedGameObject(
         MenuItems.Count > 0 ? MenuItems[0].Button.gameObject : _contextMenu.Container);
+
     _contextMenu.Container.SetActive(true);
   }
 
   public void HideMenu() {
     _contextMenu.Container.SetActive(false);
+  }
+
+  public void ResetMenu() {
+    foreach (ContextMenuItem menuTitle in MenuTitles) {
+      Destroy(menuTitle.Container);
+    }
+
+    foreach (ContextMenuItem menuItem in MenuItems) {
+      Destroy(menuItem.Container);
+    }
+
+    MenuTitles.Clear();
+    MenuItems.Clear();
   }
 
   public ContextMenuItem AddMenuTitle(string label) {
@@ -88,6 +103,8 @@ public sealed class ContextMenuController :
     menuTitle.Label.SetColor(new(1f, 0.72f, 0.36f, 1f));
     menuTitle.Background.SetColor(Color.clear);
     menuTitle.SetText(label);
+
+    MenuTitles.Add(menuTitle);
 
     return menuTitle;
   }

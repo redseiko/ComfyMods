@@ -88,7 +88,6 @@ public sealed class ContextMenuItem {
     Button button = container.AddComponent<Button>();
 
     button
-        .SetNavigationMode(Navigation.Mode.Automatic)
         .SetTransition(Selectable.Transition.ColorTint)
         .SetColors(
             new ColorBlock() {

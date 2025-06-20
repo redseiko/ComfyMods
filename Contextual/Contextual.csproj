@@ -137,9 +137,8 @@
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Contextual.cs" />
     <Compile Include="Core\ContextMenu\ContextMenuController.cs" />
-    <Compile Include="Core\ContextMenu\ContextMenu.cs" />
+    <Compile Include="Core\ContextMenu\ContextMenuPanel.cs" />
     <Compile Include="Core\ContextMenu\ContextMenuItem.cs" />
-    <Compile Include="Patches\FejdStartupPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

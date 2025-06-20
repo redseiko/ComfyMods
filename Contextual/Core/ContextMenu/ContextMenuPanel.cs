@@ -5,11 +5,11 @@ using ComfyLib;
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class ContextMenu {
+public sealed class ContextMenuPanel {
   public readonly GameObject Container;
   public readonly RectTransform RectTransform;
 
-  public ContextMenu(Transform parentTransform) {
+  public ContextMenuPanel(Transform parentTransform) {
     Container = CreateContainer(parentTransform);
     RectTransform = Container.GetComponent<RectTransform>();
   }
