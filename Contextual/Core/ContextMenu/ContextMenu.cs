@@ -38,7 +38,7 @@ public sealed class ContextMenu {
         .SetSpacing(5f);
 
     container.AddComponent<ContentSizeFitter>()
-        .SetHorizontalFit(ContentSizeFitter.FitMode.Unconstrained)
+        .SetHorizontalFit(ContentSizeFitter.FitMode.PreferredSize)
         .SetVerticalFit(ContentSizeFitter.FitMode.PreferredSize);
 
     return container;

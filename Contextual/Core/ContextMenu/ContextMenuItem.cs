@@ -29,7 +29,9 @@ public sealed class ContextMenuItem {
     Label.text = text;
     Label.ForceMeshUpdate(ignoreActiveState: true);
 
-    LayoutElement.SetPreferred(height: Label.preferredHeight + 10f);
+    LayoutElement.SetPreferred(
+      width: Label.preferredWidth + 20f,
+      height: Label.preferredHeight + 10f);
   }
 
   public void AddOnClickListener(UnityAction action) {
@@ -55,7 +57,8 @@ public sealed class ContextMenuItem {
 
     container.AddComponent<LayoutElement>()
         .SetFlexible(width: 1f)
-        .SetPreferred(height: 35f);
+        .SetPreferred(height: 35f)
+        .SetMinimum(width: 200f);
 
     return container;
   }

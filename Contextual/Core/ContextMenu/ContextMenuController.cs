@@ -3,32 +3,22 @@
 using ComfyLib;
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public sealed class ContextMenuController :
     MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IDeselectHandler {
+  RectTransform _parentRectTransform;
+  Canvas _parentCanvas;
   ContextMenu _contextMenu;
-  Canvas _contextMenuCanvas;
 
   void Awake() {
-    _contextMenu = new(transform);
-    _contextMenuCanvas = _contextMenu.Container.GetComponentInParent<Canvas>();
-
-    CreateMenuTitle("Test Context?");
-    CreateMenuItem("Test One");
-    CreateMenuItem("Not Test Two");
-    CreateMenuItem("Three");
+    _parentRectTransform = (RectTransform) transform;
+    _parentCanvas = _parentRectTransform.GetComponentInParent<Canvas>();
+    _contextMenu = new(_parentRectTransform);
 
     HideMenu();
   }
-
-  //void Update() {
-  //  if (ZInput.GetButtonDown("MouseLeft")) {
-  //    HandleLeftClick(ZInput.mousePosition);
-  //  } else if (ZInput.GetButtonDown("MouseRight")) {
-  //    HandleRightClick(ZInput.mousePosition);
-  //  }
-  //}
 
   public void OnPointerClick(PointerEventData eventData) {
     switch (eventData.button) {
@@ -37,7 +27,7 @@ public sealed class ContextMenuController :
         break;
 
       case PointerEventData.InputButton.Right:
-        HandleRightClick(eventData.position);
+        HandleRightClick(eventData);
         break;
     }
   }
@@ -55,7 +45,7 @@ public sealed class ContextMenuController :
   }
 
   void HandleLeftClick(Vector2 position) {
-    Vector2 scaledPosition = position / _contextMenuCanvas.scaleFactor;
+    Vector2 scaledPosition = position / _parentCanvas.scaleFactor;
 
     if (_contextMenu.Container.activeSelf
         && !RectTransformUtility.RectangleContainsScreenPoint(_contextMenu.RectTransform, scaledPosition)) {
@@ -63,14 +53,20 @@ public sealed class ContextMenuController :
     }
   }
 
-  void HandleRightClick(Vector2 position) {
-    Vector2 scaledPosition = position / _contextMenuCanvas.scaleFactor;
+  void HandleRightClick(PointerEventData eventData) {
+    Vector2 position = eventData.position;
+    Vector2 scaledPosition = position / _parentCanvas.scaleFactor;
 
-    ShowMenu(scaledPosition);
+    RectTransformUtility.ScreenPointToLocalPointInRectangle(
+        _parentRectTransform, scaledPosition, null, out Vector2 localPoint);
+
+    Contextual.LogInfo($"RightClick: {position:F2}, {scaledPosition:F2}, {localPoint:F2}");
+
+    ShowMenu(localPoint);
   }
 
   public void ShowMenu(Vector2 position) {
-    _contextMenu.RectTransform.anchoredPosition = position;
+    _contextMenu.RectTransform.localPosition = position;
     _contextMenu.RectTransform.SetAsLastSibling();
 
     EventSystem.current.SetSelectedGameObject(_contextMenu.Container);
@@ -81,23 +77,37 @@ public sealed class ContextMenuController :
     _contextMenu.Container.SetActive(false);
   }
 
-  ContextMenuItem CreateMenuTitle(string label) {
+  public ContextMenuItem AddMenuTitle(string label) {
     ContextMenuItem menuTitle = new(_contextMenu.RectTransform);
 
-    // menuTitle.Label.SetColor(new(1f, 0.81f, 0f, 1f));
     menuTitle.Label.SetColor(new(1f, 0.72f, 0.36f, 1f));
     menuTitle.Background.SetColor(Color.clear);
 
     menuTitle.SetText(label);
 
+    //Contextual.LogInfo($"MenuTitle localScale is: {menuTitle.RectTransform.localScale}");
+    //menuTitle.RectTransform.localScale = Vector3.one;
+
     return menuTitle;
   }
 
-  ContextMenuItem CreateMenuItem(string label) {
+  public ContextMenuItem AddMenuItem(string label, UnityAction onClickCallback = default) {
     ContextMenuItem menuItem = new(_contextMenu.RectTransform);
+
     menuItem.SetText(label);
     menuItem.AddOnClickListener(HideMenu);
 
+    if (onClickCallback != default) {
+      menuItem.AddOnClickListener(onClickCallback);
+    }
+
+    //Contextual.LogInfo($"MenuTitle localScale is: {menuItem.RectTransform.localScale}");
+    //menuItem.RectTransform.localScale = Vector3.one;
+
     return menuItem;
+  }
+
+  public void SetMenuWidth(float width) {
+    _contextMenu.RectTransform.SetSizeDelta(new(width, 0f));
   }
 }
