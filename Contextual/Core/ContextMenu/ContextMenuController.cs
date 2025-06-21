@@ -8,8 +8,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public sealed class ContextMenuController :
-    MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IDeselectHandler {
+public sealed class ContextMenuController : MonoBehaviour, IPointerClickHandler, IDeselectHandler {
   RectTransform _parentRectTransform;
   Canvas _parentCanvas;
   ContextMenuPanel _contextMenu;
@@ -21,6 +20,7 @@ public sealed class ContextMenuController :
     _parentRectTransform = (RectTransform) transform;
     _parentCanvas = _parentRectTransform.GetComponentInParent<Canvas>();
     _contextMenu = new(_parentRectTransform);
+    _contextMenu.ClickHandler.OnLeftClickOutsideRect.AddListener(HideMenu);
 
     HideMenu();
   }
@@ -35,14 +35,6 @@ public sealed class ContextMenuController :
         HandleRightClick(eventData);
         break;
     }
-  }
-
-  public void OnPointerEnter(PointerEventData eventData) {
-    // ???
-  }
-
-  public void OnPointerExit(PointerEventData eventData) {
-    // ???
   }
 
   public void OnDeselect(BaseEventData eventData) {

@@ -3,15 +3,18 @@
 using ComfyLib;
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public sealed class ContextMenuPanel {
-  public readonly GameObject Container;
-  public readonly RectTransform RectTransform;
+  public GameObject Container { get; private set; }
+  public RectTransform RectTransform { get; private set; }
+  public PointerClickHandler ClickHandler { get; private set; }
 
   public ContextMenuPanel(Transform parentTransform) {
     Container = CreateContainer(parentTransform);
     RectTransform = Container.GetComponent<RectTransform>();
+    ClickHandler = Container.AddComponent<PointerClickHandler>();
   }
 
   static GameObject CreateContainer(Transform parentTransform) {
@@ -42,5 +45,27 @@ public sealed class ContextMenuPanel {
         .SetVerticalFit(ContentSizeFitter.FitMode.PreferredSize);
 
     return container;
+  }
+}
+
+public sealed class PointerClickHandler : MonoBehaviour {
+  public RectTransform RectTransform { get; private set; }
+  public UnityEvent OnLeftClickOutsideRect { get; private set; }
+
+  void Awake() {
+    RectTransform = GetComponent<RectTransform>();
+    OnLeftClickOutsideRect = new();
+  }
+
+  void Update() {
+    if (ZInput.GetButtonDown("MouseLeft")) {
+      HandleLeftClick(ZInput.mousePosition);
+    }
+  }
+
+  void HandleLeftClick(Vector2 position) {
+    if (!RectTransformUtility.RectangleContainsScreenPoint(RectTransform, position)) {
+      OnLeftClickOutsideRect.Invoke();
+    }
   }
 }
