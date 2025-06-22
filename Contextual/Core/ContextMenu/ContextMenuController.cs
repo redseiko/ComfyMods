@@ -8,9 +8,36 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public sealed class ContextMenuController : MonoBehaviour, IPointerClickHandler, IDeselectHandler {
+public sealed class ContextMenuTrigger : MonoBehaviour, IPointerClickHandler {
+  public ContextMenuController ContextMenu { get; private set; }
+  public RectTransform RectTransform { get; private set; }
+
+  public void SetContextMenu(ContextMenuController contextMenu) {
+    ContextMenu = contextMenu;
+  }
+
+  void Awake() {
+    RectTransform = GetComponent<RectTransform>();
+  }
+
+  public void OnPointerClick(PointerEventData eventData) {
+    switch (eventData.button) {
+      case PointerEventData.InputButton.Right:
+        HandleRightClick(eventData);
+        break;
+    }
+  }
+
+  void HandleRightClick(PointerEventData eventData) {
+    Vector2 position = eventData.position;
+    RectTransformUtility.ScreenPointToLocalPointInRectangle(RectTransform, position, null, out Vector2 localPoint);
+
+    ContextMenu.ShowMenu(localPoint);
+  }
+}
+
+public sealed class ContextMenuController : MonoBehaviour {
   RectTransform _parentRectTransform;
-  Canvas _parentCanvas;
   ContextMenuPanel _contextMenu;
 
   public List<ContextMenuItem> MenuTitles { get; } = [];
@@ -18,48 +45,28 @@ public sealed class ContextMenuController : MonoBehaviour, IPointerClickHandler,
 
   void Awake() {
     _parentRectTransform = (RectTransform) transform;
-    _parentCanvas = _parentRectTransform.GetComponentInParent<Canvas>();
     _contextMenu = new(_parentRectTransform);
     _contextMenu.ClickHandler.OnLeftClickOutsideRect.AddListener(HideMenu);
 
     HideMenu();
   }
 
-  public void OnPointerClick(PointerEventData eventData) {
-    switch (eventData.button) {
-      case PointerEventData.InputButton.Left:
-        HandleLeftClick(eventData);
-        break;
+  //public void OnPointerClick(PointerEventData eventData) {
+  //  switch (eventData.button) {
+  //    case PointerEventData.InputButton.Left:
+  //      HandleLeftClick(eventData);
+  //      break;
+  //  }
+  //}
 
-      case PointerEventData.InputButton.Right:
-        HandleRightClick(eventData);
-        break;
-    }
-  }
+  //void HandleLeftClick(PointerEventData eventData) {
+  //  Vector2 position = eventData.position;
 
-  public void OnDeselect(BaseEventData eventData) {
-    HideMenu();
-  }
-
-  void HandleLeftClick(PointerEventData eventData) {
-    Vector2 position = eventData.position;
-    Vector2 scaledPosition = position / _parentCanvas.scaleFactor;
-
-    if (_contextMenu.Container.activeSelf
-        && !RectTransformUtility.RectangleContainsScreenPoint(_contextMenu.RectTransform, scaledPosition)) {
-      HideMenu();
-    }
-  }
-
-  void HandleRightClick(PointerEventData eventData) {
-    Vector2 position = eventData.position;
-    Vector2 scaledPosition = position / _parentCanvas.scaleFactor;
-
-    RectTransformUtility.ScreenPointToLocalPointInRectangle(
-        _parentRectTransform, scaledPosition, null, out Vector2 localPoint);
-
-    ShowMenu(localPoint);
-  }
+  //  if (_contextMenu.Container.activeSelf
+  //      && !RectTransformUtility.RectangleContainsScreenPoint(_contextMenu.RectTransform, position)) {
+  //    HideMenu();
+  //  }
+  //}
 
   public void ShowMenu(Vector2 position) {
     _contextMenu.RectTransform
