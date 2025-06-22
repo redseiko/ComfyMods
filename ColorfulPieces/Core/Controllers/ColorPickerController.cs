@@ -34,9 +34,13 @@ public sealed class ColorPickerController {
   public ColorPickerPanel ColorPicker { get; private set; }
   public ColorPalettePanel ColorPalette { get; private set; }
 
+  public ContextMenuController ColorPanelContextMenu { get; private set; }
+
   ColorPickerController(Transform parentTransform) {
     ColorPicker = CreateColorPicker(parentTransform);
     ColorPalette = ColorPicker.PalettePanel;
+
+    ColorPanelContextMenu = CreateContextMenu(ColorPicker);
   }
 
   ColorPickerPanel CreateColorPicker(Transform parentTransform) {
@@ -56,15 +60,21 @@ public sealed class ColorPickerController {
 
     colorPicker.Panel.AddComponent<ColorPickerPanelController>();
 
-    ContextMenuController colorPanelContextMenu = colorPicker.Panel.AddComponent<ContextMenuController>();
-    //colorPanelContextMenu.SetMenuWidth(260f);
-    
-    colorPanelContextMenu.AddMenuTitle("Color Actions");
-    colorPanelContextMenu.AddMenuItem("Find colors?");
-    colorPanelContextMenu.AddMenuItem("Hide this panel", HideColorPicker);
-    colorPanelContextMenu.AddMenuItem("Remove last color", RemovePaletteSlot);
-
     return colorPicker;
+  }
+
+  ContextMenuController CreateContextMenu(ColorPickerPanel colorPicker) {
+    ContextMenuController contextMenu = colorPicker.Panel.AddComponent<ContextMenuController>();
+
+    contextMenu.AddMenuTitle("Color Actions");
+    contextMenu.AddMenuItem("Find colors?");
+    contextMenu.AddMenuItem("Hide this panel", HideColorPicker);
+    contextMenu.AddMenuItem("Remove last color", RemovePaletteSlot);
+
+    ContextMenuTrigger trigger = colorPicker.Panel.AddComponent<ContextMenuTrigger>();
+    trigger.SetContextMenu(contextMenu);
+
+    return contextMenu;
   }
 
   public bool IsVisible() {
