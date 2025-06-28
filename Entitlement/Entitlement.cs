@@ -22,9 +22,8 @@ public sealed class Entitlement : BaseUnityPlugin {
   void Awake() {
     _logger = Logger;
 
-    DatabaseManager.Initialize();
-
     Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
+    DatabaseManager.Initialize();
   }
 
   public static void LogInfo(object obj) {

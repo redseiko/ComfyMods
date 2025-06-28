@@ -1,12 +1,13 @@
 ﻿namespace Entitlement.Database;
 
+using System;
 using System.IO;
 
 using SQLite;
 
 public static class DatabaseManager {
   public static string GetDatabasePath() {
-    return Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), "entitlement.sqlite.db");
+    return Path.Combine(Utils.m_saveDataOverride ?? Utils.persistantDataPath, "entitlement.sqlite.db");
   }
 
   public static SQLiteConnection OpenDatabase() {
@@ -18,7 +19,7 @@ public static class DatabaseManager {
 
     using (SQLiteConnection database = OpenDatabase()) {
       database.CreateTable<PlayerTitle>();
-      database.Insert(new PlayerTitle() { TitleName = $"Title {System.DateTimeOffset.Now.ToUnixTimeSeconds()}" });
+      database.Insert(new PlayerTitle() { TitleName = $"Title {DateTimeOffset.Now.ToUnixTimeSeconds()}" });
     }
   }
 }
