@@ -1,5 +1,15 @@
 ## Changelog
 
+### 1.4.0
+
+  * Updated for the `v0.220.5` patch.
+  * Bumped up `<LangVersion>` to C# 12.
+  * Code clean-up and refactoring.
+  * Added new config-options under `[EnemyHud.HealthText]`:
+    * `showMaxHealth` -- show max health value.
+    * `showInfiniteHealth` -- show infinite symbol when current health exceeds threshold.
+    * `infiniteHealthThreshold` -- threshold to show the infinite symbol for current health.
+
 ### 1.3.2
 
   * Fixed `EnemyHud` not positioned correctly when using Render-scale values not at 100%.

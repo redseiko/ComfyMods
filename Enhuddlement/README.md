@@ -11,6 +11,14 @@
   * Change the width/height/colors of the Healthbar
   * Display health values as text within the HealthBar
 
+### HealthText value customization
+
+  * Config-options under `[EnemyHud.HealthText]`:
+    * `showMaxHealth` -- show max health value.
+    * `showInfiniteHealth` -- show infinite symbol when current health exceeds threshold.
+    * `infiniteHealthThreshold` -- threshold to show the infinite symbol for current health.
+  * Note: these take effect on all PlayerHud, BossHud and EnemyHud health texts.
+
 ### Floating BossHud
 
   * Separate name and HealthBars follow each boss

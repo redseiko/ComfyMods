@@ -1,28 +1,38 @@
-﻿using System.Reflection;
+﻿namespace Enhuddlement;
+
+using System;
+using System.Globalization;
+using System.Reflection;
 
 using BepInEx;
+using BepInEx.Logging;
 
 using HarmonyLib;
 
-using static Enhuddlement.PluginConfig;
+using static PluginConfig;
 
-namespace Enhuddlement {
-  [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
-  public class Enhuddlement : BaseUnityPlugin {
-    public const string PluginGuid = "redseiko.valheim.enhuddlement";
-    public const string PluginName = "Enhuddlement";
-    public const string PluginVersion = "1.3.2";
+[BepInPlugin(PluginGuid, PluginName, PluginVersion)]
+public sealed class Enhuddlement : BaseUnityPlugin {
+  public const string PluginGuid = "redseiko.valheim.enhuddlement";
+  public const string PluginName = "Enhuddlement";
+  public const string PluginVersion = "1.4.0";
 
-    public static Harmony HarmonyInstance { get; private set; }
+  public static Harmony HarmonyInstance { get; private set; }
 
-    void Awake() {
-      BindConfig(Config);
+  static ManualLogSource _logger;
 
-      HarmonyInstance = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
-    }
+  void Awake() {
+    _logger = Logger;
+    BindConfig(Config);
 
-    void OnDestroy() {
-      HarmonyInstance?.UnpatchSelf();
-    }
+    HarmonyInstance = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
+  }
+
+  public static void LogInfo(object obj) {
+    _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
+  }
+
+  public static void LogError(object obj) {
+    _logger.LogError($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
   }
 }
