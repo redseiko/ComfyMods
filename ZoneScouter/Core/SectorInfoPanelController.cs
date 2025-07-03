@@ -33,7 +33,7 @@ public static class SectorInfoPanelController {
     if (IsModEnabled.Value && ShowSectorInfoPanel.Value && Hud.m_instance) {
       SectorInfoPanel = new(Hud.m_instance.transform);
 
-      SectorInfoPanel.Panel.RectTransform()
+      SectorInfoPanel.RectTransform
           .SetAnchorMin(new(0.5f, 1f))
           .SetAnchorMax(new(0.5f, 1f))
           .SetPivot(new(0.5f, 1f))
@@ -115,7 +115,7 @@ public static class SectorInfoPanelController {
         SectorInfoPanel.PositionZ.Value.SetText($"{position.z:F0}");
       }
 
-      Vector2i sector = ZoneSystemUtils.GetZone(position);
+      Vector2i sector = ZoneSystem.GetZone(position);
       long zdoCount = GetSectorZdoCount(sector);
 
       if (sector == lastSector && zdoCount == lastZdoCount) {
@@ -146,7 +146,7 @@ public static class SectorInfoPanelController {
         continue;
       }
 
-      Vector2i sector = ZoneSystemUtils.GetZone(Player.m_localPlayer.transform.position);
+      Vector2i sector = ZoneSystem.GetZone(Player.m_localPlayer.transform.position);
 
       for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {

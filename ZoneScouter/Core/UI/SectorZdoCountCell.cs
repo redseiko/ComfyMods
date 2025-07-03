@@ -21,10 +21,10 @@ public sealed class SectorZdoCountCell {
   public SectorZdoCountCell(Transform parentTransform) {
     Cell = CreateChildCell(parentTransform);
 
-    ZdoCountBackground = CreateChildBackground(Cell.transform).Image();
+    ZdoCountBackground = CreateChildBackground(Cell.transform).GetComponent<Image>();
     ZdoCount = CreateChildLabel(ZdoCountBackground.transform);
 
-    SectorBackground = CreateChildBackground(Cell.transform).Image();
+    SectorBackground = CreateChildBackground(Cell.transform).GetComponent<Image>();
     Sector = CreateChildLabel(SectorBackground.transform);
 
     SetCellStyle(setPreferredWidth: true);
@@ -56,7 +56,7 @@ public sealed class SectorZdoCountCell {
 
   GameObject CreateChildCell(Transform parentTransform) {
     GameObject cell = new("Cell", typeof(RectTransform));
-    cell.SetParent(parentTransform);
+    cell.transform.SetParent(parentTransform, worldPositionStays: false);
 
     cell.AddComponent<VerticalLayoutGroup>()
         .SetChildControl(width: true, height: true)
@@ -78,7 +78,7 @@ public sealed class SectorZdoCountCell {
 
   GameObject CreateChildBackground(Transform parentTransform) {
     GameObject background = new("Background", typeof(RectTransform));
-    background.SetParent(parentTransform);
+    background.transform.SetParent(parentTransform, worldPositionStays: false);
 
     background.AddComponent<HorizontalLayoutGroup>()
         .SetChildControl(width: true, height: true)

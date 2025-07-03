@@ -9,6 +9,8 @@ using static PluginConfig;
 
 public sealed class SectorInfoPanel {
   public GameObject Panel { get; private set; }
+  public RectTransform RectTransform { get; private set; }
+  public Image Background { get; private set; }
 
   public ContentRow PositionContent { get; private set; }
   public ValueWithLabel PositionX { get; private set; }
@@ -28,6 +30,8 @@ public sealed class SectorInfoPanel {
 
   public SectorInfoPanel(Transform parentTransform) {
     Panel = CreatePanel(parentTransform);
+    RectTransform = Panel.GetComponent<RectTransform>();
+    Background = Panel.GetComponent<Image>();
 
     PositionContent = new(Panel.transform);
 
@@ -101,37 +105,37 @@ public sealed class SectorInfoPanel {
     PositionX.Value.SetFontSize(fontSize);
     PositionX.Value.SetColor(PositionValueXTextColor.Value);
     PositionX.FitValueToText("-00000");
-    PositionX.Row.Image().SetColor(PositionValueXTextColor.Value.SetAlpha(0.1f));
+    PositionX.Background.SetColor(PositionValueXTextColor.Value.SetAlpha(0.1f));
 
     PositionY.Label.SetFontSize(fontSize);
     PositionY.Value.SetFontSize(fontSize);
     PositionY.Value.SetColor(PositionValueYTextColor.Value);
     PositionY.FitValueToText("-00000");
-    PositionY.Row.Image().SetColor(PositionValueYTextColor.Value.SetAlpha(0.1f));
+    PositionY.Background.SetColor(PositionValueYTextColor.Value.SetAlpha(0.1f));
 
     PositionZ.Label.SetFontSize(fontSize);
     PositionZ.Value.SetFontSize(fontSize);
     PositionZ.Value.SetColor(PositionValueZTextColor.Value);
     PositionZ.FitValueToText("-00000");
-    PositionZ.Row.Image().SetColor(PositionValueZTextColor.Value.SetAlpha(0.1f));
+    PositionZ.Background.SetColor(PositionValueZTextColor.Value.SetAlpha(0.1f));
 
     SectorXY.Label.SetFontSize(fontSize);
     SectorXY.Value.SetFontSize(fontSize);
     SectorXY.Value.SetColor(PositionValueXTextColor.Value);
     SectorXY.FitValueToText("-123,-123");
-    SectorXY.Row.Image().SetColor(PositionValueXTextColor.Value.SetAlpha(0.1f));
+    SectorXY.Background.SetColor(PositionValueXTextColor.Value.SetAlpha(0.1f));
 
     SectorZdoCount.Label.SetFontSize(fontSize);
     SectorZdoCount.Value.SetFontSize(fontSize);
     SectorZdoCount.Value.SetColor(PositionValueYTextColor.Value);
     SectorZdoCount.FitValueToText("123456");
-    SectorZdoCount.Row.Image().SetColor(PositionValueYTextColor.Value.SetAlpha(0.1f));
+    SectorZdoCount.Background.SetColor(PositionValueYTextColor.Value.SetAlpha(0.1f));
 
     ZdoManagerNextId.Label.SetFontSize(fontSize);
     ZdoManagerNextId.Value.SetFontSize(fontSize);
     ZdoManagerNextId.Value.SetColor(PositionValueZTextColor.Value);
     ZdoManagerNextId.FitValueToText("1234567890");
-    ZdoManagerNextId.Row.Image().SetColor(PositionValueZTextColor.Value.SetAlpha(0.1f));
+    ZdoManagerNextId.Background.SetColor(PositionValueZTextColor.Value.SetAlpha(0.1f));
   }
 
   public void ToggleZDOManagerContent(bool toggleOn) {
@@ -140,7 +144,7 @@ public sealed class SectorInfoPanel {
 
   GameObject CreatePanel(Transform parentTransform) {
     GameObject panel = new("SectorInfo.Panel", typeof(RectTransform));
-    panel.SetParent(parentTransform);
+    panel.transform.SetParent(parentTransform, worldPositionStays: false);
 
     panel.AddComponent<VerticalLayoutGroup>()
         .SetChildControl(width: true, height: true)
@@ -172,7 +176,7 @@ public sealed class SectorInfoPanel {
 
     GameObject CreateChildRow(Transform parentTransform) {
       GameObject row = new("Row", typeof(RectTransform));
-      row.SetParent(parentTransform);
+      row.transform.SetParent(parentTransform, worldPositionStays: false);
 
       row.AddComponent<HorizontalLayoutGroup>()
           .SetChildControl(width: true, height: true)

@@ -25,7 +25,7 @@ public static class UIBuilder {
 
   public static GameObject CreateRowSpacer(Transform parentTransform) {
     GameObject spacer = new($"{parentTransform.name}.Spacer", typeof(RectTransform));
-    spacer.SetParent(parentTransform);
+    spacer.transform.SetParent(parentTransform, worldPositionStays: false);
 
     spacer.AddComponent<LayoutElement>()
         .SetFlexible(width: 1f);

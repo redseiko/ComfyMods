@@ -70,7 +70,7 @@ public static class PluginConfig {
             "SectorInfoPanel position (relative to pivot/anchors).");
 
     SectorInfoPanelPosition.OnSettingChanged(
-        position => SectorInfoPanelController.SectorInfoPanel?.Panel.Ref()?.RectTransform().SetPosition(position));
+        position => SectorInfoPanelController.SectorInfoPanel?.RectTransform.Ref()?.SetPosition(position));
 
     SectorInfoPanelBackgroundColor =
         config.BindInOrder(
@@ -80,7 +80,7 @@ public static class PluginConfig {
             "SectorInfoPanel background color.");
 
     SectorInfoPanelBackgroundColor.OnSettingChanged(
-        color => SectorInfoPanelController.SectorInfoPanel?.Panel.Ref()?.Image().SetColor(color));
+        color => SectorInfoPanelController.SectorInfoPanel?.Background.Ref()?.SetColor(color));
 
     SectorInfoPanelFontSize =
         config.BindInOrder(

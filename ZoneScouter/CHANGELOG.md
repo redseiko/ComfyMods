@@ -1,5 +1,13 @@
 ## Changelog
 
+### 1.7.0
+
+  * Updated for the `v0.220.5` patch.
+  * Removed obsolete patch-compatibility code.
+  * Now using `AssetID` to fetch the `Custom/Distortion` shader used for sector-boundaries.
+  * Sector-boundaries cube now adjusts for player's `position.y` value.
+  * Code clean-up and refactoring.
+
 ### 1.6.0
 
   * Fixed for the `v0.219.10` PTB patch.

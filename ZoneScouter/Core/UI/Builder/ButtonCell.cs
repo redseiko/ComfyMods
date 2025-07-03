@@ -17,7 +17,7 @@ public sealed class ButtonCell {
 
   public ButtonCell(Transform parentTransform) {
     Cell = CreateChildCell(parentTransform);
-    Background = CreateChildBackground(Cell.transform).Image();
+    Background = CreateChildBackground(Cell.transform).GetComponent<Image>();
     Label = CreateChildLabel(Background.transform);
 
     Button = Cell.AddComponent<Button>();
@@ -29,7 +29,7 @@ public sealed class ButtonCell {
 
   GameObject CreateChildCell(Transform parentTransform) {
     GameObject cell = new("Cell", typeof(RectTransform));
-    cell.SetParent(parentTransform);
+    cell.transform.SetParent(parentTransform, worldPositionStays: false);
 
     cell.AddComponent<VerticalLayoutGroup>()
         .SetChildControl(width: true, height: true)
@@ -46,7 +46,7 @@ public sealed class ButtonCell {
 
   GameObject CreateChildBackground(Transform parentTransform) {
     GameObject background = new("Background", typeof(RectTransform));
-    background.SetParent(parentTransform);
+    background.transform.SetParent(parentTransform, worldPositionStays: false);
 
     background.AddComponent<HorizontalLayoutGroup>()
         .SetChildControl(width: true, height: true)

@@ -53,7 +53,7 @@ public sealed class SectorZdoCountGrid {
 
   GameObject CreateChildGrid(Transform parentTransform) {
     GameObject grid = new("Grid", typeof(RectTransform));
-    grid.SetParent(parentTransform);
+    grid.transform.SetParent(parentTransform, worldPositionStays: false);
 
     grid.AddComponent<VerticalLayoutGroup>()
         .SetChildControl(width: true, height: true)
@@ -66,7 +66,7 @@ public sealed class SectorZdoCountGrid {
 
   GameObject CreateSectorZdoCountGridRow(Transform parentTransform) {
     GameObject row = new("SectorZdoCountGrid.Row", typeof(RectTransform));
-    row.SetParent(parentTransform);
+    row.transform.SetParent(parentTransform, worldPositionStays: false);
 
     row.AddComponent<HorizontalLayoutGroup>()
         .SetChildControl(width: true, height: true)

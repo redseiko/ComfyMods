@@ -11,11 +11,15 @@ using static PluginConfig;
 
 public sealed class ValueWithLabel {
   public GameObject Row { get; private set; }
+  public Image Background { get; private set; }
+
   public TMP_Text Value { get; private set; }
   public TMP_Text Label { get; private set; }
 
   public ValueWithLabel(Transform parentTransform) {
     Row = CreateChildRow(parentTransform);
+    Background = Row.GetComponent<Image>();
+
     Value = CreateChildValue(Row.transform);
     Label = CreateChildLabel(Row.transform);
   }
@@ -30,7 +34,7 @@ public sealed class ValueWithLabel {
 
   GameObject CreateChildRow(Transform parentTransform) {
     GameObject row = new("Row", typeof(RectTransform));
-    row.SetParent(parentTransform);
+    row.transform.SetParent(parentTransform, worldPositionStays: false);
 
     row.AddComponent<HorizontalLayoutGroup>()
         .SetChildControl(width: true, height: true)

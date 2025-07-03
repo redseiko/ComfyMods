@@ -1,7 +1,5 @@
 ﻿namespace ZoneScouter;
 
-using ComfyLib;
-
 using HarmonyLib;
 
 using UnityEngine;
@@ -13,13 +11,16 @@ using static PluginConfig;
 static class MenuPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Menu.Start))]
-  static void StartPostfix(ref Menu __instance) {
-    if (!IsModEnabled.Value) {
-      return;
+  static void StartPostfix(Menu __instance) {
+    if (IsModEnabled.Value) {
+      SetupMenu(__instance);
     }
+  }
 
-    foreach (GameObject child in __instance.m_menuDialog.gameObject.Children()) {
-      if (child.name.StartsWith("darken") && child.TryGetComponent(out Image image)) {
+  public static void SetupMenu(Menu menu) {
+    foreach (Transform child in menu.m_menuDialog) {
+      if (child.name.StartsWith("darken", System.StringComparison.InvariantCulture)
+          && child.TryGetComponent(out Image image)) {
         image.raycastTarget = false;
       }
     }

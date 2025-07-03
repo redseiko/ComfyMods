@@ -1,9 +1,7 @@
 ﻿namespace ZoneScouter;
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 using ComfyLib;
 
@@ -12,7 +10,6 @@ using UnityEngine;
 using static PluginConfig;
 
 public static class SectorBoundaries {
-  static readonly Lazy<Shader> DistortionShader = new(() => Shader.Find("Custom/Distortion"));
   static readonly Vector2i UnsetSector = new(int.MaxValue, int.MaxValue);
 
   static Coroutine _updateBoundaryCubeCoroutine;
@@ -53,10 +50,7 @@ public static class SectorBoundaries {
   static void StartUp() {
     if (IsModEnabled.Value && ShowSectorBoundaries.Value && Hud.m_instance) {
       _boundaryCube = CreateBoundaryCube();
-
-      _boundaryWallRendererCache.AddRange(
-          _boundaryCube.Children().Select(child => child.GetComponent<MeshRenderer>()));
-
+      _boundaryWallRendererCache.AddRange(_boundaryCube.GetComponentsInChildren<MeshRenderer>());
       _updateBoundaryCubeCoroutine = Hud.m_instance.StartCoroutine(UpdateBoundaryCubeCoroutine());
     }
   }
@@ -65,20 +59,19 @@ public static class SectorBoundaries {
     WaitForSeconds waitInterval = new(seconds: 1f);
 
     while (true) {
+      yield return waitInterval;
+
       if (!ZoneSystem.m_instance || !Player.m_localPlayer) {
-        _lastBoundarySector = UnsetSector;
-        yield return waitInterval;
         continue;
       }
 
-      Vector2i sector = ZoneSystemUtils.GetZone(Player.m_localPlayer.transform.position);
+      Vector3 position = Player.m_localPlayer.transform.position;
+      Vector2i sector = ZoneSystem.GetZone(position);
 
-      if (sector != _lastBoundarySector) {
-        _boundaryCube.transform.position = ZoneSystemUtils.GetZonePos(sector);
-        _lastBoundarySector = sector;
-      }
+      Vector3 cubePosition = ZoneSystem.GetZonePos(sector);
+      cubePosition.y = position.y;
 
-      yield return waitInterval;
+      _boundaryCube.transform.position = cubePosition;
     }
   }
 
@@ -86,10 +79,10 @@ public static class SectorBoundaries {
     GameObject cube = new("BoundaryCube");
     cube.transform.position = Vector3.zero;
 
-    CreateBoundaryCubeWall(cube, new(32f, 256f, 0f), new(0.1f, 512f, 64f));
-    CreateBoundaryCubeWall(cube, new(-32f, 256f, 0f), new(0.1f, 512f, 64f));
-    CreateBoundaryCubeWall(cube, new(0f, 256f, 32f), new(64f, 512f, 0.1f));
-    CreateBoundaryCubeWall(cube, new(0f, 256f, -32f), new(64f, 512f, 0.1f));
+    CreateBoundaryCubeWall(cube, new(32f, -256f, 0f), new(0.1f, 1024f, 64f));
+    CreateBoundaryCubeWall(cube, new(-32f, -256f, 0f), new(0.1f, 1024f, 64f));
+    CreateBoundaryCubeWall(cube, new(0f, -256f, 32f), new(64f, 1024f, 0.1f));
+    CreateBoundaryCubeWall(cube, new(0f, -256f, -32f), new(64f, 1024f, 0.1f));
 
     return cube;
   }
@@ -104,7 +97,7 @@ public static class SectorBoundaries {
 
     MeshRenderer renderer = wall.GetComponent<MeshRenderer>();
     renderer.material.SetColor("_Color", SectorBoundaryColor.Value);
-    renderer.material.shader = DistortionShader.Value;
+    renderer.material.shader = AssetUtils.DistortionShader;
 
     UnityEngine.Object.Destroy(wall.GetComponentInChildren<Collider>());
 
