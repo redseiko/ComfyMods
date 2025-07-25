@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.14.0
+
+  * Added new feature `QuickMapPin`.
+  * Added new command `add-map-pin`.
+  * Modified map-teleporting to use `GetClosestPin()` logic for the target position to teleport to.
+
 ### 1.13.0
 
   * Updated for the `v0.220.5` patch.

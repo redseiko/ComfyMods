@@ -24,7 +24,7 @@ static class MinimapPatch {
       PinListPanelController.TogglePanel(toggleOn: false);
       PinFilterPanelController.TogglePanel(toggleOn: true);
 
-      Pinnacle.ToggleVanillaIconPanels(toggleOn: false);
+      PinnacleUtils.ToggleVanillaIconPanels(toggleOn: false);
       PinFilterPanelController.UpdateIconFilters();
     }
   }
@@ -57,15 +57,23 @@ static class MinimapPatch {
   [HarmonyPatch(nameof(Minimap.OnMapLeftClick))]
   static bool OnMapLeftClickPrefix(ref Minimap __instance) {
     if (IsModEnabled.Value
-        && global::Console.m_instance.IsCheatsEnabled()
+        && Console.m_instance.IsCheatsEnabled()
         && Player.m_localPlayer
         && ZInput.GetKey(KeyCode.LeftShift)) {
-      Vector3 targetPosition = __instance.ScreenToWorldPoint(Input.mousePosition);
+      Vector3 targetPosition = __instance.ScreenToWorldPoint(ZInput.mousePosition);
+
+      Minimap.PinData closestPin =
+          __instance.GetClosestPin(
+              targetPosition, __instance.m_removeRadius * __instance.m_largeZoom * 2f, mustBeVisible: true);
 
       __instance.SetMapMode(Minimap.MapMode.Small);
       __instance.m_smallRoot.SetActive(true);
 
-      PinnacleUtils.TeleportTo(targetPosition);
+      if (closestPin == default) {
+        PinnacleUtils.TeleportTo(targetPosition);
+      } else {
+        PinnacleUtils.TeleportTo(closestPin);
+      }
 
       return false;
     }
@@ -119,6 +127,10 @@ static class MinimapPatch {
 
       if (AddPinAtMouseShortcut.Value.IsDown()) {
         minimap.OnMapDblClick();
+      }
+
+      if (QuickMapPinShortcut.Value.IsDown() && Player.m_localPlayer) {
+        PinnacleUtils.AddQuickMapPin(minimap, Player.m_localPlayer.transform.position);
       }
     }
   }

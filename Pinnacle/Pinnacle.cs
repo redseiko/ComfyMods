@@ -2,7 +2,6 @@
 
 using System;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 
 using BepInEx;
@@ -12,15 +11,13 @@ using HarmonyLib;
 
 using ComfyLib;
 
-using UnityEngine;
-
 using static PluginConfig;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 public sealed class Pinnacle : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.pinnacle";
   public const string PluginName = "Pinnacle";
-  public const string PluginVersion = "1.13.0";
+  public const string PluginVersion = "1.14.0";
 
   static ManualLogSource _logger;
 
@@ -29,22 +26,6 @@ public sealed class Pinnacle : BaseUnityPlugin {
     BindConfig(Config); 
 
     Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
-  }
-
-  public static void TogglePinnacle(bool toggleOn) {
-    PinEditPanelController.TogglePanel(pinToEdit: null);
-    PinListPanelController.TogglePanel(toggleOn: false);
-    PinFilterPanelController.TogglePanel(toggleOn: toggleOn);
-    ToggleVanillaIconPanels(toggleOn: !toggleOn);
-  }
-
-  public static void ToggleVanillaIconPanels(bool toggleOn) {
-    foreach (
-        GameObject panel in Minimap.m_instance.Ref()?.m_largeRoot
-            .Children()
-            .Where(child => child.name.StartsWith("IconPanel"))) {
-      panel.SetActive(toggleOn);
-    }
   }
 
   public static void Log(LogLevel logLevel, object o) {

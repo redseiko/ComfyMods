@@ -5,6 +5,27 @@ using UnityEngine;
 using static PluginConfig;
 
 public static class PinnacleUtils {
+
+  public static void TogglePinnacle(bool toggleOn) {
+    PinEditPanelController.TogglePanel(pinToEdit: null);
+    PinListPanelController.TogglePanel(toggleOn: false);
+    PinFilterPanelController.TogglePanel(toggleOn: toggleOn);
+
+    ToggleVanillaIconPanels(toggleOn: !toggleOn);
+  }
+
+  public static void ToggleVanillaIconPanels(bool toggleOn) {
+    if (!Minimap.m_instance || !Minimap.m_instance.m_largeRoot) {
+      return;
+    }
+
+    foreach (Transform child in Minimap.m_instance.m_largeRoot.transform) {
+      if (child.name.StartsWith("IconPanel", System.StringComparison.InvariantCulture)) {
+        child.gameObject.SetActive(toggleOn);
+      }
+    }
+  }
+
   public static void CenterMapOnOrTeleportTo(Minimap.PinData targetPin) {
     if (IsModEnabled.Value
         && Console.m_instance.IsCheatsEnabled()
@@ -82,6 +103,12 @@ public static class PinnacleUtils {
       targetPosition.y = GetHeight(targetPosition);
     }
 
-    return minimap.AddPin(targetPosition, minimap.m_selectedType, string.Empty, true, false, 0L);
+    return minimap.AddPin(
+        targetPosition, minimap.m_selectedType, string.Empty, save: true, isChecked: false);
+  }
+
+  public static Minimap.PinData AddQuickMapPin(Minimap minimap, Vector3 targetPosition) {
+    return minimap.AddPin(
+        targetPosition, QuickMapPinDefaultPinType.Value, QuickMapPinDefaultName.Value, save: true, isChecked: false);
   }
 }

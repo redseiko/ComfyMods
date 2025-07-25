@@ -31,7 +31,7 @@ public static class PluginConfig {
             true,
             "Globally enable or disable this mod.");
 
-    IsModEnabled.OnSettingChanged(Pinnacle.TogglePinnacle);
+    IsModEnabled.OnSettingChanged(PinnacleUtils.TogglePinnacle);
     IsModEnabled.OnSettingChanged(ComfyCommandUtils.ToggleCommands);
 
     CenterMapLerpDuration =
@@ -46,6 +46,7 @@ public static class PluginConfig {
     BindPinEditPanelConfig(config);
     BindPinFilterPanelConfig(config);
     BindPinIconConfig(config);
+    BindQuickMapPinConfig(config);
 
     LateBindConfigQueue.Reset(config);
     LateBindConfigQueue.Enqueue(BindMinimapConfig);
@@ -242,6 +243,33 @@ public static class PluginConfig {
             "stripPinIconScaleTagText",
             true,
             "If set, will strip pin-icon-scale tags from the pin-text.");
+  }
+
+  public static ConfigEntry<string> QuickMapPinDefaultName { get; private set; }
+  public static ConfigEntry<Minimap.PinType> QuickMapPinDefaultPinType { get; private set; }
+  public static ConfigEntry<KeyboardShortcut> QuickMapPinShortcut { get; private set; }
+
+  static void BindQuickMapPinConfig(ConfigFile config) {
+    QuickMapPinDefaultName =
+        config.BindInOrder(
+            "QuickMapPin",
+            "quickMapPinDefaultName",
+            "QuickPin",
+            "Default pin-name to use for a quick-map-pin.");
+
+    QuickMapPinDefaultPinType =
+        config.BindInOrder(
+            "QuickMapPin",
+            "quickMapPinDefaultPinType",
+            Minimap.PinType.Icon3,
+            "Default pin-type to use for a quick-map-pin.");
+
+    QuickMapPinShortcut =
+        config.BindInOrder(
+            "QuickMapPin",
+            "quickMapPinShortcut",
+            new KeyboardShortcut(KeyCode.None),
+            "Shortcut to add a quick-map-pin at current position with the Minimap is open.");
   }
 }
 

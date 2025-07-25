@@ -6,6 +6,30 @@
 
 ## New Features
 
+### Quick Map Pins
+
+  * When the ***Minimap is open*** you can now use a keyboard-shortcut to create a pin at your current position.
+  * See the `QuickMapPin` config-options to set the shortcut and default pin-name and pin-type.
+
+### Command: `add-map-pin`
+
+    add-map-pin [--position=<x,y,z>] [--pin-name=<string>] [--pin-type=<pin-type>] [--log]
+    add-map-pin [--pos=<x,y,z>] [--name=<string>] [--type=<pin-type>] [--log]
+
+    <pin-type> must be one of the following values:
+
+      Icon0    None      Shout          Hildir1
+      Icon1    Death     Ping           Hildir2
+      Icon2    Bed       RandomEvent    Hildir3
+      Icon3    Player    EventArea
+      Icon4    Boss
+
+  * Adds a new Minimap pin using the specified position, pin-name and pin-type.
+  * If `--position` **is not specified**, position will be set to your current player position.
+  * If `--pin-name` **is not specified**, pin-name will be set to empty.
+  * If `--pin-type` **is not specified**, pin-type will be set to `Icon3`.
+  * If `--log` **is specified**, confirmation message will be sent to chat-window and console.
+
 ### Pin Icon Tags
 
   * You can now use tags at the end of the pin name to customize the pin icon!
@@ -112,6 +136,7 @@
 
   - Teleport to map point
     - Hold `LeftShift` and click on the target point on the map.
+    - Note: this will use the vanilla `GetClosestPin()` logic to check if a pin-position can be used instead.
 
   * Teleport to pin position
     * Hold `LeftShift` and click on the target row in the *PinListPanel*.
