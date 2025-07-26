@@ -1,0 +1,11 @@
+{
+  "name": "PaperTrail",
+  "version_number": "1.0.0",
+  "author": "ComfyMods",
+  "description": "Providing proof-of-pickup per pickable.",
+  "website_url": "https://github.com/redseiko/ComfyMods/tree/main/PaperTrail",
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2202",
+    "ComfyMods-BetterZeeRouter-1.10.0"
+  ]
+}
