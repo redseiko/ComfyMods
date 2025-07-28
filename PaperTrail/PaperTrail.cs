@@ -24,6 +24,8 @@ public sealed class PaperTrail : BaseUnityPlugin {
     _logger = Logger;
 
     Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
+
+    PickHandler.Register();
   }
 
   public static void LogInfo(object obj) {

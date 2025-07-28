@@ -131,6 +131,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Handlers\PickHandler.cs" />
+    <Compile Include="Core\PickableManager.cs" />
     <Compile Include="PaperTrail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -140,6 +142,7 @@
     <None Include="manifest.json" ThunderstorePackage="true" />
     <None Include="README.md" ThunderstorePackage="true" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyAssembly" AfterTargets="Build">
     <Copy SourceFiles="$(TargetDir)$(AssemblyName).dll" DestinationFolder="$(PluginOutputPath)" />
