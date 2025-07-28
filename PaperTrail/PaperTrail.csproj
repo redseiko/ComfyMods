@@ -131,6 +131,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
+    <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Core\Handlers\PickHandler.cs" />
     <Compile Include="Core\Handlers\SetPickedHandler.cs" />
     <Compile Include="Core\PickableManager.cs" />

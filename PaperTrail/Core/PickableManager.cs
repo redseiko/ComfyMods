@@ -1,5 +1,6 @@
 ﻿namespace PaperTrail;
 
+using System.Collections.Generic;
 using System.IO;
 
 using UnityEngine;
@@ -20,9 +21,22 @@ public static class PickableManager {
     }
   }
 
+  public static readonly HashSet<int> PickablePrefabsToLog = [];
+
+  public static void SetPickablePrefabsToLog(IEnumerable<string> prefabs) {
+    PickablePrefabsToLog.Clear();
+
+    foreach (string prefab in prefabs) {
+      PickablePrefabsToLog.Add(prefab.GetStableHashCode());
+    }
+
+    PaperTrail.LogInfo($"Logging RPCs for {PickablePrefabsToLog.Count} Pickable prefabs.");
+  }
+
   public static void LogRPCPick(long senderPeerId, long targetPeerId, ZDOID targetZDOID, int bonus) {
     if (targetZDOID == ZDOID.None
-        || !ZDOMan.s_instance.m_objectsByID.TryGetValue(targetZDOID, out ZDO targetZDO)) {
+        || !ZDOMan.s_instance.m_objectsByID.TryGetValue(targetZDOID, out ZDO targetZDO)
+        || !PickablePrefabsToLog.Contains(targetZDO.m_prefab)) {
       return;
     }
 
@@ -31,8 +45,9 @@ public static class PickableManager {
     string logMessage =
         $"{System.DateTimeOffset.UtcNow.ToUnixTimeSeconds()},"
             + $"RPC_Pick,"
-            + $"{senderPeerId},{targetPeerId},\"{targetZDOID}\","
-            + $"{targetZDO.m_prefab},\"{targetPosition.x:F0},{targetPosition.y:F0},{targetPosition.z:F0}\","
+            + $"{targetZDO.m_prefab},"
+            + $"{senderPeerId},{targetPeerId},{targetZDOID},"
+            + $"{targetPosition.x:F0},{targetPosition.y:F0},{targetPosition.z:F0},"
             + $"{bonus}";
 
     _rpcPickLog.WriteLine(logMessage);
@@ -41,7 +56,8 @@ public static class PickableManager {
 
   public static void LogRPCSetPicked(long senderPeerId, long targetPeerId, ZDOID targetZDOID, bool picked) {
     if (targetZDOID == ZDOID.None
-        || !ZDOMan.s_instance.m_objectsByID.TryGetValue(targetZDOID, out ZDO targetZDO)) {
+        || !ZDOMan.s_instance.m_objectsByID.TryGetValue(targetZDOID, out ZDO targetZDO)
+        || !PickablePrefabsToLog.Contains(targetZDO.m_prefab)) {
       return;
     }
 
@@ -50,8 +66,9 @@ public static class PickableManager {
     string logMessage =
         $"{System.DateTimeOffset.UtcNow.ToUnixTimeSeconds()},"
             + $"RPC_SetPicked,"
-            + $"{senderPeerId},{targetPeerId},\"{targetZDOID}\","
-            + $"{targetZDO.m_prefab},\"{targetPosition.x:F0},{targetPosition.y:F0},{targetPosition.z:F0}\","
+            + $"{targetZDO.m_prefab},"
+            + $"{senderPeerId},{targetPeerId},{targetZDOID},"
+            + $"{targetPosition.x:F0},{targetPosition.y:F0},{targetPosition.z:F0},"
             + $"{picked}";
 
     _rpcPickLog.WriteLine(logMessage);

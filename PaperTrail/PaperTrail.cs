@@ -11,6 +11,8 @@ using BetterZeeRouter;
 
 using HarmonyLib;
 
+using static PluginConfig;
+
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 [BepInDependency(BetterZeeRouter.PluginGuid, BepInDependency.DependencyFlags.HardDependency)]
 public sealed class PaperTrail : BaseUnityPlugin {
@@ -22,6 +24,7 @@ public sealed class PaperTrail : BaseUnityPlugin {
 
   void Awake() {
     _logger = Logger;
+    BindConfig(Config);
 
     Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
 
