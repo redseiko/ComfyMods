@@ -25,7 +25,7 @@ public sealed class PaperTrail : BaseUnityPlugin {
 
     Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
 
-    PickHandler.Register();
+    PickableManager.Initialize();
   }
 
   public static void LogInfo(object obj) {

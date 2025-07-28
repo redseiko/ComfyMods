@@ -10,12 +10,17 @@ public sealed class PickHandler : RpcMethodHandler {
   static readonly PickHandler _instance = new();
 
   PickHandler() {
-    PickableManager.Initialize();
+    // ...
   }
 
   public override bool Process(ZRoutedRpc.RoutedRPCData routedRpcData) {
+    ZPackage parameters = routedRpcData.m_parameters;
+    parameters.SetPos(0);
+    int bonus = parameters.ReadInt();
+    parameters.SetPos(0);
+
     PickableManager.LogRPCPick(
-        routedRpcData.m_senderPeerID, routedRpcData.m_targetPeerID, routedRpcData.m_targetZDO);
+        routedRpcData.m_senderPeerID, routedRpcData.m_targetPeerID, routedRpcData.m_targetZDO, bonus);
 
     return true;
   }

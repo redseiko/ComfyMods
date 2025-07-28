@@ -132,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Handlers\PickHandler.cs" />
+    <Compile Include="Core\Handlers\SetPickedHandler.cs" />
     <Compile Include="Core\PickableManager.cs" />
     <Compile Include="PaperTrail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

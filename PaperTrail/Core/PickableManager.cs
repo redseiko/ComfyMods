@@ -7,15 +7,20 @@ using UnityEngine;
 public static class PickableManager {
   static StreamWriter _rpcPickLog = default;
 
-  public static void Initialize() {    
-    _rpcPickLog ??=
-        File.AppendText(
-            Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), "paper-trail-rpc-pick-log.txt"));
+  public static void Initialize() {
+    if (_rpcPickLog == default) {
+      _rpcPickLog =
+          File.AppendText(
+              Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), "paper-trail-rpc-log.txt"));
 
-    _rpcPickLog.AutoFlush = true;
+      _rpcPickLog.AutoFlush = true;
+
+      PickHandler.Register();
+      SetPickedHandler.Register();
+    }
   }
 
-  public static void LogRPCPick(long senderPeerId, long targetPeerId, ZDOID targetZDOID) {
+  public static void LogRPCPick(long senderPeerId, long targetPeerId, ZDOID targetZDOID, int bonus) {
     if (targetZDOID == ZDOID.None
         || !ZDOMan.s_instance.m_objectsByID.TryGetValue(targetZDOID, out ZDO targetZDO)) {
       return;
@@ -25,12 +30,31 @@ public static class PickableManager {
 
     string logMessage =
         $"{System.DateTimeOffset.UtcNow.ToUnixTimeSeconds()},"
+            + $"RPC_Pick,"
             + $"{senderPeerId},{targetPeerId},\"{targetZDOID}\","
             + $"{targetZDO.m_prefab},\"{targetPosition.x:F0},{targetPosition.y:F0},{targetPosition.z:F0}\","
-            + $"{targetZDO.GetInt(ZDOVars.s_picked, -1)},{targetZDO.GetLong(ZDOVars.s_pickedTime, -1)},"
-            + $"{targetZDO.GetInt(ZDOVars.s_enabled, -1)}";
+            + $"{bonus}";
 
     _rpcPickLog.WriteLine(logMessage);
     PaperTrail.LogInfo(logMessage);
-  }  
+  }
+
+  public static void LogRPCSetPicked(long senderPeerId, long targetPeerId, ZDOID targetZDOID, bool picked) {
+    if (targetZDOID == ZDOID.None
+        || !ZDOMan.s_instance.m_objectsByID.TryGetValue(targetZDOID, out ZDO targetZDO)) {
+      return;
+    }
+
+    Vector3 targetPosition = targetZDO.m_position;
+
+    string logMessage =
+        $"{System.DateTimeOffset.UtcNow.ToUnixTimeSeconds()},"
+            + $"RPC_SetPicked,"
+            + $"{senderPeerId},{targetPeerId},\"{targetZDOID}\","
+            + $"{targetZDO.m_prefab},\"{targetPosition.x:F0},{targetPosition.y:F0},{targetPosition.z:F0}\","
+            + $"{picked}";
+
+    _rpcPickLog.WriteLine(logMessage);
+    PaperTrail.LogInfo(logMessage);
+  }
 }
