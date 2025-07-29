@@ -19,6 +19,20 @@ public static class PluginConfig {
   public static ConfigEntry<Color> PositionValueYTextColor { get; private set; }
   public static ConfigEntry<Color> PositionValueZTextColor { get; private set; }
 
+  public enum PositionValueOrder {
+    XYZ,
+    XZY,
+  }
+
+  public enum PositionValueSeparator {
+    Space,
+    Comma
+  }
+
+  public static ConfigEntry<string> CopyPositionValuePrefix { get; private set; }
+  public static ConfigEntry<PositionValueSeparator> CopyPositionValueSeparator { get; private set; }
+  public static ConfigEntry<PositionValueOrder> CopyPositionValueOrder { get; private set; }
+
   public static ConfigEntry<bool> ShowZDOManagerContent { get; private set; }
 
   public static ConfigEntry<bool> ShowSectorZdoCountGrid { get; private set; }
@@ -118,6 +132,27 @@ public static class PluginConfig {
             "SectorInfoPanel.PositionRow.Z value text color.");
 
     PositionValueZTextColor.OnSettingChanged(SetSectorInfoPanelStyle);
+
+    CopyPositionValuePrefix =
+        config.BindInOrder(
+            "SectorInfoPanel.CopyPosition",
+            "copyPositionValuePrefix",
+            "Position: ",
+            "Prefix to prepend to position text when copied to clipboard.");
+
+    CopyPositionValueSeparator =
+        config.BindInOrder(
+            "SectorInfoPanel.CopyPosition",
+            "copyPositionValueSeparator",
+            PositionValueSeparator.Space,
+            "Separator to use between the position XYZ values when copied to clipboard.");
+
+    CopyPositionValueOrder =
+        config.BindInOrder(
+            "SectorInfoPanel.CopyPosition",
+            "copyPositionValueOrder",
+            PositionValueOrder.XYZ,
+            "Order of the position XYZ values when copied to clipboard.");
 
     ShowZDOManagerContent =
         config.BindInOrder(

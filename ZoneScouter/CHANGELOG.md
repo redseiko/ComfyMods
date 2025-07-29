@@ -1,5 +1,14 @@
 ## Changelog
 
+### 1.8.0
+
+  * Added new config-section `SectorInfoPanel.CopyPosition` with config-options:
+    * `copyPositionValuePrefix`
+    * `copyPositionValueSeparator`
+    * `copyPositionValueOrder`
+  * Modified the behaviour of the "Copy" button to use the new config-options above.
+  * Updated icon.
+
 ### 1.7.0
 
   * Updated for the `v0.220.5` patch.

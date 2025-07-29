@@ -42,11 +42,11 @@ public static class SectorInfoPanelController {
           .SetAsFirstSibling();
 
       SectorInfoPanel.PanelDragger.OnPanelEndDrag += OnSectorInfoPanelEndDrag;
+      SectorInfoPanel.CopyPositionButton.Button.onClick.AddListener(CopyPlayerPositionToClipboard);
 
       SectorInfoPanel.Panel.SetActive(true);
       _updateSectorInfoPanelCoroutine = Hud.m_instance.StartCoroutine(UpdateSectorInfoPanelCoroutine());
     }
-
 
     ToggleSectorZdoCountGrid();
   }
@@ -160,5 +160,28 @@ public static class SectorInfoPanelController {
 
       yield return waitInterval;
     }
+  }
+
+  public static void CopyPlayerPositionToClipboard() {
+    if (Player.m_localPlayer) {
+      CopyPositionToClipboard(Player.m_localPlayer.transform.position);
+    }
+  }
+
+  public static void CopyPositionToClipboard(Vector3 targetPosition) {
+    string prefix = CopyPositionValuePrefix.Value;
+
+    string separator =
+        CopyPositionValueSeparator.Value == PositionValueSeparator.Space
+            ? " "
+            : ",";
+
+    string text =
+        CopyPositionValueOrder.Value == PositionValueOrder.XYZ
+            ? $"{prefix}{targetPosition.x:F0}{separator}{targetPosition.y:F0}{separator}{targetPosition.z:F0}"
+            : $"{prefix}{targetPosition.x:F0}{separator}{targetPosition.z:F0}{separator}{targetPosition.y:F0}";
+
+    GUIUtility.systemCopyBuffer = text;
+    Chat.instance.AddMessage($"Copied to clipboard: {text}");
   }
 }

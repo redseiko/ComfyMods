@@ -47,4 +47,4 @@
   * This is the *good enough* release with more features/options to be added later.
   * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/ZoneScouter).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
-  * Check out our community driven listing site at: [valheimlist.org](https://valheimlist.org/)
+  * Icon modified from the original using Gemini.

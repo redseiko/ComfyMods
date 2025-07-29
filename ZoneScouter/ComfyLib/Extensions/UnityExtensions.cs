@@ -4,6 +4,15 @@ using System;
 
 using UnityEngine;
 
+public static class ChatExtensions {
+  public static void AddMessage(this Chat chat, object obj) {
+    if (chat) {
+      chat.AddString(obj.ToString());
+      chat.m_hideTimer = 0f;
+    }
+  }
+}
+
 public static class ComponentExtensions {
   public static T GetOrAddComponent<T>(this Component component) where T : Component {
     return component.gameObject.TryGetComponent(out T existingComponent)

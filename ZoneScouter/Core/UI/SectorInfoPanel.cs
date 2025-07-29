@@ -81,17 +81,6 @@ public sealed class SectorInfoPanel {
         .SetSizeDelta(new(80f, 0f));
 
     CopyPositionButton.Label.text = "Copy";
-    CopyPositionButton.Button.onClick.AddListener(CopyPositionToClipboard);
-  }
-
-  void CopyPositionToClipboard() {
-    string text =
-        ZInput.GetKey(KeyCode.LeftShift, false)
-            ? $"Position (XZY): {PositionX.Value.text} {PositionZ.Value.text} {PositionY.Value.text}"
-            : $"Position (XYZ): {PositionX.Value.text} {PositionY.Value.text} {PositionZ.Value.text}";
-
-    GUIUtility.systemCopyBuffer = text;
-    Chat.instance.AddString($"Copied to clipboard: {text}");
   }
 
   public void ToggleCopyButtons(bool toggleOn) {
