@@ -12,7 +12,7 @@ using static PluginConfig;
 public sealed class TorchesAndResin : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.torchesandresin";
   public const string PluginName = "TorchesAndResin";
-  public const string PluginVersion = "1.6.0";
+  public const string PluginVersion = "1.7.0";
 
   void Awake() {
     BindConfig(Config);

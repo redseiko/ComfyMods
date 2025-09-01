@@ -2,6 +2,8 @@
 
 using System.Collections.Generic;
 
+using static PluginConfig;
+
 public static class FireplaceManager {
   public static readonly HashSet<int> EligibleFireplaceHashCodes = [
     "Candle_resin".GetStableHashCode(),
@@ -23,9 +25,19 @@ public static class FireplaceManager {
 
     fireplace.m_startFuel = startingFuel;
 
-    if (netView.IsOwner()
-        && (!zdo.GetFloat(ZDOVars.s_fuel, out float currentFuel) || currentFuel < startingFuel)) {
+    if (!netView.IsOwner()) {
+      return;
+    }
+
+    if (!zdo.GetFloat(ZDOVars.s_fuel, out float currentFuel) || currentFuel < startingFuel) {
       zdo.Set(ZDOVars.s_fuel, startingFuel);
+    }
+
+    if (fireplace.m_canTurnOff
+        && CandleAlwaysToggleOn.Value
+        && zdo.GetInt(ZDOVars.s_state, out int fireplaceState)
+        && fireplaceState != 1) {
+      zdo.Set(ZDOVars.s_state, 1);
     }
   }
 }

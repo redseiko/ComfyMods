@@ -55,9 +55,8 @@
     <PluginOutputPath Condition=" '$(PluginOutputPath)' == ''">$(GamePath)\BepInEx\plugins</PluginOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
+    <Reference Include="0Harmony" Private="false">
       <HintPath>$(GamePath)\BepInEx\core\0Harmony.dll</HintPath>
-      <Private>false</Private>
     </Reference>
     <Reference Include="assembly_guiutils_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_guiutils_publicized.dll</HintPath>

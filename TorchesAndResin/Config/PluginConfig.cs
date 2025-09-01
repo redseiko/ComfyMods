@@ -8,6 +8,8 @@ public static class PluginConfig {
   public static ConfigEntry<bool> IsModEnabled { get; private set; }
 
   public static ConfigEntry<int> TorchStartingFuel { get; private set; }
+  public static ConfigEntry<bool> CandleHoverTextShowFuel { get; private set; }
+  public static ConfigEntry<bool> CandleAlwaysToggleOn { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
     IsModEnabled =
@@ -24,5 +26,19 @@ public static class PluginConfig {
             10000,
             "Value to set eligible torches' starting fuel to.",
             new AcceptableValueRange<int>(10000, 99999));
+
+    CandleHoverTextShowFuel =
+        config.BindInOrder(
+            "Candle",
+            "candleHoverTextShowFuel",
+            true,
+            "When true, will show the remaining fuel for candles in its hover-text.");
+
+    CandleAlwaysToggleOn =
+        config.BindInOrder(
+            "Candle",
+            "candleAlwaysToggleOn",
+            true,
+            "When true, eligible candles will always be toggled-on.");
   }
 }

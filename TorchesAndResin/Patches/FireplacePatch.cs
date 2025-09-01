@@ -43,4 +43,32 @@ static class FireplacePatch {
       FireplaceManager.SetEligibleFireplaceFuel(fireplace, TorchStartingFuel.Value);
     }
   }
+
+  [HarmonyTranspiler]
+  [HarmonyPatch(nameof(Fireplace.GetHoverText))]
+  static IEnumerable<CodeInstruction> GetHoverTextTranspiler(
+      IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
+    return new CodeMatcher(instructions, generator)
+        .Start()
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldloc_1),
+            new CodeMatch(OpCodes.Ldstr, "\n[<color=yellow><b>$KEY_Use</b></color>] $piece_use"),
+            new CodeMatch(OpCodes.Call),
+            new CodeMatch(OpCodes.Stloc_1))
+        .ThrowIfInvalid($"Could not patch Fireplace.GetHoverText()! (can-turn-off-text)")
+        .Advance(offset: 2)
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Ldloc_0),
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(FireplacePatch), nameof(CanTurnOffHoverTextDelegate))))
+        .InstructionEnumeration();
+  }
+
+  static string CanTurnOffHoverTextDelegate(string hoverText, float fuel) {
+    if (IsModEnabled.Value && CandleHoverTextShowFuel.Value) {
+      return $"\n( $piece_fire_fuel {fuel:F2} )\n[<color=yellow><b>$KEY_Use</b></color>] $piece_use";
+    }
+
+    return hoverText;
+  }
 }

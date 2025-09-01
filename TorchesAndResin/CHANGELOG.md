@@ -1,5 +1,14 @@
 ## Changelog
 
+### 1.7.0
+
+  * Added new hover-text for candles to show their fuel-value.
+  * Added logic to toggle-on candles when setting their fuel-value.
+  * Added new config-options to control the new features above:
+    * `[Candle] candleHoverTextShowFuel`
+    * `[Candle] candleAlwaysToggleOn`
+  * Updated mod icon.
+
 ### 1.6.0
 
   * Updated for the `v0.220.5` patch.

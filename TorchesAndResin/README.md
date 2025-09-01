@@ -17,7 +17,13 @@
   * piece_brazierfloor01
   * fire_pit_iron
 
+## Candles
+
+  * Eligible candles will be toggled-on when their fuel is set.
+  * Show the remaining fuel for candles when they are hovered-over.
+
 ### Notes
 
   * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/TorchesAndResin).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
+  * Icon modified from the original using Gemini.
