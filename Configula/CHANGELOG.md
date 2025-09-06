@@ -1,5 +1,12 @@
 ## Changelog
 
+### 1.2.0
+
+  * Bumped up `<LangVersion>` to C# 12.
+  * Added new alternate `DrawTooltip()` functionality and config-options:
+    * `[Tooltip] useAlternateDrawTooltip`
+    * `[Tooltip] alternateTooltipWidth`
+
 ### 1.1.0
 
   * Bumped up `<LangVersion>` to C# 10.
