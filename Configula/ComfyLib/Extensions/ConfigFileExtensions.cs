@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using BepInEx.Configuration;
 
 public static class ConfigFileExtensions {
-  static readonly Dictionary<string, int> _sectionToSettingOrder = new();
+  static readonly Dictionary<string, int> _sectionToSettingOrder = [];
 
   static int GetSettingOrder(string section) {
     if (!_sectionToSettingOrder.TryGetValue(section, out int order)) {
@@ -23,7 +23,12 @@ public static class ConfigFileExtensions {
       string key,
       T defaultValue,
       string description,
-      AcceptableValueBase acceptableValues) {
+      AcceptableValueBase acceptableValues,
+      bool browsable = true,
+      bool hideDefaultButton = false,
+      bool hideSettingName = false,
+      bool isAdvanced = false,
+      bool readOnly = false) {
     return config.Bind(
         section,
         key,
@@ -32,7 +37,13 @@ public static class ConfigFileExtensions {
             description,
             acceptableValues,
             new ConfigurationManagerAttributes {
-              Order = GetSettingOrder(section)
+              Browsable = browsable,
+              CustomDrawer = default,
+              HideDefaultButton = hideDefaultButton,
+              HideSettingName = hideSettingName,
+              IsAdvanced = isAdvanced,
+              Order = GetSettingOrder(section),
+              ReadOnly = readOnly,
             }));
   }
 
@@ -54,7 +65,7 @@ public static class ConfigFileExtensions {
         defaultValue,
         new ConfigDescription(
             description,
-            null,
+            acceptableValues: default,
             new ConfigurationManagerAttributes {
               Browsable = browsable,
               CustomDrawer = customDrawer,

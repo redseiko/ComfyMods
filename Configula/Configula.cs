@@ -1,4 +1,6 @@
-﻿using System;
+﻿namespace Configula;
+
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -10,27 +12,20 @@ using HarmonyLib;
 
 using UnityEngine;
 
-using static Configula.PluginConfig;
+using static PluginConfig;
 
-namespace Configula; 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
-[BepInDependency(ConfigurationManager.ConfigurationManager.GUID, BepInDependency.DependencyFlags.HardDependency)]
+[BepInDependency(ConfigurationManager.GUID, BepInDependency.DependencyFlags.HardDependency)]
 public sealed class Configula : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.configula";
   public const string PluginName = "Configula";
-  public const string PluginVersion = "1.1.0";
-
-  Harmony _harmony;
+  public const string PluginVersion = "1.2.0";
 
   void Awake() {
     BindConfig(Config);
     BindSettingDrawHandlers();
 
-    _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
-  }
-
-  void OnDestroy() {
-    _harmony?.UnpatchSelf();
+    Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
   }
 
   static void BindSettingDrawHandlers() {
