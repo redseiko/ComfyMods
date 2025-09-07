@@ -113,6 +113,7 @@
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Core\VolumeController.cs" />
     <Compile Include="Patches\AudioManPatch.cs" />
+    <Compile Include="Patches\EffectFadePatch.cs" />
     <Compile Include="Patches\ZSFXPatch.cs" />
     <Compile Include="Volumetry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
