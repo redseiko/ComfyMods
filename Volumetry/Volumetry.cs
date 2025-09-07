@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class Volumetry : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.volumetry";
   public const string PluginName = "Volumetry";
-  public const string PluginVersion = "0.5.0";
+  public const string PluginVersion = "0.5.1";
 
   static ManualLogSource _logger;
 

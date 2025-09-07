@@ -1,6 +1,5 @@
 ﻿namespace Volumetry;
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,6 +69,7 @@ public static class PluginConfig {
             GetSfxHistory);
 
     SfxVolumeOverrides.ConfigEntry.OnSettingChanged(OnSfxVolumeOverridesChanged);
+    OnSfxVolumeOverridesChanged();
 
     EffectFadeVolumeOverrides =
         new(
@@ -81,6 +81,7 @@ public static class PluginConfig {
             GetEffectFadeHistory);
 
     EffectFadeVolumeOverrides.ConfigEntry.OnSettingChanged(OnEffectFadeVolumeOverridesChanged);
+    OnEffectFadeVolumeOverridesChanged();
   }
 
   static IEnumerable<SearchOption> GetSfxHistory() {
@@ -90,10 +91,14 @@ public static class PluginConfig {
   // TODO: encapsulate all of this into a reuseable class like DelayableOnSettingChangedSomething.
 
   static void OnSfxVolumeOverridesChanged() {
-    _sfxVolumeChangedCoroutineEnd = Time.time + 0.35f;
+    if (MonoUpdaters.s_instance) {
+      _sfxVolumeChangedCoroutineEnd = Time.time + 0.35f;
 
-    if (_sfxVolumeChangedCoroutine == default) {
-      _sfxVolumeChangedCoroutine = MonoUpdaters.s_instance.StartCoroutine(OnSfxVolumeOverridesChangedCoroutine());
+      if (_sfxVolumeChangedCoroutine == default) {
+        _sfxVolumeChangedCoroutine = MonoUpdaters.s_instance.StartCoroutine(OnSfxVolumeOverridesChangedCoroutine());
+      }
+    } else {
+      VolumeController.SetupSfxVolumeOverrides(SfxVolumeOverrides.GetToggledValues());
     }
   }
 
@@ -105,13 +110,7 @@ public static class PluginConfig {
       yield return null;
     }
 
-    VolumeController.SfxVolumeOverrideMap.Clear();
-
-    foreach ((string name, float volume) in SfxVolumeOverrides.GetToggledValues()) {
-      VolumeController.SfxVolumeOverrideMap[name] = volume;
-    }
-
-    Volumetry.LogInfo($"SFX volume overrides: {VolumeController.SfxVolumeOverrideMap.Count}");
+    VolumeController.SetupSfxVolumeOverrides(SfxVolumeOverrides.GetToggledValues());
     VolumeController.ProcessCurrentSfx();
 
     _sfxVolumeChangedCoroutine = default;
@@ -122,11 +121,15 @@ public static class PluginConfig {
   }
 
   static void OnEffectFadeVolumeOverridesChanged() {
-    _effectFadeChangedCoroutineEnd = Time.time + 0.35f;
+    if (MonoUpdaters.s_instance) {
+      _effectFadeChangedCoroutineEnd = Time.time + 0.35f;
 
-    if (_effectFadeChangedCoroutine == default) {
-      _effectFadeChangedCoroutine =
-          MonoUpdaters.s_instance.StartCoroutine(OnEffectFadeVolumeOverridesChangedCoroutine());
+      if (_effectFadeChangedCoroutine == default) {
+        _effectFadeChangedCoroutine =
+            MonoUpdaters.s_instance.StartCoroutine(OnEffectFadeVolumeOverridesChangedCoroutine());
+      }
+    } else {
+      VolumeController.SetupEffectFadeVolumeOverrides(EffectFadeVolumeOverrides.GetToggledValues());
     }
   }
 
@@ -138,13 +141,7 @@ public static class PluginConfig {
       yield return null;
     }
 
-    VolumeController.EffectFadeVolumeOverrideMap.Clear();
-
-    foreach ((string name, float volume) in EffectFadeVolumeOverrides.GetToggledValues()) {
-      VolumeController.EffectFadeVolumeOverrideMap[name] = volume;
-    }
-
-    Volumetry.LogInfo($"EffectFade volume overrides: {VolumeController.EffectFadeVolumeOverrideMap.Count}");
+    VolumeController.SetupEffectFadeVolumeOverrides(EffectFadeVolumeOverrides.GetToggledValues());
     VolumeController.ProcessCurrentEffectFade();
 
     _effectFadeChangedCoroutine = default;

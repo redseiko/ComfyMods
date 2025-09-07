@@ -11,6 +11,16 @@ public static class VolumeController {
   public static readonly CircularQueue<SearchOption> SfxHistorySearchOptions = new(50);
   public static readonly Dictionary<string, float> SfxVolumeOverrideMap = [];
 
+  public static void SetupSfxVolumeOverrides(IEnumerable<(string, float)> volumeOverrides) {
+    SfxVolumeOverrideMap.Clear();
+
+    foreach ((string name, float volume) in volumeOverrides) {
+      SfxVolumeOverrideMap[name] = volume;
+    }
+
+    Volumetry.LogInfo($"SFX volume overrides: {SfxVolumeOverrideMap.Count}");
+  }
+
   public static void ProcessSfx(ZSFX sfx) {
     string sfxName = Utils.GetPrefabName(sfx.name);
     string clipName = sfx.m_audioSource.clip.name;
@@ -52,6 +62,16 @@ public static class VolumeController {
 
   public static readonly CircularQueue<SearchOption> EffectFadeHistorySearchOptions = new(50);
   public static readonly Dictionary<string, float> EffectFadeVolumeOverrideMap = [];
+
+  public static void SetupEffectFadeVolumeOverrides(IEnumerable<(string, float)> volumeOverrides) {
+    EffectFadeVolumeOverrideMap.Clear();
+
+    foreach ((string name, float volume) in volumeOverrides) {
+      EffectFadeVolumeOverrideMap[name] = volume;
+    }
+
+    Volumetry.LogInfo($"EffectFade volume overrides: {EffectFadeVolumeOverrideMap.Count}");
+  }
 
   static bool TryGetEffectFadeVolumeOverride(EffectFade effectFade, out float volume) {
     return
