@@ -1,6 +1,7 @@
 ﻿namespace Shortcuts;
 
 using System.Collections.Generic;
+using System.Reflection.Emit;
 
 using HarmonyLib;
 
@@ -15,7 +16,9 @@ static class GameCameraPatch {
   static IEnumerable<CodeInstruction> LateUpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
         .MatchGetKeyDown(0x124)
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(TakeScreenshotDelegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(GameCameraPatch), nameof(TakeScreenshotDelegate))))
         .InstructionEnumeration();
   }
 
@@ -28,9 +31,12 @@ static class GameCameraPatch {
   static IEnumerable<CodeInstruction> UpdateMouseCaptureTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
         .MatchGetKey(0x132)
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(IgnoreKeyDelegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(GameCameraPatch), nameof(IgnoreKeyDelegate))))
         .MatchGetKeyDown(0x11A)
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(ToggleMouseCaptureDelegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(GameCameraPatch), nameof(ToggleMouseCaptureDelegate))))
         .InstructionEnumeration();
   }
 

@@ -1,6 +1,7 @@
 ﻿namespace Shortcuts;
 
 using System.Collections.Generic;
+using System.Reflection.Emit;
 
 using HarmonyLib;
 
@@ -15,7 +16,9 @@ static class FejdStartupPatch {
   static IEnumerable<CodeInstruction> LateUpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
         .MatchGetKeyDown(0x124)
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(TakeScreenshotDelegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(FejdStartupPatch), nameof(TakeScreenshotDelegate))))
         .InstructionEnumeration();
   }
 

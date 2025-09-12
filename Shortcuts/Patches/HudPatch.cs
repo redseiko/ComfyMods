@@ -1,6 +1,7 @@
 ﻿namespace Shortcuts;
 
 using System.Collections.Generic;
+using System.Reflection.Emit;
 
 using HarmonyLib;
 
@@ -15,9 +16,11 @@ static class HudPatch {
   static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
         .MatchGetKeyDown(0x11C)
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(ToggleHudDelegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HudPatch), nameof(ToggleHudDelegate))))
         .MatchGetKey(0x132)
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(IgnoreKeyDelegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HudPatch), nameof(IgnoreKeyDelegate))))
         .InstructionEnumeration();
   }
 

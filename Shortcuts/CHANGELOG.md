@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.8.0
+
+  * Fixed for the `v0.221.4` patch.
+  * Created `ZInput.Constructor` postfix-patch as entry-point to bind shortcut-configs.
+
 ### 1.7.0
 
   * Fixed for the `v0.218.14` patch.

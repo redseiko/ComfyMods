@@ -12,7 +12,7 @@ using static PluginConfig;
 public sealed class Shortcuts : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.shortcuts";
   public const string PluginName = "Shortcuts";
-  public const string PluginVersion = "1.7.0";
+  public const string PluginVersion = "1.8.0";
 
   void Awake() {
     BindConfig(Config);

@@ -7,6 +7,7 @@ using ComfyLib;
 using UnityEngine;
 
 public static class PluginConfig {
+  public static ConfigFile CurrentConfig { get; private set; }
   public static ConfigEntry<bool> IsModEnabled { get; private set; } 
 
   public static ShortcutConfigEntry ToggleConsoleShortcut { get; private set; } 
@@ -31,10 +32,17 @@ public static class PluginConfig {
   public static ShortcutConfigEntry HotbarItem8Shortcut { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
+    CurrentConfig = config;
+
     IsModEnabled =
         config.BindInOrder(
-            "_Global", "isModEnabled", true, "Globally enable or disable this mod (restart required).");
+            "_Global",
+            "isModEnabled",
+            true,
+            "Globally enable or disable this mod (restart required).");
+  }
 
+  public static void BindShortcutConfig(ConfigFile config) {
     ToggleConsoleShortcut =
         new(
             config.BindInOrder(

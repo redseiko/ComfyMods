@@ -1,6 +1,7 @@
 ﻿namespace Shortcuts;
 
 using System.Collections.Generic;
+using System.Reflection.Emit;
 
 using HarmonyLib;
 
@@ -13,7 +14,8 @@ static class ConsolePatch {
   static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
         .MatchGetButtonDown("Console")
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(ToggleConsoleDelgate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ConsolePatch), nameof(ToggleConsoleDelgate))))
         .InstructionEnumeration();
   }
 

@@ -1,6 +1,7 @@
 ﻿namespace Shortcuts;
 
 using System.Collections.Generic;
+using System.Reflection.Emit;
 
 using HarmonyLib;
 
@@ -15,29 +16,43 @@ static class PlayerPatch {
   static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
         .MatchGetKeyDown(0x7A)
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(ToggleDebugFlyDelegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(ToggleDebugFlyDelegate))))
         .MatchGetKeyDown(0x62)
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(ToggleDebugNoCostDelegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(ToggleDebugNoCostDelegate))))
         .MatchGetKeyDown(0x6B)
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(DebugKillAllDelegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(DebugKillAllDelegate))))
         .MatchGetKeyDown(0x6C)
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(DebugRemoveDropsDelegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(DebugRemoveDropsDelegate))))
         .MatchGetButtonDown("Hotbar1")
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(HotbarItem1Delegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem1Delegate))))
         .MatchGetButtonDown("Hotbar2")
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(HotbarItem2Delegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem2Delegate))))
         .MatchGetButtonDown("Hotbar3")
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(HotbarItem3Delegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem3Delegate))))
         .MatchGetButtonDown("Hotbar4")
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(HotbarItem4Delegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem4Delegate))))
         .MatchGetButtonDown("Hotbar5")
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(HotbarItem5Delegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem5Delegate))))
         .MatchGetButtonDown("Hotbar6")
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(HotbarItem6Delegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem6Delegate))))
         .MatchGetButtonDown("Hotbar7")
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(HotbarItem7Delegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem7Delegate))))
         .MatchGetButtonDown("Hotbar8")
-        .SetInstructionAndAdvance(Transpilers.EmitDelegate(HotbarItem8Delegate))
+        .SetInstructionAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem8Delegate))))
         .InstructionEnumeration();
   }
 
