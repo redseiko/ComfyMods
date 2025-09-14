@@ -55,7 +55,10 @@ public static class TerminalCommands {
   }
 
   static void UpdateCommandLists() {
-    foreach (Terminal terminal in UnityEngine.Object.FindObjectsOfType<Terminal>(includeInactive: true)) {
+    foreach (
+        Terminal terminal in
+            UnityEngine.Object.FindObjectsByType<Terminal>(
+                UnityEngine.FindObjectsInactive.Include, UnityEngine.FindObjectsSortMode.None)) {
       terminal.updateCommandList();
     }
   }

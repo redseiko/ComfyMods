@@ -240,6 +240,18 @@ public static class LayoutElementExtensions {
   }
 }
 
+public static class RectMask2DExtensions {
+  public static T SetPadding<T>(this T rectMask, Vector4 padding) where T : RectMask2D {
+    rectMask.padding = padding;
+    return rectMask;
+  }
+
+  public static T SetSoftness<T>(this T rectMask, Vector2Int softness) where T : RectMask2D {
+    rectMask.softness = softness;
+    return rectMask;
+  }
+}
+
 public static class RectTransformExtensions {
   public static RectTransform SetAnchorMin(this RectTransform rectTransform, Vector2 anchorMin) {
     rectTransform.anchorMin = anchorMin;
@@ -401,6 +413,11 @@ public static class ScrollRectExtensions {
 public static class TextMeshProExtensions {
   public static T SetAlignment<T>(this T tmpText, TextAlignmentOptions alignment) where T : TMP_Text {
     tmpText.alignment = alignment;
+    return tmpText;
+  }
+
+  public static T SetCharacterSpacing<T>(this T tmpText, float characterSpacing) where T : TMP_Text {
+    tmpText.characterSpacing = characterSpacing;
     return tmpText;
   }
 

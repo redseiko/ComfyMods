@@ -1,5 +1,11 @@
 ## Changelog
 
+### 2.12.0
+
+  * Fixed for the `v2.221.4` patch.
+  * Fixed scroll-sensitivity issue when scrolling chat-panel with mouse-wheel.
+  * Added new config-option `[ChatPanel.Scrolling] scrollContentScrollSensitivity` to customize scroll-sensitivity.
+
 ### 2.11.0
 
   * Fixed for the `v0.220.3` patch.

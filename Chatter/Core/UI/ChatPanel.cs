@@ -5,6 +5,8 @@ using ComfyLib;
 using UnityEngine;
 using UnityEngine.UI;
 
+using static PluginConfig;
+
 public sealed class ChatPanel {
   public GameObject Panel { get; private set; }
   public RectTransform PanelRectTransform { get; private set; }
@@ -131,12 +133,13 @@ public sealed class ChatPanel {
   ScrollRect CreateChildScrollRect(GameObject viewport, GameObject content) {
     ScrollRect scrollRect = viewport.AddComponent<ScrollRect>();
 
-    scrollRect.viewport = viewport.GetComponent<RectTransform>();
-    scrollRect.content = content.GetComponent<RectTransform>();
-    scrollRect.horizontal = false;
-    scrollRect.vertical = true;
-    scrollRect.movementType = ScrollRect.MovementType.Elastic;
-    scrollRect.scrollSensitivity = 20f;
+    scrollRect
+        .SetViewport(viewport.GetComponent<RectTransform>())
+        .SetContent(content.GetComponent<RectTransform>())
+        .SetHorizontal(false)
+        .SetVertical(true)
+        .SetMovementType(ScrollRect.MovementType.Elastic)
+        .SetScrollSensitivity(ScrollContentScrollSensitivity.Value);
 
     return scrollRect;
   }

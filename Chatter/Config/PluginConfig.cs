@@ -15,7 +15,7 @@ using TMPro;
 using UnityEngine;
 
 public static class PluginConfig {
-  public static ConfigFile Config { get; private set; }
+  public static ConfigFile CurrentConfig { get; private set; }
   public static ConfigEntry<bool> IsModEnabled { get; private set; }
 
   // Panel
@@ -31,6 +31,8 @@ public static class PluginConfig {
   public static ConfigEntry<KeyboardShortcut> ScrollContentUpShortcut { get; private set; }
   public static ConfigEntry<KeyboardShortcut> ScrollContentDownShortcut { get; private set; }
   public static ConfigEntry<float> ScrollContentOffsetInterval { get; private set; }
+
+  public static ConfigEntry<float> ScrollContentScrollSensitivity { get; private set; }
 
   // Content
   public static ConfigEntry<bool> ShowMessageHudCenterMessages { get; private set; }
@@ -64,9 +66,14 @@ public static class PluginConfig {
   public static ConfigEntry<string> ChatMessageUsernamePostfix { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
-    Config = config;
+    CurrentConfig = config;
 
-    IsModEnabled = config.Bind("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
+    IsModEnabled =
+        config.Bind(
+            "_Global",
+            "isModEnabled",
+            true,
+            "Globally enable or disable this mod.");
 
     IsModEnabled.OnSettingChanged(ChatPanelController.ToggleChatter);
 
@@ -138,6 +145,16 @@ public static class PluginConfig {
             defaultValue: 200f,
             "Interval (in pixels) to scroll the ChatPanel content up/down.",
             new AcceptableValueRange<float>(-1000f, 1000f));
+
+    ScrollContentScrollSensitivity =
+        config.BindInOrder(
+            "ChatPanel.Scrolling",
+            "scrollContentScrollSensitivity",
+            defaultValue: 1000f,
+            "ChatPanel content ScrollRect.scrollSensitivity value.",
+            new AcceptableValueRange<float>(0f, 2000f));
+
+    ScrollContentScrollSensitivity.OnSettingChanged(ChatPanelController.SetScrollContentScrollSensitivity);
 
     // Content
     ShowMessageHudCenterMessages =
@@ -406,7 +423,7 @@ public static class PluginConfig {
     [HarmonyPatch(nameof(FejdStartup.Awake))]
     static void AwakePostfix() {
       while (_fejdStartupBindConfigQueue.Count > 0) {
-        _fejdStartupBindConfigQueue.Dequeue()?.Invoke(Config);
+        _fejdStartupBindConfigQueue.Dequeue()?.Invoke(CurrentConfig);
       }
     }
   }

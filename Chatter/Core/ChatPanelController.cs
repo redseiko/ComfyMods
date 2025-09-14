@@ -58,6 +58,12 @@ public static class ChatPanelController {
     ChatPanel.Panel.SetActive(toggleOn);
   }
 
+  public static void SetScrollContentScrollSensitivity(float scrollSensitivity) {
+    if (TryGetChatPanel(out ChatPanel chatPanel)) {
+      chatPanel.ContentScrollRect.SetScrollSensitivity(scrollSensitivity);
+    }
+  }
+
   public static bool TryGetChatPanel(out ChatPanel chatPanel) {
     chatPanel = ChatPanel;
     return chatPanel?.Panel;
