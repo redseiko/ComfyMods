@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="Current" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -82,12 +82,20 @@
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\SoftReferenceableAssets_publicized.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Splatform_publicized">
+      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\Splatform_publicized.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Unity.InputSystem">
+      <HintPath>$(GamePath)\valheim_Data\Managed\Unity.InputSystem.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="Unity.TextMeshPro_publicized">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\Unity.TextMeshPro_publicized.dll</HintPath>
       <Private>False</Private>
@@ -138,34 +146,34 @@
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="ComfyLib\Utils\IsExternalInit.cs" />
+    <Compile Include="ComfyLib\Utils\ReflectionUtils.cs" />
+    <Compile Include="Config\PluginConfig.cs" />
+    <Compile Include="Core\Extensions\PieceExtensions.cs" />
+    <Compile Include="Core\Extensions\PieceRequirementExtensions.cs" />
+    <Compile Include="Core\Extensions\PieceTableExtensions.cs" />
     <Compile Include="Core\Pieces\BuilderShop.cs" />
     <Compile Include="Core\Pieces\CreatorShop.cs" />
     <Compile Include="Core\Pieces\PieceConstants.cs" />
+    <Compile Include="Core\Pieces\PotteryPieceList.cs" />
     <Compile Include="Core\Pieces\VanillaShop.cs" />
     <Compile Include="Core\PotteryManager.cs" />
-    <Compile Include="ComfyLib\Utils\ReflectionUtils.cs" />
-    <Compile Include="Core\Extensions\PieceRequirementExtensions.cs" />
-    <Compile Include="Core\Extensions\PieceTableExtensions.cs" />
-    <Compile Include="Core\Pieces\PotteryPieceList.cs" />
     <Compile Include="Core\Utils\CustomFieldUtils.cs" />
     <Compile Include="Core\Utils\PlacementGhostUtils.cs" />
     <Compile Include="Patches\EffectListPatch.cs" />
     <Compile Include="Patches\PiecePatch.cs" />
     <Compile Include="Patches\PlayerPatch.cs" />
-    <Compile Include="Config\PluginConfig.cs" />
-    <Compile Include="Core\Extensions\PieceExtensions.cs" />
     <Compile Include="PotteryBarn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CHANGELOG.md" />
-    <None Include="manifest.json" />
-    <None Include="README.md" />
-    <None Include="icon.png" />
+    <None Include="CHANGELOG.md" ThunderstorePackage="true" />
+    <None Include="icon.png" ThunderstorePackage="true" />
+    <None Include="manifest.json" ThunderstorePackage="true" />
+    <None Include="README.md" ThunderstorePackage="true" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="JotunnLib">
-      <Version>2.21.3</Version>
+      <Version>2.26.1</Version>
       <IncludeAssets>compile</IncludeAssets>
       <ExcludeAssets>none</ExcludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -193,7 +201,8 @@
   </Target>
   <Target Name="MakeThunderstorePackage" AfterTargets="GetAssemblyVersion">
     <ItemGroup>
-      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; CHANGELOG.md; README.md; manifest.json; icon.png" />
+      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll" />
+      <PackageFiles Include="@(None)" Condition="'%(None.ThunderstorePackage)' == 'true'" />
     </ItemGroup>
     <MakeDir Directories="$(PackageDir)" />
     <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageDir)" />

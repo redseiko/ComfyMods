@@ -204,6 +204,24 @@ public static class BuilderShop {
                   .Add(Item.Wood, 10)
                   .Add(Item.Bronze, 2))
           .AddPiece(
+              "piece_pot1_red",
+              Workstation.Workbench,
+              new PieceResourceList()
+                  .Add(Item.PotShardRed, 4)
+                  .Add(Item.CharcoalResin, 1))
+          .AddPiece(
+              "piece_pot2_red",
+              Workstation.Workbench,
+              new PieceResourceList()
+                  .Add(Item.PotShardRed, 5)
+                  .Add(Item.CharcoalResin, 1))
+          .AddPiece(
+              "piece_pot3_red",
+              Workstation.Workbench,
+              new PieceResourceList()
+                  .Add(Item.PotShardRed, 3)
+                  .Add(Item.CharcoalResin, 1))
+          .AddPiece(
               "TreasureChest_dvergrtower",
               Workstation.Workbench,
               new PieceResourceList()

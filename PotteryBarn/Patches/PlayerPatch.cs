@@ -92,6 +92,7 @@ static class PlayerPatch {
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(WearNTear), nameof(WearNTear.OnPlaced))),
             new CodeMatch(OpCodes.Ldarg_S),
             new CodeMatch(OpCodes.Brfalse))
+        .ThrowIfInvalid($"Could not patch Player.PlacePiece()! (on-placed)")
         .Advance(offset: 1)
         .ExtractLabels(out List<Label> doAttackLabels)
         .Insert(

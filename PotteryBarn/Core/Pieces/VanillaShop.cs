@@ -128,11 +128,6 @@ public static class VanillaShop {
               [ (Item.YggdrasilWood, 2),
                 (Item.Copper, 1) ])
           .AddPiece(
-              "piece_dvergr_pole",
-              Workstation.BlackForge,
-              [ (Item.YggdrasilWood, 2),
-                (Item.Copper, 1) ])
-          .AddPiece(
               "piece_dvergr_wood_door",
               Workstation.BlackForge,
               [ (Item.YggdrasilWood, 12),
@@ -158,6 +153,27 @@ public static class VanillaShop {
               "root12",
               Workstation.None,
               [ (Item.ElderBark, 2) ]);
+
+  public static readonly PotteryPieceList FurniturePieces =
+      new PotteryPieceList()
+          .AddPiece(
+              "piece_pot1_cracked",
+              Workstation.Workbench,
+              [ (Item.PotShardGreen, 4),
+                (Item.CharcoalResin, 1),
+                (Item.ProustitePowder, 1) ])
+          .AddPiece(
+              "piece_pot2_cracked",
+              Workstation.Workbench,
+              [ (Item.PotShardGreen, 5),
+                (Item.CharcoalResin, 1),
+                (Item.ProustitePowder, 1) ])
+          .AddPiece(
+              "piece_pot3_cracked",
+              Workstation.Workbench,
+              [ (Item.PotShardGreen, 3),
+                (Item.CharcoalResin, 1),
+                (Item.ProustitePowder, 1) ]);
 
   public static readonly PotteryPieceList MiscPieces =
       new PotteryPieceList()

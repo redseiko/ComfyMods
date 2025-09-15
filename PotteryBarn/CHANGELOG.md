@@ -1,5 +1,19 @@
 ## Changelog
 
+### 1.20.0
+
+  * Updated for the `v0.221.4` patch.
+  * Added new recipes:
+    * BuilderShop
+      * `piece_pot1_red`
+      * `piece_pot2_red`
+      * `piece_pot3_red`
+    * Furniture
+      * `piece_pot1_cracked`
+      * `piece_pot2_cracked`
+      * `piece_pot3_cracked`
+  * Recipes now have `m_enabled` set to true (required for new recipes to become known).
+
 ### 1.19.0
 
   * Hotfix to help players with conflicting pre-BogWitch `v1.18.0` test version properly update to latest version.
@@ -11,7 +25,7 @@
 
 ### 1.17.0
 
-  * Added empty recipe for non-pottery barn pieces without an exisiting recipe.
+  * Added empty recipe for non-pottery barn pieces without an existing recipe.
 
 ### 1.16.0
 
@@ -45,7 +59,7 @@
 
 ### 1.11.1
 
-  * Removed prefagb dvergrprops_wood_stake due to missing mesh on broken status.
+  * Removed prefab `dvergrprops_wood_stake` due to missing mesh on broken status.
 
 ### 1.11.0
 

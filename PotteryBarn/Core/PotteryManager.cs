@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-using ComfyLib;
-
 using Jotunn.Managers;
 
 using UnityEngine;
@@ -20,6 +18,7 @@ public static class PotteryManager {
   public static PieceTable GetCultivatorPieceTable() => PieceManager.Instance.GetPieceTable(CultivatorPieceTable);
 
   public static Piece.PieceCategory BuildingCategory;
+  public static Piece.PieceCategory FurnitureCategory;
   public static Piece.PieceCategory MiscCategory;
 
   public static Piece.PieceCategory CreatorShopCategory;
@@ -43,6 +42,7 @@ public static class PotteryManager {
 
   public static void SetupCategories(PieceManager pieceManager) {
     BuildingCategory = Piece.PieceCategory.BuildingWorkbench;
+    FurnitureCategory = Piece.PieceCategory.Furniture;
     MiscCategory = Piece.PieceCategory.Misc;
 
     CreatorShopCategory = pieceManager.AddPieceCategory("CreatorShop");
@@ -72,6 +72,7 @@ public static class PotteryManager {
             .ModifyResource("Wood", amount: 1, recover: true));
 
     AddPotteryPieces(hammerPieceTable, BuildingCategory, VanillaShop.BuildingPieces, VanillaPieces);
+    AddPotteryPieces(hammerPieceTable, FurnitureCategory, VanillaShop.FurniturePieces, VanillaPieces);
     AddPotteryPieces(hammerPieceTable, MiscCategory, VanillaShop.MiscPieces, VanillaPieces);
 
     AddPotteryPieces(hammerPieceTable, CreatorShopCategory, CreatorShop.HammerPieces, ShopPieces);
@@ -124,6 +125,10 @@ public static class PotteryManager {
 
     if (!piece.m_icon) {
       piece.m_icon = LoadOrRenderIcon(prefab, PrefabIconRenderRotation);
+    }
+
+    if (!piece.m_enabled) {
+      piece.m_enabled = true;
     }
 
     return piece;

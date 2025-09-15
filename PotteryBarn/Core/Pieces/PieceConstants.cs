@@ -32,7 +32,9 @@ public static class PieceConstants {
     public const string LoxPelt = "LoxPelt";
     public const string MushroomBlue = "MushroomBlue";
     public const string MushroomYellow = "MushroomYellow";
+    public const string PotShardGreen = "Pot_Shard_Green";
     public const string PotShardRed = "Pot_Shard_Red";
+    public const string ProustitePowder = "ProustitePowder";
     public const string Resin = "Resin";
     public const string RoyalJelly = "RoyalJelly";
     public const string Stone = "Stone";

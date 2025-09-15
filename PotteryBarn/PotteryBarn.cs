@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class PotteryBarn : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.potterybarn";
   public const string PluginName = "PotteryBarn";
-  public const string PluginVersion = "1.19.0";
+  public const string PluginVersion = "1.20.0";
 
   void Awake() {
     BindConfig(Config);
