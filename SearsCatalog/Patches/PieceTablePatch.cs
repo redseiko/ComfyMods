@@ -58,9 +58,11 @@ static class PieceTablePatch {
               new CodeMatch(OpCodes.Ldarga_S),
               new CodeMatch(OpCodes.Call, AccessTools.PropertyGetter(typeof(Vector2Int), nameof(Vector2Int.y))),
               new CodeMatch(OpCodes.Ldc_I4_S))
-          .ThrowIfInvalid("Could not patch PieceTable.GetPiece()! (GetY)")
+          .ThrowIfInvalid("Could not patch PieceTable.GetPiece()! (get-y)")
           .Advance(offset: 3)
-          .InsertAndAdvance(Transpilers.EmitDelegate(GetPieceGetYDelegate))
+          .InsertAndAdvance(
+              new CodeInstruction(
+                  OpCodes.Call, AccessTools.Method(typeof(GetPiecePatch), nameof(GetPieceGetYDelegate))))
           .InstructionEnumeration();
     }
 
@@ -76,19 +78,25 @@ static class PieceTablePatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldc_I4_S, Convert.ToSByte(15)))
-        .ThrowIfInvalid("Could not patch PieceTable.GetPieceIndex()! (ColumnA)")
+        .ThrowIfInvalid("Could not patch PieceTable.GetPieceIndex()! (column-a)")
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(GetPieceIndexColumnDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(PieceTablePatch), nameof(GetPieceIndexColumnDelegate))))
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldc_I4_S, Convert.ToSByte(15)))
-        .ThrowIfInvalid("Could not patch PieceTable.GetPieceIndex()! (ColumnB)")
+        .ThrowIfInvalid("Could not patch PieceTable.GetPieceIndex()! (column-b)")
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(GetPieceIndexColumnDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(PieceTablePatch), nameof(GetPieceIndexColumnDelegate))))
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldc_I4_S, Convert.ToSByte(15)))
-        .ThrowIfInvalid("Could not patch PieceTable.GetPieceIndex()! (ColumnC)")
+        .ThrowIfInvalid("Could not patch PieceTable.GetPieceIndex()! (column-c)")
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(GetPieceIndexColumnDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(PieceTablePatch), nameof(GetPieceIndexColumnDelegate))))
         .InstructionEnumeration();
   }
 
@@ -103,9 +111,10 @@ static class PieceTablePatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldc_I4_S, Convert.ToSByte(14)))
-        .ThrowIfInvalid($"Could not patch PieceTable.LeftPiece()! (Column)")
+        .ThrowIfInvalid($"Could not patch PieceTable.LeftPiece()! (column)")
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(LeftPieceDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PieceTablePatch), nameof(LeftPieceDelegate))))
         .InstructionEnumeration();
   }
 
@@ -120,9 +129,10 @@ static class PieceTablePatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldc_I4_S, Convert.ToSByte(15)))
-        .ThrowIfInvalid("Could not patch PieceTable.RightPiece()! (Column)")
+        .ThrowIfInvalid("Could not patch PieceTable.RightPiece()! (column)")
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(RightPieceDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PieceTablePatch), nameof(RightPieceDelegate))))
         .InstructionEnumeration();
   }
 
@@ -137,9 +147,10 @@ static class PieceTablePatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldc_I4_5))
-        .ThrowIfInvalid("Could not patch PieceTable.UpPiece()! (Row)")
+        .ThrowIfInvalid("Could not patch PieceTable.UpPiece()! (row)")
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(UpPieceDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PieceTablePatch), nameof(UpPieceDelegate))))
         .InstructionEnumeration();
   }
 
@@ -154,9 +165,10 @@ static class PieceTablePatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldc_I4_6))
-        .ThrowIfInvalid($"Could not patch PieceTable.DownPiece()! (Row)")
+        .ThrowIfInvalid($"Could not patch PieceTable.DownPiece()! (row)")
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(DownPieceDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PieceTablePatch), nameof(DownPieceDelegate))))
         .InstructionEnumeration();
   }
 

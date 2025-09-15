@@ -93,8 +93,13 @@ public static class BuildHudController {
     scrollRect.verticalScrollbar = scrollbar;
     scrollRect.movementType = ScrollRect.MovementType.Clamped;
     scrollRect.inertia = false;
-    scrollRect.scrollSensitivity = hud.m_pieceIconSpacing;
+    scrollRect.scrollSensitivity = BuildHudPanelScrollSensitivity.Value;
     scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
+
+    if (!hud.m_pieceListRoot.TryGetComponent(out Image image)) {
+      image = hud.m_pieceListRoot.gameObject.AddComponent<Image>();
+      image.color = Color.clear;
+    }
 
     GameObject panel = hud.m_pieceSelectionWindow.transform.parent.gameObject;
 
@@ -103,11 +108,11 @@ public static class BuildHudController {
 
     PanelDragger panelDragger = panel.AddComponent<PanelDragger>();
     panelDragger.TargetRectTransform = panelTransform;
-    panelDragger.OnPanelEndDrag += (_, position) => BuildHudPanelPosition.Value = position;
+    panelDragger.OnPanelEndDrag += HandlePanelEndDrag;
 
     PanelResizer panelResizer = UIBuilder.CreateResizer(panelTransform).AddComponent<PanelResizer>();
     panelResizer.TargetRectTransform = panelTransform;
-    panelResizer.OnPanelEndResize += (_, sizeDelta) => ResizeBuildHudPanel(sizeDelta);
+    panelResizer.OnPanelEndResize += HandlePanelEndResize;
 
     BuildHudPanelTransform = panelTransform;
     BuildHudScrollbar = scrollbar;
@@ -115,7 +120,23 @@ public static class BuildHudController {
     BuildHudNeedRefresh = true;
   }
 
+  static void HandlePanelEndDrag(object sender, Vector3 position) {
+    BuildHudPanelPosition.Value = position;
+  }
+  
+  static void HandlePanelEndResize(object sender, Vector2 sizeDelta) {
+    ResizeBuildHudPanel(sizeDelta);
+  }
+
   public static void SetBuildPanelPosition(Vector2 position) {
-    BuildHudPanelTransform.Ref()?.SetPosition(position);
+    if (BuildHudPanelTransform) {
+      BuildHudPanelTransform.anchoredPosition = position;
+    }
+  }
+
+  public static void SetBuildPanelScrollSensitivity(float scrollSensitivity) {
+    if (BuildHudScrollRect) {
+      BuildHudScrollRect.scrollSensitivity = scrollSensitivity;
+    }
   }
 }

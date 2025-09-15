@@ -75,11 +75,11 @@ static class HudPatch {
         .MatchStartForward(
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(Player), nameof(Player.GetBuildPieces))),
             new CodeMatch(OpCodes.Stloc_0))
-        .ThrowIfInvalid($"Could not patch Hud.UpdatePieceList()! (GetBuildPieces)")
+        .ThrowIfInvalid($"Could not patch Hud.UpdatePieceList()! (get-build-pieces)")
         .Advance(offset: 2)
         .InsertAndAdvance(
             new CodeInstruction(OpCodes.Ldloc_0),
-            Transpilers.EmitDelegate(GetBuildPiecesDelegate))
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HudPatch), nameof(GetBuildPiecesDelegate))))
         .InstructionEnumeration();
   }
 
@@ -99,15 +99,17 @@ static class HudPatch {
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldc_I4_S, Convert.ToSByte(15)),
             new CodeMatch(OpCodes.Stloc_1))
-        .ThrowIfInvalid($"Could not patch Hud.UpdatePieceList()! (GridColumns)")
+        .ThrowIfInvalid($"Could not patch Hud.UpdatePieceList()! (grid-columns)")
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(GridColumnsDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HudPatch), nameof(GridColumnsDelegate))))
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldc_I4_6),
             new CodeMatch(OpCodes.Stloc_2))
-        .ThrowIfInvalid(($"Could not patch Hud.UpdatePieceList()! (GridRows)"))
+        .ThrowIfInvalid(($"Could not patch Hud.UpdatePieceList()! (grid-rows)"))
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(GridRowsDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HudPatch), nameof(GridRowsDelegate))))
         .InstructionEnumeration();
   }
 
@@ -120,19 +122,22 @@ static class HudPatch {
             new CodeMatch(OpCodes.Ldloc_1),
             new CodeMatch(OpCodes.Ldloc_2),
             new CodeMatch(OpCodes.Mul))
-        .ThrowIfInvalid($"Could not patch Hud.UpdatePieceList()! (PieceIconsCount)")
+        .ThrowIfInvalid($"Could not patch Hud.UpdatePieceList()! (piece-icons-count)")
         .Advance(offset: 3)
-        .InsertAndAdvance(Transpilers.EmitDelegate(PieceIconsCountMultiplyDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(HudPatch), nameof(PieceIconsCountMultiplyDelegate))))
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Hud), nameof(Hud.m_pieceIcons))),
             new CodeMatch(
                 OpCodes.Callvirt,
                 AccessTools.Method(typeof(List<Hud.PieceIconData>), nameof(List<Hud.PieceIconData>.Clear))))
-        .ThrowIfInvalid($"Could not patch Hud.UpdatePieceList()! (PieceIconsClear)")
+        .ThrowIfInvalid($"Could not patch Hud.UpdatePieceList()! (piece-icons-clear)")
         .Advance(offset: 2)
         .InsertAndAdvance(
             new CodeInstruction(OpCodes.Ldarg_0),
-            Transpilers.EmitDelegate(PieceIconsClearPostDelegate))
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(HudPatch), nameof(PieceIconsClearPostDelegate))))
         .InstructionEnumeration();
   }
 
@@ -147,7 +152,7 @@ static class HudPatch {
   static void PieceIconsClearPostDelegate(Hud hud) {
     if (IsModEnabled.Value) {
       hud.m_pieceListRoot.sizeDelta =
-          new(
+          new Vector2(
               hud.m_pieceIconSpacing * BuildHudController.BuildHudColumns,
               hud.m_pieceIconSpacing * BuildHudController.BuildHudRows);
 
@@ -161,18 +166,21 @@ static class HudPatch {
   [HarmonyPatch(nameof(Hud.GetSelectedGrid))]
   static IEnumerable<CodeInstruction> GetSelectedGridTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: false,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldc_I4_S, Convert.ToSByte(15)),
             new CodeMatch(OpCodes.Stloc_0))
+        .ThrowIfInvalid($"Could not patch Hud.GetSelectedGrid()! (grid-columns)")
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(GridColumnsDelegate))
-        .MatchForward(
-            useEnd: false,
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HudPatch), nameof(GridColumnsDelegate))))
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldc_I4_6),
             new CodeMatch(OpCodes.Stloc_1))
+        .ThrowIfInvalid($"Could not patch Hud.GetSelectedGrid()! (grid-rows)")
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(GridRowsDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HudPatch), nameof(GridRowsDelegate))))
         .InstructionEnumeration();
   }
 

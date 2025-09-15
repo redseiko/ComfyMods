@@ -16,7 +16,7 @@ static class PlayerPatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZInput), nameof(ZInput.GetMouseScrollWheel))))
-        .ThrowIfInvalid("Could not patch Player.UpdateBuildGuiInput()! (GetMouseScrollWheel)")
+        .ThrowIfInvalid("Could not patch Player.UpdateBuildGuiInput()! (get-mouse-scroll-wheel)")
         .Repeat(InsertGetMouseScrollWheelDelegate)
         .InstructionEnumeration();
   }
@@ -24,7 +24,8 @@ static class PlayerPatch {
   static void InsertGetMouseScrollWheelDelegate(CodeMatcher matcher) {
     matcher
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(GetAxisDelegate));
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(GetAxisDelegate))));
   }
 
   static float GetAxisDelegate(float result) {

@@ -1,5 +1,13 @@
 ## Changelog
 
+### 1.7.0
+
+  * Fixed for the `v0.221.4` patch.
+  * Fixed scroll-sensitivity issue with the build-panel scrollbar.
+  * Added new config-option `[BuildHud.Panel] buildHudPanelScrollSensitivity` to customize scroll-sensitivity.
+  * Added an invisible image to the `Hud.m_pieceListRoot` to fix `ScrollRect.content` raycast-hit detection.
+  * Minor code clean-up.
+
 ### 1.6.0
 
   * Fixed for the `v0.219.10` PTB patch.
