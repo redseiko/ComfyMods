@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.8.0
+
+  * Added logic for eligible over-fueled candles when updating state to never be considered wet or underwater.
+  * Added new config-option to control new feature:
+    * `[Candle] candleUpdateStateNeverWet`
+
 ### 1.7.0
 
   * Added new hover-text for candles to show their fuel-value.

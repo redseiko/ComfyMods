@@ -71,4 +71,56 @@ static class FireplacePatch {
 
     return hoverText;
   }
+
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(Fireplace.UpdateState))]
+  static void UpdateStatePrefix(Fireplace __instance, ref bool __state) {
+    if (__instance.m_canTurnOff
+        && __instance.m_wet
+        && IsModEnabled.Value
+        && CandleUpdateStateNeverWet.Value
+        && __instance.m_startFuel > __instance.m_maxFuel) {
+      __state = true;
+      __instance.m_wet = false;
+    } else {
+      __state = false;
+    }
+  }
+
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Fireplace.UpdateState))]
+  static void UpdateStatePostfix(Fireplace __instance, bool __state) {
+    if (__state) {
+      __instance.m_wet = true;
+    }
+  }
+
+  [HarmonyTranspiler]
+  [HarmonyPatch(nameof(Fireplace.IsBurning))]
+  static IEnumerable<CodeInstruction> IsBuringTranspiler(
+      IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
+    return new CodeMatcher(instructions, generator)
+        .Start()
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Floating), nameof(Floating.IsUnderWater))))
+        .ThrowIfInvalid($"Could not patch Fireplace.IsBurning()! (is-under-water-check)")
+        .Advance(offset: 1)
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Ldarg_0),
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(FireplacePatch), nameof(IsUnderWaterPostDelegate))))
+        .InstructionEnumeration();
+  }
+
+  static bool IsUnderWaterPostDelegate(bool isUnderWater, Fireplace fireplace) {
+    if (isUnderWater
+        && fireplace.m_canTurnOff
+        && IsModEnabled.Value
+        && CandleUpdateStateNeverWet.Value
+        && fireplace.m_startFuel > fireplace.m_maxFuel) {
+      return false;
+    }
+
+    return isUnderWater;
+  }
 }

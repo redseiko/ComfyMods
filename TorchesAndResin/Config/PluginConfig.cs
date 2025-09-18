@@ -10,6 +10,7 @@ public static class PluginConfig {
   public static ConfigEntry<int> TorchStartingFuel { get; private set; }
   public static ConfigEntry<bool> CandleHoverTextShowFuel { get; private set; }
   public static ConfigEntry<bool> CandleAlwaysToggleOn { get; private set; }
+  public static ConfigEntry<bool> CandleUpdateStateNeverWet { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
     IsModEnabled =
@@ -40,5 +41,12 @@ public static class PluginConfig {
             "candleAlwaysToggleOn",
             true,
             "When true, eligible candles will always be toggled-on.");
+
+    CandleUpdateStateNeverWet =
+        config.BindInOrder(
+            "Candle",
+            "candleUpdateStateNeverWet",
+            true,
+            "When true, eligible over-fueld candles will not be wet or underwater when updating state.");
   }
 }
