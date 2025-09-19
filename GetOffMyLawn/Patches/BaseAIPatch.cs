@@ -1,5 +1,8 @@
 ﻿namespace GetOffMyLawn;
 
+using System.Collections.Generic;
+using System.Reflection.Emit;
+
 using HarmonyLib;
 
 using UnityEngine;
@@ -8,16 +11,30 @@ using static PluginConfig;
 
 [HarmonyPatch(typeof(BaseAI))]
 static class BaseAIPatch {
-  public static int TargetRayMask = 0;
-
-  [HarmonyPostfix]
+  [HarmonyTranspiler]
   [HarmonyPatch(nameof(BaseAI.Awake))]
-  static void AwakePostfix() {
-    if (IsModEnabled.Value && TargetRayMask == 0) {
-      TargetRayMask = LayerMask.GetMask(["Default", "static_solid", "Default_small", "vehicle"]);
+  static IEnumerable<CodeInstruction> AwakeTranspiler(
+      IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
+    return new CodeMatcher(instructions, generator)
+        .Start()
+        .MatchStartForward(
+            new CodeMatch(
+                OpCodes.Call, AccessTools.Method(typeof(LayerMask), nameof(LayerMask.GetMask), [typeof(string[])])),
+            new CodeMatch(OpCodes.Stsfld, AccessTools.Field(typeof(BaseAI), nameof(BaseAI.m_monsterTargetRayMask))))
+        .ThrowIfInvalid($"Could not patch BaseAI.Awake()! (monster-target-ray-mask)")
+        .Advance(offset: 1)
+        .InsertAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(BaseAIPatch), nameof(GetMonsterTargetRayMaskDelegate))))
+        .InstructionEnumeration();
+  }
 
-      BaseAI.m_monsterTargetRayMask = TargetRayMask;
+  static int GetMonsterTargetRayMaskDelegate(int value) {
+    if (IsModEnabled.Value) {
+      return LayerMask.GetMask(["Default", "static_solid", "Default_small", "vehicle"]);
     }
+
+    return value;
   }
 
   [HarmonyPrefix]

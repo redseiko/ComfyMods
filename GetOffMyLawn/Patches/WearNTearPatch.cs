@@ -1,41 +1,52 @@
 ﻿namespace GetOffMyLawn;
 
+using System.Collections.Generic;
+using System.Reflection.Emit;
+
+using ComfyLib;
+
 using HarmonyLib;
 
 using static PluginConfig;
 
 [HarmonyPatch(typeof(WearNTear))]
 static class WearNTearPatch {
-  public static readonly long PieceHealthDamageThreshold = 100_000L;
-
-  [HarmonyPrefix]
-  [HarmonyPatch(nameof(WearNTear.ApplyDamage), [typeof(float), typeof(HitData)])]
-  static bool ApplyDamagePrefix(WearNTear __instance, float damage, HitData hitData, ref bool __result) {
-    if (IsModEnabled.Value && EnablePieceHealthDamageThreshold.Value) {
-      __result = ApplyDamageDelegate(__instance, damage, hitData);
-      return false;
-    }
-
-    return true;
+  [HarmonyTranspiler]
+  [HarmonyPatch(nameof(WearNTear.ApplyDamage))]
+  static IEnumerable<CodeInstruction> ApplyDamageTranspiler(
+      IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
+    return new CodeMatcher(instructions, generator)
+        .Start()
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldloc_0),
+            new CodeMatch(OpCodes.Ldc_R4, 0f),
+            new CodeMatch(OpCodes.Bgt_Un),
+            new CodeMatch(OpCodes.Ldc_I4_0),
+            new CodeMatch(OpCodes.Ret))
+        .ThrowIfInvalid($"Could not patch WearNTear.ApplyDamage()! (health-lt-0)")
+        .Advance(offset: 5)
+        .ExtractLabels(out List<Label> postHealthLt0Labels)
+        .Insert(
+            new CodeInstruction(OpCodes.Ldloc_0),
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(WearNTearPatch), nameof(IsHealthGreaterThanDamageThreshold))),
+            new CodeInstruction(OpCodes.Brfalse),
+            new CodeInstruction(OpCodes.Ldc_I4_0),
+            new CodeInstruction(OpCodes.Ret))
+        .AddLabels(postHealthLt0Labels)
+        .CreateLabelOffset(offset: 5, out Label postHealthGtDamageLabel)
+        .Advance(offset: 2)
+        .SetOperandAndAdvance(postHealthGtDamageLabel)
+        .InstructionEnumeration();
   }
 
-  public static bool ApplyDamageDelegate(WearNTear wearNTear, float damage, HitData hitData) {
-    float health = wearNTear.m_nview.m_zdo.GetFloat(ZDOVars.s_health, wearNTear.m_health);
+  public const float PieceHealthDamageThreshold = 100_000f;
 
-    if (health <= 0f || health >= PieceHealthDamageThreshold) {
-      return false;
+  static bool IsHealthGreaterThanDamageThreshold(float health) {
+    if (health >= PieceHealthDamageThreshold && IsModEnabled.Value && EnablePieceHealthDamageThreshold.Value) {
+      return true;
     }
 
-    health -= damage;
-    wearNTear.m_nview.m_zdo.Set(ZDOVars.s_health, health);
-
-    if (health <= 0f) {
-      wearNTear.Destroy(hitData, blockDrop: false);
-    } else {
-      ZRoutedRpc.s_instance.InvokeRoutedRPC(
-          ZRoutedRpc.Everybody, "RPC_HealthChanged", wearNTear.m_nview.m_zdo.m_uid, health);
-    }
-
-    return true;
+    return false;
   }
 }

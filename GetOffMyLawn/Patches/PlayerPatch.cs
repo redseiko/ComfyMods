@@ -22,16 +22,17 @@ static class PlayerPatch {
 
   [HarmonyTranspiler]
   [HarmonyPatch(nameof(Player.RemovePiece))]
-  static IEnumerable<CodeInstruction> RemovePieceTranspiler(IEnumerable<CodeInstruction> instructions) {
-    return new CodeMatcher(instructions)
+  static IEnumerable<CodeInstruction> RemovePieceTranspiler(
+      IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
+    return new CodeMatcher(instructions, generator)
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldfld, typeof(Piece).GetField(nameof(Piece.m_canBeRemoved))))
-        .ThrowIfInvalid($"Could not patch Player.RemovePiece()! (m_canBeRemoved)")
+        .ThrowIfInvalid($"Could not patch Player.RemovePiece()! (can-ve-removed)")
         .Advance(offset: 1)
         .InsertAndAdvance(
             new CodeInstruction(OpCodes.Ldloc_1),
-            Transpilers.EmitDelegate(CanBeRemovedDelegate))
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(CanBeRemovedDelegate))))
         .InstructionEnumeration();
   }
 

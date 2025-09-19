@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.11.0
+
+  * Updated for the `v0.221.4` patch.
+  * Pieces with `Character` will now be ignored, fixes issue where `T.W.I.G` piece cannot be removed when over-healthed.
+  * Code clean-up and refactoring for improved performance.
+
 ### 1.10.0
 
   * Fixed for the `v0.219.14` patch.

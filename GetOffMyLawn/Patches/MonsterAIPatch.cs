@@ -8,8 +8,8 @@ using static PluginConfig;
 static class MonsterAIPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(MonsterAI.Awake))]
-  static void AwakePostfix(ref MonsterAI __instance) {
-    if (IsModEnabled.Value) {
+  static void AwakePostfix(MonsterAI __instance) {
+    if (IsModEnabled.Value && __instance.m_attackPlayerObjects) {
       __instance.m_attackPlayerObjects = false;
     }
   }

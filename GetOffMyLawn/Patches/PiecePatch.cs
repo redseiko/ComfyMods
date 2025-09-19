@@ -11,10 +11,9 @@ static class PiecePatch {
   static void SetCreatorPostfix(Piece __instance) {
     if (IsModEnabled.Value
         && __instance
-        && __instance.m_nview
-        && __instance.m_nview.IsValid()
-        && !__instance.TryGetComponent(out Plant _)) {
-      __instance.m_nview.m_zdo.Set(ZDOVars.s_health, TargetPieceHealth.Value);
+        && PieceUtils.TryGetValidOwnedNetView(__instance, out ZNetView netView)
+        && PieceUtils.IsEligiblePiece(__instance)) {
+      netView.m_zdo.Set(ZDOVars.s_health, TargetPieceHealth.Value);
     }
   }
 }

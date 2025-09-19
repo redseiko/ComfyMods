@@ -13,8 +13,21 @@ public static class PieceUtils {
     return piece.TryGetComponentInChildren(out Ship _) || piece.TryGetComponentInChildren(out Vagon _);
   }
 
+  public static bool IsEligiblePiece(Piece piece) {
+    if (piece.TryGetComponent(out Plant _) || piece.TryGetComponent(out Character _)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public static bool TryGetValidOwnedNetView(Piece piece, out ZNetView netView) {
+    netView = piece.m_nview;
+    return netView && netView.IsValid() && netView.IsOwner();
+  }
+
   public static bool RepairPiece(this Player player, ItemDrop.ItemData toolItem, Piece piece) {
-    if (!piece || !piece.m_nview || !piece.m_nview.IsValid() || piece.TryGetComponent(out Plant _)) {
+    if (!piece || !piece.m_nview || !piece.m_nview.IsValid() || !IsEligiblePiece(piece)) {
       return false;
     }
 
@@ -59,7 +72,7 @@ public static class PieceUtils {
     float repairTime = Time.time;
 
     foreach (Piece piece in _pieceCache) {
-      if (!piece || !piece.m_nview || !piece.m_nview.IsValid() || piece.TryGetComponent(out Plant _)) {
+      if (!piece || !piece.m_nview || !piece.m_nview.IsValid() || !IsEligiblePiece(piece)) {
         continue;
       }
 

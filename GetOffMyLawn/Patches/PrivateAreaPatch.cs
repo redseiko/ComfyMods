@@ -13,6 +13,7 @@ static class PrivateAreaPatch {
         && RepairPiecesOnWardActivation.Value
         && __instance
         && __instance.IsEnabled()
+        && __instance.m_piece
         && __instance.m_piece.IsCreator()) {
       PieceUtils.RepairPiecesInRadius(__instance.transform.position, __instance.m_radius);
     }

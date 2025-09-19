@@ -1,7 +1,6 @@
 # GetOffMyLawn
 
-  * Set the health of player-placed items in the game to a configurable value.
-  * Reduces monster attacks on player objects.
+*Set the health of player-placed items in the game to a configurable value.*
 
 ## Instructions
 
@@ -45,6 +44,10 @@
 
   - **Every piece health damage message is broadcasted to everyone on the server.**
     * The setting `EnablePieceHealthDamageThreshold` will restrict this behaviour to only pieces with < 100K health.
+    
+### MonsterAI Changes
+
+  * Reduces monster attacks on player objects.
 
 ### Recommended Mods to Use
 
