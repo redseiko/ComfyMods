@@ -18,10 +18,10 @@ public static class SignUtils {
       return;
     }
 
-    if (font.fallbackFontAssetTable == null) {
-      font.fallbackFontAssetTable = [fallbackFont];
-    } else if (!font.fallbackFontAssetTable.Contains(fallbackFont)) {
-      font.fallbackFontAssetTable.Add(fallbackFont);
+    if (font.fallbackFontAssets == default) {
+      font.fallbackFontAssets = [fallbackFont];
+    } else if (!font.fallbackFontAssets.Contains(fallbackFont)) {
+      font.fallbackFontAssets.Add(fallbackFont);
     }
   }
 
@@ -89,7 +89,7 @@ public static class SignUtils {
   }
 
   public static void SetupSignFont(Sign sign, TMP_FontAsset fontAsset, Color color) {
-    if (!sign.m_textWidget.font == fontAsset) {
+    if (sign.m_textWidget.font != fontAsset) {
       sign.m_textWidget.font = fontAsset;
     }
 
@@ -108,7 +108,9 @@ public static class SignUtils {
     TMP_FontAsset fontAsset = UIFonts.GetFontAsset(SignDefaultTextFontAsset.Value);
     Color fontColor = SignDefaultTextFontColor.Value;
 
+    //if (UseFallbackFonts.Value && SignDefaultTextFontAsset.Value != UIFonts.ValheimAveriaSansLibre) {
     if (UseFallbackFonts.Value) {
+      ComfySigns.LogInfo($"Adding fallback fonts to font: {fontAsset.name}");
       AddFallbackFonts(fontAsset);
     }
 

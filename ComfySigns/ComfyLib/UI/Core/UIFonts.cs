@@ -18,9 +18,10 @@ public static class UIFonts {
     return font;
   }
 
-  public static readonly string ValheimNorse = "Valheim-Norse";
-  public static readonly string ValheimNorsebold = "Valheim-Norsebold";
-  public static readonly string FallbackNotoSansNormal = "Fallback-NotoSansNormal";
+  public const string ValheimAveriaSansLibre = "Valheim-AveriaSansLibre";
+  public const string ValheimNorse = "Valheim-Norse";
+  public const string ValheimNorsebold = "Valheim-Norsebold";
+  public const string FallbackNotoSansNormal = "Fallback-NotoSansNormal";
 
   public static readonly Dictionary<string, TMP_FontAsset> FontAssetCache = [];
 

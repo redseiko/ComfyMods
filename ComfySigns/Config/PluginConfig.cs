@@ -65,7 +65,8 @@ public static class PluginConfig {
     string[] fontNames =
         Resources.FindObjectsOfTypeAll<TMP_FontAsset>()
             .Select(f => f.name)
-            .Concat(Resources.FindObjectsOfTypeAll<Font>().Select(f => f.name))
+            .OrderBy(f => f)
+            .Concat(Resources.FindObjectsOfTypeAll<Font>().Select(f => f.name).OrderBy(f => f))
             .ToArray();
 
     SignDefaultTextFontAsset =

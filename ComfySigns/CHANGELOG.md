@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.11.0
+
+  * Fixed for the `v0.221.4` patch.
+  * Fixed a bug where the `defaultTextFontAsset` was not being applied to the `Sign` font (at all).
+  * Fixed a bug with adding fallback font assets to a font, causing the font to no longer display its own font.
+
 ### 1.10.0
 
   * Fixed for the `v0.220.3` patch.
