@@ -39,4 +39,12 @@ static class PlayerPatch {
   static bool CanBeRemovedDelegate(bool canBeRemoved, Piece piece) {
     return canBeRemoved || (IsModEnabled.Value && PieceUtils.CanRemovePiece(piece));
   }
+
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Player.OnSpawned))]
+  static void OnSpawnedPostfix(Player __instance) {
+    if (IsModEnabled.Value && ShowStatusEffectIndicator.Value) {
+      LawnManager.ToggleStatusEffectIndicator(toggleOn: true);
+    }
+  }
 }

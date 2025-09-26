@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.12.0
+
+  * Added new feature to show an optional `StatusEffect` indicator with `TargetPieceHealth` value.
+  * Added config-option `[Indicators] showStatusEffectIndicator` (default off) for above feature.
+
 ### 1.11.0
 
   * Updated for the `v0.221.4` patch.

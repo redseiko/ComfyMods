@@ -116,7 +116,9 @@
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="Config\PluginConfig.cs" />
+    <Compile Include="Core\LawnManager.cs" />
     <Compile Include="Core\PieceUtils.cs" />
+    <Compile Include="Core\TargetPieceHealthStatusEffect.cs" />
     <Compile Include="GetOffMyLawn.cs" />
     <Compile Include="Patches\BaseAIPatch.cs" />
     <Compile Include="Patches\MonsterAIPatch.cs" />

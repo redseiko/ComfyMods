@@ -14,6 +14,7 @@ public static class PluginConfig {
 
   public static ConfigEntry<bool> ShowTopLeftMessageOnPieceRepair { get; private set; }
   public static ConfigEntry<bool> ShowRepairEffectOnWardActivation { get; private set; }
+  public static ConfigEntry<bool> ShowStatusEffectIndicator { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
     IsModEnabled =
@@ -57,5 +58,26 @@ public static class PluginConfig {
             "showRepairEffectOnWardActivation",
             false,
             "Shows the repair effect on affected pieces when activating a ward.");
+
+    ShowStatusEffectIndicator =
+        config.BindInOrder(
+            "Indicators",
+            "showStatusEffectIndicator",
+            false,
+            "If set, shows a StatusEffect with the current TargetPieceHealth value.");
+
+    IsModEnabled.OnSettingChanged(HandleShowStatusEffectIndicatorConfigChange);
+    ShowStatusEffectIndicator.OnSettingChanged(HandleShowStatusEffectIndicatorConfigChange);
+    TargetPieceHealth.OnSettingChanged(HandleShowStatusEffectIndicatorConfigChange);
+  }
+
+  static void HandleTargetPieceHealthConfigChange(float targetPieceHealth) {
+    if (IsModEnabled.Value && ShowStatusEffectIndicator.Value) {
+      LawnManager.ToggleStatusEffectIndicator(toggleOn: true);
+    }
+  }
+
+  static void HandleShowStatusEffectIndicatorConfigChange() {
+    LawnManager.ToggleStatusEffectIndicator(IsModEnabled.Value && ShowStatusEffectIndicator.Value);
   }
 }
