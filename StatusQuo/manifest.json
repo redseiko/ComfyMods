@@ -1,0 +1,8 @@
+{
+  "name": "StatusQuo",
+  "version_number": "1.0.0",
+  "author": "ComfyMods",
+  "description": "Compact StatusEffect list display.",
+  "website_url": "https://github.com/redseiko/ComfyMods/tree/main/StatusQuo",
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
+}
