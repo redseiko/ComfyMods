@@ -11,8 +11,9 @@ using Steamworks;
 static class ZSteamSocketPatch {
   [HarmonyTranspiler]
   [HarmonyPatch(typeof(ZSteamSocket), MethodType.Constructor, [typeof(SteamNetworkingIPAddr)])]
-  static IEnumerable<CodeInstruction> ConstructorTranspiler(IEnumerable<CodeInstruction> instructions) {
-    return new CodeMatcher(instructions)
+  static IEnumerable<CodeInstruction> ConstructorTranspiler(
+      IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
+    return new CodeMatcher(instructions, generator)
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldc_I4_0),
@@ -29,8 +30,9 @@ static class ZSteamSocketPatch {
 
   [HarmonyTranspiler]
   [HarmonyPatch(nameof(ZSteamSocket.GetConnectionQuality))]
-  static IEnumerable<CodeInstruction> GetConnectionQualityTranspiler(IEnumerable<CodeInstruction> instructions) {
-    return new CodeMatcher(instructions)
+  static IEnumerable<CodeInstruction> GetConnectionQualityTranspiler(
+      IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
+    return new CodeMatcher(instructions, generator)
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldc_I4_0),

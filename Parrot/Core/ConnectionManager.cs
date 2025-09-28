@@ -31,6 +31,10 @@ public static class ConnectionManager {
     netPeer.m_rpc.Register<ZPackage>("ParrotLog", RPCParrotLog);
   }
 
+  public static void RemoveParrotClient(ZNetPeer netPeer) {
+    ParrotNetPeers.Remove(netPeer);
+  }
+
   public static bool ConnectToParrotServer(string serverHost, int serverPort) {
     string serverHostPort = $"{serverHost}:{serverPort}";
     SteamNetworkingIPAddr serverAddress = new();

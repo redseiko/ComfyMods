@@ -19,6 +19,6 @@ public static class PluginConfig {
             "ParrotServer",
             "allowParrotServerConnections",
             false,
-            "Allows incoming Parrot-server connections (experimental).");
+            "Allows incoming Parrot-server connections (experimental, restart required).");
   }
 }

@@ -10,26 +10,34 @@ public static class StringExtensions {
   public static readonly char[] ColonSeparator = [':'];
 
   public static bool TryParseValue<T>(this string text, out T value) {
+    Type valueType = typeof(T);
+
     try {
-      if (typeof(T) == typeof(string)) {
+      Type underlyingType = Nullable.GetUnderlyingType(valueType);
+
+      if (underlyingType != null) {
+        valueType = underlyingType;
+      }
+
+      if (valueType == typeof(string)) {
         value = (T) (object) text;
-      } else if (typeof(T) == typeof(Vector2) && text.TryParseVector2(out Vector2 valueVector2)) {
+      } else if (valueType == typeof(Vector2) && text.TryParseVector2(out Vector2 valueVector2)) {
         value = (T) (object) valueVector2;
-      } else if (typeof(T) == typeof(Vector3) && text.TryParseVector3(out Vector3 valueVector3)) {
+      } else if (valueType == typeof(Vector3) && text.TryParseVector3(out Vector3 valueVector3)) {
         value = (T) (object) valueVector3;
-      } else if (typeof(T) == typeof(Quaternion) && text.TryParseQuaternion(out Quaternion valueQuaternion)) {
+      } else if (valueType == typeof(Quaternion) && text.TryParseQuaternion(out Quaternion valueQuaternion)) {
         value = (T) (object) valueQuaternion;
-      } else if (typeof(T) == typeof(ZDOID) && text.TryParseZDOID(out ZDOID valueZDOID)) {
+      } else if (valueType == typeof(ZDOID) && text.TryParseZDOID(out ZDOID valueZDOID)) {
         value = (T) (object) valueZDOID;
-      } else if (typeof(T).IsEnum) {
-        value = (T) Enum.Parse(typeof(T), text);
+      } else if (valueType.IsEnum) {
+        value = (T) Enum.Parse(valueType, text, ignoreCase: true);
       } else {
-        value = (T) Convert.ChangeType(text, typeof(T));
+        value = (T) Convert.ChangeType(text, valueType);
       }
 
       return true;
     } catch (Exception exception) {
-      Debug.LogError($"Failed to convert value '{text}' to type {typeof(T)}: {exception}");
+      Debug.LogError($"Failed to convert value '{text}' to type {valueType}: {exception}");
     }
 
     value = default;

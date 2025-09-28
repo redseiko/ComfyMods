@@ -18,7 +18,7 @@ using static PluginConfig;
 public sealed class Parrot : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.parrot";
   public const string PluginName = "Parrot";
-  public const string PluginVersion = "1.5.1";
+  public const string PluginVersion = "1.6.0";
 
   static ManualLogSource _logger;
 

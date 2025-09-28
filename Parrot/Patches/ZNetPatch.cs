@@ -13,6 +13,10 @@ static class ZNetPatch {
   [HarmonyPatch(nameof(ZNet.CheckForIncommingServerConnections))]
   static IEnumerable<CodeInstruction> CheckForIncommingServerConnectionsTranspiler(
       IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
+    if (!AllowParrotServerConnections.Value) {
+      return instructions;
+    }
+
     return new CodeMatcher(instructions, generator)
         .Start()
         .MatchStartForward(
@@ -38,10 +42,26 @@ static class ZNetPatch {
     return false;
   }
 
-  [HarmonyPrefix]
+  [HarmonyTranspiler]
   [HarmonyPatch(nameof(ZNet.Disconnect))]
-  static void DisconnectPrefix(ZNetPeer peer) {
-    ConnectionManager.ParrotNetPeers.Remove(peer);
+  static IEnumerable<CodeInstruction> DisconnectTranspiler(
+      IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
+    if (!AllowParrotServerConnections.Value) {
+      return instructions;
+    }
+
+    return new CodeMatcher(instructions, generator)
+        .Start()
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZNet), nameof(ZNet.ClearPlayerData))))
+        .ThrowIfInvalid($"Could not patch ZNet.Disconnect()! (clear-player-data)")
+        .Advance(offset: 1)
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Ldarg_1),
+            new CodeInstruction(
+                OpCodes.Call,
+                AccessTools.Method(typeof(ConnectionManager), nameof(ConnectionManager.RemoveParrotClient))))
+        .InstructionEnumeration();
   }
 
   [HarmonyTranspiler]
