@@ -9,6 +9,7 @@ using HarmonyLib;
 using static PluginConfig;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
+[BepInIncompatibility("randyknapp.mods.minimalstatuseffects")]
 public sealed class StatusQuo : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.statusquo";
   public const string PluginName = "StatusQuo";

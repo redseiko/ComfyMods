@@ -16,13 +16,21 @@ All configuration options can be modified in-game and will take effect immediate
 
 ![Configuration](https://imgur.com/xGPg6Ov.png)
 
-### Below Minimap
+### Position Below Minimap
 
-  * Set `[StatusEffectList] rectPosition` to `X: -40, Y: -250`.
+  * Set `[StatusEffectList] rectPosition` to `X: -40`, `Y: -250`.
   * Set `[StatusEffect] maxRows` to `0` for unlimited rows.
   * Adjust `[StatusEffect] rectSizeDelta`: `X` is width, `Y` is height
 
 ![Vertical](https://imgur.com/kYOWAgw.png)
+
+## Compatibility
+
+### [MinimalStatusEffects](https://thunderstore.io/c/valheim/p/RandyKnapp/MinimalStatusEffects/)
+
+StatusQuo is a *replacement* for MinimalStatusEffects and will show an *incompatibility* error if both are loaded.
+
+    Could not load [StatusQuo 1.0.0] because it is incompatible with: randyknapp.mods.minimalstatuseffects
 
 ## Notes
 

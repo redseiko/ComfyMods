@@ -55,7 +55,7 @@ public static class PluginConfig {
         config.BindInOrder(
             "StatusEffect",
             "maxRows",
-            6,
+            8,
             "StatusEffect max-rows per column; if 0, then max-rows is unlimited.",
             new AcceptableValueRange<int>(0, 20));
 
