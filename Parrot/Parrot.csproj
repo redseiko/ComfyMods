@@ -123,6 +123,7 @@
     <Compile Include="ComfyLib\Extensions\ConfigFileExtensions.cs" />
     <Compile Include="ComfyLib\Extensions\StringExtensions.cs" />
     <Compile Include="Config\PluginConfig.cs" />
+    <Compile Include="Core\ChatManager.cs" />
     <Compile Include="Core\Commands\ConnectToParrotServerCommand.cs" />
     <Compile Include="Core\Commands\SendParrotLogCommand.cs" />
     <Compile Include="Core\ConnectionManager.cs" />
