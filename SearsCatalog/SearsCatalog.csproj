@@ -55,85 +55,66 @@
     <PluginOutputPath Condition=" '$(PluginOutputPath)' == ''">$(GamePath)\BepInEx\plugins</PluginOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
+    <Reference Include="0Harmony" Private="false">
       <HintPath>$(GamePath)\BepInEx\core\0Harmony.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="assembly_guiutils_publicized">
+    <Reference Include="assembly_guiutils_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_guiutils_publicized.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="assembly_utils_publicized">
+    <Reference Include="assembly_utils_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="assembly_valheim_publicized">
+    <Reference Include="assembly_valheim_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_valheim_publicized.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="BepInEx">
+    <Reference Include="BepInEx" Private="false">
       <HintPath>$(GamePath)\BepInEx\core\BepInEx.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="gui_framework_publicized">
-      <Private>false</Private>
+    <Reference Include="gui_framework_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\gui_framework_publicized.dll</HintPath>
     </Reference>
-    <Reference Include="Splatform_publicized">
+    <Reference Include="Splatform_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\Splatform_publicized.dll</HintPath>
-      <Private>false</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Unity.InputSystem">
+    <Reference Include="Unity.InputSystem" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\Unity.InputSystem.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="Unity.TextMeshPro">
+    <Reference Include="Unity.TextMeshPro" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\Unity.TextMeshPro.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="UnityEngine">
+    <Reference Include="UnityEngine" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule">
+    <Reference Include="UnityEngine.CoreModule" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="UnityEngine.ImageConversionModule">
+    <Reference Include="UnityEngine.ImageConversionModule" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
+    <Reference Include="UnityEngine.IMGUIModule" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
+    <Reference Include="UnityEngine.InputLegacyModule" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="UnityEngine.JSONSerializeModule">
+    <Reference Include="UnityEngine.JSONSerializeModule" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.JSONSerializeModule.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
+    <Reference Include="UnityEngine.PhysicsModule" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
+    <Reference Include="UnityEngine.TextRenderingModule" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="UnityEngine.UI">
+    <Reference Include="UnityEngine.UI" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.UI.dll</HintPath>
-      <Private>false</Private>
     </Reference>
-    <Reference Include="UnityEngine.UIModule">
+    <Reference Include="UnityEngine.UIModule" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.UIModule.dll</HintPath>
-      <Private>false</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>

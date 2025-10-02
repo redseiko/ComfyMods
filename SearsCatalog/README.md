@@ -26,7 +26,7 @@
 
 All configuration options (except `isModEnabled`) can be modified in-game and will take effect immediately.
 
-![Configuration](https://i.imgur.com/Faoihs5.png)
+![Configuration](https://imgur.com/Xm8ma0D.png)
 
 ## Notes
 

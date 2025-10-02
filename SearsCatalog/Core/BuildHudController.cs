@@ -47,6 +47,8 @@ public static class BuildHudController {
 
     BuildHudPanelColumns.Value = Mathf.Max(Mathf.FloorToInt((sizeDelta.x - 35f) / spacing), 1);
     BuildHudPanelRows.Value = Mathf.Max(Mathf.FloorToInt((sizeDelta.y - 70f) / spacing), 1);
+
+    BuildHudNeedRefresh = true;
   }
 
   public static void SetupBuildHudPanel() {
@@ -60,6 +62,8 @@ public static class BuildHudController {
           new(BuildHudColumns * spacing + 35f, BuildHudPanelRows.Value * spacing + 70f));
 
       BuildHudNeedRefresh = true;
+
+      TriggerJotunnCategoryRebuild(Player.m_localPlayer);
     }
   }
 
@@ -88,18 +92,24 @@ public static class BuildHudController {
         .OffsetSizeDelta(new(10f, 0f));
 
     ScrollRect scrollRect = parentTransform.gameObject.AddComponent<ScrollRect>();
-    scrollRect.content = hud.m_pieceListRoot;
-    scrollRect.viewport = parentTransform.GetComponent<RectTransform>();
-    scrollRect.verticalScrollbar = scrollbar;
-    scrollRect.movementType = ScrollRect.MovementType.Clamped;
-    scrollRect.inertia = false;
-    scrollRect.scrollSensitivity = BuildHudPanelScrollSensitivity.Value;
-    scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
+
+    scrollRect
+        .SetContent(hud.m_pieceListRoot)
+        .SetViewport(parentTransform.GetComponent<RectTransform>())
+        .SetVerticalScrollbar(scrollbar)
+        .SetVerticalScrollbarVisibility(ScrollRect.ScrollbarVisibility.Permanent)
+        .SetMovementType(ScrollRect.MovementType.Clamped)
+        .SetInertia(false)
+        .SetScrollSensitivity(BuildHudPanelScrollSensitivity.Value); ;
 
     if (!hud.m_pieceListRoot.TryGetComponent(out Image image)) {
       image = hud.m_pieceListRoot.gameObject.AddComponent<Image>();
       image.color = Color.clear;
     }
+
+    SetupCategories(hud);
+    SetupTabBorder(hud);
+    SetupInputHelp(hud);
 
     GameObject panel = hud.m_pieceSelectionWindow.transform.parent.gameObject;
 
@@ -120,12 +130,43 @@ public static class BuildHudController {
     BuildHudNeedRefresh = true;
   }
 
+  static void SetupCategories(Hud hud) {
+    hud.m_pieceCategoryRoot.GetComponent<RectTransform>()
+        .SetPosition(CategoriesRectPosition.Value)
+        .SetSizeDelta(CategoriesRectSizeDelta.Value);
+  }
+
+  static void SetupTabBorder(Hud hud) {
+    Transform tabBorderTransform = hud.m_pieceCategoryRoot.transform.Find("TabBorder");
+    tabBorderTransform.gameObject.SetActive(TabBorderIsEnabled.Value);
+
+    tabBorderTransform.GetComponent<RectTransform>()
+        .SetPosition(TabBorderRectPosition.Value)
+        .SetSizeDelta(TabBorderRectSizeDelta.Value);
+  }
+
+  static void SetupInputHelp(Hud hud) {
+    Transform inputHelpTransform = hud.m_pieceSelectionWindow.transform.Find("InputHelp");
+    inputHelpTransform.gameObject.SetActive(InputHelpIsEnabled.Value);
+
+    inputHelpTransform.GetComponent<RectTransform>()
+        .SetPosition(InputHelpRectPosition.Value)
+        .SetSizeDelta(InputHelpRectSizeDelta.Value);
+  }
+
+  static void TriggerJotunnCategoryRebuild(Player player) {
+    if (player && player.m_buildPieces) {
+      player.SetPlaceMode(player.m_buildPieces);
+    }
+  }
+
   static void HandlePanelEndDrag(object sender, Vector3 position) {
     BuildHudPanelPosition.Value = position;
   }
   
   static void HandlePanelEndResize(object sender, Vector2 sizeDelta) {
     ResizeBuildHudPanel(sizeDelta);
+    TriggerJotunnCategoryRebuild(Player.m_localPlayer);
   }
 
   public static void SetBuildPanelPosition(Vector2 position) {
@@ -138,5 +179,19 @@ public static class BuildHudController {
     if (BuildHudScrollRect) {
       BuildHudScrollRect.scrollSensitivity = scrollSensitivity;
     }
+  }
+
+  public static void HandleCategoriesConfigChange() {
+    Hud hud = Hud.m_instance;
+
+    if (!hud) {
+      return;
+    }
+
+    SetupCategories(hud);
+    SetupTabBorder(hud);
+    SetupInputHelp(hud);
+
+    TriggerJotunnCategoryRebuild(Player.m_localPlayer);
   }
 }

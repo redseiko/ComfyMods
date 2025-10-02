@@ -10,14 +10,15 @@ public static class UIBuilder {
     TextMeshProUGUI label =
         UnityEngine.Object.Instantiate(UnifiedPopup.instance.bodyText, parentTransform, worldPositionStays: false);
 
-    label.name = "Label";
-    label.fontSize = 16f;
-    label.richText = true;
-    label.color = Color.white;
-    label.enableAutoSizing = false;
-    label.textWrappingMode = TextWrappingModes.NoWrap;
-    label.overflowMode = TextOverflowModes.Overflow;
-    label.text = string.Empty;
+    label
+        .SetName("Label")
+        .SetRichText(true)
+        .SetEnableAutoSizing(false)
+        .SetTextWrappingMode(TextWrappingModes.NoWrap)
+        .SetOverflowMode(TextOverflowModes.Overflow)
+        .SetColor(Color.white)
+        .SetFontSize(16f)
+        .SetText(string.Empty);
 
     return label;
   }
@@ -26,13 +27,14 @@ public static class UIBuilder {
     TextMeshProUGUI label =
         UnityEngine.Object.Instantiate(UnifiedPopup.instance.headerText, parentTransform, worldPositionStays: false);
 
-    label.name = "Label";
-    label.fontSize = 32f;
-    label.richText = true;
-    label.enableAutoSizing = false;
-    label.textWrappingMode = TextWrappingModes.NoWrap;
-    label.overflowMode = TextOverflowModes.Overflow;
-    label.text = string.Empty;
+    label
+        .SetName("Label")
+        .SetRichText(true)
+        .SetEnableAutoSizing(false)
+        .SetTextWrappingMode(TextWrappingModes.NoWrap)
+        .SetOverflowMode(TextOverflowModes.Overflow)
+        .SetFontSize(32f)
+        .SetText(string.Empty);
 
     return label;
   }

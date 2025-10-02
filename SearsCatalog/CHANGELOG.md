@@ -1,5 +1,21 @@
 ## Changelog
 
+### 1.8.0
+
+  * Modified `Categories` and `TabBorder` to now take up the full-space of the `BuildHud.Panel`.
+  * Disabled `InputHelp` (key-hints) to make room for expanded `Categories`.
+  * Added logic to trigger Jotunn category-rebuild whenever the `BuildHud.Panel` is resized or on config-change.
+  * Added new config-options:
+    * `[BuildHud.Panel.Categories] categoriesRectPosition`
+    * `[BuildHud.Panel.Categories] categoriesRectSizeDelta`
+    * `[BuildHud.Panel.TabBorder] tabBorderIsEnabled`
+    * `[BuildHud.Panel.TabBorder] tabBorderRectPosition`
+    * `[BuildHud.Panel.TabBorder] tabBorderSizeDelta`
+    * `[BuildHud.Panel.InputHelp] inputHelpIsEnabled`
+    * `[BuildHud.Panel.InputHelp] inputHelpRectPosition`
+    * `[BuildHud.Panel.InputHelp] inputHelpRectSizeDelta`
+  * Minor code clean-up.
+
 ### 1.7.0
 
   * Fixed for the `v0.221.4` patch.

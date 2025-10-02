@@ -2,10 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Reflection.Emit;
-
-using ComfyLib;
 
 using HarmonyLib;
 
@@ -39,36 +36,25 @@ static class PieceTablePatch {
     }
   }
 
-  [HarmonyPatch]
-  static class GetPiecePatch {
-    [HarmonyTargetMethod]
-    static MethodBase CalculateMethod() {
-      return ReflectionUtils.GetFirstMatchingMethod(
-          typeof(PieceTable),
-          nameof(PieceTable.GetPiece),
-          [typeof(int), typeof(Vector2Int)],
-          [typeof(Piece.PieceCategory), typeof(Vector2Int)]);
-    }
+  [HarmonyTranspiler]
+  [HarmonyPatch(nameof(PieceTable.GetPiece), [typeof(Piece.PieceCategory), typeof(Vector2Int)])]
+  static IEnumerable<CodeInstruction> GetPieceTranspiler(IEnumerable<CodeInstruction> instructions) {
+    return new CodeMatcher(instructions)
+        .Start()
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldarga_S),
+            new CodeMatch(OpCodes.Call, AccessTools.PropertyGetter(typeof(Vector2Int), nameof(Vector2Int.y))),
+            new CodeMatch(OpCodes.Ldc_I4_S, Convert.ToSByte(15)))
+        .ThrowIfInvalid("Could not patch PieceTable.GetPiece()! (get-y)")
+        .Advance(offset: 3)
+        .InsertAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(PieceTablePatch), nameof(GetPieceGetYDelegate))))
+        .InstructionEnumeration();
+  }
 
-    [HarmonyTranspiler]
-    static IEnumerable<CodeInstruction> GetPieceTranspiler(IEnumerable<CodeInstruction> instructions) {
-      return new CodeMatcher(instructions)
-          .Start()
-          .MatchStartForward(
-              new CodeMatch(OpCodes.Ldarga_S),
-              new CodeMatch(OpCodes.Call, AccessTools.PropertyGetter(typeof(Vector2Int), nameof(Vector2Int.y))),
-              new CodeMatch(OpCodes.Ldc_I4_S))
-          .ThrowIfInvalid("Could not patch PieceTable.GetPiece()! (get-y)")
-          .Advance(offset: 3)
-          .InsertAndAdvance(
-              new CodeInstruction(
-                  OpCodes.Call, AccessTools.Method(typeof(GetPiecePatch), nameof(GetPieceGetYDelegate))))
-          .InstructionEnumeration();
-    }
-
-    static int GetPieceGetYDelegate(int value) {
-      return IsModEnabled.Value ? BuildHudController.BuildHudColumns : value;
-    }
+  static int GetPieceGetYDelegate(int value) {
+    return IsModEnabled.Value ? BuildHudController.BuildHudColumns : value;
   }
 
   [HarmonyTranspiler]

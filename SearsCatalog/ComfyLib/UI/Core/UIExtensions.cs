@@ -346,6 +346,11 @@ public static class ScrollRectExtensions {
     return scrollRect;
   }
 
+  public static T SetInertia<T>(this T scrollRect, bool inertia) where T : ScrollRect {
+    scrollRect.inertia = inertia;
+    return scrollRect;
+  }
+
   public static T SetMovementType<T>(this T scrollRect, ScrollRect.MovementType movementType) where T : ScrollRect {
     scrollRect.movementType = movementType;
     return scrollRect;
