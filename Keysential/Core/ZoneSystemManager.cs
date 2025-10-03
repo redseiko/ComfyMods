@@ -23,7 +23,7 @@ public static class ZoneSystemManager {
 
     if (globalKeysAllowedSet.Count > 0) {
       zoneSystem.m_globalKeys.IntersectWith(globalKeysAllowedSet);
-      Keysential.LogInfo($"Limiting ZoneSystem.globalKeys for allowed list to:\n{LogGlobalKeys(zoneSystem)}");
+      Keysential.LogInfo($"Limiting ZoneSystem.globalKeys for allowed set to:\n{LogGlobalKeys(zoneSystem)}");
     }
 
     if (VendorKeyManagerEnabled.Value) {
@@ -42,6 +42,7 @@ public static class ZoneSystemManager {
     }
 
     Keysential.LogInfo($"Ignoring SetGlobalKey '{globalKey}' from senderId {senderId}.");
+
     return true;
   }
 

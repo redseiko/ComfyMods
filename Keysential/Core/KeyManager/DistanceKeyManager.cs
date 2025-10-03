@@ -7,10 +7,10 @@ using UnityEngine;
 
 public static class DistanceKeyManager {
   public static IEnumerator DistanceXZProximityCoroutine(
-      string managerId, Vector3 position, float distance, params string[] keysToAdd) {
+      string managerId, Vector3 position, float distance, IEnumerable<string> keysToAdd) {
     Keysential.LogInfo(
         $"Starting DistanceXZProximityCoroutine coroutine... "
-            + $"position: {position}, distance: {distance}, keys: {keysToAdd}");
+            + $"position: {position}, distance: {distance}, keys: {string.Join(",", keysToAdd)}");
 
     List<string> originalKeys = [];
     List<string> nearbyKeys = [];

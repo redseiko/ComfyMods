@@ -10,20 +10,6 @@ using Steamworks;
 using UnityEngine;
 
 public static class GlobalKeysManager {
-  public class KeyManager {
-    public string ManagerId { get; }
-    public Vector3 Position { get; }
-    public float Distance { get; }
-    public Coroutine Coroutine { get; }
-
-    public KeyManager(string managerId, Vector3 position, float distance, Coroutine coroutine) {
-      ManagerId = managerId;
-      Position = position;
-      Distance = distance;
-      Coroutine = coroutine;
-    }
-  }
-
   public static Dictionary<string, KeyManager> CurrentKeyManagers { get; private set; } = [];
   public static Dictionary<string, HashSet<long>> NearbyPeerIdsCache { get; private set; } = [];
 
@@ -100,5 +86,33 @@ public static class GlobalKeysManager {
 
     ZRoutedRpc.s_instance.InvokeRoutedRPC(
         netPeerId, "ChatMessage", position, (int) Talker.Type.Normal, userInfo, message);
+  }
+
+  public enum ManagerType {
+    DistanceXZ,
+    Vendor
+  }
+
+  public static IEnumerator CreateKeyManagerCoroutine(
+      string managerId, ManagerType managerType, Vector3 position, float distance, IEnumerable<string> keys) {
+    if (managerType == ManagerType.Vendor) {
+      return VendorKeyManager.VendorPlayerProximityCoroutine(managerId, position, distance, keys);
+    }
+
+    return DistanceKeyManager.DistanceXZProximityCoroutine(managerId, position, distance, keys);
+  }
+}
+
+public sealed class KeyManager {
+  public string ManagerId { get; }
+  public Vector3 Position { get; }
+  public float Distance { get; }
+  public Coroutine Coroutine { get; }
+
+  public KeyManager(string managerId, Vector3 position, float distance, Coroutine coroutine) {
+    ManagerId = managerId;
+    Position = position;
+    Distance = distance;
+    Coroutine = coroutine;
   }
 }

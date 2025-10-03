@@ -1,5 +1,13 @@
 ## Changelog
 
+### 1.11.0
+
+  * Converted all commands to `ComfyCommand` and `ComfyArgs` format.
+  * Renamed commands:
+    * `startkeymanager` -> `start-key-manager`
+    * `stopkeymanager` -> `stop-key-manager`
+  * Removed `startvendorkeymanager` command and merged it into `start-key-manager` command.
+
 ### 1.10.0
 
   * Updated for the `v0.221.4` patch.

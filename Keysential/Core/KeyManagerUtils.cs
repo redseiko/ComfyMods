@@ -39,10 +39,12 @@ public static class KeyManagerUtils {
     return false;
   }
 
-  public static readonly char[] SpaceSeparator = [' '];
-
   static bool IsMatchingCommand(string managerId, string command) {
-    string[] parts = command.Split(SpaceSeparator, System.StringSplitOptions.RemoveEmptyEntries);
-    return parts.Length >= 2 && parts[1] == managerId;
+    if (command.StartsWith($"start-key-manager", System.StringComparison.Ordinal)
+        && (command.Contains($"--id={managerId}") || command.Contains($"--id=\"{managerId}\""))) {
+      return true;
+    }
+
+    return false;
   }
 }

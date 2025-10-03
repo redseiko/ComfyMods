@@ -129,7 +129,6 @@
     <Compile Include="ComfyLib\Extensions\UnityExtensions.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Core\Commands\StartKeyManagerCommand.cs" />
-    <Compile Include="Core\Commands\StartVendorKeyManagerCommand.cs" />
     <Compile Include="Core\Commands\StopKeyManagerCommand.cs" />
     <Compile Include="Core\Components\VendorKeyManager.cs" />
     <Compile Include="Core\GlobalKeysManager.cs" />

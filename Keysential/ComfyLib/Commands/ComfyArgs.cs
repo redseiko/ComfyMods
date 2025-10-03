@@ -79,6 +79,15 @@ public sealed class ComfyArgs {
         && argStringValue.TryParseValue(out argValue);
   }
 
+  public bool TryGetListValue<T>(string argName, out List<T> argListValue) {
+    if (!ArgsValueByName.TryGetValue(argName, out string argStringValue)) {
+      argListValue = default;
+      return false;
+    }
+
+    return GetListValue(argStringValue, out argListValue);
+  }
+
   public bool TryGetListValue<T>(string argName, string argShortName, out List<T> argListValue) {
     if (!ArgsValueByName.TryGetValue(argName, out string argStringValue)
         && !ArgsValueByName.TryGetValue(argShortName, out argStringValue)) {
@@ -86,6 +95,10 @@ public sealed class ComfyArgs {
       return false;
     }
 
+    return GetListValue(argStringValue, out argListValue);
+  }
+
+  static bool GetListValue<T>(string argStringValue, out List<T> argListValue) {
     string[] values = argStringValue.Split(CommaSeparator, StringSplitOptions.RemoveEmptyEntries);
     argListValue = new(capacity: values.Length);
 

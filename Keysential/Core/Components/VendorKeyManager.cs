@@ -9,7 +9,7 @@ using static PluginConfig;
 
 public sealed class VendorKeyManager : MonoBehaviour {
   static readonly float _vendorNearbyDistance = 8f;
-  static readonly string _vendorNearbyGlobalKey = "defeated_goblinking";
+  static readonly string[] _vendorNearbyGlobalKeys = ["defeated_goblinking"];
 
   void Awake() {
     if (ZNet.m_isServer && VendorKeyManagerPosition.Value != Vector3.zero) {
@@ -18,15 +18,15 @@ public sealed class VendorKeyManager : MonoBehaviour {
           VendorKeyManagerPosition.Value,
           _vendorNearbyDistance,
           VendorPlayerProximityCoroutine(
-              "haldor0", VendorKeyManagerPosition.Value, _vendorNearbyDistance, _vendorNearbyGlobalKey));
+              "haldor0", VendorKeyManagerPosition.Value, _vendorNearbyDistance, _vendorNearbyGlobalKeys));
     }
   }
 
   public static IEnumerator VendorPlayerProximityCoroutine(
-      string managerId, Vector3 vendorPosition, float vendorDistance, params string[] vendorKeys) {
+      string managerId, Vector3 vendorPosition, float vendorDistance, IEnumerable<string> vendorKeys) {
     Keysential.LogInfo(
         $"Starting VendorPlayerProximityCoroutine coroutine... "
-            + $"position: {vendorPosition}, distance: {vendorDistance}, keys: {vendorKeys}");
+            + $"position: {vendorPosition}, distance: {vendorDistance}, keys: {string.Join(",", vendorKeys)}");
 
     List<string> originalKeys = [];
     List<string> nearbyKeys = [];
