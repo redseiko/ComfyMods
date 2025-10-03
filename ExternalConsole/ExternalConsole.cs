@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class ExternalConsole : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.externalconsole";
   public const string PluginName = "ExternalConsole";
-  public const string PluginVersion = "1.3.0";
+  public const string PluginVersion = "1.4.0";
 
   static ManualLogSource _logger;
 

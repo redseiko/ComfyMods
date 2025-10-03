@@ -1,5 +1,12 @@
 ## Changelog
 
+### 1.4.0
+
+  * Updated for the `v0.221.4` patch.
+  * Added logic to log processed commands to a different file, instead of commenting out existing line in input file.
+  * Added new config-option `[ExternalInput] commandLogFilename` for the new log file.
+  * Updated mod icon.
+
 ### 1.3.0
 
   * Fixed for the `v0.220.3` patch.

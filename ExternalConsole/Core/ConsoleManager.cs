@@ -40,6 +40,8 @@ public static class ConsoleManager {
       return;
     }
 
+    using StreamWriter commandLog = GetCommandLog(CommandLogFilename.Value);
+
     foreach (string line in commandList.m_list) {
       try {
         ExternalConsole.LogInfo($"Processing command line: {line}");
@@ -48,11 +50,20 @@ public static class ConsoleManager {
         ExternalConsole.LogError($"Failed processing command line due to exception: {exception}");
       }
 
-      commandList.m_comments.Add(
-          $"// [{System.DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)}] {line}");
+      commandLog.WriteLine(
+          $"[{System.DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)}] {line}");
     }
 
     commandList.m_list.Clear();
     commandList.Save();
+  }
+
+  static StreamWriter GetCommandLog(string filename) {
+    return new StreamWriter(
+        Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), filename),
+        append: true,
+        encoding: System.Text.Encoding.UTF8) {
+      AutoFlush = true
+    };
   }
 }
