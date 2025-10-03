@@ -76,6 +76,20 @@ public static class GlobalKeysManager {
     }
   }
 
+  public static void RemovePeer(ZNetPeer netPeer) {
+    if (!netPeer.IsReady()) {
+      return;
+    }
+
+    long netPeerId = netPeer.m_uid;
+
+    foreach (KeyValuePair<string, HashSet<long>> pair in NearbyPeerIdsCache) {
+      if (pair.Value.Remove(netPeerId)) {
+        Keysential.LogInfo($"Removed peer {netPeerId} from NearbyPeersId for '{pair.Key}'.");
+      }
+    }
+  }
+
   public static void SendChatMessage(long netPeerId, Vector3 position, string name, string message) {
     string steamId = SteamGameServer.GetSteamID().ToString();
 

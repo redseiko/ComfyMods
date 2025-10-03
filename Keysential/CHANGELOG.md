@@ -1,6 +1,15 @@
 ## Changelog
 
-## 1.9.0
+### 1.10.0
+
+  * Updated for the `v0.221.4` patch.
+  * Added `ComfyArgs` support for `ComfyCommand`.
+  * Converted logic from a `CachedStringList` to `CachedStringSet`.
+  * Added `GlobalKeysManager.RemovePeer()` invoked from `ZRoutedRpc.RemovePeer()` to update all `NearbyPeerIds`.
+  * Code clean-up and refactoring.
+  * Updated mod icon.
+
+### 1.9.0
 
   * Fixed for the `v0.220.3` patch.
   * Bumped up `<LangVersion>` to C# 12.

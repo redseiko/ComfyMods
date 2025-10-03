@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class Keysential : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.keysential";
   public const string PluginName = "Keysential";
-  public const string PluginVersion = "1.9.0";
+  public const string PluginVersion = "1.10.0";
 
   static ManualLogSource _logger;
 
