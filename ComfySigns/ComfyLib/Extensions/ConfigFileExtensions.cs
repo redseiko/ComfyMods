@@ -89,8 +89,7 @@ public static class ConfigFileExtensions {
   public static void OnSettingChanged<T>(
       this ConfigEntry<T> configEntry, Action<ConfigEntry<T>> settingChangedHandler) {
     configEntry.SettingChanged +=
-        (_, eventArgs) =>
-            settingChangedHandler((ConfigEntry<T>) ((SettingChangedEventArgs) eventArgs).ChangedSetting.BoxedValue);
+        (_, eventArgs) => settingChangedHandler((ConfigEntry<T>) ((SettingChangedEventArgs) eventArgs).ChangedSetting);
   }
 
   internal sealed class ConfigurationManagerAttributes {
