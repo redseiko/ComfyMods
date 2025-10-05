@@ -1,5 +1,7 @@
 ﻿namespace LicenseToSkill;
 
+using UnityEngine;
+
 using static PluginConfig;
 
 public static class StatusEffectUtils {
@@ -33,5 +35,9 @@ public static class StatusEffectUtils {
 
     statusEffect = default;
     return false;
+  }
+
+  public static float GetSkillLossFactor() {
+    return Mathf.Min(SkillLossPercentOverride.Value * 0.01f, Game.m_skillReductionRate);
   }
 }

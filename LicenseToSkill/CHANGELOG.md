@@ -1,5 +1,13 @@
 ## Changelog
 
+### 1.5.0
+
+  * Updated for the `v0.221.4` patch.
+  * Removed `StatusEffectPatch` as "No skill loss" effect now shows remaining time in vanilla.
+  * Skill loss factor uses the lowest value of `skillLossPercentOverride` or `Game.m_skillReductionRate` modifier.
+  * Code clean-up and refactoring.
+  * Updated mod icon.
+
 ### 1.4.0
 
   * Updated for the `v0.218.15` Ashlands patch.

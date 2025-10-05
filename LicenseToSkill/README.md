@@ -7,7 +7,6 @@
 ### Features
 
   * Increases 'no skill loss' status effect from 10 minutes to 20 minutes.
-  * Now shows the current time remaining!
   * Reduces skill loss on death from 5% across all skills to 1%.
 
 ### Notes
