@@ -17,7 +17,7 @@ using static PluginConfig;
 public sealed class Pinnacle : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.pinnacle";
   public const string PluginName = "Pinnacle";
-  public const string PluginVersion = "1.14.0";
+  public const string PluginVersion = "1.15.0";
 
   static ManualLogSource _logger;
 

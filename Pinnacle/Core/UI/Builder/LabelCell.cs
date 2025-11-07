@@ -10,11 +10,11 @@ using UnityEngine.UI;
 public sealed class LabelCell {
   public GameObject Cell { get; private set; }
   public Image Background { get; private set; }
-  public TMP_Text Label { get; private set; }
+  public TextMeshProUGUI Label { get; private set; }
 
   public LabelCell(Transform parentTransform) {
     Cell = CreateChildCell(parentTransform);
-    Background = Cell.Image();
+    Background = Cell.GetComponent<Image>();
     Label = CreateChildLabel(Cell.transform);
   }
 
@@ -45,8 +45,8 @@ public sealed class LabelCell {
     return cell;
   }
 
-  TMP_Text CreateChildLabel(Transform parentTransform) {
-    TMP_Text label = UIBuilder.CreateTMPLabel(parentTransform);
+  TextMeshProUGUI CreateChildLabel(Transform parentTransform) {
+    TextMeshProUGUI label = UIBuilder.CreateTMPLabel(parentTransform);
     label.SetName("Label");
 
     label.alignment = TextAlignmentOptions.Left;

@@ -54,7 +54,7 @@ public sealed class PinListPanel {
 
     PinStats = new(Panel.transform);
     PinStats.Cell.GetComponent<HorizontalLayoutGroup>().SetPadding(left: 8, right: 8, top: 2, bottom: 2);
-    PinStats.Cell.Image().SetColor(new(0.5f, 0.5f, 0.5f, 0.1f));
+    PinStats.Background.SetColor(new(0.5f, 0.5f, 0.5f, 0.1f));
     PinStats.Cell.AddComponent<Outline>().SetEffectDistance(new(2f, -2f));
 
     RefreshButton = CreateRefreshButton(PinStats.Cell.transform);
@@ -253,7 +253,7 @@ public sealed class PinListPanel {
         .SetHorizontal(false)
         .SetVertical(true)
         .SetMovementType(PinListPanelScrollRectMovementType.Value)
-        .SetScrollSensitivity(30f);
+        .SetScrollSensitivity(PinListPanelScrollRectScrollSensitivity.Value);
   }
 
   GameObject CreateChildPanelDragger(GameObject panel) {

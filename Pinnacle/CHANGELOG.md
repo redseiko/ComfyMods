@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.15.0
+
+  * Updated for the `v0.221.5` patch.
+  * Fixed scroll-sensitivity issue with `PinListPanel` scrollbar.
+  * Added new config-option `[PinListPanel.ScrollRect] scrollSensitivity` to configure above scroll-sensitivity.
+
 ### 1.14.0
 
   * Added new feature `QuickMapPin`.

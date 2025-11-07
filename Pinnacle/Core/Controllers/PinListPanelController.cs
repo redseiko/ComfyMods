@@ -69,6 +69,12 @@ public static class PinListPanelController {
     }
   }
 
+  public static void SetScrollRectScrollSensitivity(float scrollSensitivity) {
+    if (IsPanelValid()) {
+      PinListPanel.ScrollRect.scrollSensitivity = scrollSensitivity;
+    }
+  }
+
   static void OnPanelDragEnd(object sender, Vector3 position) {
     PinListPanelPosition.Value = position;
   }

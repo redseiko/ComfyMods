@@ -60,6 +60,7 @@ public static class PluginConfig {
   public static ConfigEntry<Color> PinListPanelBackgroundColor { get; private set; }
 
   public static ConfigEntry<ScrollRect.MovementType> PinListPanelScrollRectMovementType { get; private set; }
+  public static ConfigEntry<float> PinListPanelScrollRectScrollSensitivity { get; private set; }
 
   public static ConfigEntry<bool> PinListPanelEditPinOnRowClick { get; private set; }
 
@@ -116,6 +117,16 @@ public static class PluginConfig {
                 ScrollRect.MovementType.Elastic));
 
     PinListPanelScrollRectMovementType.OnSettingChanged(PinListPanelController.SetScrollRectMovementType);
+
+    PinListPanelScrollRectScrollSensitivity =
+        config.BindInOrder(
+            "PinListPanel.ScrollRect",
+            "scrollSensitivity",
+            3600f,
+            "PinListPanel scroll-sensitivity when using the mouse-wheel.",
+            new AcceptableValueRange<float>(0f, 7200f));
+
+    PinListPanelScrollRectScrollSensitivity.OnSettingChanged(PinListPanelController.SetScrollRectScrollSensitivity);
 
     PinListPanelEditPinOnRowClick =
         config.BindInOrder(
