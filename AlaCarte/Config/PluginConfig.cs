@@ -16,6 +16,7 @@ public static class PluginConfig {
 
   public static ConfigEntry<DialogType> MenuDialogType { get; private set; }
   public static ConfigEntry<Vector2> MenuDialogPosition { get; private set; }
+  public static ConfigEntry<bool> MenuDialogCanDragPanel { get; private set; }
 
   public static ConfigEntry<bool> DisableGamePauseOnMenu { get; private set; }
 
@@ -40,6 +41,13 @@ public static class PluginConfig {
             "menuDialogPosition",
             new Vector2(0f, 212f),
             "Menu.m_menuDialog.position");
+
+    MenuDialogCanDragPanel =
+        config.BindInOrder(
+            "MenuDialog",
+            "menuDialogCanDragPanel",
+            true,
+            "If enabled, Menu.m_menuDialog can be moved using mouse drag-and-drop.");
 
     DisableGamePauseOnMenu =
         config.BindInOrder(

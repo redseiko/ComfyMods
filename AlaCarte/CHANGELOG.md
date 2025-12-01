@@ -1,5 +1,12 @@
 ## Changelog
 
+### 1.6.0
+
+  * Updated for the `v0.221.4` patch.
+  * Added new config-option `[MenuDialog] menuDialogCanDragPanel`.
+  * Code clean-up and refactoring.
+  * Updated mod icon.
+
 ### 1.5.0
 
   * Updated for the `v0.219.10` PTB patch.

@@ -1,7 +1,5 @@
 ﻿namespace AlaCarte;
 
-using ComfyLib;
-
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,20 +25,26 @@ public static class MenuUtils {
   public static void SetupMenuDialogVanilla(RectTransform menuTransform) {
     MenuDialogVanilla = menuTransform;
 
-    Image image = menuTransform.Find("darken").GetComponent<Image>();
-    image.raycastTarget = false;
+    Image darkenImage = menuTransform.Find("darken").GetComponent<Image>();
+    darkenImage.raycastTarget = false;
 
-    PanelDragger dragger = menuTransform.Find("ornament").gameObject.AddComponent<PanelDragger>();
-    dragger.TargetRectTransform = menuTransform;
-    dragger.OnPanelEndDrag += OnMenuDialogEndDrag;
+    Transform ornamentTransform = menuTransform.Find("ornament");
+
+    if (!ornamentTransform.TryGetComponent(out MenuDialogDragger dragger)) {
+      dragger = ornamentTransform.gameObject.AddComponent<MenuDialogDragger>();
+      dragger.MenuRectTransform = menuTransform;
+      dragger.OnMenuDragEnd += OnMenuDialogEndDrag;
+    }
   }
 
   public static void SetupMenuDialogOld(RectTransform menuTransform) {
     MenuDialogOld = menuTransform;
 
-    PanelDragger dragger = menuTransform.gameObject.AddComponent<PanelDragger>();
-    dragger.TargetRectTransform = menuTransform;
-    dragger.OnPanelEndDrag += OnMenuDialogEndDrag;
+    if (!menuTransform.TryGetComponent(out MenuDialogDragger dragger)) {
+      dragger = menuTransform.gameObject.AddComponent<MenuDialogDragger>();
+      dragger.MenuRectTransform = menuTransform;
+      dragger.OnMenuDragEnd += OnMenuDialogEndDrag;
+    }
   }
 
   static void OnMenuDialogEndDrag(object sender, Vector3 position) {
@@ -60,18 +64,28 @@ public static class MenuUtils {
   }
 
   public static RectTransform GetMenuDialogByType(DialogType dialogType) {
-    return dialogType switch {
-      DialogType.Vanilla => MenuDialogVanilla,
-      DialogType.Old => MenuDialogOld,
-      _ => throw new System.NotImplementedException(),
-    };
+    switch (dialogType) {
+      case DialogType.Vanilla:
+        return MenuDialogVanilla;
+
+      case DialogType.Old:
+        return MenuDialogOld;
+
+      default:
+        throw new System.NotImplementedException($"DialogType {dialogType:F} not supported.");
+    }
   }
 
   static GameObject GetHandlerDefaultElementByType(DialogType dialogType) {
-    return dialogType switch {
-      DialogType.Vanilla => _handlerDefaultElementVanilla,
-      DialogType.Old => _handlerDefaultElementOld,
-      _ => default,
-    };
+    switch (dialogType) {
+      case DialogType.Vanilla:
+        return _handlerDefaultElementVanilla;
+
+      case DialogType.Old:
+        return _handlerDefaultElementOld;
+
+      default:
+        throw new System.NotImplementedException($"DialogType {dialogType:F} not supported.");
+    }
   }
 }

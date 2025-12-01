@@ -12,7 +12,7 @@ using static PluginConfig;
 public sealed class AlaCarte : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.alacarte";
   public const string PluginName = "AlaCarte";
-  public const string PluginVersion = "1.5.0";
+  public const string PluginVersion = "1.6.0";
 
   void Awake() {
     BindConfig(Config);
