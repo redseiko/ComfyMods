@@ -125,6 +125,7 @@
     <Compile Include="Core\UI\MahjongTileHelper.cs" />
     <Compile Include="Core\UI\MahjongTileInfo.cs" />
     <Compile Include="Core\UI\MahjongTile.cs" />
+    <Compile Include="Core\UI\MahjongTileDragger.cs" />
     <Compile Include="Patches\FejdStartupPatch.cs" />
     <Compile Include="Patches\InventoryGuiPatch.cs" />
     <Compile Include="Patches\MinimapPatch.cs" />

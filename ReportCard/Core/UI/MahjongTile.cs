@@ -10,12 +10,14 @@ using UnityEngine.UI;
 public sealed class MahjongTile {
   public const float TileWidth = 70f;
   public const float TileHeight = 80f;
+
   public MahjongTileInfo Info { get; private set; }
   public GameObject Container { get; }
   public RectTransform RectTransform { get; }
   public Image Background { get; }
   public TextMeshProUGUI FaceText { get; }
   public Button Button { get; }
+  public MahjongTileDragger Dragger { get; }
 
   public MahjongTile(Transform parentTransform) {
     Container = CreateContainer(parentTransform);
@@ -23,6 +25,10 @@ public sealed class MahjongTile {
     Background = Container.GetComponent<Image>();
     FaceText = CreateFaceText(Container.transform);
     Button = CreateButton(Container, Background);
+
+    Container.AddComponent<CanvasGroup>();
+    Dragger = Container.AddComponent<MahjongTileDragger>();
+    Dragger.Initialize(this);
 
     FaceText.gameObject.SetActive(false);
   }

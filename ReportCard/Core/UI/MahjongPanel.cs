@@ -50,13 +50,23 @@ public sealed class MahjongPanel {
   public void AddTile(MahjongTileInfo info) {
     MahjongTile tile = new(HandContainer.transform);
     tile.SetTile(info);
+    tile.Dragger.OnTileDropped.AddListener(OnTileDropped);
     HandTiles.Add(tile);
     RedrawHand();
   }
 
   public void RemoveTile(MahjongTile tile) {
     if (HandTiles.Remove(tile)) {
+      tile.Dragger.OnTileDropped.RemoveListener(OnTileDropped);
       Object.Destroy(tile.Container);
+      RedrawHand();
+    }
+  }
+
+  public void MoveTile(MahjongTile tile, int newIndex) {
+    if (HandTiles.Remove(tile)) {
+      newIndex = Mathf.Clamp(newIndex, 0, HandTiles.Count);
+      HandTiles.Insert(newIndex, tile);
       RedrawHand();
     }
   }
@@ -75,6 +85,23 @@ public sealed class MahjongPanel {
     for (int i = 0; i < HandTiles.Count; i++) {
       HandTiles[i].RectTransform.anchoredPosition = new Vector2(startX + i * (tileWidth + spacing), 0);
     }
+  }
+
+  void OnTileDropped(MahjongTile droppedTile) {
+    droppedTile.RectTransform.SetParent(HandContainer.transform, worldPositionStays: true);
+
+    int newIndex = 0;
+    for (int i = 0; i < HandTiles.Count; i++) {
+      if (HandTiles[i] == droppedTile) {
+        continue;
+      }
+
+      if (droppedTile.RectTransform.position.x > HandTiles[i].RectTransform.position.x) {
+        newIndex++;
+      }
+    }
+
+    MoveTile(droppedTile, newIndex);
   }
 
   static LabelButton CreateCloseButton(Transform parentTransform) {
