@@ -1,4 +1,4 @@
-﻿namespace ReportCard;
+﻿﻿namespace ReportCard;
 
 using System;
 using System.Collections.Generic;
@@ -139,7 +139,7 @@ public sealed class PlayerStatsPanel {
     LabelButton closeButton = new(parentTransform);
     closeButton.Button.name = "CloseButton";
 
-    closeButton.Container.GetComponent<RectTransform>()
+    closeButton.RectTransform
         .SetAnchorMin(Vector2.right)
         .SetAnchorMax(Vector2.right)
         .SetPivot(Vector2.right)

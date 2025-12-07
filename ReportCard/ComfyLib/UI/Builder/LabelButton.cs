@@ -1,4 +1,4 @@
-﻿namespace ComfyLib;
+﻿﻿namespace ComfyLib;
 
 using TMPro;
 
@@ -7,11 +7,13 @@ using UnityEngine.UI;
 
 public sealed class LabelButton {
   public GameObject Container { get; private set; }
+  public RectTransform RectTransform { get; private set; }
   public TMP_Text Label { get; private set; }
   public Button Button { get; private set; }
 
   public LabelButton(Transform parentTransform) {
     Container = CreateContainer(parentTransform);
+    RectTransform = Container.GetComponent<RectTransform>();
     Label = CreateLabel(Container.transform);
     Button = CreateButton(Container);
   }
@@ -25,7 +27,7 @@ public sealed class LabelButton {
         .SetSprite(UIResources.GetSprite("button"))
         .SetColor(Color.white);
 
-    container.GetComponent<RectTransform>()
+    container.GetComponent<RectTransform>() // This is for the initial setup, can't use the property yet.
         .SetAnchorMin(new(0.5f, 0.5f))
         .SetAnchorMax(new(0.5f, 0.5f))
         .SetPivot(new(0.5f, 0.5f))

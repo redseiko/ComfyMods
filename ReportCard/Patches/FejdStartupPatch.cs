@@ -1,4 +1,4 @@
-﻿namespace ReportCard;
+﻿﻿namespace ReportCard;
 
 using HarmonyLib;
 
@@ -12,6 +12,8 @@ static class FejdStartupPatch {
     if (IsModEnabled.Value) {
       PlayerStatsController.CreateStatsPanel(__instance);
       PlayerStatsController.CreateStatsButton(__instance);
+      MahjongController.CreatePanel(__instance);
+      MahjongController.CreateMahjongButton(__instance);
     }
   }
 

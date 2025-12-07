@@ -1,4 +1,4 @@
-﻿namespace ReportCard;
+﻿﻿namespace ReportCard;
 
 using ComfyLib;
 
@@ -95,7 +95,7 @@ public static class ExploredStatsController {
         .SetFontSize(20f)
         .SetText("Stats");
 
-    StatsButton.Container.GetComponent<RectTransform>()
+    StatsButton.RectTransform
         .SetAnchorMin(Vector2.up)
         .SetAnchorMax(Vector2.up)
         .SetPivot(Vector2.up)

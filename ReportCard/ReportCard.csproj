@@ -117,9 +117,14 @@
     <Compile Include="Core\ExploredStats.cs" />
     <Compile Include="Core\ExploredStatsController.cs" />
     <Compile Include="Core\PlayerStatsController.cs" />
+    <Compile Include="Core\MahjongController.cs" />
     <Compile Include="Core\UI\ExploredStatsPanel.cs" />
     <Compile Include="Core\UI\MinimapFocus.cs" />
     <Compile Include="Core\UI\PlayerStatsPanel.cs" />
+    <Compile Include="Core\UI\MahjongPanel.cs" />
+    <Compile Include="Core\UI\MahjongTileHelper.cs" />
+    <Compile Include="Core\UI\MahjongTileInfo.cs" />
+    <Compile Include="Core\UI\MahjongTile.cs" />
     <Compile Include="Patches\FejdStartupPatch.cs" />
     <Compile Include="Patches\InventoryGuiPatch.cs" />
     <Compile Include="Patches\MinimapPatch.cs" />

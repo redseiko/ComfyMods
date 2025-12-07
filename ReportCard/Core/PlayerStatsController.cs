@@ -95,7 +95,7 @@ public static class PlayerStatsController {
   public static void CreateStatsButton(FejdStartup fejdStartup) {
     LabelButton statsButton = CreateStatsButton(fejdStartup.m_characterSelectScreen.transform);
 
-    statsButton.Container.GetComponent<RectTransform>()
+    statsButton.RectTransform
         .SetAnchorMin(Vector2.right)
         .SetAnchorMax(Vector2.right)
         .SetPivot(Vector2.right)
@@ -109,7 +109,7 @@ public static class PlayerStatsController {
     LabelButton statsButton = CreateStatsButton(skillsDialog.transform.Find("SkillsFrame"));
     statsButton.Button.name = "StatsButton";
 
-    statsButton.Container.GetComponent<RectTransform>()
+    statsButton.RectTransform
         .SetAnchorMin(Vector2.one)
         .SetAnchorMax(Vector2.one)
         .SetPivot(Vector2.one)
