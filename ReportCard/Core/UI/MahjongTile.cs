@@ -45,8 +45,8 @@ public sealed class MahjongTile {
 
     container.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
-        .SetSprite(UIResources.GetSprite("button"))
-        .SetColor(Color.white);
+        .SetSprite(MahjongTileResources.TileSprite)
+        .SetColor(MahjongTileResources.TileColors.normalColor);
 
     container.GetComponent<RectTransform>()
         .SetSizeDelta(new(TileWidth, TileHeight));
@@ -77,14 +77,8 @@ public sealed class MahjongTile {
 
     button
         .SetTargetGraphic(targetGraphic)
-        .SetTransition(Selectable.Transition.SpriteSwap)
-        .SetSpriteState(
-            new() {
-              disabledSprite = UIResources.GetSprite("button_disabled"),
-              highlightedSprite = UIResources.GetSprite("button_highlight"),
-              pressedSprite = UIResources.GetSprite("button_pressed"),
-              selectedSprite = UIResources.GetSprite("button_highlight"),
-            });
+        .SetTransition(Selectable.Transition.ColorTint)
+        .SetColors(MahjongTileResources.TileColors);
 
     return button;
   }

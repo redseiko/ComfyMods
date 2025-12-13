@@ -113,6 +113,7 @@
     <Compile Include="ComfyLib\UI\Core\UIBuilder.cs" />
     <Compile Include="ComfyLib\UI\Core\UIExtensions.cs" />
     <Compile Include="ComfyLib\UI\Core\UIResources.cs" />
+    <Compile Include="ComfyLib\UI\Core\UISpriteBuilder.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Core\ExploredStats.cs" />
     <Compile Include="Core\ExploredStatsController.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Core\UI\MahjongPanel.cs" />
     <Compile Include="Core\UI\MahjongTileHelper.cs" />
     <Compile Include="Core\UI\MahjongTileInfo.cs" />
+    <Compile Include="Core\UI\MahjongTileResources.cs" />
     <Compile Include="Core\UI\MahjongTile.cs" />
     <Compile Include="Core\UI\MahjongTileDragger.cs" />
     <Compile Include="Patches\FejdStartupPatch.cs" />

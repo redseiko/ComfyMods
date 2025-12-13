@@ -10,6 +10,8 @@ public static class MahjongController {
   public static bool IsPanelValid() => MahjongPanel?.Panel;
 
   public static void CreatePanel(FejdStartup fejdStartup) {
+    MahjongTileResources.Initialize();
+
     DestroyPanel();
     MahjongPanel = new MahjongPanel(fejdStartup.m_characterSelectScreen.transform);
 
