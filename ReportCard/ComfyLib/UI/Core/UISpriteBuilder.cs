@@ -124,4 +124,75 @@ public static class UISpriteBuilder {
 
     return Math.Round(Math.Sqrt(dx * dx + dy * dy)) > rad;
   }
+
+  public static Sprite Create3dTileSprite(
+      int width,
+      int height,
+      int radius,
+      int borderWidth,
+      Vector2Int shadowOffset,
+      Color faceColor,
+      Color borderColor,
+      Color shadowColor) {
+    int textureWidth = width + shadowOffset.x;
+    int textureHeight = height + shadowOffset.y;
+
+    string name = $"3dTile-{width}w-{height}h-{radius}r-{borderWidth}b-{shadowOffset}s";
+    if (_spriteCache.TryGetValue(name, out Sprite sprite)) {
+      return sprite;
+    }
+
+    Texture2D texture = new(textureWidth, textureHeight) {
+      name = name,
+      wrapMode = TextureWrapMode.Clamp,
+      filterMode = FilterMode.Bilinear,
+    };
+
+    Color32[] pixels = new Color32[textureWidth * textureHeight];
+    for (var i = 0; i < pixels.Length; i++) {
+      pixels[i] = ColorClear;
+    }
+
+    Rect shadowRect = new(shadowOffset.x, shadowOffset.y, width, height);
+    Rect borderRect = new(0, 0, width, height);
+    Rect faceRect = new(borderWidth, borderWidth, width - (borderWidth * 2), height - (borderWidth * 2));
+
+    DrawRoundedRect(pixels, textureWidth, textureHeight, shadowRect, radius, shadowColor);
+    DrawRoundedRect(pixels, textureWidth, textureHeight, borderRect, radius, borderColor);
+    DrawRoundedRect(pixels, textureWidth, textureHeight, faceRect, radius - borderWidth, faceColor);
+
+    texture.SetPixels32(pixels);
+    texture.Apply();
+
+    sprite = Sprite.Create(
+        texture,
+        new(0, 0, textureWidth, textureHeight),
+        new(0.5f, 0.5f),
+        pixelsPerUnit: 100f,
+        extrude: 0,
+        SpriteMeshType.FullRect,
+        new(borderWidth + radius, borderWidth + radius, borderWidth + radius, borderWidth + radius));
+
+    sprite.name = name;
+    _spriteCache[name] = sprite;
+    return sprite;
+  }
+
+  static void DrawRoundedRect(
+      Color32[] pixels, int textureWidth, int textureHeight, Rect rect, int radius, Color32 color) {
+    for (int y = (int) rect.yMin; y < (int) rect.yMax; y++) {
+      for (int x = (int) rect.xMin; x < (int) rect.xMax; x++) {
+        if (x < 0 || x >= textureWidth || y < 0 || y >= textureHeight) {
+          continue;
+        }
+
+        int localX = x - (int) rect.x;
+        int localY = y - (int) rect.y;
+
+        if (!IsCornerPixel(localX, localY, (int) rect.width, (int) rect.height, radius)) {
+          pixels[(y * textureWidth) + x] = color;
+        }
+      }
+    }
+  }
 }

@@ -6,17 +6,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public static class MahjongTileResources {
-  private const int TileWidth = 70;
-  private const int TileHeight = 80;
-  private const int TileCornerRadius = 5;
+  public const int TileWidth = 70;
+  public const int TileHeight = 80;
+  public const int TileCornerRadius = 5;
 
   public static Sprite TileSprite { get; private set; }
 
-  public static readonly Color ShadowColor = new(0.1f, 0.3f, 0.1f, 0.8f);
-  public static readonly Color BorderColor = Color.black;
-
   public static readonly ColorBlock TileColors = new() {
-    normalColor = new Color32(245, 245, 220, 255),
+    normalColor = new Color32(245, 245, 245, 255),
     highlightedColor = new Color32(255, 255, 224, 255),
     pressedColor = new Color32(222, 184, 135, 255),
     selectedColor = new Color32(255, 255, 224, 255),
@@ -27,7 +24,16 @@ public static class MahjongTileResources {
 
   public static void Initialize() {
     if (!TileSprite) {
-      TileSprite = UISpriteBuilder.CreateRoundedCornerSprite(TileWidth, TileHeight, TileCornerRadius);
+      TileSprite =
+          UISpriteBuilder.Create3dTileSprite(
+              TileWidth,
+              TileHeight,
+              TileCornerRadius,
+              2,
+              new(8, 8),
+              Color.white,
+              Color.black,
+              new(0.1f, 0.3f, 0.1f, 0.8f));
     }
   }
 }
