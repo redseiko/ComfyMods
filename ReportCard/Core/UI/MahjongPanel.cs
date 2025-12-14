@@ -101,6 +101,7 @@ public sealed class MahjongPanel {
 
     MahjongTile tile = new(IncomingTileArea.transform);
     tile.SetTile(info);
+    tile.OnTileClicked += HandleTileClicked;
   }
 
   public void RemoveTile(MahjongTile tile) {
@@ -111,13 +112,15 @@ public sealed class MahjongPanel {
     }
   }
 
+  public event System.Action<MahjongTileInfo> OnDiscardRequested;
+
   void HandleTileClicked(MahjongTile tile) {
     if (_selectedTile == null) {
       _selectedTile = tile;
       Vector2 currentPos = _selectedTile.RectTransform.anchoredPosition;
       _selectedTile.RectTransform.anchoredPosition = new Vector2(currentPos.x, currentPos.y + TileSelectionYOffset);
     } else if (_selectedTile == tile) {
-      MahjongController.DiscardTile(_selectedTile.Info);
+      OnDiscardRequested?.Invoke(_selectedTile.Info);
       _selectedTile = null;
     } else {
       Vector2 currentPos = _selectedTile.RectTransform.anchoredPosition;

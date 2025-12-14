@@ -8,7 +8,7 @@ public enum MahjongSuit {
   Dragons,
 }
 
-public readonly struct MahjongTileInfo {
+public class MahjongTileInfo {
   public MahjongSuit Suit { get; }
   public int Rank { get; }
 

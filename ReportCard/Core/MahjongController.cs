@@ -1,16 +1,12 @@
 namespace ReportCard;
 
-using System.Collections.Generic;
-using System.Linq;
-
 using ComfyLib;
 
 using UnityEngine;
 
 public static class MahjongController {
   public static MahjongPanel MahjongPanel { get; private set; }
-  public static List<MahjongTileInfo> PlayerHand { get; } = [];
-  public static MahjongTileInfo IncomingTile { get; private set; }
+  public static MahjongHand CurrentHand { get; private set; } = new();
 
   public static bool IsPanelValid() => MahjongPanel?.Panel;
 
@@ -27,14 +23,9 @@ public static class MahjongController {
         .SetPosition(Vector2.zero);
 
     MahjongPanel.CloseButton.Button.onClick.AddListener(HidePanel);
+    MahjongPanel.OnDiscardRequested += DiscardTile;
 
-    PlayerHand.Clear();
-
-    for (int i = 0; i < 13; i++) {
-      PlayerHand.Add(MahjongTileHelper.GetRandomTileInfo());
-    }
-
-    IncomingTile = MahjongTileHelper.GetRandomTileInfo();
+    CurrentHand.Initialize();
     BuildHandView();
 
     HidePanel();
@@ -45,9 +36,9 @@ public static class MahjongController {
       return;
     }
     
-    PlayerHand.Remove(PlayerHand.First(x => x.Equals(tileInfo)));
-    PlayerHand.Add(IncomingTile);
-    IncomingTile = MahjongTileHelper.GetRandomTileInfo();
+    CurrentHand.Discard(tileInfo);   
+    CurrentHand.Draw(MahjongTileHelper.GetRandomTileInfo());
+    
     BuildHandView();
   }
 
@@ -58,11 +49,11 @@ public static class MahjongController {
 
     MahjongPanel.ClearHand();
 
-    foreach (MahjongTileInfo tileInfo in PlayerHand) {
+    foreach (MahjongTileInfo tileInfo in CurrentHand.Tiles) {
       MahjongPanel.AddTileToHand(tileInfo);
     }
 
-    MahjongPanel.SetIncomingTile(IncomingTile);
+    MahjongPanel.SetIncomingTile(CurrentHand.IncomingTile);
   }
 
   public static void DestroyPanel() {

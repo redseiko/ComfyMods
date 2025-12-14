@@ -119,6 +119,7 @@
     <Compile Include="Core\ExploredStatsController.cs" />
     <Compile Include="Core\PlayerStatsController.cs" />
     <Compile Include="Core\MahjongController.cs" />
+    <Compile Include="Core\MahjongHand.cs" />
     <Compile Include="Core\UI\ExploredStatsPanel.cs" />
     <Compile Include="Core\UI\MinimapFocus.cs" />
     <Compile Include="Core\UI\PlayerStatsPanel.cs" />
