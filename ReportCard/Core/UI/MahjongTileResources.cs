@@ -12,6 +12,9 @@ public static class MahjongTileResources {
 
   public static Sprite TileSprite { get; private set; }
 
+  public static readonly Color ShadowColor = new(0.1f, 0.3f, 0.1f, 0.8f);
+  public static readonly Color BorderColor = Color.black;
+
   public static readonly ColorBlock TileColors = new() {
     normalColor = new Color32(245, 245, 220, 255),
     highlightedColor = new Color32(255, 255, 224, 255),
