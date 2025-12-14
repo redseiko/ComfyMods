@@ -1,11 +1,15 @@
 namespace ReportCard;
 
+using System.Collections.Generic;
+
 using ComfyLib;
 
 using UnityEngine;
 
 public static class MahjongController {
   public static MahjongPanel MahjongPanel { get; private set; }
+  public static List<MahjongTileInfo> PlayerHand { get; } = [];
+  public static MahjongTileInfo IncomingTile { get; private set; }
 
   public static bool IsPanelValid() => MahjongPanel?.Panel;
 
@@ -23,11 +27,30 @@ public static class MahjongController {
 
     MahjongPanel.CloseButton.Button.onClick.AddListener(HidePanel);
 
+    PlayerHand.Clear();
+
     for (int i = 0; i < 13; i++) {
-      MahjongPanel.AddTile(MahjongTileHelper.GetRandomTileInfo());
+      PlayerHand.Add(MahjongTileHelper.GetRandomTileInfo());
     }
 
+    IncomingTile = MahjongTileHelper.GetRandomTileInfo();
+    BuildHandView();
+
     HidePanel();
+  }
+
+  public static void BuildHandView() {
+    if (!IsPanelValid()) {
+      return;
+    }
+
+    MahjongPanel.ClearHand();
+
+    foreach (MahjongTileInfo tileInfo in PlayerHand) {
+      MahjongPanel.AddTileToHand(tileInfo);
+    }
+
+    MahjongPanel.SetIncomingTile(IncomingTile);
   }
 
   public static void DestroyPanel() {
