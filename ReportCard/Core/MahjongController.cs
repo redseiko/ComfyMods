@@ -1,6 +1,7 @@
 namespace ReportCard;
 
 using System.Collections.Generic;
+using System.Linq;
 
 using ComfyLib;
 
@@ -37,6 +38,17 @@ public static class MahjongController {
     BuildHandView();
 
     HidePanel();
+  }
+
+  public static void DiscardTile(MahjongTileInfo tileInfo) {
+    if (!IsPanelValid()) {
+      return;
+    }
+    
+    PlayerHand.Remove(PlayerHand.First(x => x.Equals(tileInfo)));
+    PlayerHand.Add(IncomingTile);
+    IncomingTile = MahjongTileHelper.GetRandomTileInfo();
+    BuildHandView();
   }
 
   public static void BuildHandView() {

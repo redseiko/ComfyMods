@@ -5,9 +5,11 @@ using System.Collections.Generic;
 using ComfyLib;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public sealed class MahjongPanel {
   const float TileSpacing = 5f;
+  const float TileSelectionYOffset = 30f;
 
   public GameObject Panel { get; }
   public RectTransform RectTransform { get; }
@@ -15,6 +17,7 @@ public sealed class MahjongPanel {
   public GameObject PlayerHandArea { get; }
   public List<MahjongTile> PlayerHandTiles { get; } = [];
   public GameObject IncomingTileArea { get; }
+  MahjongTile _selectedTile;
 
   public MahjongPanel(Transform parentTransform) {
     Panel = CreatePanel(parentTransform);
@@ -22,6 +25,11 @@ public sealed class MahjongPanel {
     CloseButton = CreateCloseButton(RectTransform);
     PlayerHandArea = CreatePlayerHandArea(RectTransform);
     IncomingTileArea = CreateIncomingTileArea(RectTransform);
+
+    Button backgroundButton = Panel.AddComponent<Button>();
+    backgroundButton.targetGraphic = Panel.GetComponent<Image>();
+    backgroundButton.transition = Selectable.Transition.None;
+    backgroundButton.onClick.AddListener(HandleBackgroundClicked);
   }
 
   static GameObject CreatePanel(Transform parentTransform) {
@@ -81,7 +89,7 @@ public sealed class MahjongPanel {
   public void AddTileToHand(MahjongTileInfo info) {
     MahjongTile tile = new(PlayerHandArea.transform);
     tile.SetTile(info);
-    tile.Dragger.OnTileDropped.AddListener(OnTileDropped);
+    tile.OnTileClicked += HandleTileClicked;
     PlayerHandTiles.Add(tile);
     UpdateHandLayout();
   }
@@ -93,40 +101,41 @@ public sealed class MahjongPanel {
 
     MahjongTile tile = new(IncomingTileArea.transform);
     tile.SetTile(info);
-    tile.Dragger.enabled = false;
   }
 
   public void RemoveTile(MahjongTile tile) {
     if (PlayerHandTiles.Remove(tile)) {
-      tile.Dragger.OnTileDropped.RemoveListener(OnTileDropped);
+      tile.OnTileClicked -= HandleTileClicked;
       Object.Destroy(tile.Container);
       UpdateHandLayout();
     }
   }
 
-  public void MoveTile(MahjongTile tile, int newIndex) {
-    if (PlayerHandTiles.Remove(tile)) {
-      newIndex = Mathf.Clamp(newIndex, 0, PlayerHandTiles.Count);
-      PlayerHandTiles.Insert(newIndex, tile);
-      UpdateHandLayout();
+  void HandleTileClicked(MahjongTile tile) {
+    if (_selectedTile == null) {
+      _selectedTile = tile;
+      Vector2 currentPos = _selectedTile.RectTransform.anchoredPosition;
+      _selectedTile.RectTransform.anchoredPosition = new Vector2(currentPos.x, currentPos.y + TileSelectionYOffset);
+    } else if (_selectedTile == tile) {
+      MahjongController.DiscardTile(_selectedTile.Info);
+      _selectedTile = null;
+    } else {
+      Vector2 currentPos = _selectedTile.RectTransform.anchoredPosition;
+      _selectedTile.RectTransform.anchoredPosition = new Vector2(currentPos.x, currentPos.y - TileSelectionYOffset);
+
+      _selectedTile = tile;
+
+      currentPos = _selectedTile.RectTransform.anchoredPosition;
+      _selectedTile.RectTransform.anchoredPosition = new Vector2(currentPos.x, currentPos.y + TileSelectionYOffset);
     }
   }
 
-  void OnTileDropped(MahjongTile droppedTile) {
-    droppedTile.RectTransform.SetParent(PlayerHandArea.transform);
-
-    int newIndex = 0;
-    for (int i = 0; i < PlayerHandTiles.Count; i++) {
-      if (PlayerHandTiles[i] == droppedTile) {
-        continue;
-      }
-
-      if (droppedTile.RectTransform.position.x > PlayerHandTiles[i].RectTransform.position.x) {
-        newIndex++;
-      }
+  void HandleBackgroundClicked() {
+    if (_selectedTile != null) {
+      Vector2 currentPos = _selectedTile.RectTransform.anchoredPosition;
+      _selectedTile.RectTransform.anchoredPosition = new Vector2(currentPos.x, currentPos.y - TileSelectionYOffset);
+      _selectedTile = null;
     }
-
-    MoveTile(droppedTile, newIndex);
   }
 
   void UpdateHandLayout() {

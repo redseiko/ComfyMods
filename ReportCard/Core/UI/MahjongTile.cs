@@ -1,6 +1,7 @@
 namespace ReportCard;
 
 using ComfyLib;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,7 +16,7 @@ public sealed class MahjongTile {
   public Image Background { get; }
   public TextMeshProUGUI FaceText { get; }
   public Button Button { get; }
-  public MahjongTileDragger Dragger { get; }
+  public Action<MahjongTile> OnTileClicked;
 
   public MahjongTile(Transform parentTransform) {
     Container = CreateContainer(parentTransform);
@@ -23,12 +24,13 @@ public sealed class MahjongTile {
     Background = Container.GetComponent<Image>();
     FaceText = CreateFaceText(Container.transform);
     Button = CreateButton(Container, Background);
-
-    Container.AddComponent<CanvasGroup>();
-    Dragger = Container.AddComponent<MahjongTileDragger>();
-    Dragger.Initialize(this);
+    Button.onClick.AddListener(ProcessButtonClick);
 
     FaceText.gameObject.SetActive(false);
+  }
+
+  void ProcessButtonClick() {
+    OnTileClicked?.Invoke(this);
   }
 
   public void SetTile(MahjongTileInfo info) {
@@ -69,7 +71,7 @@ public sealed class MahjongTile {
 
     return label;
   }
-
+  
   static Button CreateButton(GameObject container, Image targetGraphic) {
     Button button = container.AddComponent<Button>();
 
