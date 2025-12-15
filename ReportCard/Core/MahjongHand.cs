@@ -1,59 +1,37 @@
 namespace ReportCard;
 
 using System.Collections.Generic;
-using System.Linq;
 
-using ComfyLib;
+public sealed class MahjongHand {
+  public List<MahjongTileInfo> HandTiles { get; } = [];
+  public List<MahjongTileInfo> IncomingTiles { get; } = [];
 
-public class MahjongHand {
-  public List<MahjongTileInfo> Tiles { get; } = [];
-  public MahjongTileInfo IncomingTile { get; private set; }
-
-  public void Initialize() {
-    Tiles.Clear();
-    for (int i = 0; i < 13; i++) {
-      Tiles.Add(MahjongTileHelper.GetRandomTileInfo());
-    }
-    Sort();
-    Draw(MahjongTileHelper.GetRandomTileInfo());
+  public void AddToHand(MahjongTileInfo tile) {
+    HandTiles.Add(tile);
   }
 
-  public void Draw(MahjongTileInfo tile) {
-    if (IncomingTile != null) {
-      // Logic error: already have an incoming tile
-      // For now, let's just overwrite or ignore, but strictly we should probably throw or handle cleanup
-      // In this simple prototype, we assume the controller manages flow correctly
-    }
-    IncomingTile = tile;
+  public void RemoveFromHand(MahjongTileInfo tile) {
+    HandTiles.Remove(tile);
   }
 
-  public MahjongTileInfo Discard(MahjongTileInfo tileToDiscard) {
-    // If discarding the incoming tile
-    if (tileToDiscard == IncomingTile) {
-      MahjongTileInfo discarded = IncomingTile;
-      IncomingTile = null;
-      return discarded;
-    }
-
-    // Checking reference equality implicitly via Remove
-    // However, List.Remove uses Equals currently.
-    // Since MahjongTileInfo is a class without override, it uses ReferenceEquals.
-    
-    if (Tiles.Contains(tileToDiscard)) {
-      Tiles.Remove(tileToDiscard);
-      Tiles.Add(IncomingTile);
-      IncomingTile = null;
-      Sort();
-      return tileToDiscard;
-    }
-
-    // Should not happen if UI is consistent
-    return null;
+  public void AddToIncoming(MahjongTileInfo tile) {
+    IncomingTiles.Add(tile);
   }
 
-  public void Sort() {
-    Tiles.Sort((a, b) => {
-      if (a.Suit != b.Suit) return a.Suit.CompareTo(b.Suit);
+  public void RemoveFromIncoming(MahjongTileInfo tile) {
+    IncomingTiles.Remove(tile);
+  }
+
+  public void Clear() {
+    HandTiles.Clear();
+    IncomingTiles.Clear();
+  }
+
+  public void SortHand() {
+    HandTiles.Sort((a, b) => {
+      if (a.Suit != b.Suit) {
+        return a.Suit.CompareTo(b.Suit);
+      }
       return a.Rank.CompareTo(b.Rank);
     });
   }

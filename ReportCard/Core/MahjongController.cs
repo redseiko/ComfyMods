@@ -25,20 +25,49 @@ public static class MahjongController {
     MahjongPanel.CloseButton.Button.onClick.AddListener(HidePanel);
     MahjongPanel.OnDiscardRequested += DiscardTile;
 
-    CurrentHand.Initialize();
+    InitializeGame();
     BuildHandView();
 
     HidePanel();
+  }
+
+  static void InitializeGame() {
+    CurrentHand.Clear();
+
+    for (int i = 0; i < 13; i++) {
+      CurrentHand.AddToHand(MahjongTileHelper.GetRandomTileInfo());
+    }
+
+    CurrentHand.SortHand();
+    DrawTile();
+  }
+
+  static void DrawTile() {
+    CurrentHand.AddToIncoming(MahjongTileHelper.GetRandomTileInfo());
   }
 
   public static void DiscardTile(MahjongTileInfo tileInfo) {
     if (!IsPanelValid()) {
       return;
     }
-    
-    CurrentHand.Discard(tileInfo);   
-    CurrentHand.Draw(MahjongTileHelper.GetRandomTileInfo());
-    
+
+    if (CurrentHand.IncomingTiles.Contains(tileInfo)) {
+      CurrentHand.RemoveFromIncoming(tileInfo);
+    } else if (CurrentHand.HandTiles.Contains(tileInfo)) {
+      CurrentHand.RemoveFromHand(tileInfo);
+
+      if (CurrentHand.IncomingTiles.Count > 0) {
+        MahjongTileInfo replacement = CurrentHand.IncomingTiles[0];
+
+        CurrentHand.RemoveFromIncoming(replacement);
+        CurrentHand.AddToHand(replacement);
+        CurrentHand.SortHand();
+      }
+    } else {
+      return;
+    }
+
+    DrawTile();
     BuildHandView();
   }
 
@@ -49,11 +78,11 @@ public static class MahjongController {
 
     MahjongPanel.ClearHand();
 
-    foreach (MahjongTileInfo tileInfo in CurrentHand.Tiles) {
+    foreach (MahjongTileInfo tileInfo in CurrentHand.HandTiles) {
       MahjongPanel.AddTileToHand(tileInfo);
     }
 
-    MahjongPanel.SetIncomingTile(CurrentHand.IncomingTile);
+    MahjongPanel.SetIncomingTiles(CurrentHand.IncomingTiles);
   }
 
   public static void DestroyPanel() {

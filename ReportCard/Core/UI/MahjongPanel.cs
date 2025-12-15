@@ -94,14 +94,16 @@ public sealed class MahjongPanel {
     UpdateHandLayout();
   }
 
-  public void SetIncomingTile(MahjongTileInfo info) {
+  public void SetIncomingTiles(List<MahjongTileInfo> infos) {
     foreach (Transform child in IncomingTileArea.transform) {
       Object.Destroy(child.gameObject);
     }
 
-    MahjongTile tile = new(IncomingTileArea.transform);
-    tile.SetTile(info);
-    tile.OnTileClicked += HandleTileClicked;
+    foreach (MahjongTileInfo info in infos) {
+      MahjongTile tile = new(IncomingTileArea.transform);
+      tile.SetTile(info);
+      tile.OnTileClicked += HandleTileClicked;
+    }
   }
 
   public void RemoveTile(MahjongTile tile) {
