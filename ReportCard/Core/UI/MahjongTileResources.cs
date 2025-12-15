@@ -30,7 +30,7 @@ public static class MahjongTileResources {
               TileHeight,
               TileCornerRadius,
               2,
-              new(8, 8),
+              new(4, 4),
               Color.white,
               Color.black,
               new(0.1f, 0.3f, 0.1f, 0.8f));

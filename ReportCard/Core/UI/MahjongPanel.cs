@@ -120,25 +120,38 @@ public sealed class MahjongPanel {
     if (_selectedTile == null) {
       _selectedTile = tile;
       Vector2 currentPos = _selectedTile.RectTransform.anchoredPosition;
-      _selectedTile.RectTransform.anchoredPosition = new Vector2(currentPos.x, currentPos.y + TileSelectionYOffset);
+      
+      _selectedTile.RectTransform
+          .TweenAnchoredPosition(new Vector2(currentPos.x, currentPos.y + TileSelectionYOffset), 0.2f)
+          .SetEase(Ease.OutBack);
     } else if (_selectedTile == tile) {
       OnDiscardRequested?.Invoke(_selectedTile.Info);
       _selectedTile = null;
     } else {
       Vector2 currentPos = _selectedTile.RectTransform.anchoredPosition;
-      _selectedTile.RectTransform.anchoredPosition = new Vector2(currentPos.x, currentPos.y - TileSelectionYOffset);
+      
+      _selectedTile.RectTransform
+          .TweenAnchoredPosition(new Vector2(currentPos.x, currentPos.y - TileSelectionYOffset), 0.2f)
+          .SetEase(Ease.OutQuad);
 
       _selectedTile = tile;
 
       currentPos = _selectedTile.RectTransform.anchoredPosition;
-      _selectedTile.RectTransform.anchoredPosition = new Vector2(currentPos.x, currentPos.y + TileSelectionYOffset);
+      
+      _selectedTile.RectTransform
+          .TweenAnchoredPosition(new Vector2(currentPos.x, currentPos.y + TileSelectionYOffset), 0.2f)
+          .SetEase(Ease.OutBack);
     }
   }
 
   void HandleBackgroundClicked() {
     if (_selectedTile != null) {
       Vector2 currentPos = _selectedTile.RectTransform.anchoredPosition;
-      _selectedTile.RectTransform.anchoredPosition = new Vector2(currentPos.x, currentPos.y - TileSelectionYOffset);
+      
+      _selectedTile.RectTransform
+          .TweenAnchoredPosition(new Vector2(currentPos.x, currentPos.y - TileSelectionYOffset), 0.2f)
+          .SetEase(Ease.OutQuad);
+          
       _selectedTile = null;
     }
   }

@@ -114,6 +114,10 @@
     <Compile Include="ComfyLib\UI\Core\UIExtensions.cs" />
     <Compile Include="ComfyLib\UI\Core\UIResources.cs" />
     <Compile Include="ComfyLib\UI\Core\UISpriteBuilder.cs" />
+    <Compile Include="ComfyLib\Tweening\Easing.cs" />
+    <Compile Include="ComfyLib\Tweening\Tween.cs" />
+    <Compile Include="ComfyLib\Tweening\TweenManager.cs" />
+    <Compile Include="ComfyLib\Tweening\Tweener.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Core\ExploredStats.cs" />
     <Compile Include="Core\ExploredStatsController.cs" />
