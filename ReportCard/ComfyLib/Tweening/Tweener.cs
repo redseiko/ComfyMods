@@ -48,4 +48,11 @@ public static class Tweener {
     TweenManager.Add(tween);
     return tween;
   }
+
+  public static void TweenKill(this Component target) {
+    TweenManager.KillTweens(target);
+    TweenManager.KillTweens(target.gameObject);
+    TweenManager.KillTweens(target.transform);
+    if(target is Graphic g) TweenManager.KillTweens(g.rectTransform);
+  }
 }

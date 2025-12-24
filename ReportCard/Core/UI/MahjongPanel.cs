@@ -14,9 +14,13 @@ public sealed class MahjongPanel {
   public GameObject Panel { get; }
   public RectTransform RectTransform { get; }
   public LabelButton CloseButton { get; }
+
   public GameObject PlayerHandArea { get; }
   public List<MahjongTile> PlayerHandTiles { get; } = [];
+
   public GameObject IncomingTileArea { get; }
+  public MahjongTile IncomingTile { get; private set; }
+
   MahjongTile _selectedTile;
 
   public MahjongPanel(Transform parentTransform) {
@@ -70,19 +74,21 @@ public sealed class MahjongPanel {
     return container;
   }
 
-  readonly List<MahjongTile> _tilesToRemove = [];
-
   public void ClearHand() {
-    _tilesToRemove.AddRange(PlayerHandTiles);
-
-    foreach (MahjongTile tile in _tilesToRemove) {
-      RemoveTile(tile);
+    for (int i = 0; i < PlayerHandTiles.Count; i++) {
+      if (PlayerHandTiles[i] != null && PlayerHandTiles[i].Container) {
+        Object.Destroy(PlayerHandTiles[i].Container);
+      }
     }
 
-    _tilesToRemove.Clear();
+    PlayerHandTiles.Clear();
 
-    foreach (Transform child in IncomingTileArea.transform) {
-      Object.Destroy(child.gameObject);
+    if (IncomingTile != null) {
+      if (IncomingTile.Container) {
+        Object.Destroy(IncomingTile.Container);
+      }
+
+      IncomingTile = null;
     }
   }
 
@@ -90,26 +96,74 @@ public sealed class MahjongPanel {
     MahjongTile tile = new(PlayerHandArea.transform);
     tile.SetTile(info);
     tile.OnTileClicked += HandleTileClicked;
+
     PlayerHandTiles.Add(tile);
     UpdateHandLayout();
   }
 
-  public void SetIncomingTiles(List<MahjongTileInfo> infos) {
-    foreach (Transform child in IncomingTileArea.transform) {
-      Object.Destroy(child.gameObject);
+  public void AnimateDraw(MahjongTileInfo info) {
+    IncomingTile = new(IncomingTileArea.transform);
+    IncomingTile.SetTile(info);
+    IncomingTile.OnTileClicked += HandleTileClicked;
+
+    IncomingTile.AnimateSpawn(new Vector2(200f, 0f), Vector2.zero, null);
+  }
+
+  public void AnimateDiscard(MahjongTile tile) {
+    if (tile == IncomingTile) {
+      tile.OnTileClicked -= HandleTileClicked;
+
+      tile.AnimateDiscard(() => {
+        if (tile != null && tile.Container) {
+            Object.Destroy(tile.Container);
+        }
+        if (IncomingTile == tile) {
+            IncomingTile = null;
+        }
+      });
+
+      return;
     }
 
-    foreach (MahjongTileInfo info in infos) {
-      MahjongTile tile = new(IncomingTileArea.transform);
-      tile.SetTile(info);
-      tile.OnTileClicked += HandleTileClicked;
+    if (PlayerHandTiles.Remove(tile)) {
+      tile.OnTileClicked -= HandleTileClicked;
+
+      tile.AnimateDiscard(() => {
+        Object.Destroy(tile.Container);
+      });
+
+      UpdateHandLayout();
     }
   }
 
-  public void RemoveTile(MahjongTile tile) {
+  public void AnimateSort() {
+    if (IncomingTile != null) {
+      IncomingTile.RectTransform.SetParent(PlayerHandArea.transform, true);
+
+      IncomingTile.OnTileClicked = null;
+      IncomingTile.OnTileClicked += HandleTileClicked;
+      
+      IncomingTile.RectTransform.TweenKill();
+
+      PlayerHandTiles.Add(IncomingTile);
+      IncomingTile = null;
+    }
+
+    PlayerHandTiles.Sort((a, b) => {
+      int indexA = MahjongController.CurrentHand.HandTiles.IndexOf(a.Info);
+      int indexB = MahjongController.CurrentHand.HandTiles.IndexOf(b.Info);
+
+      return indexA.CompareTo(indexB);
+    });
+
+    UpdateHandLayout();
+  }
+
+  public void RemoveTileFromHand(MahjongTile tile) {
     if (PlayerHandTiles.Remove(tile)) {
       tile.OnTileClicked -= HandleTileClicked;
       Object.Destroy(tile.Container);
+
       UpdateHandLayout();
     }
   }
@@ -120,38 +174,45 @@ public sealed class MahjongPanel {
     if (_selectedTile == null) {
       _selectedTile = tile;
       Vector2 currentPos = _selectedTile.RectTransform.anchoredPosition;
-      
+
+      _selectedTile.RectTransform.TweenKill();
       _selectedTile.RectTransform
           .TweenAnchoredPosition(new Vector2(currentPos.x, currentPos.y + TileSelectionYOffset), 0.2f)
-          .SetEase(Ease.OutBack);
+          .SetEase(Ease.OutBack)
+          .TweenStart();
     } else if (_selectedTile == tile) {
       OnDiscardRequested?.Invoke(_selectedTile.Info);
       _selectedTile = null;
     } else {
       Vector2 currentPos = _selectedTile.RectTransform.anchoredPosition;
-      
+
+      _selectedTile.RectTransform.TweenKill();
       _selectedTile.RectTransform
           .TweenAnchoredPosition(new Vector2(currentPos.x, currentPos.y - TileSelectionYOffset), 0.2f)
-          .SetEase(Ease.OutQuad);
+          .SetEase(Ease.OutQuad)
+          .TweenStart();
 
       _selectedTile = tile;
 
       currentPos = _selectedTile.RectTransform.anchoredPosition;
-      
+
+      _selectedTile.RectTransform.TweenKill();
       _selectedTile.RectTransform
           .TweenAnchoredPosition(new Vector2(currentPos.x, currentPos.y + TileSelectionYOffset), 0.2f)
-          .SetEase(Ease.OutBack);
+          .SetEase(Ease.OutBack)
+          .TweenStart();
     }
   }
 
   void HandleBackgroundClicked() {
     if (_selectedTile != null) {
-      Vector2 currentPos = _selectedTile.RectTransform.anchoredPosition;
-      
+      Vector2 currentPosition = _selectedTile.RectTransform.anchoredPosition;
+
       _selectedTile.RectTransform
-          .TweenAnchoredPosition(new Vector2(currentPos.x, currentPos.y - TileSelectionYOffset), 0.2f)
-          .SetEase(Ease.OutQuad);
-          
+          .TweenAnchoredPosition(new Vector2(currentPosition.x, currentPosition.y - TileSelectionYOffset), 0.2f)
+          .SetEase(Ease.OutQuad)
+          .TweenStart();
+
       _selectedTile = null;
     }
   }
@@ -163,7 +224,13 @@ public sealed class MahjongPanel {
     for (int i = 0; i < PlayerHandTiles.Count; i++) {
       MahjongTile tile = PlayerHandTiles[i];
       float xPos = startX + i * (MahjongTile.TileWidth + TileSpacing);
-      tile.RectTransform.anchoredPosition = new Vector2(xPos, 0);
+
+      tile.RectTransform.TweenKill();
+      tile.RectTransform
+          .TweenAnchoredPosition(new Vector2(xPos, 0), 0.2f)
+          .SetEase(Ease.OutQuad)
+          .TweenStart();
+
       tile.RectTransform.SetSiblingIndex(i);
     }
   }

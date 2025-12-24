@@ -13,6 +13,7 @@ public sealed class MahjongTile {
   public MahjongTileInfo Info { get; private set; }
   public GameObject Container { get; }
   public RectTransform RectTransform { get; }
+  public CanvasGroup CanvasGroup {  get; }
   public Image Background { get; }
   public TextMeshProUGUI FaceText { get; }
   public Button Button { get; }
@@ -21,6 +22,7 @@ public sealed class MahjongTile {
   public MahjongTile(Transform parentTransform) {
     Container = CreateContainer(parentTransform);
     RectTransform = Container.GetComponent<RectTransform>();
+    CanvasGroup = Container.GetComponent<CanvasGroup>();
     Background = Container.GetComponent<Image>();
     FaceText = CreateFaceText(Container.transform);
     Button = CreateButton(Container, Background);
@@ -47,6 +49,8 @@ public sealed class MahjongTile {
         .SetType(Image.Type.Sliced)
         .SetSprite(MahjongTileResources.TileSprite)
         .SetColor(MahjongTileResources.TileColors.normalColor);
+
+    container.AddComponent<CanvasGroup>();
 
     container.GetComponent<RectTransform>()
         .SetSizeDelta(new(TileWidth, TileHeight));
@@ -81,5 +85,32 @@ public sealed class MahjongTile {
         .SetColors(MahjongTileResources.TileColors);
 
     return button;
+  }
+
+  public void AnimateSpawn(Vector2 startPosition, Vector2 endPosition, Action onComplete) {
+    RectTransform.anchoredPosition = startPosition;
+    
+    RectTransform.TweenKill();
+    RectTransform
+        .TweenAnchoredPosition(endPosition, 0.3f)
+        .SetEase(Ease.OutBack)
+        .OnComplete(onComplete)
+        .TweenStart();
+  }
+
+  public void AnimateDiscard(Action onComplete) {
+    Vector2 currentPosition = RectTransform.anchoredPosition;
+    Vector2 targetPosition = new Vector2(currentPosition.x, currentPosition.y + 100f);
+
+    RectTransform.TweenKill();
+    RectTransform
+        .TweenAnchoredPosition(targetPosition, 0.3f)
+        .SetEase(Ease.InBack)
+        .TweenStart();
+
+    CanvasGroup
+        .TweenFade(0f, 0.3f)
+        .OnComplete(onComplete)
+        .TweenStart();
   }
 }

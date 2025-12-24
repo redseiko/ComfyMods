@@ -26,24 +26,39 @@ public static class MahjongController {
     MahjongPanel.OnDiscardRequested += DiscardTile;
 
     InitializeGame();
-    BuildHandView();
 
     HidePanel();
   }
 
   static void InitializeGame() {
     CurrentHand.Clear();
+    
+    if (IsPanelValid()) {
+      MahjongPanel.ClearHand();
+    }
 
     for (int i = 0; i < 13; i++) {
       CurrentHand.AddToHand(MahjongTileHelper.GetRandomTileInfo());
     }
 
     CurrentHand.SortHand();
+    
+    if (IsPanelValid()) {
+      foreach (MahjongTileInfo info in CurrentHand.HandTiles) {
+        MahjongPanel.AddTileToHand(info);
+      }
+    }
+
     DrawTile();
   }
 
   static void DrawTile() {
-    CurrentHand.AddToIncoming(MahjongTileHelper.GetRandomTileInfo());
+    MahjongTileInfo newTile = MahjongTileHelper.GetRandomTileInfo();
+    CurrentHand.AddToIncoming(newTile);
+    
+    if (IsPanelValid()) {
+      MahjongPanel.AnimateDraw(newTile);
+    }
   }
 
   public static void DiscardTile(MahjongTileInfo tileInfo) {
@@ -52,23 +67,35 @@ public static class MahjongController {
     }
 
     if (CurrentHand.IncomingTiles.Contains(tileInfo)) {
+      if (IsPanelValid()) {
+        MahjongPanel.AnimateDiscard(MahjongPanel.IncomingTile);
+      }
       CurrentHand.RemoveFromIncoming(tileInfo);
     } else if (CurrentHand.HandTiles.Contains(tileInfo)) {
-      CurrentHand.RemoveFromHand(tileInfo);
+      MahjongTile tile = MahjongPanel.PlayerHandTiles.Find(x => x.Info == tileInfo);
+      
+      if (tile != null) {
+        MahjongPanel.AnimateDiscard(tile);
+      }
 
+      CurrentHand.RemoveFromHand(tileInfo);
+      
       if (CurrentHand.IncomingTiles.Count > 0) {
         MahjongTileInfo replacement = CurrentHand.IncomingTiles[0];
-
         CurrentHand.RemoveFromIncoming(replacement);
         CurrentHand.AddToHand(replacement);
-        CurrentHand.SortHand();
+      }
+      
+      CurrentHand.SortHand();
+      
+      if (tile != null) {
+         MahjongPanel.AnimateSort();
       }
     } else {
       return;
     }
 
     DrawTile();
-    BuildHandView();
   }
 
   public static void BuildHandView() {
@@ -81,8 +108,6 @@ public static class MahjongController {
     foreach (MahjongTileInfo tileInfo in CurrentHand.HandTiles) {
       MahjongPanel.AddTileToHand(tileInfo);
     }
-
-    MahjongPanel.SetIncomingTiles(CurrentHand.IncomingTiles);
   }
 
   public static void DestroyPanel() {

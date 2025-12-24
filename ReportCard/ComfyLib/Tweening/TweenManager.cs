@@ -42,4 +42,9 @@ public class TweenManager : MonoBehaviour {
   public static void Add(Tween tween) {
     Instance._tweensToAdd.Add(tween);
   }
+
+  public static void KillTweens(UnityEngine.Object target) {
+    Instance._tweens.RemoveAll(t => t.Target == target);
+    Instance._tweensToAdd.RemoveAll(t => t.Target == target);
+  }
 }
