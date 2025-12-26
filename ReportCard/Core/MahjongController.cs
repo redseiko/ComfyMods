@@ -53,7 +53,7 @@ public static class MahjongController {
   }
 
   static void DrawTile() {
-    MahjongTileInfo newTile = MahjongTileHelper.GetRandomTileInfo();
+    MahjongTileInfo newTile = MahjongTileHelper.GetSequentialTileInfo();
     CurrentHand.AddToIncoming(newTile);
     
     if (IsPanelValid()) {

@@ -149,7 +149,7 @@ public static class UISpriteBuilder {
     };
 
     Color32[] pixels = new Color32[textureWidth * textureHeight];
-    for (var i = 0; i < pixels.Length; i++) {
+    for (int i = 0; i < pixels.Length; i++) {
       pixels[i] = ColorClear;
     }
 

@@ -53,4 +53,33 @@ public static class MahjongTileHelper {
 
     return new MahjongTileInfo(randomSuit, rank);
   }
+
+  static int _debugSuitIndex;
+  static int _debugRankIndex = 1;
+
+  public static MahjongTileInfo GetSequentialTileInfo() {
+    MahjongSuit[] suits = (MahjongSuit[]) Enum.GetValues(typeof(MahjongSuit));
+    MahjongSuit currentSuit = suits[_debugSuitIndex];
+
+    int maxRank = currentSuit switch {
+      MahjongSuit.Winds => 4,
+      MahjongSuit.Dragons => 3,
+      _ => 9
+    };
+
+    MahjongTileInfo info = new(currentSuit, _debugRankIndex);
+
+    _debugRankIndex++;
+
+    if (_debugRankIndex > maxRank) {
+      _debugRankIndex = 1;
+      _debugSuitIndex++;
+
+      if (_debugSuitIndex >= suits.Length) {
+        _debugSuitIndex = 0;
+      }
+    }
+
+    return info;
+  }
 }

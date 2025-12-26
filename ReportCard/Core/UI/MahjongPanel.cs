@@ -21,6 +21,8 @@ public sealed class MahjongPanel {
   public GameObject IncomingTileArea { get; }
   public MahjongTile IncomingTile { get; private set; }
 
+  public Button BackgroundButton { get; }
+
   MahjongTile _selectedTile;
 
   public MahjongPanel(Transform parentTransform) {
@@ -30,10 +32,17 @@ public sealed class MahjongPanel {
     PlayerHandArea = CreatePlayerHandArea(RectTransform);
     IncomingTileArea = CreateIncomingTileArea(RectTransform);
 
-    Button backgroundButton = Panel.AddComponent<Button>();
-    backgroundButton.targetGraphic = Panel.GetComponent<Image>();
+    IncomingTileArea = CreateIncomingTileArea(RectTransform);
+    BackgroundButton = CreateBackgroundButton(Panel, HandleBackgroundClicked);
+  }
+
+  static Button CreateBackgroundButton(GameObject panel, UnityEngine.Events.UnityAction onClick) {
+    Button backgroundButton = panel.AddComponent<Button>();
+    backgroundButton.targetGraphic = panel.GetComponent<Image>();
     backgroundButton.transition = Selectable.Transition.None;
-    backgroundButton.onClick.AddListener(HandleBackgroundClicked);
+    backgroundButton.onClick.AddListener(onClick);
+
+    return backgroundButton;
   }
 
   static GameObject CreatePanel(Transform parentTransform) {

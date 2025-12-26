@@ -131,6 +131,7 @@
     <Compile Include="Core\UI\MahjongTileHelper.cs" />
     <Compile Include="Core\UI\MahjongTileInfo.cs" />
     <Compile Include="Core\UI\MahjongTileResources.cs" />
+    <Compile Include="Core\UI\MahjongTileTextureGenerator.cs" />
     <Compile Include="Core\UI\MahjongTile.cs" />
     <Compile Include="Core\UI\MahjongTileDragger.cs" />
     <Compile Include="Patches\FejdStartupPatch.cs" />

@@ -2,7 +2,6 @@ namespace ReportCard;
 
 using ComfyLib;
 using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +14,7 @@ public sealed class MahjongTile {
   public RectTransform RectTransform { get; }
   public CanvasGroup CanvasGroup {  get; }
   public Image Background { get; }
-  public TextMeshProUGUI FaceText { get; }
+  public Image FaceImage { get; }
   public Button Button { get; }
   public Action<MahjongTile> OnTileClicked;
 
@@ -24,11 +23,11 @@ public sealed class MahjongTile {
     RectTransform = Container.GetComponent<RectTransform>();
     CanvasGroup = Container.GetComponent<CanvasGroup>();
     Background = Container.GetComponent<Image>();
-    FaceText = CreateFaceText(Container.transform);
+    FaceImage = CreateFaceImage(Container.transform);
     Button = CreateButton(Container, Background);
     Button.onClick.AddListener(ProcessButtonClick);
 
-    FaceText.gameObject.SetActive(false);
+    FaceImage.gameObject.SetActive(false);
   }
 
   void ProcessButtonClick() {
@@ -37,8 +36,8 @@ public sealed class MahjongTile {
 
   public void SetTile(MahjongTileInfo info) {
     Info = info;
-    FaceText.SetText(MahjongTileHelper.GetFormattedTileText(info));
-    FaceText.gameObject.SetActive(true);
+    FaceImage.sprite = MahjongTileTextureGenerator.GetTileSprite(info);
+    FaceImage.gameObject.SetActive(true);
   }
 
   static GameObject CreateContainer(Transform parentTransform) {
@@ -58,22 +57,21 @@ public sealed class MahjongTile {
     return container;
   }
 
-  static TextMeshProUGUI CreateFaceText(Transform parentTransform) {
-    TextMeshProUGUI label = UIBuilder.CreateTMPLabel(parentTransform);
-    label.name = "FaceText";
+  static Image CreateFaceImage(Transform parentTransform) {
+    GameObject obj = new("FaceImage", typeof(RectTransform));
+    obj.transform.SetParent(parentTransform, false);
 
-    label
-        .SetAlignment(TextAlignmentOptions.Center)
-        .SetFontSize(20f);
+    Image image = obj.AddComponent<Image>();
+    image.raycastTarget = false;
 
-    label.rectTransform
-        .SetAnchorMin(Vector2.zero)
-        .SetAnchorMax(Vector2.one)
+    image.rectTransform
+        .SetAnchorMin(new(0.5f, 0.5f))
+        .SetAnchorMax(new(0.5f, 0.5f))
         .SetPivot(new(0.5f, 0.5f))
         .SetPosition(Vector2.zero)
-        .SetSizeDelta(Vector2.zero);
+        .SetSizeDelta(new(56, 64));
 
-    return label;
+    return image;
   }
   
   static Button CreateButton(GameObject container, Image targetGraphic) {
