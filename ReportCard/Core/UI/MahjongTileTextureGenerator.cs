@@ -80,55 +80,61 @@ public static class MahjongTileTextureGenerator {
   static void DrawCharacters(Color32[] pixels, int rank) {
     // Top: Blue Number
     // Bottom: Red "Wan"
-
+    
     byte[,] numMap = rank switch {
-      1 => PixelMaps.Num1,
-      2 => PixelMaps.Num2,
-      3 => PixelMaps.Num3,
-      4 => PixelMaps.Num4,
-      5 => PixelMaps.Num5,
-      6 => PixelMaps.Num6,
-      7 => PixelMaps.Num7,
-      8 => PixelMaps.Num8,
-      9 => PixelMaps.Num9,
-      _ => PixelMaps.Num1
+        1 => PixelMaps.Num1,
+        2 => PixelMaps.Num2,
+        3 => PixelMaps.Num3,
+        4 => PixelMaps.Num4,
+        5 => PixelMaps.Num5,
+        6 => PixelMaps.Num6,
+        7 => PixelMaps.Num7,
+        8 => PixelMaps.Num8,
+        9 => PixelMaps.Num9,
+        _ => PixelMaps.Num1
     };
 
     // Draw Number (Centered Top)
-    // Map is 10x10
-    DrawPixelMap(pixels, 23, 8, numMap, ColorBlue);
-
+    // Map is 10x10. Scale 2x => 20x20.
+    // X: (56 - 20) / 2 = 18.
+    // Y: 40 (Bottom of glyph). Top will be 60.
+    DrawPixelMap(pixels, 18, 40, numMap, ColorBlue, 2);
+    
     // Draw "Wan" (Centered Bottom)
-    // Map is 12x12. Scale 2x => 24x24
-    DrawPixelMap(pixels, 16, 32, PixelMaps.CharWan, ColorRed, 2);
+    // Map is 12x12. Scale 2x => 24x24.
+    // X: (56 - 24) / 2 = 16.
+    // Y: 6 (Bottom of glyph). Top will be 30.
+    DrawPixelMap(pixels, 16, 6, PixelMaps.CharWan, ColorRed, 2);
   }
 
   static void DrawWinds(Color32[] pixels, int rank) {
-    byte[,] map = rank switch {
-      1 => PixelMaps.WindE,
-      2 => PixelMaps.WindS,
-      3 => PixelMaps.WindW,
-      4 => PixelMaps.WindN,
-      _ => PixelMaps.WindE
-    };
-
-    // Map is 10x10. Scale 3x => 30x30. Centered approx (56-30)/2 = 13
-    DrawPixelMap(pixels, 13, 17, map, ColorBlack, 3);
+      byte[,] map = rank switch {
+          1 => PixelMaps.WindE,
+          2 => PixelMaps.WindS,
+          3 => PixelMaps.WindW,
+          4 => PixelMaps.WindN,
+          _ => PixelMaps.WindE
+      };
+      
+      // Map is 10x10. Scale 3x => 30x30. Centered approx (56-30)/2 = 13
+      // Y centered: (64-30)/2 = 17.
+      DrawPixelMap(pixels, 13, 17, map, ColorBlack, 3);
   }
 
   static void DrawDragons(Color32[] pixels, int rank) {
-    switch (rank) {
-      case 1: // Red (Chung/Center)
-        DrawPixelMap(pixels, 10, 14, PixelMaps.DragonC, ColorRed, 3);
-        break;
-      case 2: // Green (Fa/Prosperity)
-        DrawPixelMap(pixels, 10, 14, PixelMaps.DragonF, ColorGreen, 3);
-        break;
-      case 3: // White (Po/Board)
-        DrawRect(pixels, new Rect(10, 8, 36, 48), ColorBlue);
-        DrawRect(pixels, new Rect(14, 12, 28, 40), ColorClear);
-        break;
-    }
+      switch (rank) {
+          case 1: // Red (Chung/Center)
+              DrawPixelMap(pixels, 10, 14, PixelMaps.DragonC, ColorRed, 3);
+              break;
+          case 2: // Green (Fa/Prosperity)
+              DrawPixelMap(pixels, 10, 14, PixelMaps.DragonF, ColorGreen, 3);
+              break;
+          case 3: // White (Po/Board)
+              // Blue Rect Frame
+              DrawRect(pixels, new Rect(10, 8, 36, 48), ColorBlue);
+              DrawRect(pixels, new Rect(14, 12, 28, 40), ColorClear);
+              break;
+      }
   }
 
   static void DrawDots(Color32[] pixels, int rank) {
@@ -173,9 +179,12 @@ public static class MahjongTileTextureGenerator {
         break;
 
       case 7:
+        // Top 3 diagonal-ish
         DrawCircle(pixels, new Vector2(cx - 12, cy - 16), r, ColorGreen);
         DrawCircle(pixels, new Vector2(cx, cy - 12), r, ColorGreen);
         DrawCircle(pixels, new Vector2(cx + 12, cy - 8), r, ColorGreen);
+        
+        // Bottom 4
         DrawCircle(pixels, new Vector2(cx - 12, cy + 8), r, ColorRed);
         DrawCircle(pixels, new Vector2(cx - 12, cy + 22), r, ColorRed);
         DrawCircle(pixels, new Vector2(cx + 12, cy + 8), r, ColorRed);
@@ -214,7 +223,6 @@ public static class MahjongTileTextureGenerator {
   }
 
   static void DrawBamboo(Color32[] pixels, int rank) {
-    // Kept as is
     if (rank == 1) {
       DrawRect(pixels, new Rect(15, 20, 26, 24), ColorGreen);
       return;
@@ -231,6 +239,11 @@ public static class MahjongTileTextureGenerator {
     }
   }
 
+  static void DrawPlaceholder(Color32[] pixels, MahjongTileInfo info) {
+    DrawRect(pixels, new Rect(5, 5, 46, 54), ColorRed);
+    DrawRect(pixels, new Rect(8, 8, 40, 48), ColorClear);
+  }
+
   static void DrawPixelMap(Color32[] pixels, int startX, int startY, byte[,] map, Color32 color, int scale = 1) {
     int height = map.GetLength(0);
     int width = map.GetLength(1);
@@ -238,15 +251,16 @@ public static class MahjongTileTextureGenerator {
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         if (map[y, x] == 1) {
+          // Flip Y: Row 0 is Top, so it should be drawn at highest Y
+          int py = startY + ((height - 1 - y) * scale);
+          
           if (scale == 1) {
-            int px = startX + x;
-            int py = startY + y;
-
-            if (px >= 0 && px < FaceWidth && py >= 0 && py < FaceHeight) {
-              pixels[py * FaceWidth + px] = color;
-            }
+             int px = startX + x;
+             if (px >= 0 && px < FaceWidth && py >= 0 && py < FaceHeight) {
+                pixels[py * FaceWidth + px] = color;
+             }
           } else {
-            DrawRect(pixels, new Rect(startX + (x * scale), startY + (y * scale), scale, scale), color);
+             DrawRect(pixels, new Rect(startX + (x * scale), py, scale, scale), color);
           }
         }
       }
