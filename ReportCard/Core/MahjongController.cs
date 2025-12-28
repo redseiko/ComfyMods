@@ -7,6 +7,7 @@ using UnityEngine;
 public static class MahjongController {
   public static MahjongPanel MahjongPanel { get; private set; }
   public static MahjongHand CurrentHand { get; private set; } = new();
+  public static MahjongWall TileWall { get; private set; }
 
   public static bool IsPanelValid() => MahjongPanel?.Panel;
 
@@ -33,12 +34,19 @@ public static class MahjongController {
   static void InitializeGame() {
     CurrentHand.Clear();
     
+    TileWall = new();
+    TileWall.Initialize();
+
     if (IsPanelValid()) {
       MahjongPanel.ClearHand();
     }
 
     for (int i = 0; i < 13; i++) {
-      CurrentHand.AddToHand(MahjongTileHelper.GetRandomTileInfo());
+      if (!TileWall.TryDrawTile(out MahjongTileInfo drawnTile)) {
+        break;
+      }
+
+      CurrentHand.AddToHand(drawnTile);
     }
 
     CurrentHand.SortHand();
@@ -53,7 +61,11 @@ public static class MahjongController {
   }
 
   static void DrawTile() {
-    MahjongTileInfo newTile = MahjongTileHelper.GetSequentialTileInfo();
+    if (!TileWall.TryDrawTile(out MahjongTileInfo newTile)) {
+      ReportCard.LogInfo("Wall is empty! Round over.");
+      return; 
+    }
+
     CurrentHand.AddToIncoming(newTile);
     
     if (IsPanelValid()) {

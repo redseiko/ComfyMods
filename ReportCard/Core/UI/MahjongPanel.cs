@@ -7,14 +7,17 @@ using ComfyLib;
 using UnityEngine;
 using UnityEngine.UI;
 
+using TMPro;
+
 public sealed class MahjongPanel {
   const float TileSpacing = 5f;
-  const float TileSelectionYOffset = 30f;
+  const float TileSelectionYOffset = 15f;
 
   public GameObject Panel { get; }
   public RectTransform RectTransform { get; }
   public LabelButton CloseButton { get; }
 
+  public TextMeshProUGUI WallCountLabel { get; }
   public GameObject PlayerHandArea { get; }
   public List<MahjongTile> PlayerHandTiles { get; } = [];
 
@@ -29,10 +32,11 @@ public sealed class MahjongPanel {
     Panel = CreatePanel(parentTransform);
     RectTransform = Panel.GetComponent<RectTransform>();
     CloseButton = CreateCloseButton(RectTransform);
+
+    WallCountLabel = CreateWallCountLabel(RectTransform);
     PlayerHandArea = CreatePlayerHandArea(RectTransform);
     IncomingTileArea = CreateIncomingTileArea(RectTransform);
 
-    IncomingTileArea = CreateIncomingTileArea(RectTransform);
     BackgroundButton = CreateBackgroundButton(Panel, HandleBackgroundClicked);
   }
 
@@ -83,6 +87,31 @@ public sealed class MahjongPanel {
     return container;
   }
 
+  static TextMeshProUGUI CreateWallCountLabel(Transform parentTransform) {
+    TextMeshProUGUI wallCount = UIBuilder.CreateTMPLabel(parentTransform);
+    wallCount.name = "WallCountText";
+
+    wallCount.rectTransform
+        .SetAnchorMin(Vector2.zero)
+        .SetAnchorMax(Vector2.zero)
+        .SetPivot(Vector2.zero)
+        .SetPosition(new(20f, 20f));
+
+    wallCount
+        .SetFontSize(20f)
+        .SetAlignment(TextAlignmentOptions.MidlineLeft)
+        .SetColor(Color.white)
+        .SetText("Tiles: 136");
+
+    return wallCount;
+  }
+
+  public void UpdateWallCount(int count) {
+    if (WallCountLabel != null) {
+      WallCountLabel.text = $"Tiles: {count}";
+    }
+  }
+
   public void ClearHand() {
     for (int i = 0; i < PlayerHandTiles.Count; i++) {
       if (PlayerHandTiles[i] != null && PlayerHandTiles[i].Container) {
@@ -111,6 +140,8 @@ public sealed class MahjongPanel {
   }
 
   public void AnimateDraw(MahjongTileInfo info) {
+    UpdateWallCount(MahjongController.TileWall.WallCount);
+
     IncomingTile = new(IncomingTileArea.transform);
     IncomingTile.SetTile(info);
     IncomingTile.OnTileClicked += HandleTileClicked;
@@ -124,10 +155,10 @@ public sealed class MahjongPanel {
 
       tile.AnimateDiscard(() => {
         if (tile != null && tile.Container) {
-            Object.Destroy(tile.Container);
+          Object.Destroy(tile.Container);
         }
         if (IncomingTile == tile) {
-            IncomingTile = null;
+          IncomingTile = null;
         }
       });
 
@@ -151,7 +182,7 @@ public sealed class MahjongPanel {
 
       IncomingTile.OnTileClicked = null;
       IncomingTile.OnTileClicked += HandleTileClicked;
-      
+
       IncomingTile.RectTransform.TweenKill();
 
       PlayerHandTiles.Add(IncomingTile);

@@ -2,8 +2,6 @@
 
 using ComfyLib;
 
-using TMPro;
-
 using UnityEngine;
 
 public static class ExploredStatsController {

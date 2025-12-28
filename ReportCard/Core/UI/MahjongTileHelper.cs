@@ -1,9 +1,35 @@
 namespace ReportCard;
 
 using System;
+using System.Collections.Generic;
 
 public static class MahjongTileHelper {
   static readonly Random Random = new();
+
+  public static List<MahjongTileInfo> CreateFullDeck() {
+    List<MahjongTileInfo> tiles = [];
+
+    // Suits 1-9 (4 copies each)
+    for (int i = 0; i < 4; i++) {
+      for (int rank = 1; rank <= 9; rank++) {
+        tiles.Add(new MahjongTileInfo(MahjongSuit.Characters, rank));
+        tiles.Add(new MahjongTileInfo(MahjongSuit.Bamboos, rank));
+        tiles.Add(new MahjongTileInfo(MahjongSuit.Dots, rank));
+      }
+
+      // Winds (4 copies each)
+      for (int rank = 1; rank <= 4; rank++) {
+        tiles.Add(new MahjongTileInfo(MahjongSuit.Winds, rank));
+      }
+
+      // Dragons (4 copies each)
+      for (int rank = 1; rank <= 3; rank++) {
+        tiles.Add(new MahjongTileInfo(MahjongSuit.Dragons, rank));
+      }
+    }
+
+    return tiles;
+  }
 
   public static string GetFormattedTileText(MahjongTileInfo info) {
     switch (info.Suit) {
