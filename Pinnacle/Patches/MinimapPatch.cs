@@ -55,30 +55,32 @@ static class MinimapPatch {
 
   [HarmonyPrefix]
   [HarmonyPatch(nameof(Minimap.OnMapLeftClick))]
-  static bool OnMapLeftClickPrefix(ref Minimap __instance) {
+  static bool OnMapLeftClickPrefix(Minimap __instance) {
     if (IsModEnabled.Value
         && Console.m_instance.IsCheatsEnabled()
         && Player.m_localPlayer
         && ZInput.GetKey(KeyCode.LeftShift)) {
-      Vector3 targetPosition = __instance.ScreenToWorldPoint(ZInput.mousePosition);
-
-      Minimap.PinData closestPin =
-          __instance.GetClosestPin(
-              targetPosition, __instance.m_removeRadius * __instance.m_largeZoom * 2f, mustBeVisible: true);
-
-      __instance.SetMapMode(Minimap.MapMode.Small);
-      __instance.m_smallRoot.SetActive(true);
-
-      if (closestPin == default) {
-        PinnacleUtils.TeleportTo(targetPosition);
-      } else {
-        PinnacleUtils.TeleportTo(closestPin);
-      }
-
+      ProcessMapLeftClickTeleport(__instance);
       return false;
     }
 
     return true;
+  }
+
+  static void ProcessMapLeftClickTeleport(Minimap minimap) {
+    Vector3 targetPosition = minimap.ScreenToWorldPoint(ZInput.mousePosition);
+
+    Minimap.PinData closestPin =
+        minimap.GetClosestPin(targetPosition, minimap.m_removeRadius * minimap.m_largeZoom * 2f, mustBeVisible: true);
+
+    minimap.SetMapMode(Minimap.MapMode.Small);
+    minimap.m_smallRoot.SetActive(true);
+
+    if (closestPin == default) {
+      PinnacleUtils.TeleportTo(targetPosition);
+    } else {
+      PinnacleUtils.TeleportTo(closestPin);
+    }
   }
 
   [HarmonyTranspiler]
@@ -194,6 +196,7 @@ static class MinimapPatch {
   static bool ShowPinNameInputPrefix(Minimap __instance, Vector3 pos) {
     if (IsModEnabled.Value) {
       __instance.m_namePin = null;
+
       PinEditPanelController.TogglePanel(PinnacleUtils.AddNewPin(__instance, pos));
       PinEditPanelController.PinEditPanel?.ActivatePinNameInputField();
 

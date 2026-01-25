@@ -83,8 +83,8 @@
     <Reference Include="Unity.InputSystem" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\Unity.InputSystem.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.TextMeshPro" Private="false">
-      <HintPath>$(GamePath)\valheim_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    <Reference Include="Unity.TextMeshPro_publicized" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\Unity.TextMeshPro_publicized.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.dll</HintPath>
@@ -122,6 +122,7 @@
     <Compile Include="ComfyLib\UI\Core\UIBuilder.cs" />
     <Compile Include="ComfyLib\UI\Core\UIExtensions.cs" />
     <Compile Include="ComfyLib\UI\Core\UIResources.cs" />
+    <Compile Include="ComfyLib\UI\Core\UISpriteBuilder.cs" />
     <Compile Include="ComfyLib\Utils\ResourceCache.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Core\CenterMapHelper.cs" />

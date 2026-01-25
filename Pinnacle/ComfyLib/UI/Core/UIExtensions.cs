@@ -313,9 +313,14 @@ public static class OutlineExtensions {
 }
 
 public static class RectMask2DExtensions {
-  public static RectMask2D SetSoftness(this RectMask2D rectMask2d, Vector2Int softness) {
-    rectMask2d.softness = softness;
-    return rectMask2d;
+  public static T SetPadding<T>(this T rectMask, Vector4 padding) where T : RectMask2D {
+    rectMask.padding = padding;
+    return rectMask;
+  }
+
+  public static T SetSoftness<T>(this T rectMask, Vector2Int softness) where T : RectMask2D {
+    rectMask.softness = softness;
+    return rectMask;
   }
 }
 
@@ -494,7 +499,7 @@ public static class SliderExtensions {
   }
 }
 
-public static class TextMeshProExtensions {
+public static class TMPTextExtensions {
   public static T SetAlignment<T>(this T tmpText, TextAlignmentOptions alignment) where T : TMP_Text {
     tmpText.alignment = alignment;
     return tmpText;
@@ -553,6 +558,28 @@ public static class TextMeshProExtensions {
   public static T SetTextWrappingMode<T>(this T tmpText, TextWrappingModes textWrappingMode) where T : TMP_Text {
     tmpText.textWrappingMode = textWrappingMode;
     return tmpText;
+  }
+}
+
+public static class TMPInputFieldExtensions {
+  public static T SetDoubleClickDelay<T>(this T tmpInputField, float doubleClickDelay) where T : TMP_InputField {
+    tmpInputField.m_DoubleClickDelay = doubleClickDelay;
+    return tmpInputField;
+  }
+
+  public static T SetOnFocusSelectAll<T>(this T tmpInputField, bool onFocusSelectAll) where T : TMP_InputField {
+    tmpInputField.onFocusSelectAll = onFocusSelectAll;
+    return tmpInputField;
+  }
+
+  public static T SetTextComponent<T>(this T tmpInputField, TMP_Text textComponent) where T : TMP_InputField {
+    tmpInputField.textComponent = textComponent;
+    return tmpInputField;
+  }
+
+  public static T SetTextViewport<T>(this T tmpInputField, RectTransform textViewport) where T : TMP_InputField {
+    tmpInputField.textViewport = textViewport;
+    return tmpInputField;
   }
 }
 

@@ -15,8 +15,9 @@ using static PluginConfig;
 
 public sealed class PinListPanel {
   public GameObject Panel { get; private set; }
-  public RectTransform PanelRectTransform { get; private set; }
-  public Image PanelBackground { get; private set; }
+  public RectTransform RectTransform { get; private set; }
+  public CanvasGroup CanvasGroup { get; private set; }
+  public Image Background { get; private set; }
 
   public ValueCell PinNameFilter { get; private set; }
 
@@ -34,30 +35,31 @@ public sealed class PinListPanel {
   readonly PointerState _pointerState;
 
   public PinListPanel(Transform parentTransform) {
-    Panel = CreateChildPanel(parentTransform);
-    PanelRectTransform = Panel.GetComponent<RectTransform>();
-    PanelBackground = Panel.GetComponent<Image>();
+    Panel = CreatePanel(parentTransform);
+    RectTransform = Panel.GetComponent<RectTransform>();
+    CanvasGroup = Panel.GetComponent<CanvasGroup>();
+    Background = Panel.GetComponent<Image>();
 
-    PanelDragger = CreateChildPanelDragger(Panel).AddComponent<PanelDragger>();
-    PanelDragger.TargetRectTransform = Panel.RectTransform();
+    PanelDragger = CreateDragger(Panel.transform).AddComponent<PanelDragger>();
+    PanelDragger.TargetRectTransform = RectTransform;
 
-    PanelResizer = CreateChildPanelResizer(Panel).AddComponent<PanelResizer>();
-    PanelResizer.TargetRectTransform = Panel.RectTransform();
+    PanelResizer = CreateResizer(Panel.transform).AddComponent<PanelResizer>();
+    PanelResizer.TargetRectTransform = RectTransform;
 
     PinNameFilter = new(Panel.transform);
-    PinNameFilter.Cell.LayoutElement().SetFlexible(width: 1f).SetPreferred(height: 30f);
+    PinNameFilter.Container.LayoutElement().SetFlexible(width: 1f).SetPreferred(height: 30f);
     PinNameFilter.InputField.onValueChanged.AddListener(SetTargetPins);
 
-    Viewport = CreateChildViewport(Panel.transform);
-    Content = CreateChildContent(Viewport.transform);
-    ScrollRect = CreateChildScrollRect(Panel, Viewport, Content);
+    Viewport = CreateViewport(Panel.transform);
+    Content = CreateContent(Viewport.transform);
+    ScrollRect = CreateScrollRect(Panel, Viewport, Content);
 
     PinStats = new(Panel.transform);
-    PinStats.Cell.GetComponent<HorizontalLayoutGroup>().SetPadding(left: 8, right: 8, top: 2, bottom: 2);
+    PinStats.Container.GetComponent<HorizontalLayoutGroup>().SetPadding(left: 8, right: 8, top: 2, bottom: 2);
     PinStats.Background.SetColor(new(0.5f, 0.5f, 0.5f, 0.1f));
-    PinStats.Cell.AddComponent<Outline>().SetEffectDistance(new(2f, -2f));
+    PinStats.Container.AddComponent<Outline>().SetEffectDistance(new(2f, -2f));
 
-    RefreshButton = CreateRefreshButton(PinStats.Cell.transform);
+    RefreshButton = CreateRefreshButton(PinStats.Container.transform);
     RefreshButton.Button.onClick.AddListener(RefreshTargetPins);
 
     _pointerState = Panel.AddComponent<PointerState>();
@@ -187,9 +189,9 @@ public sealed class PinListPanel {
     _previousRowIndex = rowIndex;
   }
 
-  GameObject CreateChildPanel(Transform parentTransform) {
-    GameObject panel = new("PinList.Panel", typeof(RectTransform));
-    panel.SetParent(parentTransform);
+  static GameObject CreatePanel(Transform parentTransform) {
+    GameObject panel = new("PinListPanel", typeof(RectTransform));
+    panel.transform.SetParent(parentTransform, worldPositionStays: false);
 
     panel.AddComponent<VerticalLayoutGroup>()
         .SetChildControl(width: true, height: true)
@@ -199,15 +201,21 @@ public sealed class PinListPanel {
 
     panel.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
-        .SetSprite(UIBuilder.CreateSuperellipse(400, 400, 15))
+        .SetSprite(UISpriteBuilder.CreateSuperellipse(400, 400, 15))
         .SetColor(new(0f, 0f, 0f, 0.9f));
+
+    panel.AddComponent<Canvas>();
+    panel.AddComponent<GraphicRaycaster>();
+
+    panel.AddComponent<CanvasGroup>()
+        .SetBlocksRaycasts(true);
 
     return panel;
   }
 
-  GameObject CreateChildViewport(Transform parentTransform) {
-    GameObject viewport = new("PinList.Viewport", typeof(RectTransform));
-    viewport.SetParent(parentTransform);
+  static GameObject CreateViewport(Transform parentTransform) {
+    GameObject viewport = new("Viewport", typeof(RectTransform));
+    viewport.transform.SetParent(parentTransform, worldPositionStays: false);
 
     viewport.AddComponent<RectMask2D>();
 
@@ -216,7 +224,7 @@ public sealed class PinListPanel {
 
     viewport.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
-        .SetSprite(UIBuilder.CreateRoundedCornerSprite(128, 128, 8))
+        .SetSprite(UISpriteBuilder.CreateRoundedCornerSprite(128, 128, 8))
         .SetColor(new(0.5f, 0.5f, 0.5f, 0.1f));
 
     viewport.AddComponent<Outline>()
@@ -225,11 +233,11 @@ public sealed class PinListPanel {
     return viewport;
   }
 
-  GameObject CreateChildContent(Transform parentTransform) {
-    GameObject content = new("PinList.Content", typeof(RectTransform));
-    content.SetParent(parentTransform);
+  static GameObject CreateContent(Transform parentTransform) {
+    GameObject content = new("Content", typeof(RectTransform));
+    content.transform.SetParent(parentTransform, worldPositionStays: false);
 
-    content.RectTransform()
+    content.GetComponent<RectTransform>()
         .SetAnchorMin(Vector2.up)
         .SetAnchorMax(Vector2.up)
         .SetPivot(Vector2.up);
@@ -246,7 +254,7 @@ public sealed class PinListPanel {
     return content;
   }
 
-  ScrollRect CreateChildScrollRect(GameObject panel, GameObject viewport, GameObject content) {
+  static ScrollRect CreateScrollRect(GameObject panel, GameObject viewport, GameObject content) {
     return panel.AddComponent<ScrollRect>()
         .SetViewport(viewport.RectTransform())
         .SetContent(content.RectTransform())
@@ -256,9 +264,9 @@ public sealed class PinListPanel {
         .SetScrollSensitivity(PinListPanelScrollRectScrollSensitivity.Value);
   }
 
-  GameObject CreateChildPanelDragger(GameObject panel) {
+  static GameObject CreateDragger(Transform parentTransform) {
     GameObject dragger = new("Dragger", typeof(RectTransform));
-    dragger.SetParent(panel.transform);
+    dragger.transform.SetParent(parentTransform, worldPositionStays: false);
 
     dragger.AddComponent<LayoutElement>()
         .SetIgnoreLayout(true);
@@ -275,9 +283,9 @@ public sealed class PinListPanel {
     return dragger;
   }
 
-  GameObject CreateChildPanelResizer(GameObject panel) {
+  static GameObject CreateResizer(Transform parentTransform) {
     GameObject resizer = new("Resizer", typeof(RectTransform));
-    resizer.SetParent(panel.transform);
+    resizer.transform.SetParent(parentTransform, worldPositionStays: false);
 
     resizer.AddComponent<LayoutElement>()
         .SetIgnoreLayout(true);
@@ -316,7 +324,7 @@ public sealed class PinListPanel {
     return resizer;
   }
 
-  LabelButton CreateRefreshButton(Transform parentTransform) {
+  static LabelButton CreateRefreshButton(Transform parentTransform) {
     LabelButton refresh = new(parentTransform);
 
     refresh.RectTransform

@@ -8,49 +8,52 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public sealed class LabelCell {
-  public GameObject Cell { get; private set; }
+  public GameObject Container { get; private set; }
+  public RectTransform RectTransform { get; private set; }
   public Image Background { get; private set; }
   public TextMeshProUGUI Label { get; private set; }
 
   public LabelCell(Transform parentTransform) {
-    Cell = CreateChildCell(parentTransform);
-    Background = Cell.GetComponent<Image>();
-    Label = CreateChildLabel(Cell.transform);
+    Container = CreateContainer(parentTransform);
+    RectTransform = Container.GetComponent<RectTransform>();
+    Background = Container.GetComponent<Image>();
+    Label = CreateLabel(Container.transform);
   }
 
-  GameObject CreateChildCell(Transform parentTransform) {
-    GameObject cell = new("Cell", typeof(RectTransform));
-    cell.SetParent(parentTransform);
+  static GameObject CreateContainer(Transform parentTransform) {
+    GameObject container = new("Container", typeof(RectTransform));
+    container.transform.SetParent(parentTransform, worldPositionStays: false);
 
-    cell.AddComponent<HorizontalLayoutGroup>()
+    container.AddComponent<HorizontalLayoutGroup>()
         .SetChildControl(width: true, height: true)
         .SetChildForceExpand(width: false, height: false)
         .SetPadding(left: 4, right: 4, top: 4, bottom: 4)
         .SetSpacing(4f)
         .SetChildAlignment(TextAnchor.MiddleCenter);
 
-    cell.AddComponent<Image>()
+    container.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
-        .SetSprite(UIBuilder.CreateRoundedCornerSprite(64, 64, 8))
+        .SetSprite(UISpriteBuilder.CreateRoundedCornerSprite(64, 64, 8))
         .SetColor(new(0.2f, 0.2f, 0.2f, 0.5f));
 
-    cell.AddComponent<ContentSizeFitter>()
+    container.AddComponent<ContentSizeFitter>()
         .SetHorizontalFit(ContentSizeFitter.FitMode.Unconstrained)
         .SetVerticalFit(ContentSizeFitter.FitMode.PreferredSize);
 
-    cell.AddComponent<LayoutElement>()
+    container.AddComponent<LayoutElement>()
         .SetPreferred(width: 150f)
         .SetFlexible(width: 1f);
 
-    return cell;
+    return container;
   }
 
-  TextMeshProUGUI CreateChildLabel(Transform parentTransform) {
+  static TextMeshProUGUI CreateLabel(Transform parentTransform) {
     TextMeshProUGUI label = UIBuilder.CreateTMPLabel(parentTransform);
-    label.SetName("Label");
 
-    label.alignment = TextAlignmentOptions.Left;
-    label.text = "Label";
+    label
+        .SetName("Label")
+        .SetAlignment(TextAlignmentOptions.Left)
+        .SetText("Label");
 
     label.gameObject.AddComponent<LayoutElement>()
         .SetFlexible(width: 1f);

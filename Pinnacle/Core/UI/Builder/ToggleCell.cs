@@ -10,19 +10,23 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public sealed class ToggleCell {
-  public GameObject Cell { get; private set; }
-  public TMP_Text Label { get; private set; }
+  public GameObject Container { get; private set; }
+  public RectTransform RectTransform { get; private set; }
+
+  public TextMeshProUGUI Label { get; private set; }
   public Image Checkbox { get; private set; }
   public Image Checkmark { get; private set; }
   public Toggle Toggle { get; private set; }
 
   public ToggleCell(Transform parentTransform) {
-    Cell = CreateChildCell(parentTransform);
-    Label = CreateChildLabel(Cell.transform);
-    Checkbox = CreateChildCheckbox(Cell.transform).Image();
-    Checkmark = CreateChildCheckmark(Checkbox.transform).Image();
+    Container = CreateContainer(parentTransform);
+    RectTransform = Container.GetComponent<RectTransform>();
 
-    Toggle = Cell.AddComponent<Toggle>();
+    Label = CreateLabel(Container.transform);
+    Checkbox = CreateCheckbox(Container.transform).Image();
+    Checkmark = CreateCheckmark(Checkbox.transform).Image();
+
+    Toggle = Container.AddComponent<Toggle>();
     Toggle.SetTransition(Selectable.Transition.ColorTint)
         .SetNavigationMode(Navigation.Mode.None)
         .SetTargetGraphic(Checkbox)
@@ -31,44 +35,44 @@ public sealed class ToggleCell {
     Toggle.toggleTransition = Toggle.ToggleTransition.Fade;
   }
 
-  GameObject CreateChildCell(Transform parentTransform) {
-    GameObject cell = new("Cell", typeof(RectTransform));
-    cell.SetParent(parentTransform);
+  static GameObject CreateContainer(Transform parentTransform) {
+    GameObject container = new("Toggle", typeof(RectTransform));
+    container.transform.SetParent(parentTransform, worldPositionStays: false);
 
-    cell.AddComponent<HorizontalLayoutGroup>()
+    container.AddComponent<HorizontalLayoutGroup>()
         .SetChildControl(width: true, height: true)
         .SetChildForceExpand(width: false, height: false)
         .SetPadding(left: 8, right: 8, top: 4, bottom: 4)
         .SetSpacing(8f)
         .SetChildAlignment(TextAnchor.MiddleCenter);
 
-    cell.AddComponent<Image>()
+    container.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
-        .SetSprite(UIBuilder.CreateRoundedCornerSprite(64, 64, 8))
+        .SetSprite(UISpriteBuilder.CreateRoundedCornerSprite(64, 64, 8))
         .SetColor(new(0.5f, 0.5f, 0.5f, 0.5f));
 
-    cell.AddComponent<Shadow>()
-        .SetEffectDistance(new(2, -2));
+    container.AddComponent<Shadow>()
+        .SetEffectDistance(new(2f, -2f));
 
-    cell.AddComponent<ContentSizeFitter>()
+    container.AddComponent<ContentSizeFitter>()
         .SetHorizontalFit(ContentSizeFitter.FitMode.PreferredSize)
         .SetVerticalFit(ContentSizeFitter.FitMode.PreferredSize);
 
-    return cell;
+    return container;
   }
 
-  GameObject CreateChildCheckbox(Transform parentTransform) {
-    GameObject checkbox = new("Toggle.Checkbox", typeof(RectTransform));
+  static GameObject CreateCheckbox(Transform parentTransform) {
+    GameObject checkbox = new("Checkbox", typeof(RectTransform));
     checkbox.SetParent(parentTransform);
 
     checkbox.AddComponent<Image>()
         .SetType(Image.Type.Filled)
-        .SetSprite(UIBuilder.CreateRoundedCornerSprite(64, 64, 10))
+        .SetSprite(UISpriteBuilder.CreateRoundedCornerSprite(64, 64, 10))
         .SetColor(new(0.5f, 0.5f, 0.5f, 0.9f))
         .SetPreserveAspect(true);
 
     checkbox.AddComponent<Shadow>()
-        .SetEffectDistance(new(1, -1));
+        .SetEffectDistance(new(1f, -1f));
 
     checkbox.AddComponent<GridLayoutGroup>()
         .SetCellSize(new(12f, 12f))
@@ -84,18 +88,18 @@ public sealed class ToggleCell {
     return checkbox;
   }
 
-  GameObject CreateChildCheckmark(Transform parentTransform) {
-    GameObject checkmark = new("Toggle.Checkmark", typeof(RectTransform));
+  static GameObject CreateCheckmark(Transform parentTransform) {
+    GameObject checkmark = new("Checkmark", typeof(RectTransform));
     checkmark.SetParent(parentTransform);
 
     checkmark.AddComponent<Image>()
         .SetType(Image.Type.Filled)
-        .SetSprite(UIBuilder.CreateRoundedCornerSprite(64, 64, 6))
+        .SetSprite(UISpriteBuilder.CreateRoundedCornerSprite(64, 64, 6))
         .SetColor(new(0.565f, 0.792f, 0.976f, 0.9f))
         .SetPreserveAspect(true);
 
     checkmark.AddComponent<Shadow>()
-        .SetEffectDistance(new(1, -1));
+        .SetEffectDistance(new(1f, -1f));
 
     checkmark.AddComponent<LayoutElement>()
         .SetFlexible(width: 1f, height: 1f);
@@ -103,12 +107,13 @@ public sealed class ToggleCell {
     return checkmark;
   }
 
-  TMP_Text CreateChildLabel(Transform parentTransform) {
-    TMP_Text label = UIBuilder.CreateTMPLabel(parentTransform);
-    label.SetName("Toggle.Label");
+  static TextMeshProUGUI CreateLabel(Transform parentTransform) {
+    TextMeshProUGUI label = UIBuilder.CreateTMPLabel(parentTransform);
 
-    label.alignment = TextAlignmentOptions.Center;
-    label.text = "Toggle";
+    label
+        .SetName("Label")
+        .SetAlignment(TextAlignmentOptions.Center)
+        .SetText("Toggle");
 
     return label;
   }
