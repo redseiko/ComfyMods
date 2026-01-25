@@ -114,6 +114,7 @@
     <Compile Include="Core\Commands\ListLocationCommand.cs" />
     <Compile Include="Core\Commands\RegisterLocationCommand.cs" />
     <Compile Include="Patches\TerminalPatch.cs" />
+    <Compile Include="Patches\WorldGeneratorPatch.cs" />
     <Compile Include="PostalCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -12,7 +12,7 @@ public static class RemoveAllPinsCommand {
   }
 
   public static object Run(Terminal.ConsoleEventArgs args) {
-    if (Minimap.m_instance) {
+    if (!Minimap.m_instance) {
       return false;
     }
 

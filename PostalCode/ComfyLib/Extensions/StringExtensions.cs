@@ -30,14 +30,14 @@ public static class StringExtensions {
       } else if (valueType == typeof(ZDOID) && text.TryParseZDOID(out ZDOID valueZDOID)) {
         value = (T) (object) valueZDOID;
       } else if (valueType.IsEnum) {
-        value = (T) Enum.Parse(valueType, text);
+        value = (T) Enum.Parse(valueType, text, ignoreCase: true);
       } else {
         value = (T) Convert.ChangeType(text, valueType);
       }
 
       return true;
     } catch (Exception exception) {
-      Debug.LogError($"Failed to convert value '{text}' to type {typeof(T)}: {exception}");
+      Debug.LogError($"Failed to convert value '{text}' to type {valueType}: {exception}");
     }
 
     value = default;
@@ -55,6 +55,20 @@ public static class StringExtensions {
     }
 
     value = default;
+    return false;
+  }
+
+  public static bool TryParseVector2i(this string text, out Vector2i vector) {
+    string[] parts = text.Split(CommaSeparator, 2, StringSplitOptions.RemoveEmptyEntries);
+
+    if (parts.Length == 2
+        && int.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out int x)
+        && int.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out int y)) {
+      vector = new(x, y);
+      return true;
+    }
+
+    vector = default;
     return false;
   }
 

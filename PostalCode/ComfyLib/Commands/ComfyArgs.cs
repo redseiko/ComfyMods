@@ -6,12 +6,17 @@ using System.Text.RegularExpressions;
 
 public sealed class ComfyArgs {
   public static readonly Regex CommandRegex =
-      new("^(?<command>\\w[\\w-]*)"
-          + "(?:\\s+--"
-              + "(?:(?<arg>\\w[\\w-]*)=(?:\"(?<value>[^\"]*?)\""
-              + "|(?<value>\\S+))"
-              + "|no(?<argfalse>\\w[\\w-]*)"
-              + "|(?<argtrue>\\w[\\w-]*)))*");
+      new Regex(
+          @"^(?<command>\w[\w-]*)"
+              + @"(\s+--("
+                  + @"(?<arg>\w[\w-]*)="
+                      + @"(""(?<value>[^""]*?)"""
+                      + @"|'(?<value>[^']*?)'"
+                      + @"|(?<value>\S+))"
+                  + @"|no(?<argfalse>\w[\w-]*)"
+                  + @"|(?<argtrue>\w[\w-]*)))*",
+          RegexOptions.ExplicitCapture | RegexOptions.Compiled | RegexOptions.CultureInvariant,
+          TimeSpan.FromMilliseconds(500));
 
   public static readonly char[] CommaSeparator = [','];
 
@@ -37,10 +42,13 @@ public sealed class ComfyArgs {
     }
 
     CaptureCollection names = match.Groups["arg"].Captures;
-    CaptureCollection values = match.Groups["value"].Captures;
+    int namesCount = names.Count;
 
-    for (int i = 0; i < names.Count; i++) {
-      ArgsValueByName[names[i].Value] = i < values.Count ? values[i].Value : string.Empty;
+    CaptureCollection values = match.Groups["value"].Captures;
+    int valuesCount = values.Count;
+
+    for (int i = 0; i < namesCount; i++) {
+      ArgsValueByName[names[i].Value] = i < valuesCount ? values[i].Value : string.Empty;
     }
   }
 
@@ -71,6 +79,15 @@ public sealed class ComfyArgs {
         && argStringValue.TryParseValue(out argValue);
   }
 
+  public bool TryGetListValue<T>(string argName, out List<T> argListValue) {
+    if (!ArgsValueByName.TryGetValue(argName, out string argStringValue)) {
+      argListValue = default;
+      return false;
+    }
+
+    return GetListValue(argStringValue, out argListValue);
+  }
+
   public bool TryGetListValue<T>(string argName, string argShortName, out List<T> argListValue) {
     if (!ArgsValueByName.TryGetValue(argName, out string argStringValue)
         && !ArgsValueByName.TryGetValue(argShortName, out argStringValue)) {
@@ -78,6 +95,10 @@ public sealed class ComfyArgs {
       return false;
     }
 
+    return GetListValue(argStringValue, out argListValue);
+  }
+
+  static bool GetListValue<T>(string argStringValue, out List<T> argListValue) {
     string[] values = argStringValue.Split(CommaSeparator, StringSplitOptions.RemoveEmptyEntries);
     argListValue = new(capacity: values.Length);
 
