@@ -113,7 +113,10 @@
     <Compile Include="Core\Commands\DeregisterLocationCommand.cs" />
     <Compile Include="Core\Commands\ListLocationCommand.cs" />
     <Compile Include="Core\Commands\RegisterLocationCommand.cs" />
+    <Compile Include="Patches\PlayerPatch.cs" />
     <Compile Include="Patches\TerminalPatch.cs" />
+    <Compile Include="Patches\WaterVolumePatch.cs" />
+    <Compile Include="Patches\MinimapPatch.cs" />
     <Compile Include="Patches\WorldGeneratorPatch.cs" />
     <Compile Include="PostalCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

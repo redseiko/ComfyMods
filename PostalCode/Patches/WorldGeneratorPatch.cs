@@ -1,9 +1,9 @@
 namespace PostalCode;
 
-using HarmonyLib;
-
 using System.Collections.Generic;
 using System.Reflection.Emit;
+
+using HarmonyLib;
 
 using UnityEngine;
 
@@ -38,11 +38,9 @@ static class WorldGeneratorPatch {
             new CodeMatch(OpCodes.Ldc_R4, 10500f))
         .ThrowIfInvalid($"Could not patch WorldGenerator.GetBiomeHeight()! (world-edge-height)")
         .Advance(offset: 3)
-        //.SetOperandAndAdvance(20000f)
         .InsertAndAdvance(
             new CodeInstruction(
                 OpCodes.Call, AccessTools.Method(typeof(WorldGeneratorPatch), nameof(WorldEdgeHeightDelegate))))
-
         .InstructionEnumeration();
   }
 
@@ -186,6 +184,53 @@ static class WorldGeneratorPatch {
     }
 
     __result = baseHeight;
+    return false;
+  }
+
+  // ====================================================================
+  // PREFIX: IsAshlands
+  // Purpose: Prevent EnvMan from switching to Ashlands environment (hiding water)
+  //          in the NEW extended area (-19500 < y < -10500).
+  //          We MUST preserve vanilla Ashlands (-10500 < y < ?).
+  // ====================================================================
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(WorldGenerator.IsAshlands))]
+  static bool IsAshlandsPrefix(float x, float y, ref bool __result) {
+    // If we are strictly beyond the new pole, it is Ashlands.
+    if (y < -19500f) {
+      __result = true;
+      return false;
+    }
+
+    // If we are in the vanilla world (including vanilla Ashlands), run original logic.
+    // Vanilla limit is roughly 10500. Let's start the override a bit further out to be safe.
+    if (y > -11000f) {
+      return true; // Run original (which returns true if y < -10500)
+    }
+
+    // In the gap (-19500 to -11000), force FALSE to allow other biomes/water to render.
+    __result = false;
+    return false;
+  }
+
+  // ====================================================================
+  // PREFIX: IsDeepNorth
+  // Purpose: Prevent EnvMan from switching to Deep North environment
+  //          in the NEW extended area.
+  // ====================================================================
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(WorldGenerator.IsDeepnorth))]
+  static bool IsDeepNorthPrefix(float x, float y, ref bool __result) {
+    if (y > 19500f) {
+      __result = true;
+      return false;
+    }
+
+    if (y < 11000f) {
+      return true; // Run original
+    }
+
+    __result = false;
     return false;
   }
 }
