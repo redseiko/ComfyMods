@@ -18,7 +18,7 @@ public static class PinListPanelController {
     if (!PinListPanel?.Panel) {
       PinListPanel = new(Minimap.m_instance.m_largeRoot.transform);
 
-      PinListPanel.PanelRectTransform
+      PinListPanel.RectTransform
           .SetAnchorMin(new(0f, 0.5f))
           .SetAnchorMax(new(0f, 0.5f))
           .SetPivot(new(0f, 0.5f))
@@ -46,19 +46,19 @@ public static class PinListPanelController {
 
   public static void SetBackgroundColor(Color color) {
     if (IsPanelValid()) {
-      PinListPanel.PanelBackground.color = color;
+      PinListPanel.Background.color = color;
     }
   }
 
   public static void SetPanelPosition(Vector2 position) {
     if (IsPanelValid()) {
-      PinListPanel.PanelRectTransform.anchoredPosition = position;
+      PinListPanel.RectTransform.anchoredPosition = position;
     }
   }
 
   public static void SetPanelSize(Vector2 sizeDelta) {
     if (IsPanelValid()) {
-      PinListPanel.PanelRectTransform.sizeDelta = sizeDelta;
+      PinListPanel.RectTransform.sizeDelta = sizeDelta;
       PinListPanel.SetTargetPins();
     }
   }

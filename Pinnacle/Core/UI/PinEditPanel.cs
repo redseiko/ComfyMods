@@ -2,7 +2,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 using ComfyLib;
 
@@ -19,97 +18,67 @@ public sealed class PinEditPanel {
 
   public GameObject Panel { get; private set; }
   public RectTransform RectTransform { get; private set; }
+  public CanvasGroup CanvasGroup { get; private set; }
 
-  public LabelValueRow PinName { get; private set; }
+  public LabelValueRow PinNameRow { get; private set; }
 
-  public LabelRow PinIconSelectorLabelRow { get; private set; }
+  public LabelRow PinIconSelectorRow { get; private set; }
   public PinIconSelector PinIconSelector { get; private set; }
 
-  public LabelValueRow PinType { get; private set; }
+  public LabelValueRow PinTypeRow { get; private set; }
 
   public LabelRow PinModifierRow { get; private set; }
-  public ToggleCell PinChecked { get; private set; }
-  public ToggleCell PinShared { get; private set; }
+  public ToggleCell PinCheckedToggle { get; private set; }
+  public ToggleCell PinSharedToggle { get; private set; }
 
-  public LabelRow PinPositionLabelRow { get; private set; }
+  public LabelRow PinPositionRow { get; private set; }
   public VectorCell PinPosition { get; private set; }
 
   // Styling.
-  readonly List<TMP_Text> Labels = [];
-  readonly List<GameObject> ValueCells = [];
+  readonly List<TextMeshProUGUI> _rowLabels = [];
 
   // HasFocus.
-  readonly List<GameObject> Selectables = [];
+  readonly HashSet<GameObject> _selectables = [];
 
   Coroutine _setActiveCoroutine;
 
   public PinEditPanel(Transform parentTransform) {
     Panel = CreatePanel(parentTransform);
     RectTransform = Panel.GetComponent<RectTransform>();
+    CanvasGroup = Panel.GetComponent<CanvasGroup>();
 
-    PinName = new(Panel.transform);
-    PinName.Label.SetText("Name");
+    PinNameRow = CreatePinNameRow(Panel.transform);
 
-    PinName.Value.Cell.LayoutElement()
-        .SetFlexible(width: 1f)
-        .SetPreferred(height: PinName.Value.InputField.preferredHeight + 8f);
+    PinIconSelectorRow = CreatePinIconSelectorRow(Panel.transform);
+    PinIconSelector = CreatePinIconSelector(PinIconSelectorRow.Row.transform);
 
-    PinName.Value.InputField.onEndEdit.AddListener(OnPinNameValueChange);
+    PinTypeRow = CreatePinTypeRow(Panel.transform);
 
-    PinIconSelectorLabelRow = new(Panel.transform);
-    PinIconSelectorLabelRow.Label.alignment = TMPro.TextAlignmentOptions.TopLeft;
-    PinIconSelectorLabelRow.Label.text = "Icon";
+    PinModifierRow = CreatePinModifierRow(Panel.transform);
+    PinCheckedToggle = CreatePinCheckedToggle(PinModifierRow.Row.transform);
+    PinSharedToggle = CreatePinSharedToggle(PinModifierRow.Row.transform);
 
-    PinIconSelector = new(PinIconSelectorLabelRow.Row.transform);
-    PinIconSelector.OnPinIconClicked += (_, pinType) => OnPinTypeValueChange(pinType);
+    PinPositionRow = CreatePinPositionRow(Panel.transform);
+    PinPosition = CreatePinPosition(PinPositionRow.Row.transform);
 
-    PinType = new(Panel.transform);
-    PinType.Label.SetText("Type");
-    PinType.Value.InputField.SetInteractable(false);
+    CacheSelectables();
+    CacheRowLabels();
 
-    PinModifierRow = new(Panel.transform);
-    PinModifierRow.Label.SetText("Modifier");
+    SetupPanelStyle();
+  }
 
-    PinChecked = new(PinModifierRow.Row.transform);
-    PinChecked.Label.SetText("Checked");
-    PinChecked.Toggle.onValueChanged.AddListener(OnPinCheckedChange);
+  void CacheSelectables() {
+    foreach (Selectable selectable in Panel.GetComponentsInChildren<Selectable>()) {
+      _selectables.Add(selectable.gameObject);
+    }
+  }
 
-    PinShared = new(PinModifierRow.Row.transform);
-    PinShared.Label.SetText("Shared");
-    PinShared.Toggle.onValueChanged.AddListener(OnPinSharedChange);
-
-    PinPositionLabelRow = new(Panel.transform);
-    PinPositionLabelRow.Label.SetText("Position");
-
-    PinPosition = new(PinPositionLabelRow.Row.transform);
-
-    PinPosition.XValue.InputField.textComponent.color = new(1f, 0.878f, 0.51f);
-    PinPosition.XValue.InputField.contentType = TMP_InputField.ContentType.DecimalNumber;
-    PinPosition.XValue.InputField.characterValidation = TMP_InputField.CharacterValidation.Decimal;
-    PinPosition.XValue.InputField.onEndEdit.AddListener(_ => OnPinPositionValueChange());
-
-    PinPosition.YValue.InputField.textComponent.color = new(0.565f, 0.792f, 0.976f);
-    PinPosition.YValue.InputField.contentType = TMP_InputField.ContentType.DecimalNumber;
-    PinPosition.YValue.InputField.characterValidation = TMP_InputField.CharacterValidation.Decimal;
-    PinPosition.YValue.InputField.onEndEdit.AddListener(_ => OnPinPositionValueChange());
-
-    PinPosition.ZValue.InputField.textComponent.color = new(0.647f, 0.839f, 0.655f);
-    PinPosition.ZValue.InputField.contentType = TMP_InputField.ContentType.DecimalNumber;
-    PinPosition.ZValue.InputField.characterValidation = TMP_InputField.CharacterValidation.Decimal;
-    PinPosition.ZValue.InputField.onEndEdit.AddListener(_ => OnPinPositionValueChange());
-
-    Selectables.AddRange(Panel.GetComponentsInChildren<Selectable>().Select(s => s.gameObject));
-
-    Labels.Add(PinName.Label);
-    Labels.Add(PinIconSelectorLabelRow.Label);
-    Labels.Add(PinType.Label);
-    Labels.Add(PinModifierRow.Label);
-    Labels.Add(PinPositionLabelRow.Label);
-
-    ValueCells.Add(PinName.Value.Cell);
-    ValueCells.Add(PinType.Value.Cell);
-
-    SetPanelStyle();
+  void CacheRowLabels() {
+    _rowLabels.Add(PinNameRow.Label);
+    _rowLabels.Add(PinIconSelectorRow.Label);
+    _rowLabels.Add(PinTypeRow.Label);
+    _rowLabels.Add(PinModifierRow.Label);
+    _rowLabels.Add(PinPositionRow.Label);
   }
 
   public void SetActive(bool toggle) {
@@ -120,7 +89,7 @@ public sealed class PinEditPanel {
     _setActiveCoroutine =
         Minimap.m_instance.StartCoroutine(
             LerpCanvasGroupAlpha(
-                Panel.GetComponent<CanvasGroup>(), toggle ? 1f : 0f, PinEditPanelToggleLerpDuration.Value));
+                CanvasGroup, toggle ? 1f : 0f, PinEditPanelToggleLerpDuration.Value));
   }
 
   static IEnumerator LerpCanvasGroupAlpha(CanvasGroup canvasGroup, float targetAlpha, float lerpDuration) {
@@ -142,17 +111,28 @@ public sealed class PinEditPanel {
     canvasGroup.SetAlpha(targetAlpha);
   }
 
-  public void SetPanelStyle() {
-    float labelWidth = Labels.Select(label => label.preferredWidth).Max();
-    Labels.ForEach(l => l.GetComponent<LayoutElement>().SetPreferred(width: labelWidth));
-    ValueCells.ForEach(cell => cell.GetComponent<LayoutElement>().SetPreferred(width: 200f));
+  public void SetupPanelStyle() {
+    float labelWidth = 0f;
+
+    foreach (TextMeshProUGUI label in _rowLabels) {
+      if (label.preferredWidth > labelWidth) {
+        labelWidth = label.preferredWidth;
+      }
+    }
+
+    foreach (TextMeshProUGUI label in _rowLabels) {
+      label.layoutElement.SetPreferred(width: labelWidth);
+    }
+
+    PinNameRow.Value.LayoutElement.SetPreferred(width: 200f);
+    PinTypeRow.Value.LayoutElement.SetPreferred(width: 200f);
   }
 
   public bool HasFocus() {
     GameObject selected = EventSystem.current.currentSelectedGameObject;
 
     return selected
-        && Selectables.Any(s => s == selected)
+        && _selectables.Contains(selected)
         && (!selected.TryGetComponent(out InputField inputField)
             || inputField.isFocused
             || ZInput.GetKeyDown(KeyCode.Return));
@@ -167,13 +147,13 @@ public sealed class PinEditPanel {
       return;
     }
 
-    PinName.Value.InputField.SetTextWithoutNotify(pin.m_name);
+    PinNameRow.Value.InputField.SetTextWithoutNotify(pin.m_name);
 
     PinIconSelector.UpdateIcons(pin.m_type);
-    PinType.Value.InputField.text = pin.m_type.ToString();
+    PinTypeRow.Value.InputField.text = pin.m_type.ToString();
 
-    PinChecked.Toggle.SetIsOnWithoutNotify(pin.m_checked);
-    PinShared.Toggle.SetIsOnWithoutNotify(pin.m_ownerID != 0L);
+    PinCheckedToggle.Toggle.SetIsOnWithoutNotify(pin.m_checked);
+    PinSharedToggle.Toggle.SetIsOnWithoutNotify(pin.m_ownerID != 0L);
 
     PinPosition.XValue.InputField.text = $"{pin.m_pos.x:F0}";
     PinPosition.YValue.InputField.text = $"{pin.m_pos.y:F0}";
@@ -181,7 +161,7 @@ public sealed class PinEditPanel {
   }
 
   public void ActivatePinNameInputField() {
-    PinName.Value.InputField.ActivateInputField();
+    PinNameRow.Value.InputField.ActivateInputField();
   }
 
   void OnPinNameValueChange(string name) {
@@ -213,7 +193,7 @@ public sealed class PinEditPanel {
     TargetPin.m_iconElement.SetSprite(TargetPin.m_icon);
 
     PinIconSelector.UpdateIcons(pinType);
-    PinType.Value.InputField.text = pinType.ToString();
+    PinTypeRow.Value.InputField.text = pinType.ToString();
   }
 
   void OnPinCheckedChange(bool pinChecked) {
@@ -233,7 +213,7 @@ public sealed class PinEditPanel {
     TargetPin.m_ownerID = TargetPin.m_ownerID == 0L ? DefaultSharedPinOwnerId : 0L;
   }
 
-  void OnPinPositionValueChange() {
+  void OnPinPositionValueChange(string value) {
     if (TargetPin == null) {
       return;
     }
@@ -263,9 +243,9 @@ public sealed class PinEditPanel {
     return Minimap.m_instance.MapPointToLocalGuiPos(mx, my, Minimap.m_instance.m_mapImageLarge);
   }
 
-  GameObject CreatePanel(Transform parentTransform) {
-    GameObject panel = new("Panel", typeof(RectTransform));
-    panel.SetParent(parentTransform);
+  static GameObject CreatePanel(Transform parentTransform) {
+    GameObject panel = new("PinEditPanel", typeof(RectTransform));
+    panel.transform.SetParent(parentTransform, worldPositionStays: false);
 
     panel.AddComponent<VerticalLayoutGroup>()
         .SetChildControl(width: true, height: true)
@@ -279,12 +259,106 @@ public sealed class PinEditPanel {
 
     panel.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
-        .SetSprite(UIBuilder.CreateSuperellipse(200, 200, 10))
+        .SetSprite(UISpriteBuilder.CreateSuperellipse(200, 200, 10))
         .SetColor(new(0f, 0f, 0f, 0.9f));
+
+    panel.AddComponent<Canvas>();
+    panel.AddComponent<GraphicRaycaster>();
 
     panel.AddComponent<CanvasGroup>()
         .SetBlocksRaycasts(true);
 
     return panel;
+  }
+
+  LabelValueRow CreatePinNameRow(Transform parentTransform) {
+    LabelValueRow pinNameRow = new(parentTransform);
+    pinNameRow.Label.SetText("Name");
+
+    pinNameRow.Value.LayoutElement
+        .SetFlexible(width: 1f)
+        .SetPreferred(height: pinNameRow.Value.InputField.preferredHeight + 8f);
+
+    pinNameRow.Value.InputField.onEndEdit.AddListener(OnPinNameValueChange);
+
+    return pinNameRow;
+  }
+
+  static LabelRow CreatePinIconSelectorRow(Transform parentTransform) {
+    LabelRow pinIconSelectorRow = new(parentTransform);
+
+    pinIconSelectorRow.Label
+        .SetAlignment(TextAlignmentOptions.TopLeft)
+        .SetText("Icon");
+
+    return pinIconSelectorRow;
+  }
+
+  PinIconSelector CreatePinIconSelector(Transform parentTransform) {
+    PinIconSelector pinIconSelector = new(parentTransform);
+
+    pinIconSelector.OnPinIconClick.AddListener(OnPinTypeValueChange);
+
+    return pinIconSelector;
+  }
+
+  static LabelValueRow CreatePinTypeRow(Transform parentTransform) {
+    LabelValueRow pinTypeRow = new(parentTransform);
+
+    pinTypeRow.Label.SetText("Type");
+    pinTypeRow.Value.InputField.SetInteractable(false);
+
+    return pinTypeRow;
+  }
+
+  static LabelRow CreatePinModifierRow(Transform parentTransform) {
+    LabelRow pinModifierRow = new(parentTransform);
+
+    pinModifierRow.Label.SetText("Modifier");
+
+    return pinModifierRow;
+  }
+
+  ToggleCell CreatePinCheckedToggle(Transform parentTransform) {
+    ToggleCell pinCheckedToggle = new(parentTransform);
+
+    pinCheckedToggle.Label.SetText("Checked");
+    pinCheckedToggle.Toggle.onValueChanged.AddListener(OnPinCheckedChange);
+
+    return pinCheckedToggle;
+  }
+
+  ToggleCell CreatePinSharedToggle(Transform parentTransform) {
+    ToggleCell pinSharedToggle = new(parentTransform);
+
+    pinSharedToggle.Label.SetText("Shared");
+    pinSharedToggle.Toggle.onValueChanged.AddListener(OnPinSharedChange);
+
+    return pinSharedToggle;
+  }
+
+  static LabelRow CreatePinPositionRow(Transform parentTransform) {
+    LabelRow pinPositionRow = new(parentTransform);
+
+    pinPositionRow.Label.SetText("Position");
+
+    return pinPositionRow;
+  }
+
+  VectorCell CreatePinPosition(Transform parentTransform) {
+    VectorCell pinPosition = new(parentTransform);
+
+    SetupPinPositionValueInputField(pinPosition.XValue.InputField, new(1f, 0.878f, 0.51f));
+    SetupPinPositionValueInputField(pinPosition.YValue.InputField, new(0.565f, 0.792f, 0.976f));
+    SetupPinPositionValueInputField(pinPosition.ZValue.InputField, new(0.647f, 0.839f, 0.655f));
+
+    return pinPosition;
+  }
+
+  void SetupPinPositionValueInputField(TMP_InputField inputField, Color textColor) {
+    inputField.textComponent.color = textColor;
+    inputField.contentType = TMP_InputField.ContentType.DecimalNumber;
+    inputField.characterValidation = TMP_InputField.CharacterValidation.Decimal;
+    inputField.onEndEdit.AddListener(OnPinPositionValueChange);
   }
 }

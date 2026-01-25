@@ -136,15 +136,23 @@ public static class PluginConfig {
             "If set, will show the PinEditPanel when a row is selected in the PinListPanel.");
   }
 
+  public static ConfigEntry<Vector2> PinEditPanelDefaultPosition { get; private set; }
   public static ConfigEntry<float> PinEditPanelToggleLerpDuration { get; private set; }
 
   public static void BindPinEditPanelConfig(ConfigFile config) {
+    PinEditPanelDefaultPosition =
+        config.BindInOrder(
+            "PinEditPanel",
+            "pinEditPanelDefaultPosition",
+            new Vector2(0f, 25f),
+            "PinEditPanel position, relative to the bottom-center of the Minimap.");
+
     PinEditPanelToggleLerpDuration =
         config.BindInOrder(
             "PinEditPanel.Toggle",
             "pinEditPanelToggleLerpDuration",
             0.25f,
-            "Duration (in seconds) for the PinEdiPanl.Toggle on/off lerp.",
+            "Duration (in seconds) for the PinEditPanel.Toggle on/off lerp.",
             new AcceptableValueRange<float>(0f, 3f));
   }
 

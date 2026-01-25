@@ -2,6 +2,8 @@
 
 using ComfyLib;
 
+using static PluginConfig;
+
 public static class PinEditPanelController {
   public static PinEditPanel PinEditPanel { get; private set; }
 
@@ -23,6 +25,7 @@ public static class PinEditPanelController {
     } else {
       CenterMapHelper.CenterMapOnPosition(pinToEdit.m_pos);
 
+      PinEditPanel.RectTransform.SetPosition(PinEditPanelDefaultPosition.Value);
       PinEditPanel.SetTargetPin(pinToEdit);
       PinEditPanel.SetActive(true);
     }

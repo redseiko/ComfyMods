@@ -42,10 +42,13 @@ public sealed class ComfyArgs {
     }
 
     CaptureCollection names = match.Groups["arg"].Captures;
-    CaptureCollection values = match.Groups["value"].Captures;
+    int namesCount = names.Count;
 
-    for (int i = 0; i < names.Count; i++) {
-      ArgsValueByName[names[i].Value] = i < values.Count ? values[i].Value : string.Empty;
+    CaptureCollection values = match.Groups["value"].Captures;
+    int valuesCount = values.Count;
+
+    for (int i = 0; i < namesCount; i++) {
+      ArgsValueByName[names[i].Value] = i < valuesCount ? values[i].Value : string.Empty;
     }
   }
 
@@ -76,14 +79,54 @@ public sealed class ComfyArgs {
         && argStringValue.TryParseValue(out argValue);
   }
 
-  public bool TryGetStringValues(string argName, string argShortName, out string[] values) {
-    if (!ArgsValueByName.TryGetValue(argName, out string argStringValue)
-        && !ArgsValueByName.TryGetValue(argShortName, out argStringValue)) {
-      values = [];
+  public bool TryGetListValue<T>(string argName, out List<T> argListValue) {
+    if (!ArgsValueByName.TryGetValue(argName, out string argStringValue)) {
+      argListValue = default;
       return false;
     }
 
-    values = argStringValue.Split(CommaSeparator, StringSplitOptions.RemoveEmptyEntries);
+    return GetListValue(argStringValue, out argListValue);
+  }
+
+  public bool TryGetListValue<T>(string argName, string argShortName, out List<T> argListValue) {
+    if (!ArgsValueByName.TryGetValue(argName, out string argStringValue)
+        && !ArgsValueByName.TryGetValue(argShortName, out argStringValue)) {
+      argListValue = default;
+      return false;
+    }
+
+    return GetListValue(argStringValue, out argListValue);
+  }
+
+  static bool GetListValue<T>(string argStringValue, out List<T> argListValue) {
+    string[] values = argStringValue.Split(CommaSeparator, StringSplitOptions.RemoveEmptyEntries);
+    argListValue = new(capacity: values.Length);
+
+    for (int i = 0; i < values.Length; i++) {
+      if (!values[i].TryParseValue(out T argValue)) {
+        return false;
+      }
+
+      argListValue.Add(argValue);
+    }
+
     return true;
+  }
+
+  public bool GetOptionalValue<T>(string argName, out T? argValue) {
+    argValue = default;
+
+    return
+        !ArgsValueByName.TryGetValue(argName, out string argStringValue)
+        || argStringValue.TryParseValue(out argValue);
+  }
+
+  public bool GetOptionalValue<T>(string argName, string argShortName, out T? argValue) {
+    argValue = default;
+
+    return
+        (!ArgsValueByName.TryGetValue(argName, out string argStringValue)
+            && !ArgsValueByName.TryGetValue(argShortName, out argStringValue))
+        || argStringValue.TryParseValue(out argValue);
   }
 }

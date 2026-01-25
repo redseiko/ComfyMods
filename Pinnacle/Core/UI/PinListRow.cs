@@ -86,7 +86,7 @@ public sealed class PinListRow {
 
     row.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
-        .SetSprite(UIBuilder.CreateRoundedCornerSprite(400, 400, 5));
+        .SetSprite(UISpriteBuilder.CreateRoundedCornerSprite(400, 400, 5));
 
     row.AddComponent<Button>()
         .SetNavigationMode(Navigation.Mode.None)

@@ -9,16 +9,18 @@ using UnityEngine.UI;
 
 public sealed class LabelRow {
   public GameObject Row { get; private set; }
-  public TMP_Text Label { get; private set; }
+  public RectTransform RectTransform { get; private set; }
+  public TextMeshProUGUI Label { get; private set; }
 
   public LabelRow(Transform parentTransform) {
-    Row = CreateChildRow(parentTransform);
-    Label = CreateChildLabel(Row.transform);
+    Row = CreateRow(parentTransform);
+    RectTransform = Row.GetComponent<RectTransform>();
+    Label = CreateLabel(Row.transform);
   }
 
-  GameObject CreateChildRow(Transform parentTransform) {
+  static GameObject CreateRow(Transform parentTransform) {
     GameObject row = new("Row", typeof(RectTransform));
-    row.SetParent(parentTransform);
+    row.transform.SetParent(parentTransform, worldPositionStays: false);
 
     row.AddComponent<HorizontalLayoutGroup>()
         .SetChildControl(width: true, height: true)
@@ -30,12 +32,13 @@ public sealed class LabelRow {
     return row;
   }
 
-  TMP_Text CreateChildLabel(Transform parentTransform) {
-    TMP_Text label = UIBuilder.CreateTMPLabel(parentTransform);
-    label.SetName("Label");
+  static TextMeshProUGUI CreateLabel(Transform parentTransform) {
+    TextMeshProUGUI label = UIBuilder.CreateTMPLabel(parentTransform);
 
-    label.alignment = TextAlignmentOptions.Left;
-    label.text = "Label";
+    label
+        .SetName("Label")
+        .SetAlignment(TextAlignmentOptions.Left)
+        .SetText("Label");
 
     label.gameObject.AddComponent<LayoutElement>();
 

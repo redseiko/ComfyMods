@@ -16,10 +16,10 @@ public sealed class PinFilterPanel {
   public PinIconSelector PinIconSelector { get; private set; }
 
   public PinFilterPanel(Transform parentTransform) {
-    Panel = CreateChildPanel(parentTransform);
+    Panel = CreatePanel(parentTransform);
     RectTransform = Panel.GetComponent<RectTransform>();
 
-    PanelDragger = CreateChildPanelDragger(Panel.transform).AddComponent<PanelDragger>();
+    PanelDragger = CreateDragger(Panel.transform).AddComponent<PanelDragger>();
     PanelDragger.TargetRectTransform = RectTransform;
 
     PinIconSelector = new(Panel.transform);
@@ -29,12 +29,12 @@ public sealed class PinFilterPanel {
         .SetConstraintCount(2)
         .SetStartAxis(GridLayoutGroup.Axis.Vertical);
 
-    PinIconSelector.OnPinIconClicked += ProcessOnPinIconClicked;
+    PinIconSelector.OnPinIconClick.AddListener(ProcessOnPinIconClick);
 
     SetPanelStyle();
   }
 
-  void ProcessOnPinIconClicked(object sender, Minimap.PinType pinType) {
+  void ProcessOnPinIconClick(Minimap.PinType pinType) {
     Minimap.m_instance.Ref()?.ToggleIconFilter(pinType);
   }
 
@@ -52,9 +52,9 @@ public sealed class PinFilterPanel {
     }
   }
 
-  GameObject CreateChildPanel(Transform parentTransform) {
-    GameObject panel = new("PinFilter.Panel", typeof(RectTransform));
-    panel.SetParent(parentTransform);
+  static GameObject CreatePanel(Transform parentTransform) {
+    GameObject panel = new("PinFilterPanel", typeof(RectTransform));
+    panel.transform.SetParent(parentTransform, worldPositionStays: false);
 
     panel.AddComponent<VerticalLayoutGroup>()
         .SetChildControl(width: true, height: true)
@@ -68,8 +68,11 @@ public sealed class PinFilterPanel {
 
     panel.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
-        .SetSprite(UIBuilder.CreateSuperellipse(200, 200, 10))
+        .SetSprite(UISpriteBuilder.CreateSuperellipse(200, 200, 10))
         .SetColor(new(0f, 0f, 0f, 0.9f));
+
+    panel.AddComponent<Canvas>();
+    panel.AddComponent<GraphicRaycaster>();
 
     panel.AddComponent<CanvasGroup>()
         .SetBlocksRaycasts(true);
@@ -77,9 +80,9 @@ public sealed class PinFilterPanel {
     return panel;
   }
 
-  GameObject CreateChildPanelDragger(Transform parentTransform) {
+  static GameObject CreateDragger(Transform parentTransform) {
     GameObject dragger = new("Dragger", typeof(RectTransform));
-    dragger.SetParent(parentTransform);
+    dragger.transform.SetParent(parentTransform, worldPositionStays: false);
 
     dragger.AddComponent<LayoutElement>()
         .SetIgnoreLayout(true);

@@ -7,10 +7,11 @@ using System.Linq;
 using ComfyLib;
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public sealed class PinIconSelector {
-  public event EventHandler<Minimap.PinType> OnPinIconClicked;
+  public UnityEvent<Minimap.PinType> OnPinIconClick { get; private set; } = new();
 
   public GameObject Grid { get; private set; }
   public GridLayoutGroup GridLayoutGroup { get; private set; }
@@ -22,14 +23,18 @@ public sealed class PinIconSelector {
     Grid = CreateChildGrid(parentTransform);
     GridLayoutGroup = Grid.GetComponent<GridLayoutGroup>();
 
+    CreateIcons(Grid.transform);
+  }
+
+  void CreateIcons(Transform parentTransform) {
     foreach (Minimap.PinType pinType in Enum.GetValues(typeof(Minimap.PinType))) {
       Sprite sprite = Minimap.m_instance.GetSprite(pinType);
 
-      if (sprite == null) {
+      if (!sprite) {
         continue;
       }
 
-      GameObject icon = CreateChildIcon(Grid.transform);
+      GameObject icon = CreateChildIcon(parentTransform);
 
       Icons.Add(icon);
       IconsByType[pinType] = icon;
@@ -37,13 +42,14 @@ public sealed class PinIconSelector {
       icon.Image()
           .SetSprite(sprite);
 
-      icon.AddComponent<Button>()
-          .SetNavigationMode(Navigation.Mode.None)
-          .SetTargetGraphic(icon.Image())
-          .SetTransition(Selectable.Transition.ColorTint)
-          .SetColors(ButtonColorBlock.Value);
+      Button button =
+          icon.AddComponent<Button>()
+              .SetNavigationMode(Navigation.Mode.None)
+              .SetTargetGraphic(icon.Image())
+              .SetTransition(Selectable.Transition.ColorTint)
+              .SetColors(ButtonColorBlock.Value);
 
-      icon.Button().onClick.AddListener(() => OnPinIconClicked?.Invoke(this, pinType));
+      button.onClick.AddListener(() => OnPinIconClick.Invoke(pinType));
     }
   }
 

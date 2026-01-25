@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.16.0
+
+  * Fixed an issue with `pinnacle-remove-all-pins` command not working.
+  * Added new config-option `[PinEditPanel] pinEditPanelDefaultPosition` to configure the `PinEditPanel` position.
+  * Code clean-up and refactoring.
+
 ### 1.15.0
 
   * Updated for the `v0.221.5` patch.
