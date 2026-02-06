@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.9.0
+
+  * Fixed for the `0.221.10` patch.
+
 ### 1.8.0
 
   * Updated for the `v0.219.16` patch.

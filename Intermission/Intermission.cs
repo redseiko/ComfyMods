@@ -16,7 +16,7 @@ using static PluginConfig;
 public sealed class Intermission : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.intermission";
   public const string PluginName = "Intermission";
-  public const string PluginVersion = "1.8.0";
+  public const string PluginVersion = "1.9.0";
 
   static ManualLogSource _logger;
 

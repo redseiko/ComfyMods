@@ -11,32 +11,36 @@ using static PluginConfig;
 
 [HarmonyPatch(typeof(SceneLoader))]
 static class SceneLoaderPatch {
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(SceneLoader.Start))]
+  static void StartPrefix(SceneLoader __instance) {
+    SetupSceneLoader(__instance);
+  }
+
   static Image _loadingImage;
   static TMP_Text _loadingText;
 
   static float _startTime;
   static float _lastImageTime;
 
-  [HarmonyPrefix]
-  [HarmonyPatch(nameof(SceneLoader.Start))]
-  static void StartPrefix(SceneLoader __instance) {
-    _loadingImage = __instance.gameLogo.transform.parent.Find("Bkg").GetComponent<Image>();
+  static void SetupSceneLoader(SceneLoader sceneLoader) {
+    _loadingImage = sceneLoader.gameLogo.transform.parent.Find("Bkg").GetComponent<Image>();
 
     if (SceneLoaderUseLoadingImages.Value && CustomAssets.LoadingImageFiles.Count > 0) {
-      __instance._showLogos = false;
-      __instance._showSaveNotification = false;
-      __instance._showHealthWarning = false;
+      sceneLoader._showLogos = false;
+      sceneLoader._showSaveNotification = false;
+      sceneLoader._showHealthWarning = false;
 
       HudUtils.SetupLoadingBackground(_loadingImage.transform.parent);
       HudUtils.SetupLoadingImage(_loadingImage);
       HudUtils.SetLoadingImage(_loadingImage);
-      __instance.ScaleLerpLoadingImage(_loadingImage);
+      sceneLoader.ScaleLerpLoadingImage(_loadingImage);
 
-      __instance.gameLogo = _loadingImage.gameObject;
+      sceneLoader.gameLogo = _loadingImage.gameObject;
     }
 
     if (SceneLoaderShowProgressText.Value) {
-      TMP_Text sourceLoadingText = __instance.savingNotification.GetComponentInChildren<TMP_Text>();
+      TMP_Text sourceLoadingText = sceneLoader.savingNotification.GetComponentInChildren<TMP_Text>();
       _loadingText = UnityEngine.Object.Instantiate(sourceLoadingText, _loadingImage.transform.parent);
 
       HudUtils.SetupTipText(_loadingText);
@@ -44,7 +48,7 @@ static class SceneLoaderPatch {
     }
 
     if (SceneLoaderCenterProgressIndicator.Value) {
-      SetupLoadingIndicator(LoadingIndicator.s_instance);
+      SetupLoadingIndicator(sceneLoader.loadingIndicator);
     }
 
     _startTime = Time.time;

@@ -14,26 +14,30 @@ using UnityEngine.UI;
 static class HudPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Hud.Awake))]
-  static void AwakePostfix(ref Hud __instance) {
-    Transform _panelSeparator = __instance.m_loadingProgress.transform.Find("panel_separator");
-    HudUtils.SetupTipText(__instance.m_loadingTip);
-    HudUtils.SetupLoadingImage(__instance.m_loadingImage);
+  static void AwakePostfix(Hud __instance) {
+    SetupHud(__instance);
+  }
+
+  static void SetupHud(Hud hud) {
+    Transform _panelSeparator = hud.m_loadingProgress.transform.Find("panel_separator");
+    HudUtils.SetupTipText(hud.m_loadingTip);
+    HudUtils.SetupLoadingImage(hud.m_loadingImage);
     HudUtils.SetupPanelSeparator(_panelSeparator);
 
-    HudUtils.SetLoadingTip(__instance.m_loadingTip);
-    HudUtils.SetLoadingImage(__instance.m_loadingImage);
+    HudUtils.SetLoadingTip(hud.m_loadingTip);
+    HudUtils.SetLoadingImage(hud.m_loadingImage);
 
-    __instance.m_loadingProgress.transform.Find("TopFade").Ref()?.gameObject.SetActive(false);
-    __instance.m_loadingProgress.transform.Find("BottomFade").Ref()?.gameObject.SetActive(false);
-    __instance.m_loadingProgress.transform.Find("text_darken").Ref()?.gameObject.SetActive(false);
+    hud.m_loadingProgress.transform.Find("TopFade").Ref()?.gameObject.SetActive(false);
+    hud.m_loadingProgress.transform.Find("BottomFade").Ref()?.gameObject.SetActive(false);
+    hud.m_loadingProgress.transform.Find("text_darken").Ref()?.gameObject.SetActive(false);
 
-    __instance.m_teleportingProgress = __instance.m_loadingProgress;
+    hud.m_teleportingProgress = hud.m_loadingProgress;
 
-    HudUtils.SetupLoadingBackground(__instance.transform.Find("LoadingBlack/Bkg").GetComponent<Image>());
+    HudUtils.SetupLoadingBackground(hud.transform.Find("LoadingBlack/Bkg").GetComponent<Image>());
 
-    Transform _loadingBlack = __instance.transform.Find("LoadingBlack");
-    __instance.m_loadingImage.transform.SetParent(_loadingBlack, false);
-    __instance.m_loadingTip.transform.SetParent(_loadingBlack, false);
+    Transform _loadingBlack = hud.transform.Find("LoadingBlack");
+    hud.m_loadingImage.transform.SetParent(_loadingBlack, false);
+    hud.m_loadingTip.transform.SetParent(_loadingBlack, false);
     _panelSeparator.SetParent(_loadingBlack, false);
   }
 
@@ -62,56 +66,42 @@ static class HudPatch {
       IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
     return new CodeMatcher(instructions, generator)
         .Start()
-        .DeclareLocal(generator, typeof(bool), out LocalBuilder isTeleportingLocal)
         .MatchStartForward(
-            new CodeMatch(OpCodes.Ldc_I4_0),
-            new CodeMatch(OpCodes.Stloc_2))
-        .ThrowIfInvalid($"Could not patch Hud.UpdateBlackScreen()! (teleport-respawn-label)")
-        .CreateLabel(out Label respawnLabel)
-        .Start()
-        .MatchStartForward(
-            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Hud), nameof(Hud.m_teleportingProgress))),
-            new CodeMatch(OpCodes.Ldc_I4_1),
-            new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))),
-            new CodeMatch(OpCodes.Ret))
-        .ThrowIfInvalid($"Could not patch Hud.UpdateBlackScreen()! (teleport-respawn-branch)")
-        .Advance(offset: 3)
+            new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(Player), nameof(Player.ShowTeleportAnimation))),
+            new CodeMatch(OpCodes.Brfalse),
+            new CodeMatch(OpCodes.Ldarg_0),
+            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Hud), nameof(Hud.m_loadingProgress))))
+        .ThrowIfInvalid($"Could not patch Hud.UpdateBlackScreen()! (show-teleport-animation)")
+        .Advance(offset: 2)
         .InsertAndAdvance(
-            new CodeInstruction(OpCodes.Ldc_I4_1),
-            new CodeInstruction(OpCodes.Stloc, isTeleportingLocal),
-            new CodeInstruction(OpCodes.Br, respawnLabel))
-        .MatchStartForward(
-            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Hud), nameof(Hud.m_teleportingProgress))),
-            new CodeMatch(OpCodes.Ldc_I4_0),
-            new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.SetActive))))
-        .ThrowIfInvalid($"Could not patch Hud.UpdateBlackScreen()! (teleport-respawn-set-active)")
-        .Advance(offset: 1)
-        .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldloc, isTeleportingLocal))
+            new CodeInstruction(OpCodes.Ldarg_0),
+            new CodeInstruction(OpCodes.Ldc_I4_0),
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Hud), nameof(Hud.UpdateShownTip))))
         .InstructionEnumeration();
   }
 
   [HarmonyTranspiler]
-  [HarmonyPatch(nameof(Hud.UpdateBlackScreen))]
-  static IEnumerable<CodeInstruction> UpdateBlackScreenTranspiler2(
+  [HarmonyPatch(nameof(Hud.UpdateShownTip))]
+  static IEnumerable<CodeInstruction> UpdateShownTipTranspiler(
       IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
     return new CodeMatcher(instructions, generator)
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Hud), nameof(Hud.m_currentLoadingTipIndex))),
             new CodeMatch(OpCodes.Callvirt),
-            new CodeMatch(OpCodes.Stloc_S))
-        .ThrowIfInvalid($"Could not patch Hud.UpdateBlackScreen()! (loading-tip-set-text)")
+            new CodeMatch(OpCodes.Stloc_1))
+        .ThrowIfInvalid($"Could not patch Hud.UpdateShownTip()! (loading-tip-set-text)")
         .Advance(offset: 2)
         .InsertAndAdvance(
             new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HudPatch), nameof(LoadingTipSetTextDelegate))))
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldstr, "tip:"),
-            new CodeMatch(OpCodes.Ldloc_S),
+            new CodeMatch(OpCodes.Ldloc_1),
             new CodeMatch(
                 OpCodes.Call,
                 AccessTools.Method(typeof(string), nameof(string.Concat), [typeof(string), typeof(string)])),
             new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZLog), nameof(ZLog.Log))))
-        .ThrowIfInvalid($"Could not patch Hud.UpdateBlackScreen()! (loading-tip-ignore-zlog)")
+        .ThrowIfInvalid($"Could not patch Hud.UpdateShownTip()! (loading-tip-ignore-zlog)")
         .CreateLabelOffset(offset: 4, out Label logLabel)
         .InsertAndAdvance(new CodeInstruction(OpCodes.Br, logLabel))
         .InstructionEnumeration();

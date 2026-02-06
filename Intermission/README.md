@@ -25,7 +25,7 @@
 
 ## Create a content mod for Thunderstore
 
-  * In your `manifest.json` add a dependency to `ComfyMods-Intermission-1.8.0`.
+  * In your `manifest.json` add a dependency to `ComfyMods-Intermission-1.9.0`.
   * Structure your content mod zip file to resemble the following example:
 
   ```
@@ -57,7 +57,7 @@
 
 ### Thunderstore (manual)
 
-  * Go to Settings > Import local mod > Select `Intermission_v1.8.0.zip`.
+  * Go to Settings > Import local mod > Select `Intermission_v1.9.0.zip`.
   * Click "OK/Import local mod" on the pop-up for information.
 
 ## Notes

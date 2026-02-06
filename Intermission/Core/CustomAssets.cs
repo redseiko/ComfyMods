@@ -2,8 +2,11 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 using ComfyLib;
+
+using HarmonyLib;
 
 using UnityEngine;
 
@@ -12,6 +15,9 @@ public static class CustomAssets {
   public static List<string> LoadingImageFiles { get; } = [];
 
   static readonly Dictionary<string, Sprite> _loadingImageCache = [];
+
+  static readonly MethodInfo _loadImageMethod =
+      AccessTools.Method(typeof(ImageConversion), nameof(ImageConversion.LoadImage), [typeof(Texture2D), typeof(byte[])]);
 
   public static void Initialize(string pluginDir) {
     LoadingTips.Clear();
@@ -58,12 +64,14 @@ public static class CustomAssets {
       return null;
     }
 
-    Texture2D texture = new(1, 1);
-    texture.SetName($"intermission.texture-{Path.GetFileName(imageFile)}");
-    texture.LoadImage(File.ReadAllBytes(imageFile));
+    Texture2D texture = new(1, 1) {
+      name = $"intermission.texture-{Path.GetFileName(imageFile)}"
+    };
+
+    _loadImageMethod.Invoke(obj: null, [texture, File.ReadAllBytes(imageFile)]);
 
     sprite = Sprite.Create(texture, new(0, 0, texture.width, texture.height), Vector2.zero, 1);
-    sprite.SetName($"intermission.sprite-{Path.GetFileName(imageFile)}");
+    sprite.name = $"intermission.sprite-{Path.GetFileName(imageFile)}";
 
     _loadingImageCache[imageFile] = sprite;
 
