@@ -17,6 +17,8 @@ public sealed class Meishi : BaseUnityPlugin {
   void Awake() {
     BindConfig(Config);
 
+    MeishiController.Initialize(Logger);
+
     Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
   }
 }
