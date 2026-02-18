@@ -16,7 +16,7 @@ public sealed class DebugFallbackRenderer : MarkdownObjectRenderer<EmDeeRenderer
 
     label
         .SetAlignment(TextAlignmentOptions.TopLeft)
-        .SetColor(Color.red)
+        .SetColor(Color.white)
         .SetText(obj.GetType().Name);
 
     label.gameObject.AddComponent<LayoutElement>()

@@ -5,8 +5,6 @@ using ComfyLib;
 using Markdig;
 using Markdig.Syntax;
 
-using UnityEngine;
-
 public sealed class EmDeeManager {
   public static EmDeeManager Instance { get; } = new();
 
@@ -28,7 +26,9 @@ public sealed class EmDeeManager {
         .SetAnchorMax(new(1f, 0.5f))
         .SetPivot(new(1f, 0.5f))
         .SetPosition(new(-25f, 0f))
-        .SetSizeDelta(new(400f, 600f));
+        .SetSizeDelta(new(600f, 600f));
+
+    MarkdownPanel.CloseButton.Button.onClick.AddListener(HideMarkdownPanel);
 
     HideMarkdownPanel();
   }
@@ -57,11 +57,11 @@ public sealed class EmDeeManager {
       return;
     }
 
-    MarkdownPanel.ClearContent();
+    MarkdownPanel.ResetMarkdownList();
     ShowMarkdownPanel();
 
     MarkdownDocument document = Markdown.Parse(inputText, new MarkdownPipelineBuilder().Build());
-    EmDeeRenderer renderer = new(MarkdownPanel.RectTransform, new EmDeeStyle());
+    EmDeeRenderer renderer = new(MarkdownPanel.MarkdownList.Content.transform, new EmDeeStyle());
     renderer.Render(document);
   }
 }
