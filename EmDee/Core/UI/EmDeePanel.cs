@@ -3,7 +3,6 @@
 using ComfyLib;
 
 using UnityEngine;
-using UnityEngine.UI;
 
 public sealed class EmDeePanel {
   public GameObject Panel { get; }

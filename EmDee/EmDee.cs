@@ -7,8 +7,6 @@ using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
 
-using ComfyLib;
-
 using HarmonyLib;
 
 using static PluginConfig;
