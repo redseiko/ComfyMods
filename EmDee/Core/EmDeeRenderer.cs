@@ -20,6 +20,8 @@ public sealed class EmDeeRenderer : RendererBase {
   }
 
   void AddObjectRenderers() {
+    ObjectRenderers.Add(new HeadingRenderer());
+    ObjectRenderers.Add(new ParagraphRenderer());
     ObjectRenderers.Add(new DebugFallbackRenderer());
   }
 
