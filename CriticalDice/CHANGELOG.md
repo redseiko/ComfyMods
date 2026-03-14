@@ -1,5 +1,11 @@
 ﻿## Changelog
 
+### 1.9.0
+
+  * Fixed for the `v0.221.12` patch.
+  * Switch to SDK style `,csproj`.
+  * Updated mod icon.
+
 ### 1.8.0
 
   * Fixed for the `v0.220.3` patch.

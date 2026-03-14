@@ -1,109 +1,115 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="Current" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B787459D-F732-4D28-99F8-26AF265F13DA}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CriticalDice</RootNamespace>
-    <AssemblyName>CriticalDice</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>net48</TargetFramework>
     <LangVersion>12</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Deterministic>true</Deterministic>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <Choose>
     <When Condition="($(OS) == 'Unix' OR $(OS) == 'OSX') AND $(GamePath) == ''">
       <PropertyGroup>
-        <GamePath Condition="!Exists('$(GamePath)')">$(HOME)/.steam/steam/steamapps/common/Valheim dedicated server</GamePath>
-        <GamePath Condition="!Exists('$(GamePath)')">$(HOME)/Library/Application Support/Steam/steamapps/common/Valheim dedicated server/Contents/MacOS</GamePath>
+        <GamePath Condition="!Exists('$(GamePath)')">$(HOME)/.steam/steam/steamapps/common/Valheim</GamePath>
+        <GamePath Condition="!Exists('$(GamePath)')">$(HOME)/Library/Application Support/Steam/steamapps/common/Valheim/Contents/MacOS</GamePath>
       </PropertyGroup>
     </When>
     <When Condition="($(OS) == 'Windows_NT') AND $(GamePath) == ''">
       <PropertyGroup>
-        <GamePath Condition="!Exists('$(GamePath)')">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 896660', 'InstallLocation', null, RegistryView.Registry64, RegistryView.Registry32))</GamePath>
+        <GamePath Condition="!Exists('$(GamePath)')">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 892970', 'InstallLocation', null, RegistryView.Registry64, RegistryView.Registry32))</GamePath>
         <_SteamLibraryPath>$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\SOFTWARE\Valve\Steam', 'SteamPath', null, RegistryView.Registry32))</_SteamLibraryPath>
-        <GamePath Condition="!Exists('$(GamePath)') AND '$(_SteamLibraryPath)' != ''">$(_SteamLibraryPath)\steamapps\common\Valheim dedicated server</GamePath>
-        <GamePath Condition="!Exists('$(GamePath)')">C:\Program Files\Steam\steamapps\common\Valheim dedicated server</GamePath>
-        <GamePath Condition="!Exists('$(GamePath)')">C:\Program Files (x86)\Steam\steamapps\common\Valheim dedicated server</GamePath>
+        <GamePath Condition="!Exists('$(GamePath)') AND '$(_SteamLibraryPath)' != ''">$(_SteamLibraryPath)\steamapps\common\Valheim</GamePath>
+        <GamePath Condition="!Exists('$(GamePath)')">C:\Program Files\Steam\steamapps\common\Valheim</GamePath>
+        <GamePath Condition="!Exists('$(GamePath)')">C:\Program Files (x86)\Steam\steamapps\common\Valheim</GamePath>
       </PropertyGroup>
     </When>
   </Choose>
+
+  <PropertyGroup>
+    <PluginOutputPath Condition=" '$(PluginOutputPath)' == ''">$(GamePath)\BepInEx\plugins</PluginOutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="0Harmony">
+    <Reference Include="0Harmony" Private="false">
       <HintPath>$(GamePath)\BepInEx\core\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_guiutils_publicized">
-      <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\assembly_guiutils_publicized.dll</HintPath>
+    <Reference Include="assembly_guiutils_publicized" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_guiutils_publicized.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_utils_publicized">
-      <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
+    <Reference Include="assembly_utils_publicized" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_valheim_publicized">
-      <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\assembly_valheim_publicized.dll</HintPath>
+    <Reference Include="assembly_valheim_publicized" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\assembly_valheim_publicized.dll</HintPath>
     </Reference>
-    <Reference Include="BepInEx">
+    <Reference Include="BepInEx" Private="false">
       <HintPath>$(GamePath)\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
-    <Reference Include="com.rlabrecque.steamworks.net">
-      <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\com.rlabrecque.steamworks.net_publicized.dll</HintPath>
+    <Reference Include="com.rlabrecque.steamworks.net_publicized" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\com.rlabrecque.steamworks.net_publicized.dll</HintPath>
     </Reference>
-    <Reference Include="Splatform_publicized">
-      <HintPath>$(GamePath)\valheim_server_Data\Managed\publicized_assemblies\Splatform_publicized.dll</HintPath>
+    <Reference Include="gui_framework_publicized" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\gui_framework_publicized.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
-      <HintPath>$(GamePath)\valheim_server_Data\Managed\UnityEngine.dll</HintPath>
+    <Reference Include="Splatform_publicized" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\Splatform_publicized.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(GamePath)\valheim_server_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    <Reference Include="Unity.InputSystem" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\Unity.InputSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro_publicized" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\Unity.TextMeshPro_publicized.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.UIModule.dll</HintPath>
     </Reference>
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Core\Handlers\SayHandler.cs" />
-    <Compile Include="CriticalDice.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="CHANGELOG.md" ThunderstorePackage="true" />
+    <None Include="icon.png" ThunderstorePackage="true" />
+    <None Include="manifest.json" ThunderstorePackage="true" />
+    <None Include="README.md" ThunderstorePackage="true" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\BetterZeeRouter\BetterZeeRouter.csproj">
-      <Project>{9c6d4066-3727-4589-b0ae-3dfc0248d088}</Project>
-      <Name>BetterZeeRouter</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\BetterZeeRouter\BetterZeeRouter.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="manifest.json" />
-    <None Include="CHANGELOG.md" />
-    <None Include="README.md" />
-    <None Include="icon.png" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="GetAssemblyVersion" AfterTargets="Build">
+
+  <Target Name="CopyAssembly" AfterTargets="Build">
+    <Copy SourceFiles="$(TargetDir)$(AssemblyName).dll" DestinationFolder="$(PluginOutputPath)" />
+  </Target>
+
+  <Target Name="GetAssemblyVersionForPackage" AfterTargets="Build">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
       <Output TaskParameter="Assemblies" ItemName="Targets" />
     </GetAssemblyIdentity>
@@ -119,9 +125,11 @@
       <PackageDir>$(OutDir)$(PackageName)</PackageDir>
     </PropertyGroup>
   </Target>
-  <Target Name="MakeThunderstorePackage" AfterTargets="GetAssemblyVersion">
+
+  <Target Name="MakeThunderstorePackage" AfterTargets="GetAssemblyVersionForPackage">
     <ItemGroup>
-      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll; CHANGELOG.md; README.md; manifest.json; icon.png" />
+      <PackageFiles Include="$(TargetDir)$(AssemblyName).dll" />
+      <PackageFiles Include="@(None)" Condition="'%(None.ThunderstorePackage)' == 'true'" />
     </ItemGroup>
     <MakeDir Directories="$(PackageDir)" />
     <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageDir)" />
