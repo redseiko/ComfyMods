@@ -2,14 +2,6 @@
 
 guidelines = 120
 
-[SQLite.cs]
-
-# External library, no analysis should be done
-dotnet_analyzer_diagnostic.severity = none
-
-# IDE0079: Remove unnecessary suppression
-dotnet_diagnostic.IDE0079.severity = none
-
 [*.cs]
 
 # IDE0003: Remove qualification
@@ -27,8 +19,8 @@ dotnet_diagnostic.IDE0066.severity = none
 # IDE0090: 'new' expression can be simplified
 dotnet_diagnostic.IDE0090.severity = none
 
-# CS8632: Nullable reference types should only be used within a '#nullable' annotations context
-dotnet_diagnostic.CS8632.severity = none
+# IDE0130: Namespace does not match folder structure
+dotnet_diagnostic.IDE0130.severity = none
 
 # IDE0290: Use primary constructor
 csharp_style_prefer_primary_constructors = false
@@ -38,6 +30,17 @@ dotnet_diagnostic.IDE0305.severity = none
 
 # IDE0306: Simplify collection initialization
 dotnet_diagnostic.IDE0306.severity = none
+
+# CS8632: Nullable reference types should only be used within a '#nullable' annotations context
+dotnet_diagnostic.CS8632.severity = none
+
+[SQLite.cs]
+
+# External library, no analysis should be done
+dotnet_analyzer_diagnostic.severity = none
+
+# IDE0079: Remove unnecessary suppression
+dotnet_diagnostic.IDE0079.severity = none
 
 [*.{cs,vb,json,csproj,md}]
 
