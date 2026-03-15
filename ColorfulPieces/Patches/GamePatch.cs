@@ -11,6 +11,7 @@ static class GamePatch {
   static void StartPostfix(Game __instance) {
     if (IsModEnabled.Value) {
       __instance.gameObject.AddComponent<PieceColorUpdater>();
+      __instance.gameObject.AddComponent<ShipColorUpdater>();
     }
   }
 }

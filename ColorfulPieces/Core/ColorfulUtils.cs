@@ -1,4 +1,4 @@
-﻿namespace ColorfulPieces;
+namespace ColorfulPieces;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -14,26 +14,28 @@ using static ColorfulConstants;
 using static PluginConfig;
 
 public static class ColorfulUtils {
-  public static void ChangePieceColorAction(WearNTear wearNTear) {
-    SetPieceColor(wearNTear, ColorToVector3(TargetPieceColor.Value), TargetPieceEmissionColorFactor.Value);
+  public static void ChangePieceColorAction(GameObject target) {
+    SetPieceColor(target, ColorToVector3(TargetPieceColor.Value), TargetPieceEmissionColorFactor.Value);
   }
 
-  public static void ClearPieceColorAction(WearNTear wearNTear) {
-    SetPieceColor(wearNTear, NoColorVector3, NoEmissionColorFactor);
+  public static void ClearPieceColorAction(GameObject target) {
+    SetPieceColor(target, NoColorVector3, NoEmissionColorFactor);
   }
 
-  public static void SetPieceColor(WearNTear wearNTear, Vector3 colorVector3, float emissionColorFactor) {
-    if (!TryClaimOwnership(wearNTear.m_nview)) {
+  public static void SetPieceColor(GameObject target, Vector3 colorVector3, float emissionColorFactor) {
+    if (!target.TryGetComponent(out ZNetView netView) || !TryClaimOwnership(netView)) {
       return;
     }
 
-    SetPieceColorZDO(wearNTear.m_nview.m_zdo, colorVector3, emissionColorFactor);
+    SetPieceColorZDO(netView.m_zdo, colorVector3, emissionColorFactor);
 
-    if (wearNTear.TryGetComponent(out PieceColor pieceColor)) {
-      pieceColor.UpdateColors();
+    if (target.TryGetComponent(out IPieceColorable colorable)) {
+      colorable.UpdateColors();
     }
 
-    wearNTear.m_piece.Ref()?.m_placeEffect?.Create(wearNTear.transform.position, wearNTear.transform.rotation);
+    if (target.TryGetComponent(out Piece piece)) {
+      piece.m_placeEffect?.Create(target.transform.position, target.transform.rotation);
+    }
   }
 
   public static void SetPieceColorZDO(ZDO zdo, Vector3 colorVector3, float emissionColorFactor) {
@@ -105,8 +107,8 @@ public static class ColorfulUtils {
         yield return null;
       }
 
-      if (piece && piece.TryGetComponent(out WearNTear wearNTear) && wearNTear) {
-        ChangePieceColorAction(wearNTear);
+      if (piece && piece.TryGetComponent(out IPieceColorable _)) {
+        ChangePieceColorAction(piece.gameObject);
         changeColorCount++;
       }
     }
@@ -135,8 +137,8 @@ public static class ColorfulUtils {
         yield return null;
       }
 
-      if (piece && piece.TryGetComponent(out WearNTear wearNTear) && wearNTear) {
-        ClearPieceColorAction(wearNTear);
+      if (piece && piece.TryGetComponent(out IPieceColorable _)) {
+        ClearPieceColorAction(piece.gameObject);
         clearColorCount++;
       }
     }

@@ -1,4 +1,4 @@
-﻿namespace ColorfulPieces;
+namespace ColorfulPieces;
 
 using ComfyLib;
 
@@ -30,8 +30,8 @@ public static class ShortcutUtils {
   }
 
   public static bool OnChangePieceColorShortcut(GameObject hovering) {
-    if (hovering.TryGetComponentInParent(out WearNTear changeTarget) && changeTarget) {
-      ColorfulUtils.ChangePieceColorAction(changeTarget);
+    if (hovering.TryGetComponentInParent(out ZNetView netView) && netView.TryGetComponent(out IPieceColorable _)) {
+      ColorfulUtils.ChangePieceColorAction(netView.gameObject);
       return true;
     }
 
@@ -39,8 +39,8 @@ public static class ShortcutUtils {
   }
 
   public static bool OnClearPieceColorShortcut(GameObject hovering) {
-    if (hovering.TryGetComponentInParent(out WearNTear clearTarget) && clearTarget) {
-      ColorfulUtils.ClearPieceColorAction(clearTarget);
+    if (hovering.TryGetComponentInParent(out ZNetView netView) && netView.TryGetComponent(out IPieceColorable _)) {
+      ColorfulUtils.ClearPieceColorAction(netView.gameObject);
       return true;
     }
 
@@ -48,8 +48,8 @@ public static class ShortcutUtils {
   }
 
   public static bool OnCopyPieceColorShortcut(GameObject hovering) {
-    if (hovering.TryGetComponentInParent(out WearNTear copyTarget) && copyTarget) {
-      ColorfulUtils.CopyPieceColorAction(copyTarget.m_nview);
+    if (hovering.TryGetComponentInParent(out ZNetView netView) && netView.TryGetComponent(out IPieceColorable _)) {
+      ColorfulUtils.CopyPieceColorAction(netView);
       return true;
     }
 

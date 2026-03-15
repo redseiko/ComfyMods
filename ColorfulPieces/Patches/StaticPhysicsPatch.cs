@@ -1,4 +1,4 @@
-﻿namespace ColorfulPieces;
+namespace ColorfulPieces;
 
 using HarmonyLib;
 
@@ -9,7 +9,9 @@ static class StaticPhysicsPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(StaticPhysics.Awake))]
   static void Awake(StaticPhysics __instance) {
-    if (IsModEnabled.Value && !__instance.gameObject.TryGetComponent(out PieceColor _)) {
+    if (IsModEnabled.Value
+        && !__instance.gameObject.TryGetComponent(out Ship _)
+        && !__instance.gameObject.TryGetComponent(out PieceColor _)) {
       __instance.gameObject.AddComponent<PieceColor>();
     }
   }

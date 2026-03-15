@@ -1,4 +1,4 @@
-﻿namespace ColorfulPieces;
+namespace ColorfulPieces;
 
 using HarmonyLib;
 
@@ -11,7 +11,7 @@ static class WearNTearPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(WearNTear.Awake))]
   static void AwakePostfix(WearNTear __instance) {
-    if (IsModEnabled.Value) {
+    if (IsModEnabled.Value && !__instance.GetComponent<Ship>()) {
       __instance.gameObject.AddComponent<PieceColor>();
     }
   }
@@ -19,9 +19,9 @@ static class WearNTearPatch {
   [HarmonyPrefix]
   [HarmonyPatch(nameof(WearNTear.Highlight))]
   static bool HighlightPrefix(WearNTear __instance) {
-    if (IsModEnabled.Value && __instance.TryGetComponent(out PieceColor pieceColor)) {
+    if (IsModEnabled.Value && __instance.TryGetComponent(out IPieceColorable colorable)) {
       Color color = GetSupportColor(__instance.GetSupportColorValue());
-      pieceColor.OverrideColors(color, color * 0.4f);
+      colorable.OverrideColors(color, color * 0.4f);
 
       __instance.CancelInvoke(nameof(WearNTear.ResetHighlight));
       __instance.Invoke(nameof(WearNTear.ResetHighlight), 0.2f);
@@ -52,8 +52,8 @@ static class WearNTearPatch {
   [HarmonyPrefix]
   [HarmonyPatch(nameof(WearNTear.ResetHighlight))]
   static bool ResetHighlightPrefix(WearNTear __instance) {
-    if (IsModEnabled.Value && __instance.TryGetComponent(out PieceColor pieceColor)) {
-      pieceColor.UpdateColors(forceUpdate: true);
+    if (IsModEnabled.Value && __instance.TryGetComponent(out IPieceColorable colorable)) {
+      colorable.UpdateColors(forceUpdate: true);
       return false;
     }
 

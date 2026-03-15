@@ -8,13 +8,13 @@ using UnityEngine;
 
 using static ColorfulConstants;
 
-public sealed class PieceColor : MonoBehaviour, IPieceColorable {
-  public static readonly List<PieceColor> PieceColorCache = [];
+public sealed class ShipColor : MonoBehaviour, IPieceColorable {
+  public static readonly List<ShipColor> ShipColorCache = [];
 
   public Color TargetColor { get; set; } = Color.clear;
   public float TargetEmissionColorFactor { get; set; } = 0f;
 
-  IPieceColorRenderer _pieceColorRenderer;
+  IShipColorRenderer _shipColorRenderer;
 
   int _cacheIndex;
   long _lastDataRevision;
@@ -34,17 +34,17 @@ public sealed class PieceColor : MonoBehaviour, IPieceColorable {
       return;
     }
 
-    PieceColorCache.Add(this);
-    _cacheIndex = PieceColorCache.Count - 1;
+    ShipColorCache.Add(this);
+    _cacheIndex = ShipColorCache.Count - 1;
 
-    _pieceColorRenderer = GetPieceColorRenderer(_netView.m_zdo.m_prefab);
+    _shipColorRenderer = GetShipColorRenderer(_netView.m_zdo.m_prefab);
   }
 
   void OnDestroy() {
-    if (_cacheIndex >= 0 && _cacheIndex < PieceColorCache.Count) {
-      PieceColorCache[_cacheIndex] = PieceColorCache[PieceColorCache.Count - 1];
-      PieceColorCache[_cacheIndex]._cacheIndex = _cacheIndex;
-      PieceColorCache.RemoveAt(PieceColorCache.Count - 1);
+    if (_cacheIndex >= 0 && _cacheIndex < ShipColorCache.Count) {
+      ShipColorCache[_cacheIndex] = ShipColorCache[ShipColorCache.Count - 1];
+      ShipColorCache[_cacheIndex]._cacheIndex = _cacheIndex;
+      ShipColorCache.RemoveAt(ShipColorCache.Count - 1);
     }
   }
 
@@ -83,12 +83,12 @@ public sealed class PieceColor : MonoBehaviour, IPieceColorable {
       TargetColor = Vector3ToColor(colorVec3);
       TargetEmissionColorFactor = factor;
 
-      _pieceColorRenderer.SetColors(gameObject, TargetColor, TargetColor * TargetEmissionColorFactor);
+      _shipColorRenderer.SetColors(gameObject, TargetColor, TargetColor * TargetEmissionColorFactor);
     } else {
       TargetColor = Color.clear;
       TargetEmissionColorFactor = 0f;
 
-      _pieceColorRenderer.ClearColors(gameObject);
+      _shipColorRenderer.ClearColors(gameObject);
     }
 
     _lastColor = TargetColor;
@@ -103,16 +103,10 @@ public sealed class PieceColor : MonoBehaviour, IPieceColorable {
     _lastColor = color;
     _lastEmissionColor = emissionColor;
 
-    _pieceColorRenderer.SetColors(gameObject, color, emissionColor);
+    _shipColorRenderer.SetColors(gameObject, color, emissionColor);
   }
 
-  static IPieceColorRenderer GetPieceColorRenderer(int prefabHash) {
-    if (prefabHash == GuardStoneHashCode) {
-      // return GuardStonePieceColorRenderer.Instance;
-    } else if (prefabHash == PortalWoodHashCode) {
-      return PortalWoodPieceColorRenderer.Instance;
-    }
-
-    return DefaultPieceColorRenderer.Instance;
+  static IShipColorRenderer GetShipColorRenderer(int prefabHash) {
+    return DefaultShipColorRenderer.Instance;
   }
 }

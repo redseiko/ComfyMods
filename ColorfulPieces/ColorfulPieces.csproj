@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -150,10 +150,15 @@
     <Compile Include="Core\ColorfulUtils.cs" />
     <Compile Include="Core\Commands\ChangeColorCommand.cs" />
     <Compile Include="Core\Commands\ClearColorCommand.cs" />
+    <Compile Include="Core\Commands\DumpRenderersCommand.cs" />
     <Compile Include="Core\Commands\ToggleColorPickerCommand.cs" />
+    <Compile Include="Core\Components\IPieceColorable.cs" />
     <Compile Include="Core\Components\PieceColor.cs" />
     <Compile Include="Core\Components\PieceColorRenderer.cs" />
     <Compile Include="Core\Components\PieceColorUpdater.cs" />
+    <Compile Include="Core\Components\ShipColor.cs" />
+    <Compile Include="Core\Components\ShipColorRenderer.cs" />
+    <Compile Include="Core\Components\ShipColorUpdater.cs" />
     <Compile Include="Core\Controllers\ColorPickerController.cs" />
     <Compile Include="Core\Extensions\MaterialManExtensions.cs" />
     <Compile Include="Core\ShortcutUtils.cs" />
@@ -167,6 +172,7 @@
     <Compile Include="Patches\TerminalPatch.cs" />
     <Compile Include="Patches\TextInputPatch.cs" />
     <Compile Include="Patches\WearNTearPatch.cs" />
+    <Compile Include="Patches\ShipPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
