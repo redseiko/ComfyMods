@@ -1,4 +1,4 @@
-﻿namespace ColorfulPieces;
+namespace ColorfulPieces;
 
 using System;
 using System.Collections.Generic;
@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using ComfyLib;
 
 using UnityEngine;
+
+using static PluginConfig;
 
 public sealed class ColorPickerController {
   static ColorPickerController _instance;
@@ -197,11 +199,10 @@ public sealed class ColorPickerController {
     }
   }
 
-  // TODO: redseiko - make this not use hard-coded keys.
   void SelectPaletteSlot(PaletteSlot slot) {
-    if (ZInput.GetKey(KeyCode.LeftShift, logWarning: false)) {
+    if (SelectPaletteColorKey.Value.IsPressed()) {
       ColorPicker.SetColor(slot.Color);
-    } else if (ZInput.GetKey(KeyCode.LeftControl, logWarning: false)) {
+    } else if (DeletePaletteColorKey.Value.IsPressed()) {
       int slotIndex = ColorPalette.PaletteGrid.PaletteSlots.IndexOf(slot);
 
       if (slotIndex >= 0 && slotIndex < _currentPaletteColors.Count) {

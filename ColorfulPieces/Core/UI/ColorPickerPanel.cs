@@ -1,4 +1,4 @@
-﻿namespace ColorfulPieces;
+namespace ColorfulPieces;
 
 using ComfyLib;
 
@@ -170,9 +170,8 @@ public sealed class ColorPickerPanel {
   void SetColorTextures(Color color) {
     CheckerboardColorImage.color = color;
 
-    Color.RGBToHSV(color, out float hue, out float saturation, out float brightness);
-    ResetSaturationTexture(SaturationTexture, hue, brightness);
-    ResetBrightnessTexture(BrightnessTexture, hue, saturation);
+    ResetSaturationTexture(SaturationTexture, HueSlider.PercentValue, BrightnessSlider.PercentValue);
+    ResetBrightnessTexture(BrightnessTexture, HueSlider.PercentValue, SaturationSlider.PercentValue);
   }
 
   void SetCurrentColor(Color color) {

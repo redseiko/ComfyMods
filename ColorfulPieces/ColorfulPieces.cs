@@ -17,7 +17,7 @@ using static PluginConfig;
 public sealed class ColorfulPieces : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.colorfulpieces";
   public const string PluginName = "ColorfulPieces";
-  public const string PluginVersion = "1.19.0";
+  public const string PluginVersion = "1.20.0";
 
   static ManualLogSource _logger;
 

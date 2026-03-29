@@ -1,4 +1,4 @@
-﻿namespace ColorfulPieces;
+namespace ColorfulPieces;
 
 using BepInEx.Configuration;
 
@@ -93,6 +93,9 @@ public static class PluginConfig {
   public static ConfigEntry<KeyboardShortcut> ToggleColorPickerShortcut { get; private set; }
   public static ConfigEntry<bool> SelectColorOnClose { get; private set; }
 
+  public static ConfigEntry<KeyboardShortcut> SelectPaletteColorKey { get; private set; }
+  public static ConfigEntry<KeyboardShortcut> DeletePaletteColorKey { get; private set; }
+
   static void BindColorPickerConfig(ConfigFile config) {
     ToggleColorPickerShortcut =
         config.BindInOrder(
@@ -107,6 +110,20 @@ public static class PluginConfig {
             "selectColorOnClose",
             true,
             "If set, will select the ColorPicker's current color on close.");
+
+    SelectPaletteColorKey =
+        config.BindInOrder(
+            "ColorPalette",
+            "selectPaletteColorKey",
+            new KeyboardShortcut(KeyCode.LeftShift),
+            "Key to be pressed to select a palette color on click.");
+
+    DeletePaletteColorKey =
+        config.BindInOrder(
+            "ColorPalette",
+            "deletePaletteColorKey",
+            new KeyboardShortcut(KeyCode.LeftControl),
+            "Key to be pressed to delete a palette color on click.");
   }
 
   public static ConfigEntry<int> UpdateColorsFrameLimit { get; private set; }

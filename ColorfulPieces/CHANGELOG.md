@@ -1,5 +1,12 @@
 ## Changelog
 
+### 1.20.0
+
+  * Fixed a bug with the ColorPicker panel when Saturation is `0`.
+  * Added new config-options to customize ColorPalette panel interactions.
+    * `[ColorPalette] selectPaletteColorKey`
+    * `[ColorPalette] deletePaletteColorKey`
+
 ### 1.19.0
 
   * Finished new ColorPicker panel and ColorPalette panel.
