@@ -156,6 +156,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaperTrail", "PaperTrail\Pa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatusQuo", "StatusQuo\StatusQuo.csproj", "{27D29148-22FD-44EC-86D4-3FC6015DC4F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VonCount", "VonCount\VonCount.csproj", "{BADEAE4B-8969-46DD-A4C5-ADE3454B655F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -430,6 +432,10 @@ Global
 		{27D29148-22FD-44EC-86D4-3FC6015DC4F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27D29148-22FD-44EC-86D4-3FC6015DC4F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27D29148-22FD-44EC-86D4-3FC6015DC4F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BADEAE4B-8969-46DD-A4C5-ADE3454B655F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BADEAE4B-8969-46DD-A4C5-ADE3454B655F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BADEAE4B-8969-46DD-A4C5-ADE3454B655F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BADEAE4B-8969-46DD-A4C5-ADE3454B655F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
