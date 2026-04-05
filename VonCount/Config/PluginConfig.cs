@@ -17,5 +17,7 @@ public static class PluginConfig {
             "isModEnabled",
             true,
             "Globally enable or disable this mod.");
+
+    IsModEnabled.OnSettingChanged(ComfyCommandUtils.ToggleCommands);
   }
 }

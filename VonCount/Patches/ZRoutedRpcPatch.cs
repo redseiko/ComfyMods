@@ -1,4 +1,4 @@
-﻿namespace VonCount;
+namespace VonCount;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
