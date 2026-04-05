@@ -7,6 +7,8 @@ using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
 
+using ComfyLib;
+
 using HarmonyLib;
 
 using static PluginConfig;
@@ -28,5 +30,6 @@ public sealed class VonCount : BaseUnityPlugin {
 
   public static void LogInfo(object obj) {
     _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
+    Chat.m_instance.AddMessage(obj);
   }
 }
