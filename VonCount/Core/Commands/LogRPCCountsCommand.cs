@@ -12,7 +12,7 @@ public static class LogRPCCountsCommand {
   public static Terminal.ConsoleCommand Register() {
     return new Terminal.ConsoleCommand(
         "log-rpc-counts",
-        "(VonCount) log-rpc-counts --type=<MethodHash|SenderId>",
+        "(VonCount) log-rpc-counts --type=<MethodHash|SenderId> --sender-id=<123>",
         Run);
   }
 
@@ -31,7 +31,12 @@ public static class LogRPCCountsCommand {
         break;
 
       case CountType.SenderId:
-        CountManager.LogRPCCountsBySenderId();
+        if (args.TryGetValue("sender-id", out long senderId)) {
+          CountManager.LogRPCCountsForSenderId(senderId);
+        } else {
+          CountManager.LogRPCCountsBySenderId();
+        }
+
         break;
     }
     
