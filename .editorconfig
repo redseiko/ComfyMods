@@ -44,13 +44,12 @@ dotnet_diagnostic.IDE0079.severity = none
 
 [*.{cs,vb,json,csproj,md}]
 
-end_of_line = lf
-
+# Indentation and spacing
 indent_size = 2
 indent_style = space
-
-insert_final_newline = true
-
-trim_trailing_whitespace = true
-
 tab_width = 2
+
+# New line preferences
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
