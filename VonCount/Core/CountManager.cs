@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using UnityEngine;
+
 public static class CountManager {  
   static readonly ConcurrentDictionary<int, string> _stableHashCodeCache = new();
 
@@ -122,5 +124,62 @@ public static class CountManager {
     }
 
     VonCount.LogInfo(message.ToString());
+  }
+
+  public static readonly DestroyZDOCounter DestroyZDOCounter = new();
+
+  public static void CountDestroyZDO(ZDO zdo) {
+    DestroyZDOCounter.CountZDO(zdo);
+  }
+
+  public static void LogDestroyZDOCounts(int limit = 0, int minimum = 0) {
+    VonCount.LogInfo(DestroyZDOCounter.ToLogString(limit, minimum));
+  }
+}
+
+public sealed class DestroyZDOCounter {
+  readonly ConcurrentDictionary<int, long> _zdosDestroyed = [];
+  long _totalDestroyed = 0;
+
+  public void CountZDO(ZDO zdo) {
+    if (!_zdosDestroyed.TryGetValue(zdo.m_prefab, out long value)) {
+      value = 0;
+    }
+
+    _zdosDestroyed[zdo.m_prefab] = value + 1;
+    _totalDestroyed += 1;
+  }
+
+  public string ToLogString(int limit = 0, int minimum = 0) {
+    if (limit <= 0) {
+      limit = Mathf.Max(1, _zdosDestroyed.Count);
+    }
+
+    Dictionary<int, GameObject> namedPrefabs = ZNetScene.s_instance.m_namedPrefabs;
+    StringBuilder message = new StringBuilder();
+
+    message
+        .AppendLine("ZDOs Destroyed by Prefab")
+        .AppendLine($"Total, {_totalDestroyed:D}");
+
+    foreach (KeyValuePair<int, long> pair in _zdosDestroyed.OrderByDescending(pair => pair.Value)) {
+      if (limit <= 0) {
+        break;
+      }
+
+      if (pair.Value < minimum) {
+        continue;
+      }
+
+      string prefabName =
+          namedPrefabs.TryGetValue(pair.Key, out GameObject prefab)
+              ? prefab.name
+              : pair.Key.ToString("D");
+
+      message.AppendLine($"{prefabName}, {pair.Value:D}");
+      limit -= 1;
+    }
+
+    return message.ToString();
   }
 }
