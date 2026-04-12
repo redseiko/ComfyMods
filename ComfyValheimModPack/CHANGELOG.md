@@ -1,5 +1,10 @@
 ## Changelog
 
+### 2.22.0
+
+  * Replaced `Amar1729-BetterLadders-0.2.0` with `ComfyMods-ComfyLadders-1.0.0`.
+  * Updated all dependences to latest version.
+
 ### 2.21.0
 
   * Updated all dependencies to latest version.
