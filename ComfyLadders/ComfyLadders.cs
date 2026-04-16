@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class ComfyLadders : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.comfyladders";
   public const string PluginName = "ComfyLadders";
-  public const string PluginVersion = "1.0.0";
+  public const string PluginVersion = "1.1.0";
 
   static ManualLogSource _logger;
 

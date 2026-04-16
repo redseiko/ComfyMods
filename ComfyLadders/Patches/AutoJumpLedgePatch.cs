@@ -34,7 +34,7 @@ static class AutoJumpLedgePatch {
         && character == Player.m_localPlayer
         && IsModEnabled.Value
         && LadderManager.IsEligibleLadder(autoJumpLedge)) {
-      LadderManager.OnAutoJumpLegacy(autoJumpLedge, character);
+      LegacyAutoJump.OnAutoJump(autoJumpLedge, character);
       return default;
     }
 
