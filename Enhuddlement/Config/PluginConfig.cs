@@ -353,6 +353,7 @@ public static class PluginConfig {
             "EnemyHud.HealthBar fast color for tamed mobs.");
   }
 
+  public static ConfigEntry<bool> EnemyLevelIsVisible{ get; private set; }
   public static ConfigEntry<bool> EnemyLevelShowByName { get; private set; }
   public static ConfigEntry<bool> EnemyLevelUseVanillaStar { get; private set; }
   public static ConfigEntry<string> EnemyLevelStarSymbol { get; private set; }
@@ -360,6 +361,13 @@ public static class PluginConfig {
   public static ConfigEntry<int> EnemyLevelTextMinFontSize { get; private set; }
 
   public static void BindEnemyLevelConfig(ConfigFile config) {
+    EnemyLevelIsVisible =
+        config.BindInOrder(
+            "EnemyLevel",
+            "enemyLevelIsVisible",
+            true,
+            "Show or hide enemy levels.");
+
     EnemyLevelShowByName =
         config.BindInOrder(
             "EnemyLevel",

@@ -8,8 +8,8 @@
 
 ### HealthBar customization
 
-  * Change the width/height/colors of the Healthbar
-  * Display health values as text within the HealthBar
+  * Change the width/height/colors of the Healthbar.
+  * Display health values as text within the HealthBar.
 
 ### HealthText value customization
 
@@ -21,25 +21,25 @@
 
 ### Floating BossHud
 
-  * Separate name and HealthBars follow each boss
-  * Add a color gradient for the name
+  * Separate name and HealthBars follow each boss.
+  * Add a color gradient for the name.
 
 ### Enemy level display
 
-  * Display enemy (and boss) levels as stars (with a number)
-  * Position next to name or below HealthBar
+  * Display enemy (and boss) levels as stars (with a number), or hide levels entirely.
+  * Position next to name or below HealthBar.
 
 ### Enemy aware/alert status display
 
-  * Color enemy name for aware/alert status
+  * Color enemy name for aware/alert status.
 
 ### Show local PlayerHud
 
-  * Display name and HealthBar over your own character
+  * Display name and HealthBar over your own character.
 
 ### Player PvP status indicator
 
-  * Color player names when their PvP toggle is enabled
+  * Color player names when their PvP toggle is enabled.
 
 ## Configuration
 

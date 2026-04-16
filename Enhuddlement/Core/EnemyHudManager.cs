@@ -203,14 +203,22 @@ public static class EnemyHudManager {
   }
 
   public static void SetupLevel(EnemyHud.HudData hudData, Transform healthTransform) {
+    if (!EnemyLevelIsVisible.Value) {
+      DisableVanillaEnemyLevel(hudData);
+      return;
+    }
+
     if (!EnemyLevelUseVanillaStar.Value || hudData.m_character.m_level > (hudData.m_character.IsBoss() ? 1 : 3)) {
       CreateEnemyLevelText(hudData, healthTransform);
-
-      hudData.m_level2.Ref()?.gameObject.SetActive(false);
-      hudData.m_level3.Ref()?.gameObject.SetActive(false);
+      DisableVanillaEnemyLevel(hudData);
     } else {
       SetupEnemyLevelStars(hudData, healthTransform);
     }
+  }
+
+  static void DisableVanillaEnemyLevel(EnemyHud.HudData hudData) {
+    hudData.m_level2.Ref()?.gameObject.SetActive(false);
+    hudData.m_level3.Ref()?.gameObject.SetActive(false);
   }
 
   public static TextMeshProUGUI CreateEnemyLevelText(EnemyHud.HudData hudData, Transform healthTransform) {

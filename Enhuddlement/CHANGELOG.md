@@ -1,5 +1,13 @@
 ## Changelog
 
+### 1.5.0
+
+  * Updated for the `v0.221.12` patch.
+  * Added new config-option under `[EnemyLevel]`:
+    * `enemyLevelIsVisible` -- show or hide enemy levels.
+  * Migrated to SDK-style `.csproj`.
+  * Updated mod icon.
+
 ### 1.4.0
 
   * Updated for the `v0.220.5` patch.

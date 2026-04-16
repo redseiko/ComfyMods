@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class Enhuddlement : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.enhuddlement";
   public const string PluginName = "Enhuddlement";
-  public const string PluginVersion = "1.4.0";
+  public const string PluginVersion = "1.5.0";
 
   public static Harmony HarmonyInstance { get; private set; }
 
