@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.15.0
+
+  * Fixed `UIGroupHandler.Update()` transpiler patch that filters out "Activating ... element" log spam.
+  * Migrated to SDK-style project.
+
 ### 1.14.0
 
   * Added a prefix-patch to skip `FejdStartup.UpdateKeyboard()` if `Console.IsVisible()` is true.
