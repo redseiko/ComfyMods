@@ -99,6 +99,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="CHANGELOG.md" ThunderstorePackage="true" />
     <None Include="icon.png" ThunderstorePackage="true" />
     <None Include="manifest.json" ThunderstorePackage="true" />
     <None Include="README.md" ThunderstorePackage="true" />

@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class SkyTree : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.skytree";
   public const string PluginName = "SkyTree";
-  public const string PluginVersion = "1.6.0";
+  public const string PluginVersion = "1.6.1";
 
   static ManualLogSource _logger;
 

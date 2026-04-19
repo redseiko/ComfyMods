@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.6.1
+
+  * Actually include `CHANGELOG.md` (sigh).
+
 ### 1.6.0
 
   * Updated for the `v0.221.12` patch.
