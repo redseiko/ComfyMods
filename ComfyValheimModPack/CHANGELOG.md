@@ -1,5 +1,11 @@
 ## Changelog
 
+### 2.23.0
+
+  * Added `ComfyMods-PassWard-1.3.0`.
+  * Updated all dependences to latest version.
+  * Updated mod-pack icon.
+
 ### 2.22.0
 
   * Replaced `Amar1729-BetterLadders-0.2.0` with `ComfyMods-ComfyLadders-1.0.0`.

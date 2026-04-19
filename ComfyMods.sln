@@ -67,11 +67,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComfyValheimModPack", "Comf
 		ComfyValheimModPack\README.md = ComfyValheimModPack\README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{7690CFA0-3B91-4BDB-8BF7-72D9C13226A1}"
-	ProjectSection(SolutionItems) = preProject
-		ComfyValheimModPack\config\quick_connect_servers.cfg = ComfyValheimModPack\config\quick_connect_servers.cfg
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LicenseToSkill", "LicenseToSkill\LicenseToSkill.csproj", "{6A971C22-27A8-4A95-8E43-CC4FA57953F8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZoneScouter", "ZoneScouter\ZoneScouter.csproj", "{185751B7-5CAE-480A-8E9C-D8EC87CE481F}"
@@ -427,9 +422,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{7690CFA0-3B91-4BDB-8BF7-72D9C13226A1} = {58A0BE10-0BF1-4E8B-BE5E-0F0370AC8D7B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7DCF26FA-FA87-4079-9F39-699DFB3BB472}
