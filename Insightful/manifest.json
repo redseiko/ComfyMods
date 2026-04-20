@@ -1,8 +1,8 @@
 {
   "name": "Insightful",
-  "version_number": "1.4.0",
+  "version_number": "1.5.0",
   "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Insightful",
   "author": "ComfyMods",
   "description": "For those that seek words inscribed upon the world.",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2105" ]
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
 }
