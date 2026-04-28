@@ -25,7 +25,7 @@ dotnet_diagnostic.IDE0090.severity = none
 dotnet_diagnostic.IDE0130.severity = none
 
 # IDE0290: Use primary constructor
-csharp_style_prefer_primary_constructors = false
+dotnet_diagnostic.IDE0290.severity = none
 
 # IDE0305: Simplify collection initialization
 dotnet_diagnostic.IDE0305.severity = none
@@ -169,7 +169,7 @@ csharp_prefer_simple_using_statement = false
 csharp_prefer_system_threading_lock = true
 csharp_style_namespace_declarations = file_scoped
 csharp_style_prefer_method_group_conversion = true
-csharp_style_prefer_primary_constructors = true
+csharp_style_prefer_primary_constructors = false
 csharp_style_prefer_top_level_statements = true
 
 # Expression-level preferences
