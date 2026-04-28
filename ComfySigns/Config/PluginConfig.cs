@@ -1,4 +1,4 @@
-﻿namespace ComfySigns;
+namespace ComfySigns;
 
 using System.Linq;
 
@@ -60,6 +60,8 @@ public static class PluginConfig {
   public static ConfigEntry<float> SignTextMaximumRenderDistance { get; private set; }
   public static ConfigEntry<bool> SignTextIgnoreSizeTags { get; private set; }
 
+  public static ConfigEntry<Vector3> SignCanvasLocalPositionOffset { get; private set; }
+
   [ComfyConfig(typeof(FejdStartup), nameof(FejdStartup.Awake))]
   public static void BindSignConfig(ConfigFile config) {
     string[] fontNames =
@@ -104,6 +106,13 @@ public static class PluginConfig {
             "if set, ignore any and all <size> tags in sign text when rendered locally.");
 
     SignTextIgnoreSizeTags.OnSettingChanged(SignUtils.OnSignTextTagsConfigChanged);
+
+    SignCanvasLocalPositionOffset =
+        config.Bind(
+            "Sign.Canvas",
+            "localPositionOffset",
+            new Vector3(0f, 0f, 0.03f),
+            "Sign.Canvas.localPosition offset value (changes require restart).");
   }
 
   public static ConfigEntry<float> SignEffectMaximumRenderDistance { get; private set; }

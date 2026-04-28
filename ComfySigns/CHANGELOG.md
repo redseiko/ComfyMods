@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.12.0
+
+  * Updated for the `v0.221.12` patch.
+  * Added new config-option `[Sign.Canvas] localPositionOffset`.
+  * Migrated to SDK-style project.
+
 ### 1.11.0
 
   * Fixed for the `v0.221.4` patch.

@@ -1,5 +1,6 @@
 ﻿namespace ComfySigns;
 
+using System;
 using System.Text.RegularExpressions;
 
 using ComfyLib;
@@ -11,7 +12,11 @@ using UnityEngine;
 using static PluginConfig;
 
 public static class SignUtils {
-  public static readonly Regex SizeRegex = new(@"<size=[^>]*>");
+  public static readonly Regex SizeRegex =
+      new Regex(
+          @"<size=[^>]*>",
+          RegexOptions.Compiled | RegexOptions.CultureInvariant,
+          TimeSpan.FromMilliseconds(100));
 
   public static void AddFallbackFont(TMP_FontAsset font, TMP_FontAsset fallbackFont) {
     if (!font || !fallbackFont || fallbackFont == font) {
@@ -32,7 +37,7 @@ public static class SignUtils {
   }
 
   public static bool HasSignEffect(TMP_Text textComponent, string effectId) {
-    if (textComponent.text.Length <= 0 || !textComponent.text.StartsWith("<link", System.StringComparison.Ordinal)) {
+    if (textComponent.text.Length <= 0 || !textComponent.text.StartsWith("<link", StringComparison.Ordinal)) {
       return false;
     }
 
@@ -108,7 +113,6 @@ public static class SignUtils {
     TMP_FontAsset fontAsset = UIFonts.GetFontAsset(SignDefaultTextFontAsset.Value);
     Color fontColor = SignDefaultTextFontColor.Value;
 
-    //if (UseFallbackFonts.Value && SignDefaultTextFontAsset.Value != UIFonts.ValheimAveriaSansLibre) {
     if (UseFallbackFonts.Value) {
       ComfySigns.LogInfo($"Adding fallback fonts to font: {fontAsset.name}");
       AddFallbackFonts(fontAsset);

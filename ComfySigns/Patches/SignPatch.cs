@@ -12,19 +12,19 @@ using static PluginConfig;
 static class SignPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Sign.Awake))]
-  static void AwakePostfix(ref Sign __instance) {
+  static void AwakePostfix(Sign __instance) {
     if (IsModEnabled.Value) {
       __instance.m_characterLimit = 999;
 
       if (__instance.m_textWidget.TryGetComponentInParent(out Canvas canvas)) {
-        canvas.transform.localPosition = new(0f, 0f, 0.10f);
+        canvas.transform.localPosition += SignCanvasLocalPositionOffset.Value;
       }
     }
   }
 
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Sign.SetText))]
-  static void SetTextPostfix(ref Sign __instance) {
+  static void SetTextPostfix(Sign __instance) {
     if (IsModEnabled.Value) {
       SignUtils.ProcessSignText(__instance);
       SignUtils.ProcessSignEffect(__instance);
