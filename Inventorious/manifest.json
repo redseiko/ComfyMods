@@ -1,8 +1,0 @@
-{
-  "name": "Inventorious",
-  "version_number": "1.0.0",
-  "author": "ComfyMods",
-  "description": "InventoryGui configuration and customization.",
-  "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Inventorious",
-  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.1901" ]
-}

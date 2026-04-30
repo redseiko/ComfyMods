@@ -103,8 +103,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComfyLoadingScreens", "Comf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intermission", "Intermission\Intermission.csproj", "{746FB90C-3D18-4EF5-8E0F-6AC9CA2B36FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventorious", "Inventorious\Inventorious.csproj", "{04A167F6-13BE-450D-A0F2-36188A574837}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComfySigns", "ComfySigns\ComfySigns.csproj", "{1A56448B-9DAC-4352-A528-D9E3F64F992E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterServerPortals", "BetterServerPortals\BetterServerPortals.csproj", "{4AD3EC73-3FDC-45A2-9E9B-E44ED30A238A}"
@@ -327,10 +325,6 @@ Global
 		{746FB90C-3D18-4EF5-8E0F-6AC9CA2B36FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{746FB90C-3D18-4EF5-8E0F-6AC9CA2B36FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{746FB90C-3D18-4EF5-8E0F-6AC9CA2B36FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{04A167F6-13BE-450D-A0F2-36188A574837}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{04A167F6-13BE-450D-A0F2-36188A574837}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{04A167F6-13BE-450D-A0F2-36188A574837}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{04A167F6-13BE-450D-A0F2-36188A574837}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1A56448B-9DAC-4352-A528-D9E3F64F992E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A56448B-9DAC-4352-A528-D9E3F64F992E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A56448B-9DAC-4352-A528-D9E3F64F992E}.Release|Any CPU.ActiveCfg = Release|Any CPU
