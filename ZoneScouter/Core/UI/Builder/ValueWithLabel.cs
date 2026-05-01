@@ -44,7 +44,7 @@ public sealed class ValueWithLabel {
 
     row.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
-        .SetSprite(UIBuilder.CreateRoundedCornerSprite(200, 200, 5))
+        .SetSprite(UISpriteBuilder.CreateRoundedCornerSprite(200, 200, 5))
         .SetColor(new(0f, 0f, 0f, 0.1f));
 
     return row;

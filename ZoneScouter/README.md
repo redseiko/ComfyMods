@@ -38,13 +38,11 @@
 
 ### Configuration
 
-  * Almost everything is configurable (more will be added later).
+  * Almost everything is configurable.
     
     ![ZoneScouter - Configuration](https://i.imgur.com/5ScpxAV.png)
 
 ## Notes
 
-  * This is the *good enough* release with more features/options to be added later.
   * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/ZoneScouter).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
-  * Icon modified from the original using Gemini.

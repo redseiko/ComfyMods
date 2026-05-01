@@ -56,13 +56,13 @@ public sealed class ButtonCell {
 
     background.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
-        .SetSprite(UIBuilder.CreateRoundedCornerSprite(200, 200, 5))
+        .SetSprite(UISpriteBuilder.CreateRoundedCornerSprite(200, 200, 5))
         .SetColor(Color.white);
 
     return background;
   }
 
-  TMP_Text CreateChildLabel(Transform parentTransform) {
+  static TMP_Text CreateChildLabel(Transform parentTransform) {
     TMP_Text label = UIBuilder.CreateTMPLabel(parentTransform);
     label.name = "Label";
 

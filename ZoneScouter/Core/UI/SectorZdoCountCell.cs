@@ -70,7 +70,7 @@ public sealed class SectorZdoCountCell {
 
     cell.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
-        .SetSprite(UIBuilder.CreateRoundedCornerSprite(200, 200, 10))
+        .SetSprite(UISpriteBuilder.CreateRoundedCornerSprite(200, 200, 10))
         .SetColor(new(0f, 0f, 0f, 0.3f));
 
     return cell;
@@ -88,7 +88,7 @@ public sealed class SectorZdoCountCell {
 
     background.AddComponent<Image>()
         .SetType(Image.Type.Sliced)
-        .SetSprite(UIBuilder.CreateRoundedCornerSprite(200, 200, 5))
+        .SetSprite(UISpriteBuilder.CreateRoundedCornerSprite(200, 200, 5))
         .SetColor(Color.clear);
 
     return background;

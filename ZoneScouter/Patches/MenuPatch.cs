@@ -19,8 +19,7 @@ static class MenuPatch {
 
   public static void SetupMenu(Menu menu) {
     foreach (Transform child in menu.m_menuDialog) {
-      if (child.name.StartsWith("darken", System.StringComparison.InvariantCulture)
-          && child.TryGetComponent(out Image image)) {
+      if (child.name.StartsWith("darken", System.StringComparison.Ordinal) && child.TryGetComponent(out Image image)) {
         image.raycastTarget = false;
       }
     }
@@ -30,7 +29,7 @@ static class MenuPatch {
   [HarmonyPatch(nameof(Menu.Show))]
   static void ShowPostfix() {
     if (IsModEnabled.Value) {
-      SectorInfoPanelController.SectorInfoPanel?.ToggleCopyButtons(true);
+      SectorInfoPanelController.ToggleMenuComponents(true);
     }
   }
 
@@ -38,7 +37,7 @@ static class MenuPatch {
   [HarmonyPatch(nameof(Menu.Hide))]
   static void HidePostfix() {
     if (IsModEnabled.Value) {
-      SectorInfoPanelController.SectorInfoPanel?.ToggleCopyButtons(false);
+      SectorInfoPanelController.ToggleMenuComponents(false);
     }
   }
 }

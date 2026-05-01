@@ -19,6 +19,10 @@ public static class PluginConfig {
   public static ConfigEntry<Color> PositionValueYTextColor { get; private set; }
   public static ConfigEntry<Color> PositionValueZTextColor { get; private set; }
 
+  public static ConfigEntry<Color> PositionValueXBackgroundColor { get; private set; }
+  public static ConfigEntry<Color> PositionValueYBackgroundColor { get; private set; }
+  public static ConfigEntry<Color> PositionValueZBackgroundColor { get; private set; }
+
   public enum PositionValueOrder {
     XYZ,
     XZY,
@@ -33,6 +37,7 @@ public static class PluginConfig {
   public static ConfigEntry<PositionValueSeparator> CopyPositionValueSeparator { get; private set; }
   public static ConfigEntry<PositionValueOrder> CopyPositionValueOrder { get; private set; }
 
+  public static ConfigEntry<bool> ShowSectorContent { get; private set; }
   public static ConfigEntry<bool> ShowZDOManagerContent { get; private set; }
 
   public static ConfigEntry<bool> ShowSectorZdoCountGrid { get; private set; }
@@ -83,8 +88,7 @@ public static class PluginConfig {
             new Vector2(0f, -25f),
             "SectorInfoPanel position (relative to pivot/anchors).");
 
-    SectorInfoPanelPosition.OnSettingChanged(
-        position => SectorInfoPanelController.SectorInfoPanel?.RectTransform.Ref()?.SetPosition(position));
+    SectorInfoPanelPosition.OnSettingChanged(SetSectorInfoPanelPosition);
 
     SectorInfoPanelBackgroundColor =
         config.BindInOrder(
@@ -93,8 +97,7 @@ public static class PluginConfig {
             new Color(0f, 0f, 0f, 0.9f),
             "SectorInfoPanel background color.");
 
-    SectorInfoPanelBackgroundColor.OnSettingChanged(
-        color => SectorInfoPanelController.SectorInfoPanel?.Background.Ref()?.SetColor(color));
+    SectorInfoPanelBackgroundColor.OnSettingChanged(SetSectorInfoPanelStyle);
 
     SectorInfoPanelFontSize =
         config.BindInOrder(
@@ -115,6 +118,15 @@ public static class PluginConfig {
 
     PositionValueXTextColor.OnSettingChanged(SetSectorInfoPanelStyle);
 
+    PositionValueXBackgroundColor =
+        config.BindInOrder(
+            "SectorInfoPanel.PositionRow",
+            "positionValueXBackgroundColor",
+            new Color(1f, 0.878f, 0.51f, 0.1f),
+            "SectorInfoPanel.PositionRow.X value background color.");
+
+    PositionValueXBackgroundColor.OnSettingChanged(SetSectorInfoPanelStyle);
+
     PositionValueYTextColor =
         config.BindInOrder(
             "SectorInfoPanel.PositionRow",
@@ -124,6 +136,15 @@ public static class PluginConfig {
 
     PositionValueYTextColor.OnSettingChanged(SetSectorInfoPanelStyle);
 
+    PositionValueYBackgroundColor =
+        config.BindInOrder(
+            "SectorInfoPanel.PositionRow",
+            "positionValueYBackgroundColor",
+            new Color(0.565f, 0.792f, 0.976f, 0.1f),
+            "SectorInfoPanel.PositionRow.Y value background color.");
+
+    PositionValueYBackgroundColor.OnSettingChanged(SetSectorInfoPanelStyle);
+
     PositionValueZTextColor =
         config.BindInOrder(
             "SectorInfoPanel.PositionRow",
@@ -132,6 +153,15 @@ public static class PluginConfig {
             "SectorInfoPanel.PositionRow.Z value text color.");
 
     PositionValueZTextColor.OnSettingChanged(SetSectorInfoPanelStyle);
+
+    PositionValueZBackgroundColor =
+        config.BindInOrder(
+            "SectorInfoPanel.PositionRow",
+            "positionValueZBackgroundColor",
+            new Color(0.647f, 0.839f, 0.655f, 0.1f),
+            "SectorInfoPanel.PositionRow.Z value background color.");
+
+    PositionValueZBackgroundColor.OnSettingChanged(SetSectorInfoPanelStyle);
 
     CopyPositionValuePrefix =
         config.BindInOrder(
@@ -154,6 +184,15 @@ public static class PluginConfig {
             PositionValueOrder.XYZ,
             "Order of the position XYZ values when copied to clipboard.");
 
+    ShowSectorContent =
+        config.BindInOrder(
+            "SectorInfoPanel.SectorContent",
+            "showSectorContent",
+            true,
+            "Show SectorInfoPanel.Sector content.");
+
+    ShowSectorContent.OnSettingChanged(SectorInfoPanelController.ToggleSectorContent);
+
     ShowZDOManagerContent =
         config.BindInOrder(
             "SectorInfoPanel.ZDOManagerContent",
@@ -161,8 +200,7 @@ public static class PluginConfig {
             false,
             "Show SectorInfoPanel.ZDOManager content.");
 
-    ShowZDOManagerContent.OnSettingChanged(
-        toggleOn => SectorInfoPanelController.SectorInfoPanel?.ToggleZDOManagerContent(toggleOn));
+    ShowZDOManagerContent.OnSettingChanged(SectorInfoPanelController.ToggleZDOManagerContent);
 
     ShowSectorZdoCountGrid =
         config.BindInOrder(
@@ -262,13 +300,17 @@ public static class PluginConfig {
             "toggleSectorBoundariesShortcut",
             new KeyboardShortcut(KeyCode.None),
             "Shortcut to toggle on/off sector boundaries.");
+  }
 
-    static void SetSectorInfoPanelStyle() {
-      SectorInfoPanelController.SectorInfoPanel?.SetPanelStyle();
-    }
+  static void SetSectorInfoPanelPosition(Vector2 position) {
+    SectorInfoPanelController.SectorInfoPanel?.RectTransform.SetPosition(position);
+  }
 
-    static void SetSectorZDOCountGridCellStyle() {
-      SectorInfoPanelController.SectorZdoCountGrid?.SetCellStyle();
-    }
+  static void SetSectorInfoPanelStyle() {
+    SectorInfoPanelController.SectorInfoPanel?.SetPanelStyle();
+  }
+
+  static void SetSectorZDOCountGridCellStyle() {
+    SectorInfoPanelController.SectorZdoCountGrid?.SetCellStyle();
   }
 }

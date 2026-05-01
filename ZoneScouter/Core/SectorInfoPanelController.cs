@@ -55,6 +55,28 @@ public static class SectorInfoPanelController {
     SectorInfoPanelPosition.Value = position;
   }
 
+  public static bool HasValidPanel() {
+    return SectorInfoPanel?.Panel;
+  }
+
+  public static void ToggleSectorContent(bool toggleOn) {
+    if (HasValidPanel()) {
+      SectorInfoPanel.ToggleSectorContent(toggleOn);
+    }
+  }
+
+  public static void ToggleZDOManagerContent(bool toggleOn) {
+    if (HasValidPanel()) {
+      SectorInfoPanel.ToggleZDOManagerContent(toggleOn);
+    }
+  }
+
+  public static void ToggleMenuComponents(bool toggleOn) {
+    if (HasValidPanel()) {
+      SectorInfoPanel.ToggleMenuComponents(toggleOn);
+    }
+  }
+
   public static void ToggleSectorZdoCountGrid() {
     if (_updateSectorZdoCountGridCoroutine != null && Hud.m_instance) {
       Hud.m_instance.StopCoroutine(_updateSectorZdoCountGridCoroutine);
@@ -102,7 +124,7 @@ public static class SectorInfoPanelController {
       uint nextUid = ZDOMan.s_instance.m_nextUid;
 
       if (nextUid != lastNextUid) {
-        SectorInfoPanel.ZdoManagerNextId.Value.SetText($"{nextUid:D}");
+        SectorInfoPanel.ZDOManagerNextId.Value.SetText($"{nextUid:D}");
         lastNextUid = nextUid;
       }
 

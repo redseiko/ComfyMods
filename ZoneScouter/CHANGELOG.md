@@ -1,5 +1,17 @@
 ## Changelog
 
+### 1.9.0
+
+  * Migrated to SDK-style project.
+  * Added new config-options:
+    * `[SectorInfoPanel.PositionRow] positionValueXBackgroundColor`
+    * `[SectorInfoPanel.PositionRow] positionValueYBackgroundColor`
+    * `[SectorInfoPanel.PositionRow] positionValueZBackgroundColor`
+    * `[SectorInfoPanel.SectorContent] showSectorContent`
+  * SectorInfoPanel can now only be mouse-dragged when Menu is visible.
+  * Code clean-up and refactoring.
+  * Updated mod icon.
+
 ### 1.8.0
 
   * Added new config-section `SectorInfoPanel.CopyPosition` with config-options:
