@@ -1,4 +1,4 @@
-﻿namespace BetterServerPortals;
+﻿namespace ComfyLib;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -31,7 +31,11 @@ public sealed class PooledListDictionary<TKey, TValue> : IEnumerable<KeyValuePai
     _keyToListDictionary.Clear();
   }
 
-  public IEnumerator<KeyValuePair<TKey, List<TValue>>> GetEnumerator() {
+  public Dictionary<TKey, List<TValue>>.Enumerator GetEnumerator() {
+    return _keyToListDictionary.GetEnumerator();
+  }
+
+  IEnumerator<KeyValuePair<TKey, List<TValue>>> IEnumerable<KeyValuePair<TKey, List<TValue>>>.GetEnumerator() {
     return _keyToListDictionary.GetEnumerator();
   }
 

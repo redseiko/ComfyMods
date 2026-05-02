@@ -1,5 +1,11 @@
 ﻿## Changelog
 
+### 1.8.0
+
+  * Migrated to SDK-style project.
+  * Added new config-option `[Portals] additionalPortalPrefabs`.
+  * Code clean-up and refactoring.
+
 ### 1.7.0
 
   * Add new random portal connection feature.

@@ -1,4 +1,4 @@
-﻿namespace BetterServerPortals;
+﻿namespace ComfyLib;
 
 using System;
 using System.Collections.Generic;

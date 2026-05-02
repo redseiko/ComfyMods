@@ -5,6 +5,14 @@ using HarmonyLib;
 [HarmonyPatch(typeof(Game))]
 static class GamePatch {
   [HarmonyPostfix]
+  [HarmonyPatch(nameof(Game.Awake))]
+  static void GamePostfix(Game __instance) {
+    if (ZNet.m_isServer) {
+      PortalManager.SetPortalPrefabHash(__instance);
+    }
+  }
+
+  [HarmonyPostfix]
   [HarmonyPatch(nameof(Game.Start))]
   static void StartPostfix(Game __instance) {
     if (ZNet.m_isServer) {

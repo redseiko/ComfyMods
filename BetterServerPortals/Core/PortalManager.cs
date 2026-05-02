@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
+using ComfyLib;
+
 using UnityEngine;
 
 using static PluginConfig;
@@ -20,6 +22,25 @@ public static class PortalManager {
       new(
           Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), RandomPortalsAccessListFilename.Value),
           "RandomPortals access list.");
+
+  public static void SetPortalPrefabHash(Game game) {
+    if (!game) {
+      return;
+    }
+
+    string[] prefabNames = AdditionalPortalPrefabs.Value.Split([','], System.StringSplitOptions.RemoveEmptyEntries);
+
+    if (prefabNames.Length <= 0) {
+      return;
+    }
+
+    foreach (string prefabName in prefabNames) {
+      int prefabHash = prefabName.GetStableHashCode();
+      game.PortalPrefabHash.Add(prefabHash);
+
+      BetterServerPortals.LogInfo($"Added {prefabName} ({prefabHash}) to Game.PortalPrefabHash list.");
+    }
+  }
 
   public static void ConnectPortals(ZDOMan zdoManager) {
     ClearCaches();
