@@ -147,6 +147,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatusQuo", "StatusQuo\Stat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComfyLadders", "ComfyLadders\ComfyLadders.csproj", "{2EFD3F9A-BD01-B20F-8832-3D0A827EDCBD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hashiko", "Hashiko\Hashiko.csproj", "{4A6F3F1C-B7A9-4C33-99C4-94B92AA655C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -413,6 +415,10 @@ Global
 		{2EFD3F9A-BD01-B20F-8832-3D0A827EDCBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EFD3F9A-BD01-B20F-8832-3D0A827EDCBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EFD3F9A-BD01-B20F-8832-3D0A827EDCBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A6F3F1C-B7A9-4C33-99C4-94B92AA655C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A6F3F1C-B7A9-4C33-99C4-94B92AA655C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A6F3F1C-B7A9-4C33-99C4-94B92AA655C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A6F3F1C-B7A9-4C33-99C4-94B92AA655C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,8 @@
+{
+  "name": "Hashiko",
+  "version_number": "1.0.0",
+  "author": "ComfyMods",
+  "description": "Loyal preloader-patcher for GetStableHashCode.",
+  "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Hashiko",
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
+}
