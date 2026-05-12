@@ -158,7 +158,7 @@ public static class PluginConfig {
     PlayerBeardItem.OnSettingChanged(DyeManager.SetPlayerBeardItem);
   }
 
-  public static IEnumerable<string> AlphanumericSort(this IEnumerable<string> text) {
-    return text.OrderBy(x => Regex.Replace(x, @"\d+", m => m.Value.PadLeft(50, '0')));
+  public static IEnumerable<string> AlphanumericSort(this IEnumerable<string> values) {
+    return values.OrderBy(value => Regex.Replace(value, @"\d+", match => match.Value.PadLeft(50, '0')));
   }
 }

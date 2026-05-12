@@ -25,5 +25,5 @@
 
 ### Notes
 
-  * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/DyeHard).
+  * See source at: [GitHub/ComfyMods](https://github.com/redseiko/ComfyMods/tree/main/DyeHard).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)

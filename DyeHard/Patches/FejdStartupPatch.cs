@@ -17,12 +17,13 @@ static class FejdStartupPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(FejdStartup.SetupCharacterPreview))]
   static void SetupCharacterPreviewPostfix(FejdStartup __instance) {
-    DyeManager.SetLocalPlayer(__instance.m_playerInstance.GetComponent<Player>());
+    Player player = __instance.m_playerInstance.GetComponent<Player>();
+    DyeManager.SetLocalPlayer(player);
 
-    if (IsModEnabled.Value) {
-      DyeManager.SetPlayerZDOHairColor();
-      DyeManager.SetPlayerHairItem();
-      DyeManager.SetPlayerBeardItem();
+    if (IsModEnabled.Value && player) {
+      DyeManager.SetPlayerZDOHairColor(player);
+      DyeManager.SetPlayerHairItem(player);
+      DyeManager.SetPlayerBeardItem(player);
       DyeManager.SetCharacterPreviewPosition();
     }
   }
