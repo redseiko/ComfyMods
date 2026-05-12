@@ -20,21 +20,21 @@ static class VisEquipmentPatch {
 
   [HarmonyPrefix]
   [HarmonyPatch(nameof(VisEquipment.SetHairItem))]
-  static void SetHairItemPrefix(VisEquipment __instance, ref string name) {
+  static void SetHairItemPrefix(VisEquipment __instance, ref int itemHash) {
     if (IsModEnabled.Value
         && OverridePlayerHairItem.Value
         && __instance == DyeManager.LocalVisEquipment) {
-      name = PlayerHairItem.Value;
+      itemHash = PlayerHairItem.Value.GetStableHashCode();
     }
   }
 
   [HarmonyPrefix]
   [HarmonyPatch(nameof(VisEquipment.SetBeardItem))]
-  static void SetBeardItemPrefix(VisEquipment __instance, ref string name) {
+  static void SetBeardItemPrefix(VisEquipment __instance, ref int itemHash) {
     if (IsModEnabled.Value
         && OverridePlayerBeardItem.Value
         && __instance == DyeManager.LocalVisEquipment) {
-      name = PlayerBeardItem.Value;
+      itemHash = PlayerBeardItem.Value.GetStableHashCode();
     }
   }
 }

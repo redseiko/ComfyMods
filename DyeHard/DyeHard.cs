@@ -12,7 +12,7 @@ using static PluginConfig;
 public sealed class DyeHard : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.dyehard";
   public const string PluginName = "DyeHard";
-  public const string PluginVersion = "1.6.0";
+  public const string PluginVersion = "1.7.0";
 
   void Awake() {
     BindConfig(Config);

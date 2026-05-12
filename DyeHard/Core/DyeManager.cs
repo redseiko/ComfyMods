@@ -26,57 +26,48 @@ public static class DyeManager {
   }
 
   public static void SetPlayerBeardItem() {
-    if (!LocalPlayer || !LocalPlayer.m_visEquipment) {
-      return;
+    if (LocalPlayer && LocalPlayer.m_visEquipment) {
+      SetPlayerBeardItem(LocalPlayer);
     }
+  }
 
+  public static void SetPlayerBeardItem(Player player) {
     string beardItem =
-        IsModEnabled.Value && OverridePlayerBeardItem.Value ? PlayerBeardItem.Value : LocalPlayer.m_beardItem;
+        IsModEnabled.Value && OverridePlayerBeardItem.Value
+            ? PlayerBeardItem.Value
+            : player.m_beardItem;
 
-    if (LocalPlayer.m_nview) {
-      LocalPlayer.m_visEquipment.SetBeardItem(beardItem);
-    }
-
-
-    LocalPlayer.m_visEquipment.m_beardItem = beardItem;
+    player.m_visEquipment.SetBeardItem(beardItem.GetStableHashCode());
   }
 
   public static void SetPlayerHairItem() {
-    if (!LocalPlayer || !LocalPlayer.m_visEquipment) {
-      return;
+    if (LocalPlayer && LocalPlayer.m_visEquipment) {
+      SetPlayerHairItem(LocalPlayer);
     }
+  }
 
+  public static void SetPlayerHairItem(Player player) {
     string hairItem =
-        IsModEnabled.Value && OverridePlayerHairItem.Value ? PlayerHairItem.Value : LocalPlayer.m_hairItem;
+        IsModEnabled.Value && OverridePlayerHairItem.Value
+            ? PlayerHairItem.Value
+            : player.m_hairItem;
 
-    if (LocalPlayer.m_nview) {
-      LocalPlayer.m_visEquipment.SetHairItem(hairItem);
-    }
-
-
-    LocalPlayer.m_visEquipment.m_hairItem = hairItem;
+    player.m_visEquipment.SetHairItem(hairItem.GetStableHashCode());
   }
 
   public static void SetPlayerZDOHairColor() {
-    if (!LocalPlayer || !LocalPlayer.m_visEquipment) {
-      return;
+    if (LocalPlayer && LocalPlayer.m_visEquipment) {
+      SetPlayerZDOHairColor(LocalPlayer);
     }
+  }
 
+  public static void SetPlayerZDOHairColor(Player player) {
     Vector3 color =
         IsModEnabled.Value && OverridePlayerHairColor.Value
             ? GetPlayerHairColorVector()
-            : LocalPlayer.m_hairColor;
+            : player.m_hairColor;
 
-    LocalPlayer.m_visEquipment.m_hairColor = color;
-
-    if (!LocalPlayer.m_nview || !LocalPlayer.m_nview.IsValid()) {
-      return;
-    }
-
-    if (!LocalPlayer.m_nview.m_zdo.TryGetVector3(ZDOVars.s_hairColor, out Vector3 cachedColor)
-        || cachedColor != color) {
-      LocalPlayer.m_nview.m_zdo.Set(ZDOVars.s_hairColor, color);
-    }
+    player.m_visEquipment.SetHairColor(color);
   }
 
   public static void SetCharacterPreviewPosition() {
