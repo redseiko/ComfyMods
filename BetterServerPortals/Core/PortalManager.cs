@@ -1,4 +1,4 @@
-﻿namespace BetterServerPortals;
+namespace BetterServerPortals;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +15,7 @@ public static class PortalManager {
   public static readonly char RandomTagPrefix = '?';
 
   static readonly HashSet<ZDOID> _zdosToForceSend = [];
+  static readonly List<ZDO> _portalsCache = [];
   static readonly Dictionary<string, ZDO> _portalsByTagCache = [];
   static readonly PooledListDictionary<string, ZDO> _randomPortalsByTagCache = [];
 
@@ -22,6 +23,9 @@ public static class PortalManager {
       new(
           Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), RandomPortalsAccessListFilename.Value),
           "RandomPortals access list.");
+
+
+  static int _lastPortalsCacheCount = 0;
 
   public static void SetPortalPrefabHash(Game game) {
     if (!game) {
@@ -45,6 +49,7 @@ public static class PortalManager {
   public static void ConnectPortals(ZDOMan zdoManager) {
     ClearCaches();
 
+    CachePortals(zdoManager);
     UpdateUnconnectedPortals(zdoManager);
     UpdateConnectedPortals(zdoManager);
     UpdateRandomPortals(zdoManager);
@@ -55,6 +60,7 @@ public static class PortalManager {
 
   static void ClearCaches() {
     _zdosToForceSend.Clear();
+    _portalsCache.Clear();
     _portalsByTagCache.Clear();
     _randomPortalsByTagCache.Clear();
   }
@@ -63,11 +69,19 @@ public static class PortalManager {
     return tag.Length > 0 && tag[0] == RandomTagPrefix;
   }
 
+  static void CachePortals(ZDOMan zdoManager) {
+    foreach (List<ZDO> portals in zdoManager.m_portalObjects.Values) {
+      _portalsCache.AddRange(portals);
+    }
+
+    _lastPortalsCacheCount = _portalsCache.Count;
+  }
+
   static void UpdateUnconnectedPortals(ZDOMan zdoManager) {
     long sessionId = zdoManager.m_sessionID;
     HashSet<string> randomPortalsAccess = _randomPortalsAccessList.GetEntries();
 
-    foreach (ZDO zdo in zdoManager.m_portalObjects) {
+    foreach (ZDO zdo in _portalsCache) {
       string portalTag = zdo.GetString(ZDOVars.s_tag, string.Empty);
 
       if (IsRandomTag(portalTag)) {
@@ -107,7 +121,7 @@ public static class PortalManager {
   static void UpdateConnectedPortals(ZDOMan zdoManager) {
     long sessionId = zdoManager.m_sessionID;
 
-    foreach (ZDO zdo in zdoManager.m_portalObjects) {
+    foreach (ZDO zdo in _portalsCache) {
       string portalTag = zdo.GetString(ZDOVars.s_tag, string.Empty);
 
       if (IsRandomTag(portalTag)) {
@@ -211,7 +225,7 @@ public static class PortalManager {
       ConnectPortals(ZDOMan.s_instance);
 
       if (stopwatch.ElapsedMilliseconds >= 60000L) {
-        BetterServerPortals.LogInfo($"Processed {ZDOMan.s_instance.m_portalObjects.Count} portals.");
+        BetterServerPortals.LogInfo($"Processed {_lastPortalsCacheCount} portals.");
         stopwatch.Restart();
       }
 
