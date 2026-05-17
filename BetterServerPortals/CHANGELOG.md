@@ -1,5 +1,9 @@
 ﻿## Changelog
 
+### 1.9.0
+
+  * Fixed for the `v0.221.13` PTB patch.
+
 ### 1.8.0
 
   * Migrated to SDK-style project.
