@@ -31,11 +31,11 @@ public sealed class SectorZdoCountCell {
   }
 
   public void SetCellStyle(bool setPreferredWidth = false) {
-    ZdoCountBackground.SetColor(CellZdoCountBackgroundImageColor.Value);
-    ZdoCount.SetColor(CellZdoCountTextColor.Value);
+    ZdoCountBackground.SetColor(CellZDOCountBackgroundImageColor.Value);
+    ZdoCount.SetColor(CellZDOCountTextColor.Value);
 
-    if (ZdoCount.fontSize != CellZdoCountTextFontSize.Value || setPreferredWidth) {
-      ZdoCount.SetFontSize(CellZdoCountTextFontSize.Value);
+    if (ZdoCount.fontSize != CellZDOCountTextFontSize.Value || setPreferredWidth) {
+      ZdoCount.SetFontSize(CellZDOCountTextFontSize.Value);
 
       ZdoCount.GetComponent<LayoutElement>()
           .SetFlexible(width: 1f)

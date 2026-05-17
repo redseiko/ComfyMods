@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.10.0
+
+  * Fixed for the `v0.221.13` PTB patch.
+  * Increase wait-interval for `SectorZDOCountGrid` refresh from `1s` to `2s`.
+  * Code clean-up and refactoring.
+
 ### 1.9.0
 
   * Migrated to SDK-style project.

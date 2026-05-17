@@ -21,7 +21,7 @@ public sealed class SectorInfoPanel {
 
   public ContentRow SectorContent { get; private set; }
   public ValueWithLabel SectorXY { get; private set; }
-  public ValueWithLabel SectorZdoCount { get; private set; }
+  public ValueWithLabel SectorZDOCount { get; private set; }
 
   public ContentRow ZDOManagerContent { get; private set; }
   public ValueWithLabel ZDOManagerNextId { get; private set; }
@@ -51,8 +51,8 @@ public sealed class SectorInfoPanel {
     SectorXY = new(SectorContent.Row.transform);
     SectorXY.Label.SetText("Sector");
 
-    SectorZdoCount = new(SectorContent.Row.transform);
-    SectorZdoCount.Label.SetText("ZDOs");
+    SectorZDOCount = new(SectorContent.Row.transform);
+    SectorZDOCount.Label.SetText("ZDOs");
 
     ZDOManagerContent = new(Panel.transform);
 
@@ -97,11 +97,11 @@ public sealed class SectorInfoPanel {
     SectorXY.FitValueToText("-123,-123");
     SectorXY.Background.SetColor(PositionValueXBackgroundColor.Value);
 
-    SectorZdoCount.Label.SetFontSize(fontSize);
-    SectorZdoCount.Value.SetFontSize(fontSize);
-    SectorZdoCount.Value.SetColor(PositionValueYTextColor.Value);
-    SectorZdoCount.FitValueToText("123456");
-    SectorZdoCount.Background.SetColor(PositionValueYBackgroundColor.Value);
+    SectorZDOCount.Label.SetFontSize(fontSize);
+    SectorZDOCount.Value.SetFontSize(fontSize);
+    SectorZDOCount.Value.SetColor(PositionValueYTextColor.Value);
+    SectorZDOCount.FitValueToText("123456");
+    SectorZDOCount.Background.SetColor(PositionValueYBackgroundColor.Value);
 
     ZDOManagerNextId.Label.SetFontSize(fontSize);
     ZDOManagerNextId.Value.SetFontSize(fontSize);
