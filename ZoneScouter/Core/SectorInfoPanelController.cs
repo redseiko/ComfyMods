@@ -1,7 +1,6 @@
 ﻿namespace ZoneScouter;
 
 using System.Collections;
-using System.Collections.Generic;
 
 using ComfyLib;
 
@@ -10,14 +9,20 @@ using UnityEngine;
 using static PluginConfig;
 
 public static class SectorInfoPanelController {
-  static readonly Dictionary<Vector2i, int> SectorToIndexCache = [];
-
   static Coroutine _updateSectorInfoPanelCoroutine;
-  static Coroutine _updateSectorZdoCountGridCoroutine;
+  static Coroutine _updateSectorZDOCountGridCoroutine;
 
   public static SectorInfoPanel SectorInfoPanel { get; private set; }
 
-  public static SectorZdoCountGrid SectorZdoCountGrid { get; private set; }
+  public static bool HasValidSectorInfoPanel() {
+    return SectorInfoPanel?.Panel;
+  }
+
+  public static SectorZdoCountGrid SectorZDOCountGrid { get; private set; }
+
+  public static bool HasValidSectorZDOCountGrid() {
+    return SectorZDOCountGrid?.Grid;
+  }
 
   public static void ToggleSectorInfoPanel() {
     if (_updateSectorInfoPanelCoroutine != null) {
@@ -25,7 +30,7 @@ public static class SectorInfoPanelController {
       _updateSectorInfoPanelCoroutine = null;
     }
 
-    if (SectorInfoPanel?.Panel) {
+    if (HasValidSectorInfoPanel()) {
       UnityEngine.Object.Destroy(SectorInfoPanel.Panel);
       SectorInfoPanel = null;
     }
@@ -48,76 +53,69 @@ public static class SectorInfoPanelController {
       _updateSectorInfoPanelCoroutine = Hud.m_instance.StartCoroutine(UpdateSectorInfoPanelCoroutine());
     }
 
-    ToggleSectorZdoCountGrid();
+    ToggleSectorZDOCountGrid();
   }
 
   public static void OnSectorInfoPanelEndDrag(object sender, Vector3 position) {
     SectorInfoPanelPosition.Value = position;
   }
 
-  public static bool HasValidPanel() {
-    return SectorInfoPanel?.Panel;
-  }
-
   public static void ToggleSectorContent(bool toggleOn) {
-    if (HasValidPanel()) {
+    if (HasValidSectorInfoPanel()) {
       SectorInfoPanel.ToggleSectorContent(toggleOn);
     }
   }
 
   public static void ToggleZDOManagerContent(bool toggleOn) {
-    if (HasValidPanel()) {
+    if (HasValidSectorInfoPanel()) {
       SectorInfoPanel.ToggleZDOManagerContent(toggleOn);
     }
   }
 
   public static void ToggleMenuComponents(bool toggleOn) {
-    if (HasValidPanel()) {
+    if (HasValidSectorInfoPanel()) {
       SectorInfoPanel.ToggleMenuComponents(toggleOn);
     }
   }
 
-  public static void ToggleSectorZdoCountGrid() {
-    if (_updateSectorZdoCountGridCoroutine != null && Hud.m_instance) {
-      Hud.m_instance.StopCoroutine(_updateSectorZdoCountGridCoroutine);
-      _updateSectorZdoCountGridCoroutine = null;
+  public static void ToggleSectorZDOCountGrid() {
+    if (_updateSectorZDOCountGridCoroutine != null && Hud.m_instance) {
+      Hud.m_instance.StopCoroutine(_updateSectorZDOCountGridCoroutine);
+      _updateSectorZDOCountGridCoroutine = null;
     }
 
-    if (SectorZdoCountGrid?.Grid) {
-      UnityEngine.Object.Destroy(SectorZdoCountGrid.Grid);
-      SectorZdoCountGrid = null;
+    if (HasValidSectorZDOCountGrid()) {
+      UnityEngine.Object.Destroy(SectorZDOCountGrid.Grid);
+      SectorZDOCountGrid = null;
     }
 
-    if (IsModEnabled.Value && ShowSectorInfoPanel.Value && ShowSectorZdoCountGrid.Value && SectorInfoPanel?.Panel) {
-      SectorZdoCountGrid = new(SectorInfoPanel.Panel.transform, SectorZdoCountGridSize.Value);
-      SectorZdoCountGrid.Grid.SetActive(true);
+    if (IsModEnabled.Value && ShowSectorInfoPanel.Value && ShowSectorZDOCountGrid.Value && HasValidSectorInfoPanel()) {
+      SectorZDOCountGrid = new(SectorInfoPanel.Panel.transform, SectorZDOCountGridSize.Value);
+      SectorZDOCountGrid.Grid.SetActive(true);
 
-      _updateSectorZdoCountGridCoroutine = Hud.m_instance.StartCoroutine(UpdateSectorZdoCountGrid());
+      _updateSectorZDOCountGridCoroutine = Hud.m_instance.StartCoroutine(UpdateSectorZDOCountGrid());
     }
   }
 
-  static long GetSectorZdoCount(Vector2i sector) {
-    if (!SectorToIndexCache.TryGetValue(sector, out int index)) {
-      index = ZDOMan.s_instance.SectorToIndex(sector);
-      SectorToIndexCache[sector] = index;
-    }
+  static long GetSectorZDOCount(Vector2s sector) {
+    uint index = ZoneSystem.SectorToIndex(sector).Sector;
 
-    return index >= 0
-        ? ZDOMan.s_instance.m_objectsBySector[index]?.Count ?? 0L
-        : 0L;
+    return ZDOMan.s_instance.m_objectsBySector[index]?.Count ?? 0L;
   }
 
   static IEnumerator UpdateSectorInfoPanelCoroutine() {
     WaitForSeconds waitInterval = new(seconds: 0.25f);
-    Vector3 lastPosition = Vector3.positiveInfinity;
-    Vector2i lastSector = new(int.MinValue, int.MaxValue);
-    long lastZdoCount = long.MaxValue;
+
+    Vector3Int lastPosition = Vector3Int.zero;
+    Vector2s lastSector = new(short.MinValue, short.MaxValue);
+
+    long lastZDOCount = long.MaxValue;
     uint lastNextUid = uint.MaxValue;
 
     while (true) {
       yield return waitInterval;
 
-      if (!ZoneSystem.m_instance || !Player.m_localPlayer || !SectorInfoPanel?.Panel) {
+      if (!ZoneSystem.s_instance || !Player.m_localPlayer || !HasValidSectorInfoPanel()) {
         continue;
       }
 
@@ -128,54 +126,54 @@ public static class SectorInfoPanelController {
         lastNextUid = nextUid;
       }
 
-      Vector3 position = Player.m_localPlayer.transform.position;
+      Vector3Int position = Vector3Int.FloorToInt(Player.m_localPlayer.transform.position);
 
       if (position != lastPosition) {
         lastPosition = position;
-        SectorInfoPanel.PositionX.Value.SetText($"{position.x:F0}");
-        SectorInfoPanel.PositionY.Value.SetText($"{position.y:F0}");
-        SectorInfoPanel.PositionZ.Value.SetText($"{position.z:F0}");
+        SectorInfoPanel.PositionX.Value.SetText($"{position.x}");
+        SectorInfoPanel.PositionY.Value.SetText($"{position.y}");
+        SectorInfoPanel.PositionZ.Value.SetText($"{position.z}");
       }
 
-      Vector2i sector = ZoneSystem.GetZone(position);
-      long zdoCount = GetSectorZdoCount(sector);
+      Vector2s currentSector = ZoneSystem.GetZone(position);
+      long currentZDOCount = GetSectorZDOCount(currentSector);
 
-      if (sector == lastSector && zdoCount == lastZdoCount) {
+      if (currentSector == lastSector && currentZDOCount == lastZDOCount) {
         continue;
       }
 
-      lastSector = sector;
-      lastZdoCount = zdoCount;
+      lastSector = currentSector;
+      lastZDOCount = currentZDOCount;
 
-      SectorInfoPanel.SectorXY.Value.SetText($"{sector.x},{sector.y}");
-      SectorInfoPanel.SectorZdoCount.Value.SetText($"{zdoCount}");
+      SectorInfoPanel.SectorXY.Value.SetText($"{currentSector.x},{currentSector.y}");
+      SectorInfoPanel.SectorZDOCount.Value.SetText($"{currentZDOCount}");
     }
   }
 
-  static IEnumerator UpdateSectorZdoCountGrid() {
-    if (!SectorZdoCountGrid?.Grid) {
+  static IEnumerator UpdateSectorZDOCountGrid() {
+    if (!HasValidSectorZDOCountGrid()) {
       yield break;
     }
 
-    WaitForSeconds waitInterval = new(seconds: 1f);
+    WaitForSeconds waitInterval = new(seconds: 2f);
 
-    int size = SectorZdoCountGrid.Size;
+    int size = SectorZDOCountGrid.Size;
     int offset = Mathf.FloorToInt(size / 2f);
 
-    while (SectorZdoCountGrid?.Grid) {
+    while (HasValidSectorZDOCountGrid()) {
       if (!Player.m_localPlayer) {
         yield return waitInterval;
         continue;
       }
 
-      Vector2i sector = ZoneSystem.GetZone(Player.m_localPlayer.transform.position);
+      Vector2s sector = ZoneSystem.GetZone(Player.m_localPlayer.transform.position);
 
       for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-          Vector2i cellSector = new(sector.x + i - offset, sector.y - j + offset);
-          SectorZdoCountCell cell = SectorZdoCountGrid.Cells[j, i];
+          Vector2s cellSector = new(sector.x + i - offset, sector.y - j + offset);
+          SectorZdoCountCell cell = SectorZDOCountGrid.Cells[j, i];
 
-          cell.ZdoCount.SetText($"{GetSectorZdoCount(cellSector)}");
+          cell.ZdoCount.SetText($"{GetSectorZDOCount(cellSector)}");
           cell.Sector.SetText($"{cellSector.x},{cellSector.y}");
         }
       }

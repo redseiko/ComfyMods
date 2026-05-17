@@ -40,12 +40,12 @@ public static class PluginConfig {
   public static ConfigEntry<bool> ShowSectorContent { get; private set; }
   public static ConfigEntry<bool> ShowZDOManagerContent { get; private set; }
 
-  public static ConfigEntry<bool> ShowSectorZdoCountGrid { get; private set; }
-  public static ConfigEntry<GridSize> SectorZdoCountGridSize { get; private set; }
+  public static ConfigEntry<bool> ShowSectorZDOCountGrid { get; private set; }
+  public static ConfigEntry<GridSize> SectorZDOCountGridSize { get; private set; }
 
-  public static ConfigEntry<Color> CellZdoCountBackgroundImageColor { get; private set; }
-  public static ConfigEntry<int> CellZdoCountTextFontSize { get; private set; }
-  public static ConfigEntry<Color> CellZdoCountTextColor { get; private set; }
+  public static ConfigEntry<Color> CellZDOCountBackgroundImageColor { get; private set; }
+  public static ConfigEntry<int> CellZDOCountTextFontSize { get; private set; }
+  public static ConfigEntry<Color> CellZDOCountTextColor { get; private set; }
 
   public static ConfigEntry<Color> CellSectorBackgroundImageColor { get; private set; }
   public static ConfigEntry<int> CellSectorTextFontSize { get; private set; }
@@ -202,34 +202,34 @@ public static class PluginConfig {
 
     ShowZDOManagerContent.OnSettingChanged(SectorInfoPanelController.ToggleZDOManagerContent);
 
-    ShowSectorZdoCountGrid =
+    ShowSectorZDOCountGrid =
         config.BindInOrder(
             "SectorZdoCountGrid",
             "showSectorZdoCountGrid",
             false,
             "Show the SectorZdoCount grid in the SectorInfo panel.");
 
-    ShowSectorZdoCountGrid.OnSettingChanged(SectorInfoPanelController.ToggleSectorZdoCountGrid);
+    ShowSectorZDOCountGrid.OnSettingChanged(SectorInfoPanelController.ToggleSectorZDOCountGrid);
 
-    SectorZdoCountGridSize =
+    SectorZDOCountGridSize =
         config.BindInOrder(
             "SectorZdoCountGrid",
             "sectorZdoCountGridSize",
             GridSize.ThreeByThree,
             "Size of the SectorZdoCount grid.");
 
-    SectorZdoCountGridSize.OnSettingChanged(SectorInfoPanelController.ToggleSectorZdoCountGrid);
+    SectorZDOCountGridSize.OnSettingChanged(SectorInfoPanelController.ToggleSectorZDOCountGrid);
 
-    CellZdoCountBackgroundImageColor =
+    CellZDOCountBackgroundImageColor =
         config.BindInOrder(
             "SectorZdoCountGrid",
             "cellZdoCountBackgroundImageColor",
             Color.clear,
             "SectorZdoCountCell.ZdoCount.Background.Image color.");
 
-    CellZdoCountBackgroundImageColor.OnSettingChanged(SetSectorZDOCountGridCellStyle);
+    CellZDOCountBackgroundImageColor.OnSettingChanged(SetSectorZDOCountGridCellStyle);
 
-    CellZdoCountTextFontSize =
+    CellZDOCountTextFontSize =
         config.BindInOrder(
             "SectorZdoCountGrid",
             "cellZdoCountTextFontSize",
@@ -237,16 +237,16 @@ public static class PluginConfig {
             "SectorZdoCountCell.ZdoCount.Text font size.",
             new AcceptableValueRange<int>(2, 64));
 
-    CellZdoCountTextFontSize.OnSettingChanged(SetSectorZDOCountGridCellStyle);
+    CellZDOCountTextFontSize.OnSettingChanged(SetSectorZDOCountGridCellStyle);
 
-    CellZdoCountTextColor =
+    CellZDOCountTextColor =
         config.BindInOrder(
             "SectorZdoCountGrid",
             "cellZdoCountTextColor",
             Color.white,
             "SectorZdoCountCell.ZdoCount.Text color.");
 
-    CellZdoCountTextColor.OnSettingChanged(SetSectorZDOCountGridCellStyle);
+    CellZDOCountTextColor.OnSettingChanged(SetSectorZDOCountGridCellStyle);
 
     CellSectorBackgroundImageColor =
         config.BindInOrder(
@@ -311,6 +311,6 @@ public static class PluginConfig {
   }
 
   static void SetSectorZDOCountGridCellStyle() {
-    SectorInfoPanelController.SectorZdoCountGrid?.SetCellStyle();
+    SectorInfoPanelController.SectorZDOCountGrid?.SetCellStyle();
   }
 }

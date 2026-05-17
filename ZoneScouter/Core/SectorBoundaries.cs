@@ -61,12 +61,12 @@ public static class SectorBoundaries {
     while (true) {
       yield return waitInterval;
 
-      if (!ZoneSystem.m_instance || !Player.m_localPlayer) {
+      if (!ZoneSystem.s_instance || !Player.m_localPlayer) {
         continue;
       }
 
       Vector3 position = Player.m_localPlayer.transform.position;
-      Vector2i sector = ZoneSystem.GetZone(position);
+      Vector2s sector = ZoneSystem.GetZone(position);
 
       Vector3 cubePosition = ZoneSystem.GetZonePos(sector);
       cubePosition.y = position.y;
