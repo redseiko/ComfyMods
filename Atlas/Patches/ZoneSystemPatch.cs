@@ -37,6 +37,24 @@ static class ZoneSystemPatch {
         .InstructionEnumeration();
   }
 
+  [HarmonyTranspiler]
+  [HarmonyPatch(nameof(ZoneSystem.LoadOld))]
+  static IEnumerable<CodeInstruction> LoadOldTranspiler(IEnumerable<CodeInstruction> instructions) {
+    return new CodeMatcher(instructions)
+        .Start()
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldloc_1),
+            new CodeMatch(OpCodes.Ldarg_0),
+            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(ZoneSystem), nameof(ZoneSystem.m_locationVersion))))
+        .ThrowIfInvalid("Could not patch ZoneSystem.LoadOld()! (location-version)")
+        .Advance(offset: 1)
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Ldarg_0),
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(ZoneSystemPatch), nameof(CheckLocationVersionDelegate))))
+        .InstructionEnumeration();
+  }
+
   static int CheckLocationVersionDelegate(int locationVersion, ZoneSystem zoneSystem) {
     if (IgnoreLocationVersion.Value) {
       PluginLogger.LogInfo(

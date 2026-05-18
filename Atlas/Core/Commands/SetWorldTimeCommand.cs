@@ -38,18 +38,18 @@ public static class SetWorldTimeCommand {
     ZNet.m_instance.m_netTime = time;
 
     foreach (ZDO zdo in ZDOMan.s_instance.m_objectsByID.Values) {
-      if (ZDOExtraData.GetLong(zdo.m_uid, Atlas.EpochTimeCreatedHashCode, out long epochTimeCreated)) {
+      if (ZDOExtraData.GetLong(zdo.m_uid, Atlas.EpochTimeCreatedHash, out long epochTimeCreated)) {
         long timeCreated = (epochTimeCreated * TimeSpan.TicksPerSecond) - nowTicks + timeTicks;
 
         ZDOExtraData.s_tempTimeCreated[zdo.m_uid] = timeCreated;
-        zdo.Set(Atlas.TimeCreatedHashCode, timeCreated);
+        zdo.Set(Atlas.TimeCreatedHash, timeCreated);
 
         zdosSetToEpoch++;
       } else if (TryGetTimeCreated(zdo, out long timeCreated) && timeCreated != 0L) {
         timeCreated += offsetTicks;
 
         ZDOExtraData.s_tempTimeCreated[zdo.m_uid] = timeCreated;
-        zdo.Set(Atlas.TimeCreatedHashCode, timeCreated);
+        zdo.Set(Atlas.TimeCreatedHash, timeCreated);
 
         zdosOffset++;
       }
@@ -61,7 +61,7 @@ public static class SetWorldTimeCommand {
 
   static bool TryGetTimeCreated(ZDO zdo, out long timeCreated) {
     if (ZDOExtraData.s_longs.TryGetValue(zdo.m_uid, out BinarySearchDictionary<int, long> values)
-        && values.TryGetValue(Atlas.TimeCreatedHashCode, out timeCreated)) {
+        && values.TryGetValue(Atlas.TimeCreatedHash, out timeCreated)) {
       return true;
     } else if (ZDOExtraData.s_tempTimeCreated.TryGetValue(zdo.m_uid, out timeCreated)) {
       return true;

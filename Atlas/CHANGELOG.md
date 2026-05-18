@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.16.0
+
+  * Fixed for the `v0.221.13` PTB patch.
+  * Migrated to SDK-style project.
+  * Updated mod icon.
+
 ### 1.15.0
 
   * Updated for the `v0.220.3` patch.
