@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class Unstrippable : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.unstrippable";
   public const string PluginName = "Unstrippable";
-  public const string PluginVersion = "1.0.0";
+  public const string PluginVersion = "1.1.0";
 
   static ManualLogSource _logger;
 

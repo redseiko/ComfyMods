@@ -10,5 +10,5 @@
 
 ## Notes
 
-  * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/Unstrippable)
+  * See source at: [GitHub/Unstrippable](https://github.com/redseiko/ComfyMods/tree/main/Unstrippable)
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
