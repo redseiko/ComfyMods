@@ -1,4 +1,4 @@
-﻿namespace Atlas;
+namespace Atlas;
 
 using System.Reflection;
 
@@ -10,7 +10,7 @@ using HarmonyLib;
 public sealed class Atlas : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.atlas";
   public const string PluginName = "Atlas";
-  public const string PluginVersion = "1.16.0";
+  public const string PluginVersion = "1.17.0";
 
   public const int TimeCreatedHash = -1420903867;       // timeCreated
   public const int EpochTimeCreatedHash = 1272608570;   // epochTimeCreated
