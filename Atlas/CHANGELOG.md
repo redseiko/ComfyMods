@@ -1,5 +1,12 @@
 ## Changelog
 
+### 1.17.0
+
+  * Added new `Game.FixedUpdate()` transpiler to enable a custom server-position for dedicated servers.
+  * Added new config-options:
+    * `[Game] overrideServerPosition`
+    * `[Game] customServerPosition`
+
 ### 1.16.0
 
   * Fixed for the `v0.221.13` PTB patch.
