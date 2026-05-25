@@ -21,6 +21,8 @@ public sealed class ComfyArgs {
   public static readonly char[] CommaSeparator = [','];
 
   public Terminal.ConsoleEventArgs Args { get; }
+  public Terminal Context { get => Args.Context; }
+
   public string Command { get; private set; }
   public readonly Dictionary<string, string> ArgsValueByName = [];
 

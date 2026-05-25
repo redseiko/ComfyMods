@@ -21,7 +21,8 @@ public static class StartKeyManagerCommand {
     return Run(new ComfyArgs(args));
   }
 
-  public static bool Run(ComfyArgs args) {    if (!args.TryGetValue("id", out string managerId)) {
+  public static bool Run(ComfyArgs args) {
+    if (!args.TryGetValue("id", out string managerId)) {
       Keysential.LogError($"Missing string value for: --id");
       return false;
     }

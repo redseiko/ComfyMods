@@ -48,7 +48,7 @@ public static class GlobalKeysManager {
   }
 
   static void ResetNearbyPeers(KeyManager keyManager, HashSet<long> nearbyPeerIds) {
-    List<string> originalKeys = [.. ZoneSystem.m_instance.m_globalKeys];
+    List<string> originalKeys = [.. ZoneSystem.s_instance.m_globalKeys];
 
     foreach (long nearbyPeerId in nearbyPeerIds) {
       Keysential.LogInfo($"Sending original global keys to peer: {nearbyPeerId}");
