@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.12.0
+
+  * Fixed for the `v0.221.13` PTB patch.
+  * Migrated to SDK-style project.
+
 ### 1.11.0
 
   * Converted all commands to `ComfyCommand` and `ComfyArgs` format.

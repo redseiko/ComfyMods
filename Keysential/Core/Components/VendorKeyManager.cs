@@ -36,7 +36,7 @@ public sealed class VendorKeyManager : MonoBehaviour {
 
     while (ZNet.m_instance) {
       originalKeys.Clear();
-      originalKeys.AddRange(ZoneSystem.m_instance.m_globalKeys);
+      originalKeys.AddRange(ZoneSystem.s_instance.m_globalKeys);
 
       nearbyKeys.Clear();
       nearbyKeys.AddRange(originalKeys);
