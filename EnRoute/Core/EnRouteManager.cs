@@ -12,7 +12,7 @@ public static class EnRouteManager {
 
   public static void SetupNearbyRPCMethods() {
     NearbyRPCMethodByHashCode.Clear();
-    string[] names = NearbyRPCMethodNames.Value.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries);
+    string[] names = NearbyRPCMethodNames.Value.Split([','], System.StringSplitOptions.RemoveEmptyEntries);
 
     foreach (string name in names) {
       NearbyRPCMethodByHashCode[name.GetStableHashCode()] = name;

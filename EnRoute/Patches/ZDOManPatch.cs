@@ -1,45 +1,34 @@
 ﻿namespace EnRoute;
 
+using System.Collections.Generic;
+using System.Reflection.Emit;
+
 using HarmonyLib;
 
 [HarmonyPatch(typeof(ZDOMan))]
 static class ZDOManPatch {
-  [HarmonyPrefix]
+  [HarmonyTranspiler]
   [HarmonyPatch(nameof(ZDOMan.HandleDestroyedZDO))]
-  static bool HandleDestroyedZDOPrefix(ref ZDOMan __instance, ZDOID uid) {
-    if (uid == ZDOID.None) {
-      return false;
-    }
-
-    if (uid.UserID == __instance.m_sessionID && uid.ID >= __instance.m_nextUid) {
-      __instance.m_nextUid = uid.ID + 1U;
-    }
-
-    if (!__instance.m_objectsByID.TryGetValue(uid, out ZDO zdo) || zdo == null) {
-      return false;
-    }
-
-    __instance.m_onZDODestroyed(zdo);
-
-    __instance.RemoveFromSector(zdo, zdo.GetSector());
-    __instance.m_objectsByID.Remove(zdo.m_uid);
-
-    if (Game.instance.PortalPrefabHash.Contains(zdo.m_prefab)) {
-      __instance.m_portalObjects.Remove(zdo);
-    }
-
-    ZDOPool.Release(zdo);
-
-    foreach (ZDOMan.ZDOPeer zdoPeer in __instance.m_peers) {
-      if (zdoPeer.m_zdos.Remove(uid)) {
-        // TODO: need to route this RPC for any matching NetPeers.
-      }
-    }
-
-    if (ZNet.m_isServer) {
-      __instance.m_deadZDOs[uid] = EnRouteManager.NetTimeTicks;
-    }
-
-    return false;
+  static IEnumerable<CodeInstruction> HandleDestroyedZDOTranspiler(
+      IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
+    return new CodeMatcher(instructions, generator)
+        .Start()
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Call, AccessTools.PropertyGetter(typeof(ZNet), nameof(ZNet.instance))),
+            new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(ZNet), nameof(ZNet.GetTime))),
+            new CodeMatch(OpCodes.Stloc_S),
+            new CodeMatch(OpCodes.Ldloca_S),
+            new CodeMatch(
+                OpCodes.Call, AccessTools.PropertyGetter(typeof(System.DateTime), nameof(System.DateTime.Ticks))),
+            new CodeMatch(OpCodes.Stloc_S))
+        .ThrowIfInvalid($"Could not patch ZDOMan.HandleDestroyedZDO()! (get-time-ticks)")
+        .SetInstructionAndAdvance(
+            new CodeInstruction(
+                OpCodes.Ldsfld, AccessTools.Field(typeof(EnRouteManager), nameof(EnRouteManager.NetTimeTicks))))
+        .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
+        .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
+        .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
+        .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
+        .InstructionEnumeration();
   }
 }

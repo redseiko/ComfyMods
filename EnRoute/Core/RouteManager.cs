@@ -2,8 +2,10 @@
 
 using System.Collections.Generic;
 
+using ComfyLib;
+
 public static class RouteManager {
-  public static readonly int RoutedRPCHashCode = "RoutedRPC".GetStableHashCode();
+  public const int RoutedRPCHash = -667652280; // RoutedRPC
 
   public static readonly Dictionary<long, ZNetPeer> NetPeers = [];
   public static readonly Dictionary<long, RouteRecord> NetPeerRouting = [];
@@ -36,10 +38,17 @@ public static class RouteManager {
         continue;
       }
 
-      if (record.Sector.IsSectorInRange(otherRecord.Sector, 2)) {
+      if (IsSectorInRange(record.Sector, otherRecord.Sector, 2)) {
         record.NearbyUserIds.Add(otherRecord.UserId);
       }
     }
+  }
+
+  static bool IsSectorInRange(Vector2s source, Vector2s target, int range) {
+    return target.x + range >= source.x - range
+        && target.x - range <= source.x + range
+        && target.y + range >= source.y - range
+        && target.y - range <= source.y + range;
   }
 
   static readonly ZPackage _package = new();
@@ -48,7 +57,7 @@ public static class RouteManager {
     if (rpcData.m_targetPeerID == ZRoutedRpc.Everybody) {
       RouteRPCToEverybody(routedRpc, rpcData);
     } else if (TryGetPeer(rpcData.m_targetPeerID, out ZNetPeer netPeer)) {
-      SerializeRoutedRPCInvoke(rpcData, RoutedRPCHashCode, _package);
+      SerializeRoutedRPCInvoke(rpcData, RoutedRPCHash, _package);
       SendPackage(netPeer.m_rpc, _package);
     }
   }
@@ -67,7 +76,7 @@ public static class RouteManager {
       return;
     }
 
-    SerializeRoutedRPCInvoke(rpcData, RoutedRPCHashCode, _package);
+    SerializeRoutedRPCInvoke(rpcData, RoutedRPCHash, _package);
 
     foreach (long peerId in record.NearbyUserIds) {
       if (TryGetPeer(peerId, out ZNetPeer netPeer)) {
@@ -77,7 +86,7 @@ public static class RouteManager {
   }
 
   static void RouteToPeers(ZRoutedRpc routedRpc, ZRoutedRpc.RoutedRPCData rpcData, long senderPeerId) {
-    SerializeRoutedRPCInvoke(rpcData, RoutedRPCHashCode, _package);
+    SerializeRoutedRPCInvoke(rpcData, RoutedRPCHash, _package);
 
     foreach (ZNetPeer netPeer in routedRpc.m_peers) {
       if (netPeer.m_uid != senderPeerId && netPeer.IsReady()) {
