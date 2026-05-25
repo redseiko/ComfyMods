@@ -1,5 +1,13 @@
 ## Changelog
 
+### 1.6.0
+
+  * Fixed for the `v0.221.13` PTB patch.
+  * Migrated to SDK-style project.
+  * Converted `ZDOMan.HandleDestroyedZDO()` prefix-patch to a transpiler-patch.
+  * Code clean-up and refactoring.
+  * Updated mod icon.
+
 ### 1.5.0
 
   * Fixed for the `v0.219.13` patch.

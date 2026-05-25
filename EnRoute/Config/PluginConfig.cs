@@ -12,7 +12,7 @@ public static class PluginConfig {
         config.BindInOrder(
             "RouteManager",
             "nearbyRPCMethodNames",
-            "FlashShield,Step,WNTCreateFragments",
+            "FlashShield,Step,RPC_DamageText,RPC_ResetCloth,WNTCreateFragments",
             "Comma-separated list of RPC method names that should be routed only to nearby clients.");
 
     NearbyRPCMethodNames.OnSettingChanged(EnRouteManager.SetupNearbyRPCMethods);

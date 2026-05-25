@@ -1,13 +1,4 @@
-﻿namespace EnRoute;
-
-public static class PluginExtensions {
-  public static bool IsSectorInRange(this Vector2i source, Vector2i target, int range) {
-    return target.x + range >= source.x - range
-        && target.x - range <= source.x + range
-        && target.y + range >= source.y - range
-        && target.y - range <= source.y + range;
-  }
-}
+﻿namespace ComfyLib;
 
 public static class RoutedRPCDataExtensions {
   public static void WriteToPackage(this ZRoutedRpc.RoutedRPCData rpcData, ZPackage package) {
