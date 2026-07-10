@@ -2,19 +2,14 @@
 
 *EffectArea tweaks and customization.*
 
-## Installation
+## Features
 
-### Manual
+  * Fixes `NullReferenceException` console spam when `Character` objects are destroyed within an `EffectArea`.
+  * Increases `EffectArea.m_tempColliders` buffer size used for `GetBaseValue()` and `IsPointInsideArea()` checks.
+  * Enabling/disabling mod requires a *full restart* of the game to take effect.
 
-  * Un-zip `Effectual.dll` to your `/Valheim/BepInEx/plugins/` folder.
+## Notes
 
-### Thunderstore (manual)
-
-  * Go to Settings > Import local mod > Select `Effectual_v1.0.0.zip`.
-  * Click "Import local mod" on the pop-up for information.
-
-## Changelog
-
-### 1.0.0
-
-  * Initial release.
+  * This is the *good enough* release. More features to be added later.
+  * See source at: [GitHub/ComfyMods](https://github.com/redseiko/ComfyMods/tree/main/Effectual).
+  * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)

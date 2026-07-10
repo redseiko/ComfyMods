@@ -1,28 +1,32 @@
-﻿using System.Reflection;
+namespace Effectual;
+
+using System;
+using System.Globalization;
+using System.Reflection;
 
 using BepInEx;
+using BepInEx.Logging;
 
 using HarmonyLib;
 
-using static Effectual.PluginConfig;
+using static PluginConfig;
 
-namespace Effectual {
-  [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
-  public class Effectual : BaseUnityPlugin {
-    public const string PluginGuid = "redseiko.valheim.effectual";
-    public const string PluginName = "Effectual";
-    public const string PluginVersion = "1.0.0";
+[BepInPlugin(PluginGuid, PluginName, PluginVersion)]
+public sealed class Effectual : BaseUnityPlugin {
+  public const string PluginGuid = "redseiko.valheim.effectual";
+  public const string PluginName = "Effectual";
+  public const string PluginVersion = "1.1.0";
 
-    Harmony _harmony;
+  static ManualLogSource _logger;
 
-    public void Awake() {
-      BindConfig(Config);
+  void Awake() {
+    _logger = Logger;
+    BindConfig(Config);
 
-      _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
-    }
+    Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
+  }
 
-    public void OnDestroy() {
-      _harmony?.UnpatchSelf();
-    }
+  public static void LogInfo(object obj) {
+    _logger.LogInfo($"[{DateTime.Now.ToString(DateTimeFormatInfo.InvariantInfo)}] {obj}");
   }
 }
