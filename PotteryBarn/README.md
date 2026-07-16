@@ -15,7 +15,7 @@
 
 ### Changing the ArmorStand pose
 
-  * The new ArmorStands have 15 different poses available!
+  * The ArmorStands have 15 different poses available!
   * There is a `Change Pose` switch at the base of the stand.
 
 ### Notes
@@ -26,4 +26,4 @@
 
 ### Dependencies
 
-  * [Jotunn-v2.26.1](https://valheim.thunderstore.io/package/ValheimModding/Jotunn/)
+  * [Jotunn-v2.29.2](https://valheim.thunderstore.io/package/ValheimModding/Jotunn/)

@@ -1,4 +1,4 @@
-﻿namespace PotteryBarn;
+namespace PotteryBarn;
 
 using static PieceConstants;
 
@@ -12,10 +12,11 @@ public static class VanillaShop {
 
   public static readonly PotteryPieceList BuildingPieces =
       new PotteryPieceList()
+          // A
           .AddPiece(
               "Ashlands_floor_large",
               Workstation.Stonecutter,
-              [ (Item.Grausten, 32) ])
+              [ (Item.Grausten, 50) ])
           .AddPiece(
               "Ashlands_StairsBroad",
               Workstation.Stonecutter,
@@ -24,23 +25,24 @@ public static class VanillaShop {
               "ashwood_arch_top",
               Workstation.Workbench,
               [ (Item.Blackwood, 2) ])
+          // B
           .AddPiece(
               "blackmarble_2x2_enforced",
               Workstation.BlackForge,
               [ (Item.BlackMarble, 8),
-                (Item.Copper, 4) ])
+                (Item.Copper, 2) ])
           .AddPiece(
               "blackmarble_base_2",
               Workstation.Stonecutter,
-              [ (Item.BlackMarble, 10) ])
+              [ (Item.BlackMarble, 8) ])
           .AddPiece(
               "blackmarble_column_3",
               Workstation.Stonecutter,
-              [ (Item.BlackMarble, 24) ])
+              [ (Item.BlackMarble, 16) ])
           .AddPiece(
               "blackmarble_floor_large",
               Workstation.Stonecutter,
-              [ (Item.BlackMarble, 80) ])
+              [ (Item.BlackMarble, 50) ])
           .AddPiece(
               "blackmarble_head_big01",
               Workstation.BlackForge,
@@ -52,11 +54,11 @@ public static class VanillaShop {
           .AddPiece(
               "blackmarble_head01",
               Workstation.BlackForge,
-              [ (Item.Copper, 4) ])
+              [ (Item.Copper, 2) ])
           .AddPiece(
               "blackmarble_head02",
               Workstation.BlackForge,
-              [ (Item.Copper, 4) ] )
+              [ (Item.Copper, 2) ] )
           .AddPiece(
               "blackmarble_out_2",
               Workstation.Stonecutter,
@@ -77,6 +79,7 @@ public static class VanillaShop {
               "blackmarble_tile_wall_2x4",
               Workstation.Stonecutter,
               [ (Item.BlackMarble, 8) ])
+          // D
           .AddPiece(
               "dvergrprops_banner",
               Workstation.Workbench,
@@ -111,17 +114,19 @@ public static class VanillaShop {
           .AddPiece(
               "dvergrprops_wood_wall",
               Workstation.BlackForge,
-              [ (Item.YggdrasilWood, 32),
-                (Item.Copper, 16) ])
+              [ (Item.YggdrasilWood, 16),
+                (Item.Copper, 8) ])
           .AddPiece(
               "dvergrtown_stair_corner_wood_left",
               Workstation.BlackForge,
-              [ (Item.YggdrasilWood, 6),
-                (Item.Copper, 3) ])
+              [ (Item.YggdrasilWood, 5),
+                (Item.Copper, 2) ])
+          // M
           .AddPiece(
               "metalbar_1x2",
               Workstation.Stonecutter,
-              [ (Item.Copper, 8) ])
+              [ (Item.Copper, 4) ])
+          // P
           .AddPiece(
               "piece_dvergr_pole",
               Workstation.BlackForge,
@@ -130,17 +135,18 @@ public static class VanillaShop {
           .AddPiece(
               "piece_dvergr_wood_door",
               Workstation.BlackForge,
-              [ (Item.YggdrasilWood, 12),
-                (Item.Copper, 12) ])
+              [ (Item.YggdrasilWood, 8),
+                (Item.Copper, 8) ])
           .AddPiece(
               "piece_dvergr_wood_wall",
               Workstation.BlackForge,
               [ (Item.YggdrasilWood, 10),
                 (Item.Copper, 5) ])
+          // R
           .AddPiece(
               "root07",
               Workstation.None,
-              [ (Item.ElderBark, 2) ])
+              [ (Item.ElderBark, 1) ])
           .AddPiece(
               "root08",
               Workstation.None,

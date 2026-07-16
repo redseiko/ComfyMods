@@ -1,5 +1,13 @@
 ## Changelog
 
+### 1.21.1
+
+  * Updated for the `v0.221.12` patch.
+  * Migrated to SDK-style project.
+  * Updated Jotunn dependency to `v2.29.2`.
+  * Fixed a bug with vanilla pieces *not placed by PotteryBarn* not having their resources set correcty.
+  * `BuilderShop` and `CreatorShop` now merged into a single `ComfyCreative` category, many recipes are changed.
+
 ### 1.20.0
 
   * Updated for the `v0.221.4` patch.

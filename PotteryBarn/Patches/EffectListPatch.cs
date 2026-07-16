@@ -1,4 +1,4 @@
-﻿namespace PotteryBarn;
+namespace PotteryBarn;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -19,7 +19,7 @@ static class EffectListPatch {
             new CodeMatch(
                 OpCodes.Ldfld,
                 AccessTools.Field(typeof(EffectList.EffectData), nameof(EffectList.EffectData.m_enabled))))
-        .ThrowIfInvalid($"Could not patch EffectList.Create()! (m_enabled)")
+        .ThrowIfInvalid($"Could not patch EffectList.Create()! (effect-data-enabled)")
         .InsertAndAdvance(
             new CodeInstruction(OpCodes.Ldloc_2),
             new CodeInstruction(

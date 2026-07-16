@@ -1,4 +1,4 @@
-﻿namespace PotteryBarn;
+namespace PotteryBarn;
 
 using System;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ static class PlayerPatch {
                         [typeof(Type)])
                     .MakeGenericMethod(typeof(GameObject))),
             new CodeMatch(OpCodes.Stfld, AccessTools.Field(typeof(Player), nameof(Player.m_placementGhost))))
-        .ThrowIfInvalid("Could not patch Player.SetupPlacementGhost()! (m_placementGhost)")
+        .ThrowIfInvalid("Could not patch Player.SetupPlacementGhost()! (placement-ghost)")
         .SetInstructionAndAdvance(
             new CodeInstruction(
                 OpCodes.Call,

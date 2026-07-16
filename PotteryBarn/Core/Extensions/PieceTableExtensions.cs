@@ -1,4 +1,4 @@
-﻿namespace PotteryBarn;
+namespace PotteryBarn;
 
 public static class PieceTableExtensions {
   public static PieceTable AddPiece(this PieceTable pieceTable, Piece piece) {

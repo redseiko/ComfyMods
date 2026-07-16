@@ -1,4 +1,4 @@
-﻿namespace PotteryBarn;
+namespace PotteryBarn;
 
 public static class PieceRequirementExtensions {
   public static Piece.Requirement SetAmount(this Piece.Requirement requirement, int amount) {

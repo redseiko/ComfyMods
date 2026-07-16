@@ -1,4 +1,4 @@
-﻿namespace PotteryBarn;
+namespace PotteryBarn;
 
 using UnityEngine;
 
@@ -34,6 +34,7 @@ public static class PlacementGhostUtils {
       humanoid.m_randomArmor = [];
       humanoid.m_randomShield = [];
       humanoid.m_randomSets = [];
+      humanoid.m_randomItems = [];
     }
   }
 }

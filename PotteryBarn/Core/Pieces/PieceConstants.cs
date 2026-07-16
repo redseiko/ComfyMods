@@ -1,10 +1,11 @@
-﻿namespace PotteryBarn;
+namespace PotteryBarn;
 
 public static class PieceConstants {
   public static class Item {
     public const string AsksvinCarrionNeck = "AsksvinCarrionNeck";
     public const string AsksvinCarrionRibcage = "AsksvinCarrionRibcage";
     public const string AsksvinCarrionSkull = "AsksvinCarrionSkull";
+    public const string Barley = "Barley";
     public const string BellFragment = "BellFragment";
     public const string BlackMarble = "BlackMarble";
     public const string Blackwood = "Blackwood";
@@ -41,6 +42,7 @@ public static class PieceConstants {
     public const string SurtlingCore = "SurtlingCore";
     public const string Tar = "Tar";
     public const string TrophySeeker = "TrophySeeker";
+    public const string TrophySkeleton = "TrophySkeleton";
     public const string Wisp = "Wisp";
     public const string WolfClaw = "WolfClaw";
     public const string WolfPelt = "WolfPelt";

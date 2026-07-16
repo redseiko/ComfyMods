@@ -1,4 +1,4 @@
-﻿namespace PotteryBarn;
+namespace PotteryBarn;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +20,7 @@ public static class PotteryManager {
   public static Piece.PieceCategory BuildingCategory;
   public static Piece.PieceCategory FurnitureCategory;
   public static Piece.PieceCategory MiscCategory;
-
-  public static Piece.PieceCategory CreatorShopCategory;
-  public static Piece.PieceCategory BuilderShopCategory;
+  public static Piece.PieceCategory ComfyCreativeCategory;
 
   public static readonly Quaternion PrefabIconRenderRotation = Quaternion.Euler(0f, -37.5f, 0f);
 
@@ -44,9 +42,7 @@ public static class PotteryManager {
     BuildingCategory = Piece.PieceCategory.BuildingWorkbench;
     FurnitureCategory = Piece.PieceCategory.Furniture;
     MiscCategory = Piece.PieceCategory.Misc;
-
-    CreatorShopCategory = pieceManager.AddPieceCategory("CreatorShop");
-    BuilderShopCategory = pieceManager.AddPieceCategory("BuilderShop");
+    ComfyCreativeCategory = pieceManager.AddPieceCategory("ComfyCreative");
   }
 
   public static void AddHammerPieces(PieceTable hammerPieceTable) {  
@@ -74,14 +70,12 @@ public static class PotteryManager {
     AddPotteryPieces(hammerPieceTable, BuildingCategory, VanillaShop.BuildingPieces, VanillaPieces);
     AddPotteryPieces(hammerPieceTable, FurnitureCategory, VanillaShop.FurniturePieces, VanillaPieces);
     AddPotteryPieces(hammerPieceTable, MiscCategory, VanillaShop.MiscPieces, VanillaPieces);
-
-    AddPotteryPieces(hammerPieceTable, CreatorShopCategory, CreatorShop.HammerPieces, ShopPieces);
-    AddPotteryPieces(hammerPieceTable, BuilderShopCategory, BuilderShop.HammerPieces, ShopPieces);
+    AddPotteryPieces(hammerPieceTable, ComfyCreativeCategory, CreativeShop.HammerPieces, ShopPieces);
   }
 
   public static void AddCultivatorPieces(PieceTable cultivatorPieceTable) {
     AddPotteryPieces(cultivatorPieceTable, MiscCategory, VanillaShop.CultivatorPieces, VanillaPieces);
-    AddPotteryPieces(cultivatorPieceTable, CreatorShopCategory, CreatorShop.CultivatorPieces, ShopPieces);
+    AddPotteryPieces(cultivatorPieceTable, ComfyCreativeCategory, CreativeShop.CultivatorPieces, ShopPieces);
   }
 
   public static void AddPotteryPieces(
@@ -186,28 +180,12 @@ public static class PotteryManager {
         .Replace("  ", " ");
   }
 
-  public static Piece.Requirement[] CreateRequirements(Dictionary<string, int> data) {
-    Piece.Requirement[] requirements = new Piece.Requirement[data.Count];
-    for (int index = 0; index < data.Count; index++) {
-      KeyValuePair<string, int> item = data.ElementAt(index);
-
-      Piece.Requirement req = new() {
-        m_resItem = PrefabManager.Cache.GetPrefab<GameObject>(item.Key).GetComponent<ItemDrop>(),
-        m_amount = item.Value
-      };
-
-      requirements[index] = req;
-    }
-
-    return requirements;
-  }
-
   public static bool IsShopPiece(Piece piece) {
-    return ShopPieces.ContainsKey(piece.m_description);
+    return ShopPieces.ContainsKey(Utils.GetPrefabName(piece.name));
   }
 
   public static bool IsVanillaPiece(Piece piece) {
-    return VanillaPieces.ContainsKey(piece.m_description);
+    return VanillaPieces.ContainsKey(Utils.GetPrefabName(piece.name));
   }
 
   public static Sprite LoadOrRenderIcon(GameObject prefab, Quaternion renderRotation) {
@@ -240,7 +218,7 @@ public static class PotteryManager {
     if (IsPlacingPiece) {
       piece.SetIsPlacedByPotteryBarn(true);
     } else if (!piece.IsPlacedByPotteryBarn()) {
-      if (VanillaPieceResources.TryGetValue(piece.name, out Piece.Requirement[] resources)) {
+      if (VanillaPieceResources.TryGetValue(Utils.GetPrefabName(piece.name), out Piece.Requirement[] resources)) {
         piece.m_resources = resources;
       } else {
         piece.m_resources = [];
@@ -268,11 +246,11 @@ public static class PotteryManager {
     }
   }
 
-  public static int IsPlacedByPotteryBarnHashCode = "IsPlacedByPotteryBarn".GetStableHashCode();
+  public const int IsPlacedByPotteryBarnHash = -868975970;  // IsPlacedByPotteryBarn
 
   public static void SetIsPlacedByPotteryBarn(this Piece piece, bool isPlacedByPotteryBarn) {
     if (piece.m_nview && piece.m_nview.IsValid()) {
-      piece.m_nview.m_zdo.Set(IsPlacedByPotteryBarnHashCode, true);
+      piece.m_nview.m_zdo.Set(IsPlacedByPotteryBarnHash, true);
     }
   }
 
@@ -280,6 +258,6 @@ public static class PotteryManager {
     return
         piece.m_nview
         && piece.m_nview.IsValid()
-        && piece.m_nview.m_zdo.GetBool(IsPlacedByPotteryBarnHashCode, false);
+        && piece.m_nview.m_zdo.GetBool(IsPlacedByPotteryBarnHash, false);
   }
 }
