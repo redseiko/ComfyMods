@@ -2,7 +2,7 @@
 
 ### 1.6.0
 
-  * Fixed for the `v0.221.13` PTB patch.
+  * Fixed for the `v1.0.7` patch.
   * Migrated to SDK-style project.
   * Converted `ZDOMan.HandleDestroyedZDO()` prefix-patch to a transpiler-patch.
   * Code clean-up and refactoring.

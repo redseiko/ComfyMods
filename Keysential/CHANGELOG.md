@@ -2,7 +2,7 @@
 
 ### 1.12.0
 
-  * Fixed for the `v0.221.13` PTB patch.
+  * Fixed for the `v1.0.7` patch.
   * Migrated to SDK-style project.
 
 ### 1.11.0

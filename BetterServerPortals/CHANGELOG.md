@@ -1,8 +1,8 @@
-﻿## Changelog
+## Changelog
 
 ### 1.9.0
 
-  * Fixed for the `v0.221.13` PTB patch.
+  * Fixed for the `v1.0.7` PTB patch.
 
 ### 1.8.0
 
