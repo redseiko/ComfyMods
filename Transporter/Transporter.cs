@@ -1,4 +1,4 @@
-﻿namespace Transporter;
+namespace Transporter;
 
 using System;
 using System.Globalization;
@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class Transporter : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.transporter";
   public const string PluginName = "Transporter";
-  public const string PluginVersion = "1.5.0";
+  public const string PluginVersion = "1.6.0";
 
   static ManualLogSource _logger;
 
