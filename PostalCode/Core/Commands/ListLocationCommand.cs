@@ -1,4 +1,4 @@
-﻿namespace PostalCode;
+namespace PostalCode;
 
 using System.Collections.Generic;
 
@@ -23,11 +23,11 @@ public static class ListLocationCommand {
       return false;
     }
 
-    ZoneSystem zoneSystem = ZoneSystem.m_instance;
+    ZoneSystem zoneSystem = ZoneSystem.s_instance;
     List<string> positions = [];
 
     foreach (ZoneSystem.LocationInstance locationInstance in zoneSystem.m_locationInstances.Values) {
-      if (locationInstance.m_location.m_prefab.Name == prefabName) {
+      if (locationInstance.m_location.m_prefabName == prefabName) {
         positions.Add(locationInstance.m_position.ToString("F0"));
       }
     }

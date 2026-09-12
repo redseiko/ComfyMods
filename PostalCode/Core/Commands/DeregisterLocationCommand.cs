@@ -1,4 +1,4 @@
-﻿namespace PostalCode;
+namespace PostalCode;
 
 using ComfyLib;
 
@@ -23,8 +23,8 @@ public static class DeregisterLocationCommand {
       return false;
     }
 
-    ZoneSystem zoneSystem = ZoneSystem.m_instance;
-    Vector2i sector = ZoneSystem.GetZone(position);
+    ZoneSystem zoneSystem = ZoneSystem.s_instance;
+    Vector2s sector = ZoneSystem.GetZone(position);
 
     if (zoneSystem.m_locationInstances.TryGetValue(sector, out ZoneSystem.LocationInstance instance)) {
       PostalCode.LogInfo(

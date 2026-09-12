@@ -1,4 +1,4 @@
-﻿namespace PostalCode;
+namespace PostalCode;
 
 using System;
 using System.Globalization;
@@ -15,7 +15,7 @@ using HarmonyLib;
 public sealed class PostalCode : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.postalcode";
   public const string PluginName = "PostalCode";
-  public const string PluginVersion = "1.1.0";
+  public const string PluginVersion = "1.2.0";
 
   static ManualLogSource _logger;
 

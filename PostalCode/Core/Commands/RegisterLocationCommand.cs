@@ -1,4 +1,4 @@
-﻿namespace PostalCode;
+namespace PostalCode;
 
 using ComfyLib;
 
@@ -23,7 +23,7 @@ public static class RegisterLocationCommand {
       return false;
     }
 
-    ZoneSystem zoneSystem = ZoneSystem.m_instance;
+    ZoneSystem zoneSystem = ZoneSystem.s_instance;
 
     if (!zoneSystem.m_locationsByHash.TryGetValue(
             prefabName.GetStableHashCode(), out ZoneSystem.ZoneLocation zoneLocation)) {
@@ -41,7 +41,7 @@ public static class RegisterLocationCommand {
       return false;
     }
 
-    Vector2i sector = ZoneSystem.GetZone(position);
+    Vector2s sector = ZoneSystem.GetZone(position);
 
     if (zoneSystem.m_locationInstances.TryGetValue(sector, out ZoneSystem.LocationInstance instance)) {
       PostalCode.LogInfo(
@@ -49,11 +49,12 @@ public static class RegisterLocationCommand {
               + $"sector: {sector:F0}, position: {position:F0}, generated: {instance.m_placed}.");
     }
 
-    zoneSystem.m_locationInstances[sector] = new() {
-      m_location = zoneLocation,
-      m_position = position,
-      m_placed = generated,
-    };
+    zoneSystem.m_locationInstances[sector] =
+        new ZoneSystem.LocationInstance() {
+          m_location = zoneLocation,
+          m_position = position,
+          m_placed = generated,
+        };
 
     PostalCode.LogInfo(
         $"Registered location {prefabName} at sector: {sector}, position: {position}, generated: {generated}.");

@@ -1,9 +1,11 @@
-﻿namespace ComfyLib;
+namespace ComfyLib;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+
+using UnityEngine;
 
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class ComfyCommand : Attribute {
@@ -25,7 +27,9 @@ public static class ComfyCommandUtils {
   }
 
   static void UpdateCommandLists() {
-    foreach (Terminal terminal in UnityEngine.Object.FindObjectsOfType<Terminal>(includeInactive: true)) {
+    foreach (
+        Terminal terminal in
+            UnityEngine.Object.FindObjectsByType<Terminal>(FindObjectsInactive.Include, FindObjectsSortMode.None)) {
       terminal.updateCommandList();
     }
   }

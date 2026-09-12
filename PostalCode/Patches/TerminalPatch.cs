@@ -1,4 +1,4 @@
-﻿namespace PostalCode;
+namespace PostalCode;
 
 using ComfyLib;
 
