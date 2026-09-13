@@ -1,4 +1,4 @@
-﻿namespace BetterZeeRouter;
+namespace BetterZeeRouter;
 
 using System;
 using System.IO;

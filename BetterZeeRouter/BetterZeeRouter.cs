@@ -1,4 +1,4 @@
-﻿namespace BetterZeeRouter;
+namespace BetterZeeRouter;
 
 using System;
 using System.Globalization;
@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class BetterZeeRouter : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.betterzeerouter";
   public const string PluginName = "BetterZeeRouter";
-  public const string PluginVersion = "1.10.0";
+  public const string PluginVersion = "1.11.0";
 
   static ManualLogSource _logger;
 

@@ -1,4 +1,4 @@
-﻿namespace BetterZeeRouter;
+namespace BetterZeeRouter;
 
 public sealed class DamageTextHandler : RpcMethodHandler {
   public static void Register() {

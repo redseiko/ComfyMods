@@ -1,4 +1,4 @@
-﻿namespace BetterZeeRouter;
+namespace BetterZeeRouter;
 
 public static class ZPackageExtensions {
   public static void ReadPackageTo(this ZPackage sourcePackage, ref ZPackage targetPackage) {

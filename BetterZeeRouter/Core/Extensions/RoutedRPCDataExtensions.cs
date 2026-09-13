@@ -1,4 +1,4 @@
-﻿namespace BetterZeeRouter;
+namespace BetterZeeRouter;
 
 public static class RoutedRPCDataExtensions {
   public static void DeserializeFrom(this ZRoutedRpc.RoutedRPCData routedRpcData, ref ZPackage sourcePackage) {
