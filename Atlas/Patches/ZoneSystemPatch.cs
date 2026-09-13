@@ -1,4 +1,4 @@
-﻿namespace Atlas;
+namespace Atlas;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -37,6 +37,14 @@ static class ZoneSystemPatch {
         .InstructionEnumeration();
   }
 
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(ZoneSystem.Load))]
+  static void LoadPostfix(ZoneSystem __instance) {
+    if (!__instance.m_locationsGenerated && IgnoreLocationVersion.Value) {
+      __instance.m_locationsGenerated = true;
+    }
+  }
+
   [HarmonyTranspiler]
   [HarmonyPatch(nameof(ZoneSystem.LoadOld))]
   static IEnumerable<CodeInstruction> LoadOldTranspiler(IEnumerable<CodeInstruction> instructions) {
@@ -53,6 +61,14 @@ static class ZoneSystemPatch {
             new CodeInstruction(
                 OpCodes.Call, AccessTools.Method(typeof(ZoneSystemPatch), nameof(CheckLocationVersionDelegate))))
         .InstructionEnumeration();
+  }
+
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(ZoneSystem.LoadOld))]
+  static void LoadOldPostfix(ZoneSystem __instance) {
+    if (!__instance.m_locationsGenerated && IgnoreLocationVersion.Value) {
+      __instance.LocationsGenerated = true;
+    }
   }
 
   static int CheckLocationVersionDelegate(int locationVersion, ZoneSystem zoneSystem) {

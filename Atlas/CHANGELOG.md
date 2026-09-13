@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.18.0
+
+  * Fixed for the `v1.0.12` patch.
+  * Added new `ZoneSystem.Load()` and `ZoneSystem.LoadOld()` postfix-patches to fix `ignoreLocationVersion` feature.
+
 ### 1.17.0
 
   * Updated for the `v1.0.7` patch.
