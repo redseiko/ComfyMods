@@ -1,4 +1,8 @@
-﻿## Changelog
+## Changelog
+
+### 1.10.0
+
+  * Fixed for the `v1.0.12` patch.
 
 ### 1.9.0
 

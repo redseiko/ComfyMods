@@ -1,3 +1,3 @@
-﻿# CriticalDice
+# CriticalDice
 
 *Roll for initiative.*

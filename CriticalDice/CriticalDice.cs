@@ -1,4 +1,4 @@
-﻿namespace CriticalDice;
+namespace CriticalDice;
 
 using System.Reflection;
 
@@ -13,7 +13,7 @@ using HarmonyLib;
 public sealed class CriticalDice : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.criticaldice";
   public const string PluginName = "CriticalDice";
-  public const string PluginVersion = "1.9.0";
+  public const string PluginVersion = "1.10.0";
 
   void Awake() {
     Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGUID);

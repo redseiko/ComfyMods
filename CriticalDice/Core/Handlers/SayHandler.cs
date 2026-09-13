@@ -1,4 +1,4 @@
-﻿namespace CriticalDice;
+namespace CriticalDice;
 
 using System;
 using System.Collections;
