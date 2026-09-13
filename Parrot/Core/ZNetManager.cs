@@ -1,4 +1,4 @@
-﻿namespace Parrot;
+namespace Parrot;
 
 using Splatform;
 
@@ -37,7 +37,8 @@ public static class ZNetManager {
     package.Write(ServerCharacterID);               // m_characterID
     package.Write(ServerPlatformUserId.ToString()); // m_userInfo.m_id
     package.Write(ServerName);                      // m_userInfo.m_displayName
-    package.Write(ServerName);                      // m_serverAssignedDisplayName
+    package.Write(ServerName);                      // m_userInfo.m_serverAssignedDisplayName
+    package.Write(string.Empty);                    // m_userInfo.m_playfabId
     package.Write(false);                           // m_publicPosition
   }
 }

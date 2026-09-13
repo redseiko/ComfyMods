@@ -1,4 +1,4 @@
-﻿namespace Parrot;
+namespace Parrot;
 
 using BepInEx.Configuration;
 

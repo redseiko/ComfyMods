@@ -1,4 +1,4 @@
-﻿namespace Parrot;
+namespace Parrot;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -45,8 +45,8 @@ static class ZNetPatch {
   }
 
   [HarmonyTranspiler]
-  [HarmonyPatch(nameof(ZNet.SendPlayerList))]
-  static IEnumerable<CodeInstruction> SendPlayerListTranspiler(
+  [HarmonyPatch(nameof(ZNet.WritePlayerInfo))]
+  static IEnumerable<CodeInstruction> WritePlayerInfoTranspiler(
       IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
     return new CodeMatcher(instructions, generator)
         .Start()
@@ -55,7 +55,7 @@ static class ZNetPatch {
             new CodeMatch(OpCodes.Callvirt),
             new CodeMatch(
                 OpCodes.Callvirt, AccessTools.Method(typeof(ZPackage), nameof(ZPackage.Write), [typeof(int)])))
-        .ThrowIfInvalid($"Could not patch ZNet.SendPlayerList()! (write-players-count)")
+        .ThrowIfInvalid($"Could not patch ZNet.WritePlayerInfo()! (write-players-count)")
         .Advance(offset: 3)
         .InsertAndAdvance(
             new CodeInstruction(OpCodes.Ldarg_0),

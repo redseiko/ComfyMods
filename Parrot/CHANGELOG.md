@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.6.0
+
+  * Fixed for the `v1.0.12` patch.
+  * Migrated to SDK-style project.
+  * Updated mod-icon.
+
 ### 1.5.1
 
   * Hot-fix to handle missed case that `Chat.SendPing()` remains on original pre-patch logic.

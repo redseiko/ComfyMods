@@ -1,4 +1,4 @@
-﻿namespace Parrot;
+namespace Parrot;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
