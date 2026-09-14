@@ -1,4 +1,4 @@
-﻿namespace Chatter;
+namespace Chatter;
 
 using System;
 using System.Collections.Generic;

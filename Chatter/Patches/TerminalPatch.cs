@@ -1,4 +1,4 @@
-﻿namespace Chatter;
+namespace Chatter;
 
 using System;
 using System.Reflection;
@@ -22,9 +22,21 @@ static class TerminalPatch {
     }
   }
 
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(Terminal.InitTerminal))]
+  static void InitTerminalPrefix(ref bool __state) {
+    __state = Terminal.m_terminalInitialized;
+  }
+
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Terminal.InitTerminal))]
-  static void InitTerminalPostfix() {
+  static void InitTerminalPostfix(bool __state) {
+    if (!__state) {
+      PatchChatCommands();
+    }
+  }
+
+  static void PatchChatCommands() {
     if (TryGetDelegateMethod(Terminal.commands["say"], out MethodInfo sayMethod)) {
       Chatter.HarmonyInstance.Patch(
           sayMethod,

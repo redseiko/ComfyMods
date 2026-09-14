@@ -1,5 +1,11 @@
 ## Changelog
 
+### 2.13.0
+
+  * Fixed for the `v1.0.12` patch.
+  * Migrated to SDK-style project.
+  * Minor code clean-up.
+
 ### 2.12.0
 
   * Fixed for the `v2.221.4` patch.

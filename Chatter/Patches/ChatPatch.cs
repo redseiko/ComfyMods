@@ -1,4 +1,4 @@
-﻿namespace Chatter;
+namespace Chatter;
 
 using System;
 using System.Collections;
@@ -96,7 +96,7 @@ static class ChatPatch {
 
   [HarmonyTranspiler]
   [HarmonyPatch(nameof(Chat.Update))]
-  static IEnumerable<CodeInstruction> UpdateTranspiler1(IEnumerable<CodeInstruction> instructions) {
+  static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
         .Start()
         .MatchStartForward(
@@ -112,13 +112,7 @@ static class ChatPatch {
             new CodeInstruction(OpCodes.Ldarg_0),
             new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Chat), nameof(Chat.m_hideTimer))),
             new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ChatPatch), nameof(HideChatPanelDelegate))))
-        .InstructionEnumeration();
-  }
 
-  [HarmonyTranspiler]
-  [HarmonyPatch(nameof(Chat.Update))]
-  static IEnumerable<CodeInstruction> UpdateTranspiler2(IEnumerable<CodeInstruction> instructions) {
-    return new CodeMatcher(instructions)
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldarg_0),
@@ -136,13 +130,7 @@ static class ChatPatch {
         .ThrowIfInvalid("Could not patch Chat.Update()! (enable-chat-panel)")
         .InsertAndAdvance(
             new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ChatPatch), nameof(EnableChatPanelDelegate))))
-        .InstructionEnumeration();
-  }
 
-  [HarmonyTranspiler]
-  [HarmonyPatch(nameof(Chat.Update))]
-  static IEnumerable<CodeInstruction> UpdateTranspiler3(IEnumerable<CodeInstruction> instructions) {
-    return new CodeMatcher(instructions)
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldarg_0),
