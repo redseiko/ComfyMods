@@ -1,4 +1,4 @@
-﻿namespace ZoneScouter;
+namespace ZoneScouter;
 
 using System.Collections.Generic;
 
