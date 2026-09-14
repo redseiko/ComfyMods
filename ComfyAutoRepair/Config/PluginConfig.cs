@@ -1,4 +1,4 @@
-﻿namespace ComfyAutoRepair;
+namespace ComfyAutoRepair;
 
 using BepInEx.Configuration;
 

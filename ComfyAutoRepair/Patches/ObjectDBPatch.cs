@@ -1,4 +1,4 @@
-﻿namespace ComfyAutoRepair;
+namespace ComfyAutoRepair;
 
 using HarmonyLib;
 
@@ -14,7 +14,7 @@ static class ObjectDBPatch {
 
   [HarmonyPrefix]
   [HarmonyPatch(nameof(ObjectDB.GetRecipe))]
-  static bool GetRecipePrefix(InventoryGui __instance, ItemDrop.ItemData item, ref Recipe __result) {
+  static bool GetRecipePrefix(ItemDrop.ItemData item, ref Recipe __result) {
     if (IsModEnabled.Value) {
       RecipeManager.TryGetRecipe(item, out __result);
       return false;

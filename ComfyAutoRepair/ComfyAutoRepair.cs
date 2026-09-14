@@ -1,4 +1,4 @@
-﻿namespace ComfyAutoRepair;
+namespace ComfyAutoRepair;
 
 using System;
 using System.Globalization;
@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class ComfyAutoRepair : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.comfyautorepair";
   public const string PluginName = "ComfyAutoRepair";
-  public const string PluginVersion = "1.0.0";
+  public const string PluginVersion = "1.1.0";
 
   static ManualLogSource _logger;
 
