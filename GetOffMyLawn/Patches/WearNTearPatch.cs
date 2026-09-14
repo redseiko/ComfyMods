@@ -1,4 +1,4 @@
-﻿namespace GetOffMyLawn;
+namespace GetOffMyLawn;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;

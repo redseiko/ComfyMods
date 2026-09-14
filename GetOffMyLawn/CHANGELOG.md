@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.13.0
+
+  * Fixed for the `v1.0.12` patch.
+  * Migrated to SDK-style project.
+
 ### 1.12.0
 
   * Added new feature to show an optional `StatusEffect` indicator with `TargetPieceHealth` value.

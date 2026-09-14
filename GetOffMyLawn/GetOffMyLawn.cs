@@ -1,4 +1,4 @@
-﻿namespace GetOffMyLawn;
+namespace GetOffMyLawn;
 
 using System;
 using System.Globalization;
@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class GetOffMyLawn : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.getoffmylawn";
   public const string PluginName = "GetOffMyLawn";
-  public const string PluginVersion = "1.12.0";
+  public const string PluginVersion = "1.13.0";
 
   static ManualLogSource _logger;
 

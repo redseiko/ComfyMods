@@ -1,4 +1,4 @@
-﻿namespace GetOffMyLawn;
+namespace GetOffMyLawn;
 
 public static class LawnManager {
   public static void ToggleStatusEffectIndicator(bool toggleOn) {
