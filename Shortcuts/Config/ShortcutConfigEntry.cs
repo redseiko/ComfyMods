@@ -1,4 +1,4 @@
-﻿namespace Shortcuts;
+namespace Shortcuts;
 
 using System;
 using System.Linq;
@@ -54,11 +54,13 @@ public sealed class ShortcutConfigEntry {
       return false;
     }
 
-    if (_modifierKeyCount > 0) {
-      for (int i = 0; i < _modifierKeyCount; i++) {
-        if (!_modifierKeyControls[i].isPressed) {
-          return false;
-        }
+    if (_modifierKeyCount <= 0) {
+      return true;
+    }
+
+    for (int i = 0; i < _modifierKeyCount; i++) {
+      if (!_modifierKeyControls[i].isPressed) {
+        return false;
       }
     }
 

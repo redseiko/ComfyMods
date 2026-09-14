@@ -1,4 +1,4 @@
-﻿namespace Shortcuts;
+namespace Shortcuts;
 
 using System;
 using System.Reflection.Emit;
@@ -33,7 +33,9 @@ public static class CodeMatcherExtensions {
   public static CodeMatcher MatchGetKeyDown(this CodeMatcher matcher, int key) {
     return matcher
         .MatchStartForward(
-            key > 127 ? new CodeMatch(OpCodes.Ldc_I4, key) : new CodeMatch(OpCodes.Ldc_I4_S, Convert.ToSByte(key)),
+            key > 127
+                ? new CodeMatch(OpCodes.Ldc_I4, key)
+                : new CodeMatch(OpCodes.Ldc_I4_S, Convert.ToSByte(key)),
             new CodeMatch(OpCodes.Ldc_I4_1),
             ZInputGetKeyDownMatch)
         .ThrowIfInvalid($"Could not patch ZInput.GetKeyDown() for Key: {key}!")
@@ -43,7 +45,9 @@ public static class CodeMatcherExtensions {
   public static CodeMatcher MatchGetKey(this CodeMatcher matcher, int key) {
     return matcher
         .MatchStartForward(
-            key > 127 ? new CodeMatch(OpCodes.Ldc_I4, key) : new CodeMatch(OpCodes.Ldc_I4_S, Convert.ToSByte(key)),
+            key > 127
+                ? new CodeMatch(OpCodes.Ldc_I4, key)
+                : new CodeMatch(OpCodes.Ldc_I4_S, Convert.ToSByte(key)),
             new CodeMatch(OpCodes.Ldc_I4_1),
             ZInputGetKeyMatch)
         .ThrowIfInvalid($"Could not patch ZInput.GetKey() for Key: {key}!")
