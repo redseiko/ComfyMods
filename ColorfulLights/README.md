@@ -21,6 +21,5 @@
 
 ## Notes
 
-  * This is the *good enough* release with more features/options to be added later.
-  * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/ColorfulLights).
+  * See source at: [GitHub/ComfyMods](https://github.com/redseiko/ComfyMods/tree/main/ColorfulLights).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)

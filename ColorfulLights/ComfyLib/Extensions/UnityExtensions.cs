@@ -1,4 +1,4 @@
-﻿namespace ComfyLib;
+namespace ComfyLib;
 
 public static class ColorExtensions {
   public static string GetColorHtmlString(this UnityEngine.Color color) {

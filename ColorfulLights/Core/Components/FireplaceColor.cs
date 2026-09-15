@@ -1,4 +1,4 @@
-﻿namespace ColorfulLights;
+namespace ColorfulLights;
 
 using System.Collections.Generic;
 

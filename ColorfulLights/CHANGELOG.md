@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.13.0
+
+  * Fixed for the `v1.0.12` patch.
+  * Migrated to SDK-style project.
+  * Updated mod icon.
+
 ### 1.12.0
 
   * Fixed for the `v0.220.3` patch.

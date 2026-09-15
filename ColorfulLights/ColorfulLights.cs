@@ -1,4 +1,4 @@
-﻿namespace ColorfulLights;
+namespace ColorfulLights;
 
 using System;
 using System.Globalization;
@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class ColorfulLights : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.colorfullights";
   public const string PluginName = "ColorfulLights";
-  public const string PluginVersion = "1.12.0";
+  public const string PluginVersion = "1.13.0";
 
 
   static ManualLogSource _logger;
