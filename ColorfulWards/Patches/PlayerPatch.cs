@@ -1,4 +1,4 @@
-﻿namespace ColorfulWards;
+namespace ColorfulWards;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;

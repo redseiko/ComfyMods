@@ -1,4 +1,4 @@
-﻿namespace ColorfulWards;
+namespace ColorfulWards;
 
 using System;
 using System.Globalization;
@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class ColorfulWards : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.colorfulwards";
   public const string PluginName = "ColorfulWards";
-  public const string PluginVersion = "1.7.0";
+  public const string PluginVersion = "1.8.0";
 
   static ManualLogSource _logger;
 

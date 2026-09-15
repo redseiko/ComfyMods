@@ -1,4 +1,4 @@
-﻿namespace ColorfulWards;
+namespace ColorfulWards;
 
 using BepInEx.Configuration;
 
