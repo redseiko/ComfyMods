@@ -1,4 +1,4 @@
-﻿namespace ComfyLib;
+namespace ComfyLib;
 
 using System.Collections.Generic;
 
@@ -124,13 +124,6 @@ public static class UIBuilder {
         colorMultiplier = 1f,
         fadeDuration = 0.15f,
       };
-
-  public static Slider CreateSlider(Transform parentTransform) {
-    Slider slider = UnityEngine.Object.Instantiate(InventoryGui.m_instance.m_splitSlider, parentTransform);
-    slider.name = "Slider";
-
-    return slider;
-  }
 
   public static GuiInputField CreateInputField(Transform parentTransform) {
     GuiInputField inputField =

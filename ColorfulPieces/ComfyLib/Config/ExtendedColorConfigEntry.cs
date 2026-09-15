@@ -1,4 +1,4 @@
-﻿namespace ComfyLib;
+namespace ComfyLib;
 
 using System.Collections.Generic;
 using System.Globalization;

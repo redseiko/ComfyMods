@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.21.0
+
+  * Fixed for the `v1.0.12` patch.
+  * Migrated to SDK-style project.
+  * Updated mod icon.
+
 ### 1.20.0
 
   * Fixed a bug with the ColorPicker panel when Saturation is `0`.

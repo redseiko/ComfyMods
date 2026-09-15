@@ -1,4 +1,4 @@
-﻿namespace ColorfulPieces;
+namespace ColorfulPieces;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;

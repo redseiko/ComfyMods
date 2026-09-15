@@ -1,4 +1,4 @@
-﻿namespace ColorfulPieces;
+namespace ColorfulPieces;
 
 using System;
 using System.Globalization;
@@ -17,7 +17,7 @@ using static PluginConfig;
 public sealed class ColorfulPieces : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.colorfulpieces";
   public const string PluginName = "ColorfulPieces";
-  public const string PluginVersion = "1.20.0";
+  public const string PluginVersion = "1.21.0";
 
   static ManualLogSource _logger;
 
