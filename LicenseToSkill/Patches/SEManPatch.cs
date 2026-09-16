@@ -1,4 +1,4 @@
-﻿namespace LicenseToSkill;
+namespace LicenseToSkill;
 
 using HarmonyLib;
 
@@ -7,7 +7,7 @@ using static PluginConfig;
 [HarmonyPatch(typeof(SEMan))]
 static class SEManPatch {
   [HarmonyPostfix]
-  [HarmonyPatch(nameof(SEMan.AddStatusEffect), typeof(int), typeof(bool), typeof(int), typeof(float))]
+  [HarmonyPatch(nameof(SEMan.AddStatusEffect), typeof(int), typeof(bool), typeof(int), typeof(float), typeof(short))]
   static void AddStatusEffectPostfix(SEMan __instance, ref StatusEffect __result) {
     if (IsModEnabled.Value
         && Player.m_localPlayer == __instance.m_character

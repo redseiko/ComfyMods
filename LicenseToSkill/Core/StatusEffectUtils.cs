@@ -1,4 +1,4 @@
-﻿namespace LicenseToSkill;
+namespace LicenseToSkill;
 
 using UnityEngine;
 
