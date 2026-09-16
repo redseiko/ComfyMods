@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.17.0
+
+  * Fixed for the `v1.0.12` patch.
+  * Migrated to SDK-style project.
+
 ### 1.16.0
 
   * Fixed an issue with `pinnacle-remove-all-pins` command not working.

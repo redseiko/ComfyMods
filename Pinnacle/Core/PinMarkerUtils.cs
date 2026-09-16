@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using System.Collections.Generic;
 
@@ -19,20 +19,20 @@ public static class PinMarkerUtils {
   }
 
   public static void SetPinNameFont() {
-    if (Minimap.m_instance) {
+    if (Minimap.s_instance) {
       TMP_FontAsset font = UIResources.GetFontAssetByName(PinFont.Value);
       
-      foreach (TMP_Text label in GetPinNameLabels(Minimap.m_instance)) {
+      foreach (TMP_Text label in GetPinNameLabels(Minimap.s_instance)) {
         label.font = font;
       }
     }
   }
 
   public static void SetPinNameFontSize() {
-    if (Minimap.m_instance) {
+    if (Minimap.s_instance) {
       float fontSize = PinFontSize.Value;
 
-      foreach (TMP_Text label in GetPinNameLabels(Minimap.m_instance)) {
+      foreach (TMP_Text label in GetPinNameLabels(Minimap.s_instance)) {
         label.fontSize = fontSize;
       }
     }

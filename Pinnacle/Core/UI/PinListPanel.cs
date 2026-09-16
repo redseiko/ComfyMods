@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using System;
 using System.Collections.Generic;
@@ -86,15 +86,17 @@ public sealed class PinListPanel {
   }
 
   public void SetTargetPins(string filter) {
-    SetTargetPins(Minimap.m_instance.m_pins.Where(pin => IsPinNameValid(pin, filter)).ToList());
+    SetTargetPins(Minimap.s_instance.m_pins.Where(pin => IsPinNameValid(pin, filter)));
   }
 
-  public void SetTargetPins(List<Minimap.PinData> pins) {
+  public void SetTargetPins(IEnumerable<Minimap.PinData> pins) {
     TargetPins.Clear();
     TargetPins.AddRange(pins.OrderBy(p => p.m_type).ThenBy(p => p.m_name));
 
-    foreach (Minimap.PinData pin in pins.Where(p => Mathf.Approximately(p.m_pos.y, 0f))) {
-      pin.m_pos.y = PinnacleUtils.GetHeight(pin.m_pos);
+    foreach (Minimap.PinData pin in TargetPins) {
+      if (Mathf.Approximately(pin.m_pos.y, 0f)) {
+        pin.m_pos.y = PinnacleUtils.GetHeight(pin.m_pos);
+      }
     }
 
     RefreshPinListRows();

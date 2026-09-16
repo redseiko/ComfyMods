@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using UnityEngine;
 

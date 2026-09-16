@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using ComfyLib;
 
@@ -16,7 +16,7 @@ public static class PinListPanelController {
 
   public static void TogglePanel(bool toggleOn) {
     if (!PinListPanel?.Panel) {
-      PinListPanel = new(Minimap.m_instance.m_largeRoot.transform);
+      PinListPanel = new(Minimap.s_instance.m_largeRoot.transform);
 
       PinListPanel.RectTransform
           .SetAnchorMin(new(0f, 0.5f))

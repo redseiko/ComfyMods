@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using ComfyLib;
 
@@ -12,11 +12,11 @@ public static class RemoveAllPinsCommand {
   }
 
   public static object Run(Terminal.ConsoleEventArgs args) {
-    if (!Minimap.m_instance) {
+    if (!Minimap.s_instance) {
       return false;
     }
 
-    int count = Minimap.m_instance.m_pins.RemoveAll(pin => pin.m_save);
+    int count = Minimap.s_instance.m_pins.RemoveAll(pin => pin.m_save);
     args.Context.AddString($"Removed {count} pins.");
 
     return true;

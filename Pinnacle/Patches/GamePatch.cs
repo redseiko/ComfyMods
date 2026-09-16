@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -27,7 +27,7 @@ static class GamePatch {
   }
 
   static Minimap.MapMode SetMapModeDelegate(Minimap.MapMode mapMode) {
-    if (IsModEnabled.Value && !Game.m_noMap && Minimap.m_instance.m_mode == Minimap.MapMode.Large) {
+    if (IsModEnabled.Value && !Game.m_noMap && Minimap.s_instance.m_mode == Minimap.MapMode.Large) {
       return Minimap.MapMode.Large;
     }
 

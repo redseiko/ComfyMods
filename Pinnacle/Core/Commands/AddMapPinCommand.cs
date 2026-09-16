@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using ComfyLib;
 
@@ -18,7 +18,7 @@ public static class AddMapPinCommand {
   }
 
   public static bool Run(ComfyArgs args) {
-    Minimap minimap = Minimap.m_instance;
+    Minimap minimap = Minimap.s_instance;
     Player player = Player.m_localPlayer;
 
     if (!minimap || !player) {

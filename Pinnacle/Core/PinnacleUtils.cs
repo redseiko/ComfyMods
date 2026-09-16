@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using UnityEngine;
 
@@ -15,12 +15,12 @@ public static class PinnacleUtils {
   }
 
   public static void ToggleVanillaIconPanels(bool toggleOn) {
-    if (!Minimap.m_instance || !Minimap.m_instance.m_largeRoot) {
+    if (!Minimap.s_instance || !Minimap.s_instance.m_largeRoot) {
       return;
     }
 
-    foreach (Transform child in Minimap.m_instance.m_largeRoot.transform) {
-      if (child.name.StartsWith("IconPanel", System.StringComparison.InvariantCulture)) {
+    foreach (Transform child in Minimap.s_instance.m_largeRoot.transform) {
+      if (child.name.StartsWith("IconPanel", System.StringComparison.Ordinal)) {
         child.gameObject.SetActive(toggleOn);
       }
     }
@@ -78,7 +78,7 @@ public static class PinnacleUtils {
     Pinnacle.LogInfo($"Teleporting player from {player.transform.position:F0} to {targetPosition:F0}.");
     player.TeleportTo(targetPosition, player.transform.rotation, distantTeleport: true);
 
-    Minimap.m_instance.SetMapMode(Minimap.MapMode.Small);
+    Minimap.s_instance.SetMapMode(Minimap.MapMode.Small);
   }
 
   public static float GetHeight(Vector3 targetPosition) {

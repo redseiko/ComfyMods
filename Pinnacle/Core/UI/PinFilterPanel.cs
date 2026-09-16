@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using ComfyLib;
 
@@ -35,7 +35,7 @@ public sealed class PinFilterPanel {
   }
 
   void ProcessOnPinIconClick(Minimap.PinType pinType) {
-    Minimap.m_instance.Ref()?.ToggleIconFilter(pinType);
+    Minimap.s_instance.Ref()?.ToggleIconFilter(pinType);
   }
 
   public void SetPanelStyle() {
@@ -48,7 +48,7 @@ public sealed class PinFilterPanel {
       PinIconSelector.IconsByType[pinType]
           .Image()
           .Ref()?
-          .SetColor(Minimap.m_instance.m_visibleIconTypes[(int) pinType] ? Color.white : Color.gray);
+          .SetColor(Minimap.s_instance.m_visibleIconTypes[(int) pinType] ? Color.white : Color.gray);
     }
   }
 

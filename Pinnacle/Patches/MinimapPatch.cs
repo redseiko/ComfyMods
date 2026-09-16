@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -68,7 +68,7 @@ static class MinimapPatch {
   }
 
   static void ProcessMapLeftClickTeleport(Minimap minimap) {
-    Vector3 targetPosition = minimap.ScreenToWorldPoint(ZInput.mousePosition);
+    Vector3 targetPosition = minimap.ScreenToWorldPoint(ZInput.pointerPosition);
 
     Minimap.PinData closestPin =
         minimap.GetClosestPin(targetPosition, minimap.m_removeRadius * minimap.m_largeZoom * 2f, mustBeVisible: true);

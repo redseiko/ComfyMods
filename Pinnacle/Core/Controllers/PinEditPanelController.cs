@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using ComfyLib;
 
@@ -9,7 +9,7 @@ public static class PinEditPanelController {
 
   public static void TogglePanel(Minimap.PinData pinToEdit = null) {
     if (!IsValid()) {
-      PinEditPanel = new(Minimap.m_instance.m_largeRoot.transform);
+      PinEditPanel = new(Minimap.s_instance.m_largeRoot.transform);
 
       PinEditPanel.RectTransform
           .SetAnchorMin(new(0.5f, 0f))

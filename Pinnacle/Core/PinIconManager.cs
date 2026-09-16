@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using System.Text.RegularExpressions;
 
@@ -106,7 +106,7 @@ public static class PinIconManager {
     pinData.m_iconElement.color =
         pinData.m_ownerID == 0L
             ? Color.white
-            : GetIconFadeColor(Minimap.m_instance);
+            : GetIconFadeColor(Minimap.s_instance);
   }
 
   public static Color GetIconFadeColor(Minimap minimap) {
@@ -177,7 +177,7 @@ public static class PinIconManager {
       Match match = IconScaleTagRegex.Match(pinName);
 
       if (match.Success && int.TryParse(match.Groups[1].Value, out int iconScale)) {
-        float iconSize = Mathf.Clamp(iconScale, 50, 200) * 0.01f * GetIconDefaultSize(Minimap.m_instance);
+        float iconSize = Mathf.Clamp(iconScale, 50, 200) * 0.01f * GetIconDefaultSize(Minimap.s_instance);
         pinData.m_uiElement.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, iconSize);
         pinData.m_uiElement.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, iconSize);
 
@@ -190,7 +190,7 @@ public static class PinIconManager {
 
   public static void ResetIconScale(Minimap.PinData pinData) {
     RectTransform uiElement = pinData.m_uiElement;
-    float defaultSize = GetIconDefaultSize(Minimap.m_instance);
+    float defaultSize = GetIconDefaultSize(Minimap.s_instance);
 
     uiElement.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, defaultSize);
     uiElement.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, defaultSize);

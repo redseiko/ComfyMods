@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ public sealed class PinIconSelector {
 
   void CreateIcons(Transform parentTransform) {
     foreach (Minimap.PinType pinType in Enum.GetValues(typeof(Minimap.PinType))) {
-      Sprite sprite = Minimap.m_instance.GetSprite(pinType);
+      Sprite sprite = Minimap.s_instance.GetSprite(pinType);
 
       if (!sprite) {
         continue;
@@ -54,7 +54,7 @@ public sealed class PinIconSelector {
   }
 
   public void UpdateIcons(Minimap.PinType pinType) {
-    string spriteName = Minimap.m_instance.GetSprite(pinType).Ref()?.name;
+    string spriteName = Minimap.s_instance.GetSprite(pinType).Ref()?.name;
 
     foreach (Image icon in Icons.Select(i => i.Image())) {
       icon.SetColor(

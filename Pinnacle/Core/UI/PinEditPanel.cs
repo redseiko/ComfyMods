@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -83,11 +83,11 @@ public sealed class PinEditPanel {
 
   public void SetActive(bool toggle) {
     if (_setActiveCoroutine != null) {
-      Minimap.m_instance.StopCoroutine(_setActiveCoroutine);
+      Minimap.s_instance.StopCoroutine(_setActiveCoroutine);
     }
 
     _setActiveCoroutine =
-        Minimap.m_instance.StartCoroutine(
+        Minimap.s_instance.StartCoroutine(
             LerpCanvasGroupAlpha(
                 CanvasGroup, toggle ? 1f : 0f, PinEditPanelToggleLerpDuration.Value));
   }
@@ -173,7 +173,7 @@ public sealed class PinEditPanel {
 
     if (TargetPin.m_NamePinData == null) {
       TargetPin.m_NamePinData = new(TargetPin);
-      Minimap.m_instance.CreateMapNamePin(TargetPin, Minimap.m_instance.m_pinNameRootLarge);
+      Minimap.s_instance.CreateMapNamePin(TargetPin, Minimap.s_instance.m_pinNameRootLarge);
     }
 
     TargetPin.m_NamePinData.PinNameText.SetText(name);
@@ -182,14 +182,14 @@ public sealed class PinEditPanel {
   }
 
   void OnPinTypeValueChange(Minimap.PinType pinType) {
-    Minimap.m_instance.m_selectedType = pinType;
+    Minimap.s_instance.m_selectedType = pinType;
 
     if (TargetPin == null) {
       return;
     }
 
     TargetPin.m_type = pinType;
-    TargetPin.m_icon = Minimap.m_instance.GetSprite(pinType);
+    TargetPin.m_icon = Minimap.s_instance.GetSprite(pinType);
     TargetPin.m_iconElement.SetSprite(TargetPin.m_icon);
 
     PinIconSelector.UpdateIcons(pinType);
@@ -239,8 +239,8 @@ public sealed class PinEditPanel {
   }
 
   static Vector2 GetMapImagePosition(Vector3 mapPosition) {
-    Minimap.m_instance.WorldToMapPoint(mapPosition, out float mx, out float my);
-    return Minimap.m_instance.MapPointToLocalGuiPos(mx, my, Minimap.m_instance.m_mapImageLarge);
+    Minimap.s_instance.WorldToMapPoint(mapPosition, out float mx, out float my);
+    return Minimap.s_instance.MapPointToLocalGuiPos(mx, my, Minimap.s_instance.m_mapImageLarge);
   }
 
   static GameObject CreatePanel(Transform parentTransform) {

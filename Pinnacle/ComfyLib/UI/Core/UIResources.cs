@@ -1,4 +1,4 @@
-﻿namespace ComfyLib;
+namespace ComfyLib;
 
 using System.Collections.Generic;
 
@@ -19,7 +19,7 @@ public static class UIResources {
   public static string ValheimAveriaSansLibre = "Valheim-AveriaSansLibre";
 
   public static TMP_FontAsset ValheimNorseFontAsset {
-    get => Minimap.m_instance.m_pinNamePrefab.GetComponentInChildren<TextMeshProUGUI>().font;
+    get => Minimap.s_instance.m_pinNamePrefab.GetComponentInChildren<TextMeshProUGUI>().font;
   }
 
   public static TMP_FontAsset ValheimAveriaSansLibreFontAsset {

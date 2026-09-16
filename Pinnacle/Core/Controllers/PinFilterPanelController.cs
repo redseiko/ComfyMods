@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using ComfyLib;
 
@@ -11,7 +11,7 @@ public static class PinFilterPanelController {
 
   public static void TogglePanel(bool toggleOn) {
     if (!IsValid()) {
-      _currentPanel = new(Minimap.m_instance.m_largeRoot.transform);
+      _currentPanel = new(Minimap.s_instance.m_largeRoot.transform);
 
       _currentPanel.RectTransform
           .SetAnchorMin(new(1f, 0.5f))

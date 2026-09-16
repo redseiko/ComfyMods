@@ -1,4 +1,4 @@
-﻿namespace Pinnacle;
+namespace Pinnacle;
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ public static class PinImportExport {
   }
 
   public static void ExportPinsToFile(Terminal.ConsoleEventArgs args, PinFileFormat exportFormat) {
-    if (!Minimap.m_instance) {
+    if (!Minimap.s_instance) {
       return;
     }
 
@@ -23,7 +23,7 @@ public static class PinImportExport {
         string.Format(
             "Pinnacle/{0}.v{1}.{2}",
             args.Length >= 2 ? args[1] : DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
-            Minimap.MAPVERSION,
+            (int) global::Version.c_MapVersion,
             exportFormat switch {
               PinFileFormat.Binary => "pins",
               PinFileFormat.PlainText => "pins.txt",
@@ -33,7 +33,7 @@ public static class PinImportExport {
     Directory.CreateDirectory(Path.GetDirectoryName(filename));
 
     IReadOnlyCollection<Minimap.PinData> pinsToExport =
-        FilterPins(Minimap.m_instance.m_pins, args.Length >= 3 ? args[2] : string.Empty);
+        FilterPins(Minimap.s_instance.m_pins, args.Length >= 3 ? args[2] : string.Empty);
 
     Pinnacle.LogInfo($"Exporting {pinsToExport.Count} pins to file: {filename}");
 
@@ -91,7 +91,7 @@ public static class PinImportExport {
   }
 
   public static void ImportPinsFromBinaryFile(Terminal.ConsoleEventArgs args) {
-    if (!Minimap.m_instance || args.Length < 2) {
+    if (!Minimap.s_instance || args.Length < 2) {
       return;
     }
 
@@ -103,7 +103,7 @@ public static class PinImportExport {
     }
 
     Dictionary<Minimap.PinType, Sprite> pinTypeToSprite =
-        Minimap.m_instance.m_icons.ToDictionary(data => data.m_name, data => data.m_icon);
+        Minimap.s_instance.m_icons.ToDictionary(data => data.m_name, data => data.m_icon);
 
     using FileStream stream = new(filename, FileMode.Open);
     using BinaryReader reader = new(stream);
@@ -141,7 +141,7 @@ public static class PinImportExport {
 
     Pinnacle.LogInfo($"Imported {pins.Count} pins from file: {filename}");
 
-    Minimap.m_instance.m_pins.AddRange(pins);
+    Minimap.s_instance.m_pins.AddRange(pins);
   }
 
   static List<Minimap.PinData> FilterPins(IReadOnlyCollection<Minimap.PinData> pins, string nameRegexPattern) {
@@ -149,7 +149,7 @@ public static class PinImportExport {
       Pinnacle.LogInfo($"Filtering {pins.Count} pins by pin.name with regex: {nameRegexPattern}");
       Regex regex = new(nameRegexPattern, RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
 
-      return pins.Where(pin => pin.m_save && regex.Match(pin.m_name).Success).ToList();
+      return pins.Where(pin => pin.m_save && regex.IsMatch(pin.m_name)).ToList();
     } else {
       return pins.Where(pin => pin.m_save).ToList();
     }
