@@ -1,4 +1,4 @@
-﻿namespace Silence;
+namespace Silence;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;

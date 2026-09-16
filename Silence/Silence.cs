@@ -1,4 +1,4 @@
-﻿namespace Silence;
+namespace Silence;
 
 using System;
 using System.Globalization;
@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class Silence : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.silence";
   public const string PluginName = "Silence";
-  public const string PluginVersion = "1.8.0";
+  public const string PluginVersion = "1.9.0";
 
   static ManualLogSource _logger;
 

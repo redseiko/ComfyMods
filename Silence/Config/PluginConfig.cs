@@ -1,4 +1,4 @@
-﻿namespace Silence;
+namespace Silence;
 
 using BepInEx.Configuration;
 

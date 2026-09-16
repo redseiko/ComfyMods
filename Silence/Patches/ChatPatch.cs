@@ -1,4 +1,4 @@
-﻿namespace Silence;
+namespace Silence;
 
 using System;
 using System.Collections.Generic;
@@ -53,7 +53,7 @@ static class ChatPatch {
       _delegateType = AccessTools.Inner(typeof(Chat), "<>c__DisplayClass12_0");
       _chatField = AccessTools.Field(_delegateType, "<>4__this");
 
-      return AccessTools.Method(_delegateType, "<OnNewChatMessage>b__0");
+      return AccessTools.Method(_delegateType, "<OnNewChatMessage>g__OnCheckPermissionAsyncCompleted|0");
     }
 
     [HarmonyPostfix]
