@@ -1,4 +1,4 @@
-﻿namespace OdinSaves;
+namespace OdinSaves;
 
 using HarmonyLib;
 
@@ -7,6 +7,16 @@ using static PluginConfig;
 [HarmonyPatch(typeof(Game))]
 static class GamePatch {
   static float _savePlayerProfileTimer = 0f;
+
+  static void SavePlayerProfile(Game game) {
+    if (ShowMessageOnModSave.Value) {
+      MessageHud.instance.ShowMessage(MessageHud.MessageType.Center, "Saving player profile...");
+    }
+
+    _savePlayerProfileTimer = 0f;
+
+    game.SavePlayerProfile(SetLogoutPointOnSave.Value);
+  }
 
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Game.SavePlayerProfile))]
@@ -23,17 +33,10 @@ static class GamePatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Game.UpdateSaving))]
   static void UpdateSavingPostfix(Game __instance) {
-    if (!IsModEnabled.Value
-        || _savePlayerProfileTimer <= 0f
-        || _savePlayerProfileTimer < SavePlayerProfileInterval.Value) {
-      return;
+    if (IsModEnabled.Value
+        && _savePlayerProfileTimer > 0f
+        && _savePlayerProfileTimer >= SavePlayerProfileInterval.Value) {
+      SavePlayerProfile(__instance);
     }
-
-    if (ShowMessageOnModSave.Value) {
-      MessageHud.instance.ShowMessage(MessageHud.MessageType.Center, "Saving player profile...");
-    }
-
-    _savePlayerProfileTimer = 0f;
-    __instance.SavePlayerProfile(SetLogoutPointOnSave.Value);
   }
 }

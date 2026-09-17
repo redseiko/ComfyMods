@@ -1,4 +1,4 @@
-﻿namespace OdinSaves;
+namespace OdinSaves;
 
 using HarmonyLib;
 
@@ -6,7 +6,9 @@ using HarmonyLib;
 static class PlayerPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Player.OnDeath))]
-  static void OnDeathPostfix(ref Player __instance) {
-    Game.instance.m_playerProfile.ClearLoguoutPoint();
+  static void OnDeathPostfix(Player __instance) {
+    if (__instance == Player.m_localPlayer) {
+      Game.instance.m_playerProfile.ClearLoguoutPoint();
+    }
   }
 }

@@ -1,4 +1,4 @@
-﻿namespace OdinSaves;
+namespace OdinSaves;
 
 using HarmonyLib;
 

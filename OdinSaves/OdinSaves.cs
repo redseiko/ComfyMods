@@ -1,4 +1,4 @@
-﻿namespace OdinSaves;
+namespace OdinSaves;
 
 using System;
 using System.Globalization;
@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class OdinSaves : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.odinsaves";
   public const string PluginName = "OdinSaves";
-  public const string PluginVersion = "1.5.0";
+  public const string PluginVersion = "1.6.0";
 
   static ManualLogSource _logger;
 

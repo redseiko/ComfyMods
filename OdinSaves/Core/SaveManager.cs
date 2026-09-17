@@ -1,4 +1,4 @@
-﻿namespace OdinSaves;
+namespace OdinSaves;
 
 using System;
 using System.Collections;
@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public static class SaveManager {
+  public static readonly int VersionMapCompressed = (int) global::Version.Map.Compressed;
   static readonly ZPackage _mapPackage = new();
 
   static byte[] CompressMapData(ref byte[] mapData) {
@@ -17,19 +18,30 @@ public static class SaveManager {
       return mapData;
     }
 
+    byte[] uncompressedMapData = new byte[mapData.Length - 4];
+    Buffer.BlockCopy(mapData, srcOffset: 4, uncompressedMapData, 0, uncompressedMapData.Length);
+
     _mapPackage.Clear();
-    _mapPackage.Write(Minimap.MAPVERSION);
-    _mapPackage.Write(Utils.Compress(mapData));
+    _mapPackage.Write(VersionMapCompressed);
+    _mapPackage.Write(Utils.Compress(uncompressedMapData));
 
     return _mapPackage.GetArray();
   }
 
-  static bool IsCompressedMapData(byte[] data) {
-    return data != null && data.Length >= 4 && BitConverter.ToInt32(data, startIndex: 0) >= 7;
+  static bool IsCompressedMapData(byte[] mapData) {
+    return mapData != null
+        && mapData.Length >= 4
+        && BitConverter.ToInt32(mapData, startIndex: 0) >= VersionMapCompressed;
   }
 
   static bool HasUncompressedData(PlayerProfile profile) {
-    return profile.m_worldData.Values.Any(value => value.m_mapData != null && !IsCompressedMapData(value.m_mapData));
+    foreach (PlayerProfile.WorldPlayerData worldPlayerData in profile.m_worldData.Values) {
+      if (worldPlayerData.m_mapData != null && !IsCompressedMapData(worldPlayerData.m_mapData)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   static GameObject _profileCompressionRoot;
@@ -142,7 +154,7 @@ public static class SaveManager {
 
   static IEnumerator CompressProfileMapDataCoroutine(
     FejdStartup fejdStartup, PlayerProfile profile) {
-    Selectable[] selectables = UnityEngine.Object.FindObjectsOfType<Selectable>();
+    Selectable[] selectables = UnityEngine.Object.FindObjectsByType<Selectable>(FindObjectsSortMode.None);
 
     foreach (Selectable selectable in selectables) {
       selectable.interactable = false;
