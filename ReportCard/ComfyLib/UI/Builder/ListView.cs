@@ -1,4 +1,4 @@
-﻿namespace ComfyLib;
+namespace ComfyLib;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -81,7 +81,7 @@ public sealed class ListView {
             .SetContent(content.GetComponent<RectTransform>())
             .SetHorizontal(false)
             .SetVertical(true)
-            .SetScrollSensitivity(20f)
+            .SetScrollSensitivity(800f)
             .SetMovementType(ScrollRect.MovementType.Clamped);
 
     Scrollbar scrollbar = UIBuilder.CreateScrollbar(view.transform);

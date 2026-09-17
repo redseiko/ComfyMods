@@ -27,7 +27,6 @@
 
 ## Notes
 
-  * This is the *good enough* release. More features and polish to be added later.
   * See source at: [GitHub/ComfyMods](https://github.com/redseiko/ComfyMods/tree/main/ReportCard).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
   * ReportCard icon created by [@jenniely](https://twitter.com/jenniely) (jenniely.com)

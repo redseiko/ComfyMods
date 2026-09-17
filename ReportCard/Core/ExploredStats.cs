@@ -1,4 +1,4 @@
-﻿namespace ReportCard;
+namespace ReportCard;
 
 using System;
 using System.Collections;
@@ -64,7 +64,7 @@ public sealed class ExploredStats {
     int counter = 0;
 
     WorldGenerator worldGenerator = WorldGenerator.m_instance;
-    bool[] explored = minimap.m_explored;
+    BitArray explored = minimap.m_explored;
 
     for (int y = py - radius; y <= py + radius; y++) {
       for (int x = px - radius; x <= px + radius; x++) {

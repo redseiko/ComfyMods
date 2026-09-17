@@ -1,4 +1,4 @@
-﻿namespace ReportCard;
+namespace ReportCard;
 
 using System;
 

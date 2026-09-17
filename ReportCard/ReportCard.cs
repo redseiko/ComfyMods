@@ -1,4 +1,4 @@
-﻿namespace ReportCard;
+namespace ReportCard;
 
 using System;
 using System.Globalization;
@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class ReportCard : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.reportcard";
   public const string PluginName = "ReportCard";
-  public const string PluginVersion = "1.3.0";
+  public const string PluginVersion = "1.4.0";
 
   static ManualLogSource _logger;
 

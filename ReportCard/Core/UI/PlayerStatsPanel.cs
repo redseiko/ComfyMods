@@ -1,4 +1,4 @@
-﻿namespace ReportCard;
+namespace ReportCard;
 
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using UnityEngine.UI;
 public sealed class PlayerStatsPanel {
   public GameObject Panel { get; private set; }
   public RectTransform RectTransform { get; }
-  public TMP_Text Title { get; private set; }
+  public TextMeshProUGUI Title { get; private set; }
   public ListView StatsList { get; private set; }
   public LabelButton CloseButton { get; private set; }
 
@@ -25,19 +25,19 @@ public sealed class PlayerStatsPanel {
     CloseButton = CreateCloseButton(Panel.transform);
   }
 
-  public List<TMP_Text> StatLabels { get; } = [];
+  public List<TextMeshProUGUI> StatLabels { get; } = [];
 
   public void UpdateStatsList(PlayerProfile profile) {
-    List<KeyValuePair<PlayerStatType, float>> stats = [..profile.m_playerStats.m_stats];
+    List<KeyValuePair<PlayerStatType, float>> stats = [..profile.m_playerStats[0].m_stats];
 
     for (int i = StatLabels.Count; i < stats.Count; i++) {
-      TMP_Text label = CreateStatLabel(StatsList.Content.transform);
+      TextMeshProUGUI label = CreateStatLabel(StatsList.Content.transform);
       StatLabels.Add(label);
     }
 
     for (int i = 0; i < stats.Count; i++) {
       KeyValuePair<PlayerStatType, float> pair = stats[i];
-      TMP_Text label = StatLabels[i];
+      TextMeshProUGUI label = StatLabels[i];
 
       label.SetText(
           $"<align=left><color=#FFD600>{pair.Key}</color><line-height=0>\n"
@@ -55,6 +55,7 @@ public sealed class PlayerStatsPanel {
       case PlayerStatType.DistanceWalk:
       case PlayerStatType.DistanceRun:
       case PlayerStatType.DistanceSail:
+      case PlayerStatType.DistanceSailHelm:
       case PlayerStatType.DistanceAir:
         return $"{pair.Value:N2}";
 
@@ -69,8 +70,8 @@ public sealed class PlayerStatsPanel {
         : $"{duration.Hours:D2}:{duration.Minutes:D2}:{duration.Seconds:D2}";
   }
 
-  static TMP_Text CreateStatLabel(Transform parentTransform) {
-    TMP_Text label = UIBuilder.CreateTMPLabel(parentTransform);
+  static TextMeshProUGUI CreateStatLabel(Transform parentTransform) {
+    TextMeshProUGUI label = UIBuilder.CreateTMPLabel(parentTransform);
     label.name = "StatLabel";
 
     label.rectTransform
@@ -101,8 +102,8 @@ public sealed class PlayerStatsPanel {
     return panel;
   }
 
-  static TMP_Text CreateTitle(Transform parentTransform) {
-    TMP_Text title = UIBuilder.CreateTMPHeaderLabel(parentTransform);
+  static TextMeshProUGUI CreateTitle(Transform parentTransform) {
+    TextMeshProUGUI title = UIBuilder.CreateTMPHeaderLabel(parentTransform);
     title.name = "Title";
 
     title

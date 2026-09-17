@@ -1,4 +1,4 @@
-﻿namespace ReportCard;
+namespace ReportCard;
 
 using ComfyLib;
 
@@ -73,7 +73,7 @@ public static class PlayerStatsController {
       return;
     }
 
-    if (profile?.m_playerStats == null) {
+    if (profile?.m_playerStats.Length <= 0) {
       ReportCard.LogInfo($"PlayerProfile ({profile?.GetName()}) has no valid PlayerStats.");
       HideStatsPanel();
     } else {

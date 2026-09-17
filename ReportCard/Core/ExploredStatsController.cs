@@ -1,4 +1,4 @@
-﻿namespace ReportCard;
+namespace ReportCard;
 
 using ComfyLib;
 
@@ -45,7 +45,7 @@ public static class ExploredStatsController {
       StatsPanel.ResetStatsList();
       StatsPanel.UpdateStatus(string.Empty);
 
-      _exploredStats.Generate(Minimap.m_instance, StatsPanel.StatusLabel, UpdateStatsPanel);
+      _exploredStats.Generate(Minimap.instance, StatsPanel.StatusLabel, UpdateStatsPanel);
     }
   }
 

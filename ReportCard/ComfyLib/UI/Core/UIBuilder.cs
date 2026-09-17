@@ -1,4 +1,8 @@
-﻿namespace ComfyLib;
+namespace ComfyLib;
+
+using System.Collections.Generic;
+
+using GUIFramework;
 
 using TMPro;
 
@@ -121,10 +125,20 @@ public static class UIBuilder {
         fadeDuration = 0.15f,
       };
 
-  public static Slider CreateSlider(Transform parentTransform) {
-    Slider slider = UnityEngine.Object.Instantiate(InventoryGui.m_instance.m_splitSlider, parentTransform);
-    slider.name = "Slider";
+  public static GuiInputField CreateInputField(Transform parentTransform) {
+    GuiInputField inputField =
+        UnityEngine.Object.Instantiate(TextInput.instance.m_inputField, parentTransform, worldPositionStays: false);
 
-    return slider;
+    inputField.GetComponent<RectTransform>()
+        .SetAnchorMin(new(0.5f, 0.5f))
+        .SetAnchorMax(new(0.5f, 0.5f))
+        .SetPivot(new(0.5f, 0.5f))
+        .SetPosition(Vector2.zero)
+        .SetSizeDelta(new(120f, 40f));
+
+    inputField.GetComponentInChildren<RectMask2D>()
+        .SetPadding(Vector4.zero);
+
+    return inputField;
   }
 }

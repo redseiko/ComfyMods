@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.4.0
+
+  * Fixed for the `v1.0.12` patch.
+  * Migrated to SDK-style project.
+
 ### 1.3.0
 
   * Added new config-option `showStatsButton` under `ExploredStatsPanel`.
