@@ -30,6 +30,7 @@
 
   * Un-binds the debugmode KillAll shortcut `K` by default because of many accidental pet deaths. :(
   * Un-binds the debugmode RemoveAll shortcut `L` by default.
+  * Ignores the *alternate* vanilla keybinds (if set) for Hotbar items.
 
 ## Notes
 

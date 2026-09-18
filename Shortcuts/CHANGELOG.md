@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.10.0
+
+  * Fixed for the `v1.0.14` patch.
+  * *Alternate* vanilla keybinds (if set) for Hotbar items are ignored.
+
 ### 1.9.0
 
   * Fixed for the `v1.0.12` patch.

@@ -1,4 +1,4 @@
-﻿namespace Shortcuts;
+namespace Shortcuts;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -13,8 +13,10 @@ using static PluginConfig;
 static class PlayerPatch {
   [HarmonyTranspiler]
   [HarmonyPatch(nameof(Player.Update))]
-  static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
-    return new CodeMatcher(instructions)
+  static IEnumerable<CodeInstruction> UpdateTranspiler(
+      IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
+    return new CodeMatcher(instructions, generator)
+        .Start()
         .MatchGetKeyDown(0x7A)
         .SetInstructionAndAdvance(
             new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(ToggleDebugFlyDelegate))))
@@ -29,30 +31,18 @@ static class PlayerPatch {
         .SetInstructionAndAdvance(
             new CodeInstruction(
                 OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(DebugRemoveDropsDelegate))))
-        .MatchGetButtonDown("Hotbar1")
-        .SetInstructionAndAdvance(
-            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem1Delegate))))
-        .MatchGetButtonDown("Hotbar2")
-        .SetInstructionAndAdvance(
-            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem2Delegate))))
-        .MatchGetButtonDown("Hotbar3")
-        .SetInstructionAndAdvance(
-            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem3Delegate))))
-        .MatchGetButtonDown("Hotbar4")
-        .SetInstructionAndAdvance(
-            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem4Delegate))))
-        .MatchGetButtonDown("Hotbar5")
-        .SetInstructionAndAdvance(
-            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem5Delegate))))
-        .MatchGetButtonDown("Hotbar6")
-        .SetInstructionAndAdvance(
-            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem6Delegate))))
-        .MatchGetButtonDown("Hotbar7")
-        .SetInstructionAndAdvance(
-            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem7Delegate))))
-        .MatchGetButtonDown("Hotbar8")
-        .SetInstructionAndAdvance(
-            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItem8Delegate))))
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldloc_S),
+            new CodeMatch(OpCodes.Ldc_I4_8),
+            new CodeMatch(OpCodes.Ble))
+        .ThrowIfInvalid($"Could not patch Player.Update()! (for-loop-8)")
+        .Advance(offset: 1)
+        .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldc_I4_0))
+        .Advance(offset: 1)
+        .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Ldarg_0),
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(HotbarItemsDelegate))))
         .InstructionEnumeration();
   }
 
@@ -72,35 +62,41 @@ static class PlayerPatch {
     return DebugRemoveDropsShortcut.IsKeyDown();
   }
 
-  static bool HotbarItem1Delegate(string name) {
-    return HotbarItem1Shortcut.IsKeyDown();
-  }
+  static void HotbarItemsDelegate(Player player) {
+    if (HotbarItem1Shortcut.IsKeyDown()) {
+      player.UseHotbarItem(1);
+    }
 
-  static bool HotbarItem2Delegate(string name) {
-    return HotbarItem2Shortcut.IsKeyDown();
-  }
+    if (HotbarItem2Shortcut.IsKeyDown()) {
+      player.UseHotbarItem(2);
+    }
 
-  static bool HotbarItem3Delegate(string name) {
-    return HotbarItem3Shortcut.IsKeyDown();
-  }
+    if (HotbarItem3Shortcut.IsKeyDown()) {
+      player.UseHotbarItem(3);
+    }
 
-  static bool HotbarItem4Delegate(string name) {
-    return HotbarItem4Shortcut.IsKeyDown();
-  }
+    if (HotbarItem4Shortcut.IsKeyDown()) {
+      player.UseHotbarItem(4);
+    }
 
-  static bool HotbarItem5Delegate(string name) {
-    return HotbarItem5Shortcut.IsKeyDown();
-  }
+    if (HotbarItem5Shortcut.IsKeyDown()) {
+      player.UseHotbarItem(5);
+    }
 
-  static bool HotbarItem6Delegate(string name) {
-    return HotbarItem6Shortcut.IsKeyDown();
-  }
+    if (HotbarItem6Shortcut.IsKeyDown()) {
+      player.UseHotbarItem(6);
+    }
 
-  static bool HotbarItem7Delegate(string name) {
-    return HotbarItem7Shortcut.IsKeyDown();
-  }
+    if (HotbarItem6Shortcut.IsKeyDown()) {
+      player.UseHotbarItem(6);
+    }
 
-  static bool HotbarItem8Delegate(string name) {
-    return HotbarItem8Shortcut.IsKeyDown();
+    if (HotbarItem7Shortcut.IsKeyDown()) {
+      player.UseHotbarItem(7);
+    }
+
+    if (HotbarItem8Shortcut.IsKeyDown()) {
+      player.UseHotbarItem(8);
+    }
   }
 }
