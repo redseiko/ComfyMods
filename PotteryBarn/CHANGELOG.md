@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.22.0
+
+  * Fixed for the `v1.0.14` patch.
+  * Updated Jotunn dependency to `v2.30.1`.
+
 ### 1.21.1
 
   * Updated for the `v0.221.12` patch.

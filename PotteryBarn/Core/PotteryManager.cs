@@ -74,6 +74,8 @@ public static class PotteryManager {
   }
 
   public static void AddCultivatorPieces(PieceTable cultivatorPieceTable) {
+    cultivatorPieceTable.m_hideAdvancedMenu = false;
+
     AddPotteryPieces(cultivatorPieceTable, MiscCategory, VanillaShop.CultivatorPieces, VanillaPieces);
     AddPotteryPieces(cultivatorPieceTable, ComfyCreativeCategory, CreativeShop.CultivatorPieces, ShopPieces);
   }

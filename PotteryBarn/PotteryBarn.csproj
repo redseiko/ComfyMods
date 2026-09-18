@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.sdk">
+﻿<Project Sdk="Microsoft.NET.sdk">
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <LangVersion>12</LangVersion>
@@ -72,8 +72,8 @@
     <Reference Include="UnityEngine.AnimationModule" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.AudioModule" Private="false">
-      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+    <Reference Include="UnityEngine.AssetBundleModule" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
@@ -113,7 +113,7 @@
 
   <ItemGroup>
     <PackageReference Include="JotunnLib">
-      <Version>2.29.2</Version>
+      <Version>2.30.1</Version>
       <IncludeAssets>compile</IncludeAssets>
       <ExcludeAssets>none</ExcludeAssets>
       <PrivateAssets>all</PrivateAssets>
