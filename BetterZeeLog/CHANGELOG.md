@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.16.0
+
+  * Updated for the `v1.0.15` patch.
+  * Added new `ZNetScene.CreateObject()` transpiler to remove `Missing prefab hash: ` log spam.
+
 ### 1.15.0
 
   * Fixed `UIGroupHandler.Update()` transpiler patch that filters out "Activating ... element" log spam.

@@ -1,4 +1,4 @@
-﻿namespace BetterZeeLog;
+namespace BetterZeeLog;
 
 using BepInEx.Configuration;
 

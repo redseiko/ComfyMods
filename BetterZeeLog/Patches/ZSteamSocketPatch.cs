@@ -1,4 +1,4 @@
-﻿namespace BetterZeeLog;
+namespace BetterZeeLog;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
