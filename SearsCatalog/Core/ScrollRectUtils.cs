@@ -1,4 +1,4 @@
-﻿namespace SearsCatalog;
+namespace SearsCatalog;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,8 +9,9 @@ public static class ScrollRectUtils {
     float viewportHeight = scrollRect.viewport.rect.height;
     Vector2 scrollPosition = scrollRect.content.anchoredPosition;
 
-    float elementTop = child.anchoredPosition.y;
-    float elementBottom = elementTop - child.rect.height;
+    float childHeight = child.rect.height;
+    float elementTop = child.anchoredPosition.y + (1f - child.pivot.y) * childHeight;
+    float elementBottom = elementTop - childHeight;
 
     float visibleContentTop = -scrollPosition.y - padding;
     float visibleContentBottom = -scrollPosition.y - viewportHeight + padding;

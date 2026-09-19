@@ -2,6 +2,8 @@ namespace SearsCatalog;
 
 using HarmonyLib;
 
+using UnityEngine;
+
 [HarmonyPatch(typeof(BuildUi))]
 static class BuildUiPatch {
   [HarmonyPostfix]
@@ -16,9 +18,17 @@ static class BuildUiPatch {
     BuildUiController.DestroyBuildUi(__instance);
   }
 
-  [HarmonyPostfix]
+  [HarmonyPrefix]
   [HarmonyPatch(nameof(BuildUi.OpenBuildMenu))]
-  static void OpenBuildMenuPostfix(BuildUi __instance) {
+  static void OpenBuildMenuPrefix(BuildUi __instance) {
     BuildUiController.ShowBuildUi(__instance);
+  }
+
+  [HarmonyPrefix]
+  [HarmonyPatch(nameof(BuildUi.FocusPiece))]
+  static bool FocusPiecePrefix(BuildUi __instance, BuildUiPieceButton button) {
+    // TODO: make this conditional.
+    ScrollRectUtils.EnsureVisibility(__instance.m_pieceScrollRect, button.GetComponent<RectTransform>());
+    return false;
   }
 }

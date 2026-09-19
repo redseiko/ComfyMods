@@ -52,6 +52,8 @@ public static class BuildUiController {
 
   static void HandlePanelResizeEnd(Vector2 sizeDelta) {
     BuildUiPanelSizeDelta.Value = sizeDelta;
+
+    Hud.m_instance.m_buildUi.ConfigureButtonNavigation();
   }
 
   public static void DestroyBuildUi(BuildUi buildUi) {
