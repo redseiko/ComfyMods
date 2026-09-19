@@ -2,31 +2,31 @@
 
 *Resize and reposition the build panel in-game.*
 
-![Splash](https://i.imgur.com/jwYCsdf.png)
+![Splash](https://i.imgur.com/XonwPvVl.png)
 
 ## Features
 
 ### Panel resize (mouse)
 
-  * Hover over the lower-right corner of the build panel to display the resize icon.
-  * Click and drag the resize icon to the desired size.
-  * Build panel will resize to the closest `Rows x Columns` size.
+  * Hover over the lower-right corner of the `BuildUi` panel to display the resize icon.
+  * Click and drag the resize icon to resize the `BuildUi` panel.
 
 ### Panel resize (config)
 
-  * Using ConfigurationManager, change `buildHudPanelRows` or `buildHudPanelColumns` to desired values.
-  * Build panel will resize to the new `Rows x Columns` size immediately.
+  * Using ConfigurationManager, change `[BuildUi.Panel] panelSizeDelta` value to the desired size.
+  * `panelSizeDelta` is an offset and is added to the vanilla panel-size of `1085x490`.
+  * `BuildUi` panel will resize the next time the panel is opened.
 
 ### Panel reposition
 
-  * Click on any empty space on the build panel and drag it to the desired position.
+  * Click on any empty space on the `BuildUi` panel and drag it to the desired position.
   * Position is saved/loaded from config and can be reset in ConfigurationManager.
 
 ## Configuration
 
-All configuration options (except `isModEnabled`) can be modified in-game and will take effect immediately.
+All config-options can be modified in-game and will take effect when the `BuildUi` panel is re-opened.
 
-![Configuration](https://imgur.com/Xm8ma0D.png)
+![Configuration](https://i.imgur.com/QkYSAzm.png)
 
 ## Notes
 

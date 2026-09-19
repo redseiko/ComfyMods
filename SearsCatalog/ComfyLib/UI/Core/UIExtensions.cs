@@ -1,4 +1,4 @@
-﻿namespace ComfyLib;
+namespace ComfyLib;
 
 using System;
 
@@ -320,18 +320,6 @@ public static class SelectableExtensions {
     navigation.mode = mode;
     selectable.navigation = navigation;
     return selectable;
-  }
-}
-
-public static class ShadowExtensions {
-  public static Shadow SetEffectColor(this Shadow shadow, Color effectColor) {
-    shadow.effectColor = effectColor;
-    return shadow;
-  }
-
-  public static Shadow SetEffectDistance(this Shadow shadow, Vector2 effectDistance) {
-    shadow.effectDistance = effectDistance;
-    return shadow;
   }
 }
 

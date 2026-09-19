@@ -1,6 +1,32 @@
-﻿namespace ComfyLib;
+namespace ComfyLib;
 
 using System;
+
+public static class ComponentExtensions {
+  public static bool TryGetComponentInChildren<T>(
+      this UnityEngine.Component parentComponent, out T component) where T : UnityEngine.Component {
+    component = parentComponent.GetComponentInChildren<T>();
+    return component;
+  }
+
+  public static bool TryGetComponentInChildren<T>(
+      this UnityEngine.GameObject gameObject, out T component) where T : UnityEngine.Component {
+    component = gameObject.GetComponentInChildren<T>();
+    return component;
+  }
+
+  public static bool TryGetComponentInParent<T>(
+    this UnityEngine.Component childComponent, out T component) where T : UnityEngine.Component {
+    component = childComponent.GetComponentInParent<T>();
+    return component;
+  }
+
+  public static bool TryGetComponentInParent<T>(
+      this UnityEngine.GameObject gameObject, out T component) where T : UnityEngine.Component {
+    component = gameObject.GetComponentInParent<T>();
+    return component;
+  }
+}
 
 public static class ObjectExtensions {
   public static T FirstByNameOrThrow<T>(this T[] unityObjects, string name) where T : UnityEngine.Object {
