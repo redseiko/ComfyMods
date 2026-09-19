@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.4.1
+
+  * Fixed `PlayerStatsPanel` NRE when creating or editing a character in `FejdStartup`.
+
 ### 1.4.0
 
   * Fixed for the `v1.0.12` patch.

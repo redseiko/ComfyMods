@@ -73,7 +73,7 @@ public static class PlayerStatsController {
       return;
     }
 
-    if (profile?.m_playerStats.Length <= 0) {
+    if (profile?.m_playerStats == null || profile.m_playerStats.Length <= 0) {
       ReportCard.LogInfo($"PlayerProfile ({profile?.GetName()}) has no valid PlayerStats.");
       HideStatsPanel();
     } else {
