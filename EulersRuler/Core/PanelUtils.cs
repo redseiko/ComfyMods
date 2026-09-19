@@ -35,7 +35,7 @@ public static class PanelUtils {
       }
 
       HoverPiecePanel.UpdateProperties(Player.m_localPlayer.m_hoveringPiece, HoverPiecePanelEnabledRows.Value);
-      PlacementGhostPanel.UpdateProperties(Player.m_localPlayer.m_placementGhost, PlacementGhostPanelEnabledRows.Value);
+      PlacementGhostPanel.UpdateProperties(Player.m_localPlayer.m_placementGhost, PlacementGhostPanelEnabledRows.Value, Player.m_localPlayer.m_hoveringPiece);
     }
   }
 
