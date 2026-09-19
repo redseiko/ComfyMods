@@ -1,5 +1,16 @@
 ## Changelog
 
+### 1.9.0
+
+  * Fixed for `v1.0.15` patch.
+  * Migrated to SDK-style project.
+  * Removed all original `[BuildHud.Panel]` config-options as vanilla now has a a brand new `BuildUi` panel.
+  * Added new config-options:
+    * `[BuildUi.Panel] canMovePanel`
+    * `[BuildUi.Panel] panelPosition`
+    * `[BuildUi.Panel] canResizePanel`
+    * `[BuildUi.Panel] panelSizeDelta`
+
 ### 1.8.0
 
   * Modified `Categories` and `TabBorder` to now take up the full-space of the `BuildHud.Panel`.

@@ -1,4 +1,4 @@
-﻿namespace ComfyLib;
+namespace ComfyLib;
 
 using TMPro;
 
@@ -57,9 +57,6 @@ public static class UIBuilder {
         .SetType(Image.Type.Sliced)
         .SetSprite(UIResources.GetSprite("button"))
         .SetColor(new(1f, 1f, 1f, 0.95f));
-
-    resizer.AddComponent<Shadow>()
-        .SetEffectDistance(new(2f, -2f));
 
     resizer.AddComponent<CanvasGroup>()
         .SetAlpha(0f);

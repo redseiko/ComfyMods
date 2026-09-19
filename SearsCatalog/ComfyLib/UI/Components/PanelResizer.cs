@@ -1,54 +1,36 @@
-﻿namespace ComfyLib;
-
-using System;
-using System.Collections;
+namespace ComfyLib;
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public sealed class PanelResizer :
     MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler {
+  public UnityEvent<Vector2> OnPanelResizeEnd = new();
+
   CanvasGroup _canvasGroup;
+  ComfyTween<float> _alphaTween;
   float _targetAlpha = 0f;
 
   Vector2 _lastMousePosition;
-  Coroutine _lerpAlphaCoroutine;
+  RectTransform _targetRectTransform;
 
-  public RectTransform TargetRectTransform;
-  public event EventHandler<Vector2> OnPanelEndResize;
+  public void SetTargetRectTransform(RectTransform rectTransform) {
+    _targetRectTransform = rectTransform;
+  }
 
   void Awake() {
     _canvasGroup = GetComponent<CanvasGroup>();
+    _alphaTween = new ComfyTween<float>(
+        this, 0.25f, () => _canvasGroup.alpha, val => _canvasGroup.SetAlpha(val), Mathf.Lerp);
   }
 
   void SetCanvasGroupAlpha(float alpha) {
-    if (_lerpAlphaCoroutine != null) {
-      StopCoroutine(_lerpAlphaCoroutine);
-      _lerpAlphaCoroutine = null;
-    }
-
     if (_canvasGroup.alpha == alpha) {
       return;
     }
 
-    _lerpAlphaCoroutine = StartCoroutine(LerpCanvasGroupAlpha(alpha, 0.25f));
-  }
-
-  IEnumerator LerpCanvasGroupAlpha(float targetAlpha, float lerpDuration) {
-    float timeElapsed = 0f;
-    float sourceAlpha = _canvasGroup.alpha;
-
-    while (timeElapsed < lerpDuration) {
-      float t = timeElapsed / lerpDuration;
-      t = t * t * (3f - (2f * t));
-
-      _canvasGroup.SetAlpha(Mathf.Lerp(sourceAlpha, targetAlpha, t));
-      timeElapsed += Time.deltaTime;
-
-      yield return null;
-    }
-
-    _canvasGroup.SetAlpha(targetAlpha);
+    _alphaTween.To(alpha);
   }
 
   public void OnPointerEnter(PointerEventData eventData) {
@@ -64,38 +46,20 @@ public sealed class PanelResizer :
     }
   }
 
-  Vector2 _originalPivot;
-
   public void OnBeginDrag(PointerEventData eventData) {
     SetCanvasGroupAlpha(1f);
     _lastMousePosition = eventData.position;
-    _originalPivot = TargetRectTransform.pivot;
-    SetPivot(TargetRectTransform, new(0f, 1f));
   }
 
   public void OnDrag(PointerEventData eventData) {
     Vector2 difference = _lastMousePosition - eventData.position;
+    _targetRectTransform.sizeDelta += new Vector2(-1f * difference.x, difference.y);
 
-    if (TargetRectTransform) {
-      TargetRectTransform.sizeDelta += new Vector2(-1f * difference.x, difference.y);
-    }
-
-    SetCanvasGroupAlpha(1f);
     _lastMousePosition = eventData.position;
   }
 
   public void OnEndDrag(PointerEventData eventData) {
     SetCanvasGroupAlpha(_targetAlpha);
-    OnPanelEndResize?.Invoke(this, TargetRectTransform.sizeDelta);
-    SetPivot(TargetRectTransform, _originalPivot);
-  }
-
-  void SetPivot(RectTransform rectTransform, Vector2 pivot) {
-    Vector3 deltaPosition = rectTransform.pivot - pivot;
-    deltaPosition.Scale(rectTransform.rect.size);
-    deltaPosition.Scale(rectTransform.localScale);
-    deltaPosition = rectTransform.rotation * deltaPosition;
-    rectTransform.pivot = pivot;
-    rectTransform.localPosition -= deltaPosition;
+    OnPanelResizeEnd.Invoke(_targetRectTransform.sizeDelta);
   }
 }

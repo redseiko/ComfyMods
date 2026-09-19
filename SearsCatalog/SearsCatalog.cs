@@ -1,4 +1,4 @@
-﻿namespace SearsCatalog;
+namespace SearsCatalog;
 
 using System.Reflection;
 
@@ -12,7 +12,7 @@ using static PluginConfig;
 public sealed class SearsCatalog : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.searscatalog";
   public const string PluginName = "SearsCatalog";
-  public const string PluginVersion = "1.8.0";
+  public const string PluginVersion = "1.9.0";
 
   void Awake() {
     BindConfig(Config);
