@@ -18,6 +18,13 @@
   * The ArmorStands have 15 different poses available!
   * There is a `Change Pose` switch at the base of the stand.
 
+### ArmorStand Incompatibility with MagicaCloth
+
+  * The unused ArmorStand prefabs `ArmorStand_Male` and `ArmorStand_Female` are incompatible with the new `MagicaCloth`
+    added in `1.0` release.
+  * Unity will *crash* (in vanilla) if any items with `MagicaCloth` (such as capes) are attached to these prefabs.
+  * There is logic in place to prevent attaching incompatible items to these prefabs (it will log a warning).
+
 ### Notes
 
   * See source at: [GitHub/ComfyMods](https://github.com/redseiko/ComfyMods/tree/main/PotteryBarn).

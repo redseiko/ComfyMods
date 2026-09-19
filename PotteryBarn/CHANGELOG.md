@@ -1,5 +1,13 @@
 ## Changelog
 
+### 1.23.0
+
+  * Fixed for the `v1.0.15` patch.
+  * Added a work-around for Unity crashing when `ArmorStand_Male` and `ArmorStand_Female` have capes attached.
+    * Crash occurs due to the prefabs' `VisEquipment.m_clothColliders` not updated for new `MagicaClothV2`.
+    * Prevents crashing by removing `m_clothColliders` for these prefabs in `VisEquipment.SetupCloth()`.
+    * Prevents attaching any items to these prefabs that have `MagicaCloth` component in `ArmorStand.CanAttach()`.
+
 ### 1.22.0
 
   * Fixed for the `v1.0.14` patch.

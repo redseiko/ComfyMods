@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+using ComfyLib;
+
 using Jotunn.Managers;
 
 using UnityEngine;
@@ -261,5 +263,25 @@ public static class PotteryManager {
         piece.m_nview
         && piece.m_nview.IsValid()
         && piece.m_nview.m_zdo.GetBool(IsPlacedByPotteryBarnHash, false);
+  }
+
+  public const int ArmorStandMaleHash = 639316453;    // ArmorStand_Male
+  public const int ArmorStandFemaleHash = 826840908;  // ArmorStand_Female
+
+  public static bool CanAttachItemToArmorStand(ArmorStand armorStand, ItemDrop.ItemData item) {
+    int prefabHash = armorStand.m_nview.m_zdo.m_prefab;
+
+    if (prefabHash != ArmorStandMaleHash && prefabHash != ArmorStandFemaleHash) {
+      return true;
+    }
+
+    if (item.m_dropPrefab
+        && item.m_dropPrefab.TryGetComponentInChildren(out MagicaCloth2.MagicaCloth _, includeInactive: true)) {
+      PotteryBarn.LogInfo(
+          $"Cannot attach item {item.m_dropPrefab.name} to ArmorStand due to MagicaCloth incompatibility.");
+      return false;
+    }
+
+    return true;
   }
 }
