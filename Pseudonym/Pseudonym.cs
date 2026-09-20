@@ -1,4 +1,4 @@
-﻿namespace Pseudonym;
+namespace Pseudonym;
 
 using System;
 using System.Globalization;
@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class Pseudonym : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.pseudonym";
   public const string PluginName = "Pseudonym";
-  public const string PluginVersion = "1.4.0";
+  public const string PluginVersion = "1.5.0";
 
   static ManualLogSource _logger;
 

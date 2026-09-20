@@ -20,5 +20,5 @@
 
 ## Notes
 
-  * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/Pseudonym).
+  * See source at: [GitHub/ComfyMods](https://github.com/redseiko/ComfyMods/tree/main/Pseudonym).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)

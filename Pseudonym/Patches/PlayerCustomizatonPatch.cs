@@ -1,4 +1,4 @@
-﻿namespace Pseudonym;
+namespace Pseudonym;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -17,9 +17,11 @@ static class PlayerCustomizatonPatch {
         .MatchStartForward(
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(Player), nameof(Player.GetPlayerModel))),
             new CodeMatch(OpCodes.Ldc_I4_1))
-        .ThrowIfInvalid("Could not patch PlayerCustomizaton.OnBeardLeft()! (GetPlayerModel)")
+        .ThrowIfInvalid("Could not patch PlayerCustomizaton.OnBeardLeft()! (get-player-model)")
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(GetPlayerModelDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(PlayerCustomizatonPatch), nameof(GetPlayerModelDelegate))))
         .InstructionEnumeration();
   }
 
@@ -31,9 +33,11 @@ static class PlayerCustomizatonPatch {
         .MatchStartForward(
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(Player), nameof(Player.GetPlayerModel))),
             new CodeMatch(OpCodes.Ldc_I4_1))
-        .ThrowIfInvalid("Could not patch PlayerCustomizaton.OnBeardRight()! (GetPlayerModel)")
+        .ThrowIfInvalid("Could not patch PlayerCustomizaton.OnBeardRight()! (get-player-model)")
         .Advance(offset: 1)
-        .InsertAndAdvance(Transpilers.EmitDelegate(GetPlayerModelDelegate))
+        .InsertAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(PlayerCustomizatonPatch), nameof(GetPlayerModelDelegate))))
         .InstructionEnumeration();
   }
 

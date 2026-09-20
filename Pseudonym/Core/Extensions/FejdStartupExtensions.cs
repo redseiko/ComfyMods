@@ -1,4 +1,4 @@
-﻿namespace Pseudonym;
+namespace Pseudonym;
 
 public static class FejdStartupExtensions {
   public static bool TryGetPlayerProfile(this FejdStartup fejdStartup, out PlayerProfile profile) {

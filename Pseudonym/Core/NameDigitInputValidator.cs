@@ -1,4 +1,4 @@
-﻿namespace Pseudonym;
+namespace Pseudonym;
 
 using TMPro;
 
