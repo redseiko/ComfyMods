@@ -18,6 +18,7 @@ public static class PluginConfig {
     Euler = 8,
     Quaternion = 16,
     PieceName = 32,
+    Resists = 64,
   }
 
   [Flags]
@@ -29,6 +30,7 @@ public static class PluginConfig {
     PieceName = 32,
     Distance = 64,
     Position = 128,
+    Stability = 256,
   }
 
   public static ConfigEntry<bool> IsModEnabled { get; private set; }
@@ -94,7 +96,7 @@ public static class PluginConfig {
         config.BindInOrder(
             "PlacementGhost.Panel",
             "placementGhostPanelEnabledRows",
-            PlacementGhostPanelRow.Name | PlacementGhostPanelRow.Euler | PlacementGhostPanelRow.Quaternion,
+            PlacementGhostPanelRow.Name | PlacementGhostPanelRow.Euler | PlacementGhostPanelRow.Quaternion  | PlacementGhostPanelRow.Stability,
             "Which rows to display on the PlacementGhost properties panel.");
 
     PlacementGhostPanelFontSize =
