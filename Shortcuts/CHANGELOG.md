@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.10.1
+
+  * Fixed a bug with Hotbar keybinding (mmm copy-pasta).
+
 ### 1.10.0
 
   * Fixed for the `v1.0.14` patch.

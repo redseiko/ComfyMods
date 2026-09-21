@@ -87,10 +87,6 @@ static class PlayerPatch {
       player.UseHotbarItem(6);
     }
 
-    if (HotbarItem6Shortcut.IsKeyDown()) {
-      player.UseHotbarItem(6);
-    }
-
     if (HotbarItem7Shortcut.IsKeyDown()) {
       player.UseHotbarItem(7);
     }
