@@ -1,5 +1,11 @@
 ## Changelog
 
+### 2.24.0
+
+  * Replaced `Menthus-Weightless_Coins-1.0.0` with `ComfyMods-WeightlessCoins-1.0.0`.
+  * Removed `ComfyMods-LicenseToKill-1.0.1` until it's been updated.
+  * Updated all dependencies to their latest version.
+
 ### 2.23.0
 
   * Added `ComfyMods-PassWard-1.3.0`.
