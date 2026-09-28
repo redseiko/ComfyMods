@@ -1,4 +1,4 @@
-﻿namespace RemoteWork;
+namespace RemoteWork;
 
 public static class CommandUtils {
   public static readonly char[] SpaceSeparator = [' '];
@@ -9,7 +9,7 @@ public static class CommandUtils {
     if (parts.Length >= 1
         && !string.IsNullOrEmpty(parts[0])
         && Terminal.commands.TryGetValue(parts[0].ToLowerInvariant(), out Terminal.ConsoleCommand consoleCommand)) {
-      RunCommand(rpc, consoleCommand, new Terminal.ConsoleEventArgs(command, Console.instance));
+      RunCommand(rpc, consoleCommand, new Terminal.ConsoleEventArgs(command, Console.instance, consoleCommand));
     } else {
       rpc.RemotePrint($"Invalid command: {command}");
     }

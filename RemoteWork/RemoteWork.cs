@@ -1,4 +1,4 @@
-﻿namespace RemoteWork;
+namespace RemoteWork;
 
 using System;
 using System.Globalization;
@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class RemoteWork : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.remotework";
   public const string PluginName = "RemoteWork";
-  public const string PluginVersion = "1.1.0";
+  public const string PluginVersion = "1.2.0";
 
   static ManualLogSource _logger;
 
