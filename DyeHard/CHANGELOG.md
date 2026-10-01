@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.7.1
+
+  * Updated for the `v1.0.16` patch.
+  * Rebuilt to remove old reference to PTB-only `GetStableHashCode(string)`.
+
 ### 1.7.0
 
   * Updated for the `v1.0.12` patch.
