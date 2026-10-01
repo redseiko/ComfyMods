@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.11.0
+
+  * Updated for the `v1.0.16` patch.
+  * Fixed an issue where color was not correctly applied to the sector boundary-walls.
+
 ### 1.10.0
 
   * Fixed for the `v1.0.12` patch.

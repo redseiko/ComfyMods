@@ -1,4 +1,4 @@
-﻿namespace ZoneScouter;
+namespace ZoneScouter;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -10,10 +10,7 @@ using UnityEngine;
 using static PluginConfig;
 
 public static class SectorBoundaries {
-  static readonly Vector2i UnsetSector = new(int.MaxValue, int.MaxValue);
-
   static Coroutine _updateBoundaryCubeCoroutine;
-  static Vector2i _lastBoundarySector = UnsetSector;
 
   static GameObject _boundaryCube;
   static readonly List<MeshRenderer> _boundaryWallRendererCache = [];
@@ -26,7 +23,7 @@ public static class SectorBoundaries {
   public static void SetBoundaryColor(Color targetColor) {
     if (IsModEnabled.Value && _boundaryCube) {
       foreach (MeshRenderer renderer in _boundaryWallRendererCache) {
-        renderer.material.SetColor("_Color", targetColor);
+        renderer.material.color = targetColor;
       }
     }
   }
@@ -37,7 +34,6 @@ public static class SectorBoundaries {
     }
 
     _updateBoundaryCubeCoroutine = null;
-    _lastBoundarySector = UnsetSector;
 
     if (_boundaryCube) {
       UnityEngine.Object.Destroy(_boundaryCube);
@@ -96,8 +92,8 @@ public static class SectorBoundaries {
     wall.transform.localScale = scale;
 
     MeshRenderer renderer = wall.GetComponent<MeshRenderer>();
-    renderer.material.SetColor("_Color", SectorBoundaryColor.Value);
     renderer.material.shader = AssetUtils.DistortionShader;
+    renderer.material.color = SectorBoundaryColor.Value;
 
     UnityEngine.Object.Destroy(wall.GetComponentInChildren<Collider>());
 
