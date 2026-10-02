@@ -1,5 +1,13 @@
 ## Changelog
 
+### 1.12.0
+
+  * Updated for the `v1.0.16` patch.
+  * Added new config-entry `[IgnoreRPCHandler] methodNamesList` with default-value `RPC_HealthChanged`.
+  * Added new handler `IgnoreRPCHandler` as a standard handler to ignore incoming RPCs matching above config-entry.
+  * Removed `HealthChangedHandler` as this is now covered by `IgnoreRPCHandler` using `RPC_HealthChanged`.
+  * Removed `DamageTextHandler` as the RPC is now handled by `EnRoute` mod.
+
 ### 1.11.0
 
   * Updated for the `v1.0.12` patch.

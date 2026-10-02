@@ -7,6 +7,8 @@ using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
 
+using ComfyLib;
+
 using HarmonyLib;
 
 using static PluginConfig;
@@ -15,7 +17,7 @@ using static PluginConfig;
 public sealed class BetterZeeRouter : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.betterzeerouter";
   public const string PluginName = "BetterZeeRouter";
-  public const string PluginVersion = "1.11.0";
+  public const string PluginVersion = "1.12.0";
 
   static ManualLogSource _logger;
 
@@ -29,8 +31,7 @@ public sealed class BetterZeeRouter : BaseUnityPlugin {
   }
 
   static void RegisterStandardHandlers() {
-    HealthChangedHandler.Register();
-    DamageTextHandler.Register();
+    IgnoreRPCHandler.Register(IgnoreRPCHandlerMethodNamesList.GetStringValues());
     SetTargetHandler.Register();
     TeleportPlayerHandler.Register();
   }

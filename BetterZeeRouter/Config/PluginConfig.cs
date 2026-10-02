@@ -3,10 +3,19 @@ namespace BetterZeeRouter;
 using BepInEx.Configuration;
 
 public static class PluginConfig {
+  public static ConfigEntry<string> IgnoreRPCHandlerMethodNamesList { get; private set; }
+
   public static ConfigEntry<bool> SetTargetHandlerShouldCheckDistance { get; private set; }
   public static ConfigEntry<float> SetTargetHandlerDistanceCheckRange { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
+    IgnoreRPCHandlerMethodNamesList =
+        config.Bind(
+            "IgnoreRPCHandler",
+            "methodNamesList",
+            "RPC_HealthChanged",
+            "IgnoreRPCHandler: comma-separated list of RPC methods (by name) that will be ignored by the server.");
+
     SetTargetHandlerShouldCheckDistance =
         config.Bind(
             "SetTargetHandler",
