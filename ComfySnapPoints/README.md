@@ -1,0 +1,3 @@
+# ComfySnapPoints
+
+*SnapPoints made comfy.*
