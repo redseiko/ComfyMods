@@ -149,6 +149,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComfyLadders", "ComfyLadder
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hashiko", "Hashiko\Hashiko.csproj", "{4A6F3F1C-B7A9-4C33-99C4-94B92AA655C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perpetuity", "Perpetuity\Perpetuity.csproj", "{39487370-D608-4698-BE52-078D526C909A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -419,6 +421,10 @@ Global
 		{4A6F3F1C-B7A9-4C33-99C4-94B92AA655C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A6F3F1C-B7A9-4C33-99C4-94B92AA655C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A6F3F1C-B7A9-4C33-99C4-94B92AA655C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39487370-D608-4698-BE52-078D526C909A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39487370-D608-4698-BE52-078D526C909A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39487370-D608-4698-BE52-078D526C909A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39487370-D608-4698-BE52-078D526C909A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
