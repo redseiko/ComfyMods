@@ -20,6 +20,16 @@ static class PersistentEventPatch {
     return new CodeMatcher(instructions, generator)
         .Start()
         .MatchStartForward(
+            new CodeMatch(
+                OpCodes.Newobj,
+                AccessTools.Constructor(typeof(Vector3), [typeof(float), typeof(float), typeof(float)])),
+            new CodeMatch(OpCodes.Stobj, typeof(Vector3)))
+        .ThrowIfInvalid($"Could not patch PersistentEvent.GenerateEventLocation()! (normalize-position)")
+        .Advance(offset: 1)
+        .InsertAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(PersistentEventPatch), nameof(NormalizePositionDelegate))))
+        .MatchStartForward(
             new CodeMatch(OpCodes.Endfinally),
             new CodeMatch(IsLdLocS8),
             new CodeMatch(OpCodes.Brtrue))
@@ -45,9 +55,20 @@ static class PersistentEventPatch {
     }
   }
 
+  public static Vector3 NormalizePositionDelegate(Vector3 position) {
+    if (CenterPersistentEventPosition.Value) {
+      return new Vector3(
+          Utils.FloorToInt((position.x + 32f) / 64f) * 64f,
+          0f,
+          Utils.FloorToInt((position.z + 32f) / 64f) * 64f);
+    }
+
+    return position;
+  }
+
   public static bool CheckNearbyPlayersDelegate(bool isPlayerNearby, Vector3 position) {
     if (!isPlayerNearby
-        && LocationInstancesBlockEventPlacement.Value
+        && LocationInstancesBlockPeristentEventPlacement.Value
         && ZoneSystem.s_instance.m_locationInstances.TryGetValue(ZoneSystem.GetZone(position), out _)) {
       return true;
     }
