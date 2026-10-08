@@ -19,5 +19,7 @@
     * `applyOverrides`
       * If true, applies overrides to PersistentEvents.
   * `[PersistentEvent]`
+    * `centerPosition`
+      * If true, PersistentEvent position will be overriden to the *center* of the sector.
     * `locationInstancesBlockPlacement`
       * If true, PersistentEvents will not spawn in sectors with an existing LocationInstance.
