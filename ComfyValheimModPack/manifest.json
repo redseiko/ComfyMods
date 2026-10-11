@@ -1,13 +1,13 @@
 {
   "name": "ComfyValheimPack",
-  "version_number": "2.24.0",
+  "version_number": "2.25.0",
   "website_url": "https://discord.gg/ameHJz5PFk",
   "author": "ComfyMods",
   "description": "Convenient mods for use on the Comfy Valheim server.",
   "dependencies": [
-    "denikson-BepInExPack_Valheim-5.4.2333",
+    "denikson-BepInExPack_Valheim-5.4.2351",
     "ValheimModding-Jotunn-2.30.2",
-    "Azumatt-Official_BepInEx_ConfigurationManager-18.4.1",
+    "ComfyDeps-BepInExConfigurationManager-19.0.0",
     "ComfyMods-BetterZeeLog-1.16.0",
     "ComfyMods-Chatter-2.13.0",
     "ComfyMods-ColorfulDamage-1.2.0",
@@ -21,8 +21,8 @@
     "ComfyMods-ComfySigns-1.12.0",
     "ComfyMods-Configula-1.2.0",
     "ComfyMods-DumpsterFire-1.1.0",
-    "ComfyMods-DyeHard-1.7.0",
-    "ComfyMods-Enhuddlement-1.4.0",
+    "ComfyMods-DyeHard-1.7.1",
+    "ComfyMods-Enhuddlement-1.5.0",
     "ComfyMods-Enigma-1.1.0",
     "ComfyMods-EulersRuler-1.9.0",
     "ComfyMods-GetOffMyLawn-1.13.0",
@@ -40,9 +40,10 @@
     "ComfyMods-SearsCatalog-1.9.0",
     "ComfyMods-Shortcuts-1.10.1",
     "ComfyMods-SkyTree-1.6.1",
-    "ComfyMods-WeightlessCoins-1.0.0",
-    "ComfyMods-ZoneScouter-1.10.0",
+    "ComfyMods-WeightlessCoins-1.0.1",
+    "ComfyMods-ZoneScouter-1.11.0",
     "JereKuusela-Item_Stand_All_Items-1.26.0",
-    "VentureValheim-Venture_Farm_Grid-1.0.0"
+    "VentureValheim-Venture_Farm_Grid-1.0.0",
+    "VentureValheim-YesIModButWantAchievementsAnyways-1.0.0"
   ]
 }

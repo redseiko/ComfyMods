@@ -1,5 +1,11 @@
 ## Changelog
 
+### 2.25.0
+
+  * Replaced `Azumatt-Official_BepInEx_ConfigurationManager-18.4.1` with `ComfyDeps-BepInExConfigurationManager-19.0.0`.
+  * Added `VentureValheim-YesIModButWantAchievementsAnyways-1.0.0`.
+  * Updated all dependencies to their latest version.
+
 ### 2.24.0
 
   * Replaced `Menthus-Weightless_Coins-1.0.0` with `ComfyMods-WeightlessCoins-1.0.0`.
