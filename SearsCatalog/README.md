@@ -6,6 +6,10 @@
 
 ## Features
 
+### Pooled GridView
+
+  * `BuildUi` panel now uses a pooled `GridView` which reduces all `BuildUi`-related lag and stuttering.
+
 ### Panel resize (mouse)
 
   * Hover over the lower-right corner of the `BuildUi` panel to display the resize icon.
