@@ -15,6 +15,13 @@ public static class PluginConfig {
   public static ConfigEntry<bool> BuildUiCanResizePanel { get; private set; }
   public static ConfigEntry<Vector2> BuildUiPanelSizeDelta { get; private set; }
 
+  public enum SearchFilterMode {
+    Vanilla,
+    Advanced
+  }
+
+  public static ConfigEntry<SearchFilterMode> BuildUiSearchFilterMode { get; private set; }
+
   public static void BindConfig(ConfigFile config) {
     IsModEnabled =
         config.BindInOrder(
@@ -50,5 +57,14 @@ public static class PluginConfig {
             "panelSizeDelta",
             defaultValue: Vector2.zero,
             "BuildUi panel RectTransform.sizeDelta value.");
+
+    BuildUiSearchFilterMode =
+        config.BindInOrder(
+            "BuildUi.SearchFilter",
+            "searchFilterMode",
+            SearchFilterMode.Advanced,
+            "BuildUi search-filter mode. Advanced enables multi-word searching.");
+
+    BuildUiSearchFilterMode.OnSettingChanged(PieceSearchFilter.ResetSearch);
   }
 }

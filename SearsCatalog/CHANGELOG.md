@@ -1,5 +1,12 @@
 ## Changelog
 
+### 1.10.0
+
+  * Created new `PooledGridView` to reduce all `BuildUi` related-lag and stuttering.
+  * Created new `PieceSearchFilter` and added new `[BuildUi.SearchFilter] searchFilterMode` config-option.
+    * `Vanilla` mode uses the vanilla-logic when searching.
+    * `Advanced` mode (default) enables multi-word searching.
+
 ### 1.9.0
 
   * Fixed for `v1.0.15` patch.

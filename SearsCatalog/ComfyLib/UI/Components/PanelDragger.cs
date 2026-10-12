@@ -2,8 +2,6 @@ namespace ComfyLib;
 
 using UnityEngine;
 using UnityEngine.EventSystems;
-
-using System;
 using UnityEngine.Events;
 
 public sealed class PanelDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
