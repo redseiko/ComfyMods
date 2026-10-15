@@ -1,6 +1,8 @@
 namespace SearsCatalog;
 
+using System;
 using System.Collections.Generic;
+using System.Text;
 
 using ComfyLib;
 
@@ -8,6 +10,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 using static PluginConfig;
+
+using Object = UnityEngine.Object;
 
 public static class BuildUiController {
   public static RectTransform SelectionWindow { get; private set; }
@@ -18,7 +22,9 @@ public static class BuildUiController {
   public static List<Piece> CurrentPieces { get; } = [];
   public static List<Piece> FilteredPieces { get; } = [];
 
-  static readonly Dictionary<string, List<string>> _cachedSearchTerms = [];
+  static readonly Dictionary<string, string> _cachedSearchStrings = [];
+  static readonly List<Piece> _tempSearchMatches = [];
+  static string _previousSearchTerm = string.Empty;
 
   public static void SetupBuildUi(BuildUi buildUi) {
     RectTransform selectionWindow = (RectTransform) buildUi.transform.Find("bar/SelectionWindow");
@@ -66,6 +72,15 @@ public static class BuildUiController {
             button.Setup(FilteredPieces[index], buildUi);
           }
         });
+
+    Localization.OnLanguageChange =
+        (Action) Delegate.Remove(Localization.OnLanguageChange, new Action(HandleLanguageChange));
+    Localization.OnLanguageChange =
+        (Action) Delegate.Combine(Localization.OnLanguageChange, new Action(HandleLanguageChange));
+  }
+
+  static void HandleLanguageChange() {
+    _cachedSearchStrings.Clear();
   }
 
   static void HandlePanelDragEnd(Vector2 position) {
@@ -82,13 +97,18 @@ public static class BuildUiController {
   }
 
   public static void DestroyBuildUi(BuildUi buildUi) {
+    Localization.OnLanguageChange =
+        (Action) Delegate.Remove(Localization.OnLanguageChange, new Action(HandleLanguageChange));
+
     SelectionWindow = default;
     WindowDragger = default;
     WindowResizer = default;
     PieceGridView = default;
     CurrentPieces.Clear();
     FilteredPieces.Clear();
-    _cachedSearchTerms.Clear();
+    _tempSearchMatches.Clear();
+    _cachedSearchStrings.Clear();
+    _previousSearchTerm = string.Empty;
   }
 
   public static void ShowBuildUi(BuildUi buildUi) {
@@ -154,9 +174,11 @@ public static class BuildUiController {
 
     buildUi.m_tempPieces.Clear();
 
+    _previousSearchTerm = string.Empty;
+
     string searchTerm =
         buildUi.m_searchField != null && buildUi.m_searchField.isActiveAndEnabled
-            ? buildUi.m_searchField.text
+            ? buildUi.m_searchField.text.Replace(" ", "").ToLowerInvariant()
             : string.Empty;
 
     ApplySearch(searchTerm);
@@ -166,60 +188,75 @@ public static class BuildUiController {
   }
 
   public static void UpdateSearch(BuildUi buildUi, string term) {
-    term = term.Replace(" ", "").ToLowerInvariant();
+    string normalizedTerm = term.Replace(" ", "").ToLowerInvariant();
 
-    if (!string.IsNullOrEmpty(term) && buildUi.m_currentTagId != -1) {
+    if (!string.IsNullOrEmpty(normalizedTerm) && buildUi.m_currentTagId != -1) {
       buildUi.SetCurrentTag(-1, false);
       buildUi.UpdatePieceButtons();
       return;
     }
 
-    ApplySearch(term);
+    ApplySearch(normalizedTerm);
     buildUi.ConfigureButtonNavigation();
   }
 
-  static void ApplySearch(string term) {
-    term = term.Replace(" ", "").ToLowerInvariant();
+  static void ApplySearch(string normalizedTerm) {
+    if (FilteredPieces.Capacity < CurrentPieces.Count) {
+      FilteredPieces.Capacity = CurrentPieces.Count;
+    }
 
-    FilteredPieces.Clear();
-
-    if (string.IsNullOrEmpty(term)) {
+    if (string.IsNullOrEmpty(normalizedTerm)) {
+      FilteredPieces.Clear();
       FilteredPieces.AddRange(CurrentPieces);
-    } else {
-      for (int i = 0; i < CurrentPieces.Count; i++) {
-        Piece piece = CurrentPieces[i];
-        if (MatchesSearch(piece, term)) {
-          FilteredPieces.Add(piece);
-        }
+      _previousSearchTerm = string.Empty;
+      PieceGridView?.SetTotalItems(FilteredPieces.Count);
+      return;
+    }
+
+    List<Piece> sourcePieces =
+        (!string.IsNullOrEmpty(_previousSearchTerm) && normalizedTerm.StartsWith(_previousSearchTerm, StringComparison.Ordinal))
+            ? FilteredPieces
+            : CurrentPieces;
+
+    _tempSearchMatches.Clear();
+    if (_tempSearchMatches.Capacity < sourcePieces.Count) {
+      _tempSearchMatches.Capacity = sourcePieces.Count;
+    }
+
+    for (int i = 0; i < sourcePieces.Count; i++) {
+      Piece piece = sourcePieces[i];
+      if (MatchesSearch(piece, normalizedTerm)) {
+        _tempSearchMatches.Add(piece);
       }
     }
+
+    FilteredPieces.Clear();
+    FilteredPieces.AddRange(_tempSearchMatches);
+    _tempSearchMatches.Clear();
+    _previousSearchTerm = normalizedTerm;
 
     PieceGridView?.SetTotalItems(FilteredPieces.Count);
   }
 
   static bool MatchesSearch(Piece piece, string term) {
-    if (!_cachedSearchTerms.TryGetValue(piece.gameObject.name, out List<string> terms)) {
-      terms = [Localization.instance.Localize(piece.m_name).ToLowerInvariant().Replace(" ", "")];
+    if (!_cachedSearchStrings.TryGetValue(piece.gameObject.name, out string searchString)) {
+      StringBuilder builder = new(Localization.instance.Localize(piece.m_name).ToLowerInvariant().Replace(" ", ""));
 
       if (piece.m_resources != null) {
         for (int i = 0; i < piece.m_resources.Length; i++) {
           Piece.Requirement req = piece.m_resources[i];
           if (req != null && req.m_resItem != null && req.m_resItem.m_itemData != null) {
-            terms.Add(Localization.instance.Localize(req.m_resItem.m_itemData.m_shared.m_name).ToLowerInvariant().Replace(" ", ""));
+            builder.Append('\0');
+            builder.Append(Localization.instance.Localize(req.m_resItem.m_itemData.m_shared.m_name).ToLowerInvariant().Replace(" ", ""));
           }
         }
       }
 
-      _cachedSearchTerms[piece.gameObject.name] = terms;
+      searchString = builder.ToString();
+      _cachedSearchStrings[piece.gameObject.name] = searchString;
     }
 
-    for (int i = 0; i < terms.Count; i++) {
-      if (terms[i].Contains(term)) {
-        return true;
-      }
-    }
-
-    return false;
+    return searchString.IndexOf(term, StringComparison.Ordinal) >= 0;
   }
 
   public static void UpdatePieceSelection(BuildUi buildUi, Piece selectedPiece) {
