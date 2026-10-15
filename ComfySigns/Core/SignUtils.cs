@@ -1,4 +1,4 @@
-﻿namespace ComfySigns;
+namespace ComfySigns;
 
 using System;
 using System.Text.RegularExpressions;
@@ -14,8 +14,8 @@ using static PluginConfig;
 public static class SignUtils {
   public static readonly Regex SizeRegex =
       new Regex(
-          @"<size=[^>]*>",
-          RegexOptions.Compiled | RegexOptions.CultureInvariant,
+          @"</?size(?:\s*=[^>]*)?>",
+          RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase,
           TimeSpan.FromMilliseconds(100));
 
   public static void AddFallbackFont(TMP_FontAsset font, TMP_FontAsset fallbackFont) {
@@ -36,7 +36,7 @@ public static class SignUtils {
     AddFallbackFont(font, UIFonts.GetFontAsset(UIFonts.FallbackNotoSansNormal));
   }
 
-  public static bool HasSignEffect(TMP_Text textComponent, string effectId) {
+  public static bool HasSignEffect(TextMeshProUGUI textComponent, string effectId) {
     if (textComponent.text.Length <= 0 || !textComponent.text.StartsWith("<link", StringComparison.Ordinal)) {
       return false;
     }
@@ -69,7 +69,7 @@ public static class SignUtils {
       if (sign && sign.m_nview && sign.m_nview.IsValid() && sign.m_textWidget) {
         if (SignTextIgnoreSizeTags.Value) {
           ProcessSignText(sign);
-        } else {
+        } else if (sign.m_isViewable) {
           sign.m_textWidget.text = sign.m_currentText;
         }
       }
@@ -77,32 +77,43 @@ public static class SignUtils {
   }
 
   public static void ProcessSignEffect(Sign sign) {
-    if (sign.m_textWidget.enabled && HasSignEffect(sign.m_textWidget, "party") && ShouldRenderSignEffect(sign)) {
-      if (!sign.m_textWidget.gameObject.TryGetComponent(out VertexColorCycler _)) {
-        sign.m_textWidget.gameObject.AddComponent<VertexColorCycler>();
+    TextMeshProUGUI textWidget = sign.m_textWidget;
+    bool shouldRender = textWidget.enabled && HasSignEffect(textWidget, "party") && ShouldRenderSignEffect(sign);
+
+    if (textWidget.gameObject.TryGetComponent(out VertexColorCycler cycler)) {
+      if (cycler.enabled != shouldRender) {
+        cycler.enabled = shouldRender;
       }
-    } else if (sign.m_textWidget.gameObject.TryGetComponent(out VertexColorCycler colorCycler)) {
-      UnityEngine.Object.Destroy(colorCycler);
-      sign.m_textWidget.ForceMeshUpdate(ignoreActiveState: true);
+    } else if (shouldRender) {
+      textWidget.gameObject.AddComponent<VertexColorCycler>();
     }
   }
 
   public static void ProcessSignText(Sign sign) {
-    if (SignTextIgnoreSizeTags.Value && SizeRegex.IsMatch(sign.m_textWidget.text)) {
-      sign.m_textWidget.text = SizeRegex.Replace(sign.m_textWidget.text, string.Empty);
+    if (!SignTextIgnoreSizeTags.Value) {
+      return;
+    }
+
+    string originalText = sign.m_textWidget.text;
+    string sanitizedText = SizeRegex.Replace(originalText, string.Empty);
+
+    if (!ReferenceEquals(originalText, sanitizedText)) {
+      sign.m_textWidget.text = sanitizedText;
     }
   }
 
   public static void SetupSignFont(Sign sign, TMP_FontAsset fontAsset, Color color) {
-    if (sign.m_textWidget.font != fontAsset) {
-      sign.m_textWidget.font = fontAsset;
+    TextMeshProUGUI textWidget = sign.m_textWidget;
+
+    if (textWidget.font != fontAsset) {
+      textWidget.font = fontAsset;
     }
 
-    if (sign.m_textWidget.fontSharedMaterial != fontAsset.material) {
-      sign.m_textWidget.fontSharedMaterial = fontAsset.material;
+    if (textWidget.fontSharedMaterial != fontAsset.material) {
+      textWidget.fontSharedMaterial = fontAsset.material;
     }
 
-    sign.m_textWidget.color = color;
+    textWidget.color = color;
   }
 
   public static void SetupSignPrefabs(ZNetScene netScene) {
@@ -119,13 +130,13 @@ public static class SignUtils {
     }
 
     foreach (GameObject prefab in netScene.m_namedPrefabs.Values) {
-      if (prefab.TryGetComponent(out Sign sign)) {
+      if (prefab.TryGetComponent(out Sign sign) && sign.m_textWidget) {
         SetupSignFont(sign, fontAsset, fontColor);
       }
     }
 
     foreach (ZNetView netView in netScene.m_instances.Values) {
-      if (netView.TryGetComponent(out Sign sign)) {
+      if (netView.TryGetComponent(out Sign sign) && sign.m_textWidget) {
         SetupSignFont(sign, fontAsset, fontColor);
       }
     }

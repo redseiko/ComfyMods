@@ -1,4 +1,4 @@
-﻿namespace ComfySigns;
+namespace ComfySigns;
 
 using System.Collections;
 
@@ -17,18 +17,23 @@ public sealed class VertexColorCycler : MonoBehaviour {
     _textComponent = GetComponent<TMP_Text>();
   }
 
-  void Start() {
+  void OnEnable() {
     StartCoroutine(AnimateVertexColors());
   }
 
+  void OnDisable() {
+    StopAllCoroutines();
+
+    if (_textComponent) {
+      _textComponent.ForceMeshUpdate(ignoreActiveState: true);
+    }
+  }
+
   IEnumerator AnimateVertexColors() {
-    TMP_TextInfo textInfo = _textComponent.textInfo;
     int currentCharacter = 0;
 
-    Color32[] vertexColors;
-    Color32 color;
-
     while (true) {
+      TMP_TextInfo textInfo = _textComponent.textInfo;
       int characterCount = textInfo.characterCount;
 
       if (characterCount == 0) {
@@ -36,13 +41,29 @@ public sealed class VertexColorCycler : MonoBehaviour {
         continue;
       }
 
-      int materialIndex = textInfo.characterInfo[currentCharacter].materialReferenceIndex;
-      vertexColors = textInfo.meshInfo[materialIndex].colors32;
-      int vertexIndex = textInfo.characterInfo[currentCharacter].vertexIndex;
+      if (currentCharacter >= characterCount) {
+        currentCharacter = 0;
+      }
 
-      if (textInfo.characterInfo[currentCharacter].isVisible) {
-        color =
-            new Color32((byte) Random.Range(0, 255), (byte) Random.Range(0, 255), (byte) Random.Range(0, 255), 255);
+      TMP_CharacterInfo charInfo = textInfo.characterInfo[currentCharacter];
+      int materialIndex = charInfo.materialReferenceIndex;
+
+      if (materialIndex < 0 || materialIndex >= textInfo.meshInfo.Length) {
+        yield return _shortWait;
+        continue;
+      }
+
+      Color32[] vertexColors = textInfo.meshInfo[materialIndex].colors32;
+      int vertexIndex = charInfo.vertexIndex;
+
+      if (vertexColors == null || vertexIndex + 3 >= vertexColors.Length) {
+        yield return _shortWait;
+        continue;
+      }
+
+      if (charInfo.isVisible) {
+        Color32 color =
+            new Color32((byte) Random.Range(0, 256), (byte) Random.Range(0, 256), (byte) Random.Range(0, 256), 255);
 
         vertexColors[vertexIndex + 0] = color;
         vertexColors[vertexIndex + 1] = color;

@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.13.0
+
+  * Updated for the `v1.0.20` patch.
+  * Code clean-up and refactoring.
+
 ### 1.12.0
 
   * Updated for the `v0.221.12` patch.

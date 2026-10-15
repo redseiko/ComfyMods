@@ -1,27 +1,18 @@
-﻿namespace ComfySigns;
+namespace ComfySigns;
 
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public sealed class TextInputPanelDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
+public sealed class TextInputPanelDragger : MonoBehaviour, IDragHandler {
   RectTransform _rectTransform;
-  Vector2 _lastMousePosition;
+  Canvas _canvas;
 
   void Start() {
     _rectTransform = GetComponent<RectTransform>();
-  }
-
-  public void OnBeginDrag(PointerEventData eventData) {
-    _lastMousePosition = eventData.position;
+    _canvas = GetComponentInParent<Canvas>();
   }
 
   public void OnDrag(PointerEventData eventData) {
-    Vector2 difference = eventData.position - _lastMousePosition;
-    _rectTransform.position += new Vector3(difference.x, difference.y, 0f);
-    _lastMousePosition = eventData.position;
-  }
-
-  public void OnEndDrag(PointerEventData eventData) {
-    // ... Do nothing.
+    _rectTransform.anchoredPosition += eventData.delta / _canvas.scaleFactor;
   }
 }

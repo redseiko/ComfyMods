@@ -1,4 +1,4 @@
-﻿namespace ComfySigns;
+namespace ComfySigns;
 
 using ComfyLib;
 
@@ -12,8 +12,12 @@ static class TextInputPatch {
   [HarmonyPatch(nameof(TextInput.Awake))]
   static void AwakePostfix(TextInput __instance) {
     if (IsModEnabled.Value && __instance.m_inputField) {
-      __instance.m_panel.GetOrAddComponent<TextInputPanelDragger>();
-      __instance.m_inputField.richText = false;
+      SetupTextInput(__instance);
     }
+  }
+
+  static void SetupTextInput(TextInput textInput) {
+    textInput.m_panel.GetOrAddComponent<TextInputPanelDragger>();
+    textInput.m_inputField.richText = false;
   }
 }
