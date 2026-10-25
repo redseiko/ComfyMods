@@ -10,6 +10,7 @@
   * Removes `Activating default/right-stick element` logging to reduce log spam.
   * Removes `Players wants to open/but im not the owner` logging to reduce log spam.
   * Removes `Missing prefab hash: ` logging to reduce log spam.
+  * Removes `placed at height`, `placed at world height` and `Placed ...` logging to reduce log spam.
 
 ## Config
 

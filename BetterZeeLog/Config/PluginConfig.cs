@@ -6,9 +6,13 @@ using ComfyLib;
 
 public static class PluginConfig {
   public static ConfigEntry<bool> IsModEnabled { get; private set; }
+
   public static ConfigEntry<bool> RemoveStackTraceForNonErrorLogType { get; private set; }
   public static ConfigEntry<bool> RemoveFailedToSendDataLogging { get; private set; }
   public static ConfigEntry<bool> RemoveContainerRequestOpenLogging { get; private set; }
+  public static ConfigEntry<bool> RemovePlayerPlacePieceLogging { get; private set; }
+  public static ConfigEntry<bool> RemovePlayerTryPlacePieceLogging { get; private set; }
+
   public static ConfigEntry<bool> CheckProjectFixedUpdateZeroVelocity { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
@@ -39,6 +43,20 @@ public static class PluginConfig {
             "removeContainerRequestOpenLogging",
             true,
             "Removes (NOPs out) 'Players wants to open/but im not the owner' logging in Container.RPC_RequestOpen().");
+
+    RemovePlayerPlacePieceLogging =
+        config.BindInOrder(
+            "Logging",
+            "removePlayerPlacePieceLogging",
+            true,
+            "Removes 'placed at height'/'placed at world height' logging in Player.PlacePiece().");
+
+    RemovePlayerTryPlacePieceLogging =
+        config.BindInOrder(
+            "Logging",
+            "removePlayerTryPlacePieceLogging",
+            true,
+            "Removes 'Placed' logging in Player.TryPlacePiece().");
 
     CheckProjectFixedUpdateZeroVelocity =
         config.BindInOrder(

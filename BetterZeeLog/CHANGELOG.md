@@ -1,5 +1,13 @@
 ## Changelog
 
+### 1.17.0
+
+  * Updated for the `v1.0.20` patch.
+  * Added new `Player` transpiler patches to remove the following log spam:
+    * `placed at height`
+    * `placed at world height`
+    * `Placed ...`
+
 ### 1.16.0
 
   * Updated for the `v1.0.15` patch.
