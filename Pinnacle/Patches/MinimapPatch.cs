@@ -18,6 +18,8 @@ static class MinimapPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Minimap.Start))]
   static void StartPostfix(Minimap __instance) {
+    PinNameUtils.Initialize(__instance);
+
     if (IsModEnabled.Value) {
       PinMarkerUtils.SetupPinNamePrefab(__instance);
       PinEditPanelController.TogglePanel(pinToEdit: null);
@@ -29,6 +31,16 @@ static class MinimapPatch {
     }
   }
 
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(Minimap.OnDestroy))]
+  static void OnDestroyPostfix() {
+    PinNameUtils.Reset();
+    PinSearchFilter.Reset();
+    PinListPanelController.Reset();
+    PinEditPanelController.Reset();
+    PinFilterPanelController.Reset();
+  }
+
   [HarmonyTranspiler]
   [HarmonyPatch(nameof(Minimap.OnMapDblClick))]
   static IEnumerable<CodeInstruction> OnMapDblClickTranspiler(IEnumerable<CodeInstruction> instructions) {
@@ -36,8 +48,16 @@ static class MinimapPatch {
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Minimap), nameof(Minimap.m_selectedType))),
-            new CodeMatch(OpCodes.Ldc_I4_4))
-        .ThrowIfInvalid($"Could not patch Minimap.OnMapDblClick()! (m-selected-type)")
+            new CodeMatch(OpCodes.Stloc_0))
+        .ThrowIfInvalid($"Could not patch Minimap.OnMapDblClick()! (m-selected-type-cached)")
+        .Advance(offset: 1)
+        .InsertAndAdvance(
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(MinimapPatch), nameof(OnMapDblClickSelectedTypeDelegate))))
+        .MatchStartForward(
+            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(Minimap), nameof(Minimap.m_selectedType))),
+            new CodeMatch(OpCodes.Ldc_I4_S))
+        .ThrowIfInvalid($"Could not patch Minimap.OnMapDblClick()! (m-selected-type-ping)")
         .Advance(offset: 2)
         .InsertAndAdvance(
             new CodeInstruction(
@@ -45,12 +65,12 @@ static class MinimapPatch {
         .InstructionEnumeration();
   }
 
-  static int OnMapDblClickSelectedTypeDelegate(int pinTypeDeath) {
+  static int OnMapDblClickSelectedTypeDelegate(int pinType) {
     if (IsModEnabled.Value) {
       return -1;
     }
 
-    return pinTypeDeath;
+    return pinType;
   }
 
   [HarmonyPrefix]
@@ -187,7 +207,7 @@ static class MinimapPatch {
     }
 
     if (IsModEnabled.Value && mode == Minimap.MapMode.Large && __state != mode) {
-      PinListPanelController.PinListPanel.SetTargetPins();
+      PinListPanelController.RefreshTargetPins();
     }
   }
 

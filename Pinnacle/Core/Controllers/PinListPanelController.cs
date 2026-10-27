@@ -1,5 +1,7 @@
 namespace Pinnacle;
 
+using System.Collections.Generic;
+
 using ComfyLib;
 
 using UnityEngine;
@@ -10,12 +12,14 @@ using static PluginConfig;
 public static class PinListPanelController {
   public static PinListPanel PinListPanel { get; private set; }
 
+  static readonly Dictionary<GameObject, PinListRow> _listItems = [];
+
   public static void TogglePanel() {
-    TogglePanel(!PinListPanel?.Panel.Ref()?.activeSelf ?? false);
+    TogglePanel(!IsPanelValid() || !PinListPanel.Panel.activeSelf);
   }
 
   public static void TogglePanel(bool toggleOn) {
-    if (!PinListPanel?.Panel) {
+    if (!IsPanelValid()) {
       PinListPanel = new(Minimap.s_instance.m_largeRoot.transform);
 
       PinListPanel.RectTransform
@@ -25,23 +29,89 @@ public static class PinListPanelController {
           .SetPosition(PinListPanelPosition.Value)
           .SetSizeDelta(PinListPanelSizeDelta.Value);
 
+      PinListPanel.PinScrollView
+          .SetItemHeight(26f)
+          .SetSpacing(2f)
+          .SetScrollSensitivity(PinListPanelScrollRectScrollSensitivity.Value)
+          .SetMovementType(PinListPanelScrollRectMovementType.Value)
+          .Setup(CreateRow, RenderRow);
+
+      PinListPanel.PinNameFilter.InputField.onValueChanged.AddListener(OnSearchValueChanged);
+      PinListPanel.RefreshButton.Button.onClick.AddListener(RefreshTargetPins);
+
       PinListPanel.PanelDragger.OnPanelEndDrag += OnPanelDragEnd;
       PinListPanel.PanelResizer.OnPanelEndResize += OnPanelResizeEnd;
     }
 
     if (toggleOn) {
       PinListPanel.Panel.SetActive(true);
-      PinListPanel.SetTargetPins();
+
+      LayoutRebuilder.ForceRebuildLayoutImmediate(PinListPanel.RectTransform);
+      PinListPanel.PinScrollView.UpdatePoolSize();
+
+      RefreshTargetPins();
     } else {
       PinListPanel.PinNameFilter.InputField.DeactivateInputField();
       PinListPanel.Panel.SetActive(false);
     }
   }
 
-  public static bool IsPanelValid() => PinListPanel?.Panel;
+  static RectTransform CreateRow(Transform parent) {
+    PinListRow row = new(parent);
+    _listItems[row.Row] = row;
+
+    row.Init(OnRowClicked);
+
+    return row.RectTransform;
+  }
+
+  static void RenderRow(int index, GameObject rowObj) {
+    if (!_listItems.TryGetValue(rowObj, out PinListRow row)) {
+      return;
+    }
+
+    if (index >= 0 && index < PinSearchFilter.FilteredPins.Count) {
+      Minimap.PinData pin = PinSearchFilter.FilteredPins[index];
+      row.SetRowContent(pin, showCoordinates: PinListPanelShowPinPosition.Value);
+    }
+  }
+
+  static void OnRowClicked(Minimap.PinData pin) {
+    if (pin != null) {
+      PinnacleUtils.CenterMapOnOrTeleportTo(pin);
+    }
+  }
+
+  public static void OnSearchValueChanged(string searchText) {
+    PinSearchFilter.ApplySearch(searchText);
+
+    if (IsPanelValid()) {
+      PinListPanel.PinScrollView.SetTotalItems(PinSearchFilter.FilteredPins.Count);
+      PinListPanel.PinScrollView.ScrollToTop();
+      PinListPanel.PinStats.Label.SetText($"{PinSearchFilter.FilteredPins.Count} pins.");
+    }
+  }
+
+  public static void RefreshTargetPins() {
+    SetTargetPins(Minimap.s_instance ? Minimap.s_instance.m_pins : []);
+  }
+
+  public static void SetTargetPins(IEnumerable<Minimap.PinData> pins) {
+    PinSearchFilter.SetSourcePins(pins ?? []);
+
+    string filter = IsPanelValid() ? PinListPanel.PinNameFilter.InputField.text : string.Empty;
+    PinSearchFilter.ApplySearch(filter);
+
+    if (IsPanelValid()) {
+      PinListPanel.PinScrollView.SetTotalItems(PinSearchFilter.FilteredPins.Count);
+      PinListPanel.PinStats.Label.SetText($"{PinSearchFilter.FilteredPins.Count} pins.");
+    }
+  }
+
+  public static bool IsPanelValid() => PinListPanel != null && PinListPanel.Panel;
 
   public static bool HasFocus() {
-    return PinListPanel != default && PinListPanel.HasFocus();
+    return IsPanelValid() && PinListPanel.HasFocus();
   }
 
   public static void SetBackgroundColor(Color color) {
@@ -59,19 +129,26 @@ public static class PinListPanelController {
   public static void SetPanelSize(Vector2 sizeDelta) {
     if (IsPanelValid()) {
       PinListPanel.RectTransform.sizeDelta = sizeDelta;
-      PinListPanel.SetTargetPins();
+      LayoutRebuilder.ForceRebuildLayoutImmediate(PinListPanel.RectTransform);
+      PinListPanel.PinScrollView.UpdatePoolSize();
     }
   }
 
   public static void SetScrollRectMovementType(ScrollRect.MovementType movementType) {
     if (IsPanelValid()) {
-      PinListPanel.ScrollRect.movementType = movementType;
+      PinListPanel.PinScrollView.SetMovementType(movementType);
     }
   }
 
   public static void SetScrollRectScrollSensitivity(float scrollSensitivity) {
     if (IsPanelValid()) {
-      PinListPanel.ScrollRect.scrollSensitivity = scrollSensitivity;
+      PinListPanel.PinScrollView.SetScrollSensitivity(scrollSensitivity);
+    }
+  }
+
+  public static void OnShowPinPositionChanged(bool showPinPosition) {
+    if (IsPanelValid()) {
+      PinListPanel.PinScrollView.Refresh();
     }
   }
 
@@ -81,5 +158,15 @@ public static class PinListPanelController {
 
   static void OnPanelResizeEnd(object sender, Vector2 sizeDelta) {
     PinListPanelSizeDelta.Value = sizeDelta;
+
+    if (IsPanelValid()) {
+      LayoutRebuilder.ForceRebuildLayoutImmediate(PinListPanel.RectTransform);
+      PinListPanel.PinScrollView.UpdatePoolSize();
+    }
+  }
+
+  public static void Reset() {
+    _listItems.Clear();
+    PinListPanel = null;
   }
 }

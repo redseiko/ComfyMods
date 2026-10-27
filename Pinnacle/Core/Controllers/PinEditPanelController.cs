@@ -38,4 +38,8 @@ public static class PinEditPanelController {
   public static bool HasFocus() {
     return PinEditPanel != default && PinEditPanel.Panel && PinEditPanel.Panel.activeSelf && PinEditPanel.HasFocus();
   }
+
+  public static void Reset() {
+    PinEditPanel = null;
+  }
 }

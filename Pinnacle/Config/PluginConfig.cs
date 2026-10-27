@@ -79,6 +79,8 @@ public static class PluginConfig {
             true,
             "Show the Pin.Position columns in the PinListPanel.");
 
+    PinListPanelShowPinPosition.OnSettingChanged(PinListPanelController.OnShowPinPositionChanged);
+
     PinListPanelPosition =
         config.BindInOrder(
             "PinListPanel.Panel",

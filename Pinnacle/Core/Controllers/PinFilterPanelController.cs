@@ -44,4 +44,8 @@ public static class PinFilterPanelController {
       _currentPanel.SetPanelStyle();
     }
   }
+
+  public static void Reset() {
+    _currentPanel = null;
+  }
 }

@@ -69,4 +69,68 @@ public static class UIBuilder {
 
     return inputField;
   }
+
+  public static Scrollbar CreateScrollbar(Transform parentTransform) {
+    GameObject scrollbar = new("Scrollbar", typeof(RectTransform));
+    scrollbar.transform.SetParent(parentTransform, worldPositionStays: false);
+
+    scrollbar.GetComponent<RectTransform>()
+        .SetAnchorMin(Vector2.right)
+        .SetAnchorMax(Vector2.one)
+        .SetPivot(Vector2.one)
+        .SetPosition(Vector2.zero)
+        .SetSizeDelta(new(10f, 0f));
+
+    scrollbar.AddComponent<Image>()
+        .SetType(Image.Type.Sliced)
+        .SetSprite(UIResources.GetSprite("Background"))
+        .SetColor(Color.black)
+        .SetRaycastTarget(true);
+
+    GameObject area = new("SlidingArea", typeof(RectTransform));
+    area.transform.SetParent(scrollbar.transform, worldPositionStays: false);
+
+    area.GetComponent<RectTransform>()
+        .SetAnchorMin(Vector2.zero)
+        .SetAnchorMax(Vector2.one)
+        .SetPivot(new(0.5f, 0.5f))
+        .SetPosition(Vector2.zero)
+        .SetSizeDelta(Vector2.zero);
+
+    GameObject handle = new("Handle", typeof(RectTransform));
+    handle.transform.SetParent(area.transform, worldPositionStays: false);
+
+    RectTransform handleRectTransform =
+        handle.GetComponent<RectTransform>()
+            .SetAnchorMin(new(0.5f, 0.5f))
+            .SetAnchorMax(new(0.5f, 0.5f))
+            .SetPivot(new(0.5f, 0.5f))
+            .SetPosition(Vector2.zero)
+            .SetSizeDelta(new(2.5f, 2.5f));
+
+    Image handleImage =
+        handle.AddComponent<Image>()
+            .SetType(Image.Type.Sliced)
+            .SetSprite(UIResources.GetSprite("UISprite"))
+            .SetColor(Color.white)
+            .SetPixelsPerUnitMultiplier(1f);
+
+    return scrollbar.AddComponent<Scrollbar>()
+        .SetTargetGraphic(handleImage)
+        .SetTransition(Selectable.Transition.ColorTint)
+        .SetColors(ScrollbarColors)
+        .SetDirection(Scrollbar.Direction.TopToBottom)
+        .SetHandleRect(handleRectTransform);
+  }
+
+  public static readonly ColorBlock ScrollbarColors =
+      new() {
+        normalColor = Color.white,
+        highlightedColor = new(1f, 0.75f, 0f),
+        selectedColor = new(1f, 0.75f, 0f),
+        pressedColor = new(1f, 0.67f, 0.11f),
+        disabledColor = Color.gray,
+        colorMultiplier = 1f,
+        fadeDuration = 0.15f,
+      };
 }

@@ -54,11 +54,17 @@
     <Reference Include="gui_framework_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\gui_framework_publicized.dll</HintPath>
     </Reference>
+    <Reference Include="mscorlib" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\mscorlib.dll</HintPath>
+    </Reference>
     <Reference Include="SoftReferenceableAssets_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\SoftReferenceableAssets_publicized.dll</HintPath>
     </Reference>
     <Reference Include="Splatform_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\Splatform_publicized.dll</HintPath>
+    </Reference>
+    <Reference Include="System" Private="false">
+      <HintPath>$(GamePath)\valheim_Data\Managed\System.dll</HintPath>
     </Reference>
     <Reference Include="Unity.InputSystem" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\Unity.InputSystem.dll</HintPath>

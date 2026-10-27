@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.18.0
+
+  * Fixed for the `v1.0.21` patch.
+  * Refactored the entire `PinListPanel` list-view for improved performance.
+
 ### 1.17.0
 
   * Fixed for the `v1.0.12` patch.
