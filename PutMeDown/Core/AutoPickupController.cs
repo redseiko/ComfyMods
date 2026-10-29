@@ -1,9 +1,9 @@
-﻿namespace PutMeDown;
+namespace PutMeDown;
 
 using System.Collections.Generic;
 
 public static class AutoPickupController {
-  static readonly HashSet<string> _itemsToIgnore = new();
+  static readonly HashSet<string> _itemsToIgnore = [];
 
   public static void SetItemsToIgnore(IEnumerable<string> itemsToIgnore) {
     _itemsToIgnore.Clear();

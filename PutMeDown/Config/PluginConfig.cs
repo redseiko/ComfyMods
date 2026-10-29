@@ -1,11 +1,12 @@
-﻿namespace PutMeDown;
+namespace PutMeDown;
 
 using System.Collections.Generic;
-using System.Linq;
 
 using BepInEx.Configuration;
 
 using ComfyLib;
+
+using UnityEngine;
 
 public static class PluginConfig {
   public static ConfigEntry<bool> IsModEnabled { get; private set; }
@@ -18,7 +19,12 @@ public static class PluginConfig {
 
   [ComfyConfig]
   public static void BindConfig(ConfigFile config) {
-    IsModEnabled = config.BindInOrder("_Global", "isModEnabled", true, "Globally enable or disable this mod.");
+    IsModEnabled =
+        config.BindInOrder(
+            "_Global",
+            "isModEnabled",
+            true,
+            "Globally enable or disable this mod.");
   }
 
   [ComfyConfig(LateBind = true)]
@@ -72,7 +78,7 @@ public static class PluginConfig {
     CycleItemsToIgnoreConfig();
   }
 
-  static readonly List<ToggleStringListConfigEntry> _itemsToIgnoreConfigs = new();
+  static readonly List<ToggleStringListConfigEntry> _itemsToIgnoreConfigs = [];
   static int _itemsToIgnoreConfigIndex = -1;
   static ToggleStringListConfigEntry _itemsToIgnoreConfig = default;
 
@@ -93,19 +99,20 @@ public static class PluginConfig {
     }
   }
 
-  public static IEnumerable<ToggleStringListConfigEntry.SearchOption> GetItemDropSearchOptions() {
-    return ObjectDB.m_instance.m_items
-        .Where(
-            item =>
-                item.TryGetComponent(out ItemDrop itemDrop)
-                && itemDrop.m_autoPickup
-                && itemDrop.m_itemData.m_shared.m_icons.Length > 0
-                && !string.IsNullOrEmpty(itemDrop.m_itemData.m_shared.m_description))
-        .Select(
-            item =>
-                new ToggleStringListConfigEntry.SearchOption(
-                    item.name,
-                    Localization.m_instance.Localize(item.GetComponent<ItemDrop>().m_itemData.m_shared.m_name)
-                        + $" ({item.name})"));
+  public static List<ToggleStringListConfigEntry.SearchOption> GetItemDropSearchOptions() {
+    List<ToggleStringListConfigEntry.SearchOption> options = [];
+
+    foreach (GameObject item in ObjectDB.m_instance.m_items) {
+      if (item.TryGetComponent(out ItemDrop itemDrop)
+          && itemDrop.m_autoPickup
+          && itemDrop.m_itemData.m_shared.m_icons.Length > 0
+          && !string.IsNullOrEmpty(itemDrop.m_itemData.m_shared.m_description)) {
+        string name = Localization.m_instance.Localize(itemDrop.m_itemData.m_shared.m_name);
+
+        options.Add(new(item.name, $"{name} ({item.name})"));
+      }
+    }
+
+    return options;
   }
 }

@@ -1,4 +1,4 @@
-﻿namespace PutMeDown;
+namespace PutMeDown;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -13,21 +13,21 @@ static class PlayerPatch {
   [HarmonyPatch(nameof(Player.AutoPickup))]
   static IEnumerable<CodeInstruction> AutoPickupTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: false,
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Ldloc_S),
             new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(ItemDrop), nameof(ItemDrop.m_autoPickup))))
-        .ThrowIfInvalid("Could not patch Player.AutoPickup()! (m_autoPickup)")
+        .ThrowIfInvalid("Could not patch Player.AutoPickup()! (auto-pickup)")
         .CopyInstruction(out CodeInstruction loadItemDropInstruction)
         .Advance(offset: 2)
         .InsertAndAdvance(
             loadItemDropInstruction,
-            Transpilers.EmitDelegate(AutoPickupDelegate))
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(AutoPickupDelegate))))
         .InstructionEnumeration();
   }
 
   static CodeMatcher CopyInstruction(this CodeMatcher matcher, out CodeInstruction instruction) {
-    instruction = matcher.Instruction;
+    instruction = new CodeInstruction(matcher.Opcode, matcher.Operand);
     return matcher;
   }
 
@@ -43,15 +43,14 @@ static class PlayerPatch {
   [HarmonyPatch(nameof(Player.Update))]
   static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
-        .MatchForward(
-            useEnd: false,
-            new CodeMatch(OpCodes.Ldarg_0),
+        .Start()
+        .MatchStartForward(
             new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Player), nameof(Player.UpdateHover))))
-        .ThrowIfInvalid("Could not patch Player.Update()! (UpdateHover)")
-        .Advance(offset: 2)
+        .ThrowIfInvalid($"Could not patch Player.Update()! (update-hover)")
+        .Advance(offset: 1)
         .InsertAndAdvance(
             new CodeInstruction(OpCodes.Ldloc_1),
-            Transpilers.EmitDelegate(UpdateHoverPostDelegate))
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PlayerPatch), nameof(UpdateHoverPostDelegate))))
         .InstructionEnumeration();
   }
 

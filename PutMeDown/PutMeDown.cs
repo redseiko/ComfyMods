@@ -1,4 +1,4 @@
-﻿namespace PutMeDown;
+namespace PutMeDown;
 
 using System;
 using System.Globalization;
@@ -15,20 +15,15 @@ using HarmonyLib;
 public sealed class PutMeDown : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.putmedown";
   public const string PluginName = "PutMeDown";
-  public const string PluginVersion = "1.2.0";
+  public const string PluginVersion = "1.3.0";
 
   static ManualLogSource _logger;
-  Harmony _harmony;
 
   void Awake() {
     _logger = Logger;
     ComfyConfigUtils.BindConfig(Config);
 
-    _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
-  }
-
-  void OnDestroy() {
-    _harmony?.UnpatchSelf();
+    Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyInstanceId: PluginGuid);
   }
 
   public static void LogInfo(object obj) {

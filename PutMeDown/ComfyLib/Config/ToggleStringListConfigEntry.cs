@@ -1,8 +1,7 @@
-﻿namespace ComfyLib;
+namespace ComfyLib;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using BepInEx.Configuration;
 
@@ -33,21 +32,30 @@ public sealed class ToggleStringListConfigEntry {
     SettingChanged?.Invoke(this, ToggledStringValues());
   }
 
-  static readonly char[] _valueSeparator = { ',' };
-  static readonly char[] _toggleSeperator = { '=' };
-
-  readonly List<string> _valuesCache = new();
+  readonly List<string> _valuesCache = [];
   string _valueText = string.Empty;
+
+  static bool IsToggledOn(ReadOnlySpan<char> value) {
+    return value.Length == 1 && value[0] == '1';
+  }
 
   public string[] ToggledStringValues() {
     _valuesCache.Clear();
-    string[] values = BaseConfigEntry.Value.Split(_valueSeparator, StringSplitOptions.RemoveEmptyEntries);
+    ReadOnlySpan<char> span = BaseConfigEntry.Value.AsSpan();
 
-    for (int i = 0, count = values.Length; i < count; i++) {
-      string[] parts = values[i].Split(_toggleSeperator, 2, StringSplitOptions.RemoveEmptyEntries);
+    while (!span.IsEmpty) {
+      int commaIndex = span.IndexOf(',');
+      ReadOnlySpan<char> entry = commaIndex >= 0 ? span[..commaIndex] : span;
+      span = commaIndex >= 0 ? span[(commaIndex + 1)..] : [];
 
-      if (parts.Length >= 2 && parts[1] == "1") {
-        _valuesCache.Add(parts[0]);
+      if (entry.IsEmpty) {
+        continue;
+      }
+
+      int equalsIndex = entry.IndexOf('=');
+
+      if (equalsIndex > 0 && IsToggledOn(entry[(equalsIndex + 1)..])) {
+        _valuesCache.Add(entry[..equalsIndex].ToString());
       }
     }
 
@@ -58,9 +66,17 @@ public sealed class ToggleStringListConfigEntry {
     GUILayout.BeginVertical(GUILayout.ExpandWidth(true));
 
     _valuesCache.Clear();
+    ReadOnlySpan<char> span = BaseConfigEntry.Value.AsSpan();
 
-    _valuesCache.AddRange(
-        configEntry.BoxedValue.ToString().Split(_valueSeparator, StringSplitOptions.RemoveEmptyEntries));
+    while (!span.IsEmpty) {
+      int commaIndex = span.IndexOf(',');
+      ReadOnlySpan<char> entry = commaIndex >= 0 ? span[..commaIndex] : span;
+      span = commaIndex >= 0 ? span[(commaIndex + 1)..] : [];
+
+      if (!entry.IsEmpty) {
+        _valuesCache.Add(entry.ToString());
+      }
+    }
 
     GUILayout.BeginHorizontal();
     bool toggleOnClicked = GUILayout.Button("Toggle On", GUILayout.ExpandWidth(true));
@@ -71,12 +87,14 @@ public sealed class ToggleStringListConfigEntry {
     int removeIndex = -1;
 
     for (int i = 0, count = _valuesCache.Count; i < count; i++) {
-      string[] parts = _valuesCache[i].Split(_toggleSeperator, 2, StringSplitOptions.RemoveEmptyEntries);
-      bool isToggled = parts.Length >= 2 && parts[1] == "1";
+      ReadOnlySpan<char> entry = _valuesCache[i].AsSpan();
+      int equalsIndex = entry.IndexOf('=');
+      bool isToggled = equalsIndex > 0 && IsToggledOn(entry[(equalsIndex + 1)..]);
+      string label = equalsIndex > 0 ? entry[..equalsIndex].ToString() : _valuesCache[i];
 
       GUILayout.BeginHorizontal();
 
-      bool result = GUILayout.Toggle(isToggled, parts[0], GUILayout.ExpandWidth(true));
+      bool result = GUILayout.Toggle(isToggled, label, GUILayout.ExpandWidth(true));
 
       if (GUILayout.Button("\u2212", GUILayout.MinWidth(40f), GUILayout.ExpandWidth(false))) {
         removeIndex = i;
@@ -92,7 +110,7 @@ public sealed class ToggleStringListConfigEntry {
 
       if (result != isToggled) {
         hasChanged = true;
-        _valuesCache[i] = parts[0] + (result ? "=1" : "=0");
+        _valuesCache[i] = label + (result ? "=1" : "=0");
       }
     }
 
@@ -128,7 +146,7 @@ public sealed class ToggleStringListConfigEntry {
     }
 
     if (hasChanged) {
-      configEntry.BoxedValue = string.Join(",", _valuesCache);
+      BaseConfigEntry.Value = string.Join(",", _valuesCache);
     }
   }
 
@@ -155,7 +173,7 @@ public sealed class ToggleStringListConfigEntry {
     public AutoCompleteBox(Func<IEnumerable<SearchOption>> searchOptionsFunc) {
       _searchOptionsFunc = searchOptionsFunc;
       _options = null;
-      _currentOptions = new();
+      _currentOptions = [];
       _value = string.Empty;
       _scrollPosition = Vector2.zero;
     }
@@ -163,18 +181,7 @@ public sealed class ToggleStringListConfigEntry {
     public string DrawBox(string value) {
       if (_value != value) {
         _value = value;
-        _currentOptions.Clear();
-
-        if (!string.IsNullOrEmpty(value)) {
-          _options ??= new(_searchOptionsFunc());
-
-          _currentOptions.AddRange(
-              _options.Where(
-                  option =>
-                      option.DisplayValue.IndexOf(value, StringComparison.InvariantCultureIgnoreCase) >= 0
-                      || option.OptionValue.StartsWith(value, StringComparison.InvariantCultureIgnoreCase)));
-        }
-
+        FilterOptions(_value);
         _scrollPosition = Vector2.zero;
       }
 
@@ -183,6 +190,23 @@ public sealed class ToggleStringListConfigEntry {
       }
 
       return DrawCurrentOptions();
+    }
+
+    void FilterOptions(string query) {
+      _currentOptions.Clear();
+
+      if (string.IsNullOrEmpty(query)) {
+        return;
+      }
+
+      _options ??= [.. _searchOptionsFunc()];
+
+      foreach (SearchOption option in _options) {
+        if (option.DisplayValue.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
+            || option.OptionValue.StartsWith(query, StringComparison.OrdinalIgnoreCase)) {
+          _currentOptions.Add(option);
+        }
+      }
     }
 
     string DrawCurrentOptions() {

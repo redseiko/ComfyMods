@@ -1,4 +1,4 @@
-﻿namespace ComfyLib;
+namespace ComfyLib;
 
 using System;
 using System.Collections.Generic;
@@ -50,9 +50,9 @@ public static class ComfyConfigUtils {
 
     public static void Bind(ConfigFile config, MethodInfo method, ComfyConfigAttribute attribute) {
       if (!attribute.LateBind || _startupPatched) {
-        method.Invoke(null, new object[] { config });
+        method.Invoke(null, [config]);
       } else {
-        _lateBindQueue.Enqueue(() => method.Invoke(null, new object[] { config }));
+        _lateBindQueue.Enqueue(() => method.Invoke(null, [config]));
       }
     }
 
