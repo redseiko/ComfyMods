@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.7.0
+
+  * Updated for the `v1.0.21` patch.
+  * Migrated to SDK-style project.
+  * Minor code clean-up and refactoring.
+
 ### 1.6.0
 
   * Updated for the `v0.221.4` patch.

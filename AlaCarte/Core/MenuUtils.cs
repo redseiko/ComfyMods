@@ -1,4 +1,4 @@
-﻿namespace AlaCarte;
+namespace AlaCarte;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,8 +32,8 @@ public static class MenuUtils {
 
     if (!ornamentTransform.TryGetComponent(out MenuDialogDragger dragger)) {
       dragger = ornamentTransform.gameObject.AddComponent<MenuDialogDragger>();
-      dragger.MenuRectTransform = menuTransform;
-      dragger.OnMenuDragEnd += OnMenuDialogEndDrag;
+      dragger.TargetRectTransform = menuTransform;
+      dragger.OnMenuDialogDragEnd.AddListener(SaveMenuDialogPosition);
     }
   }
 
@@ -42,13 +42,13 @@ public static class MenuUtils {
 
     if (!menuTransform.TryGetComponent(out MenuDialogDragger dragger)) {
       dragger = menuTransform.gameObject.AddComponent<MenuDialogDragger>();
-      dragger.MenuRectTransform = menuTransform;
-      dragger.OnMenuDragEnd += OnMenuDialogEndDrag;
+      dragger.TargetRectTransform = menuTransform;
+      dragger.OnMenuDialogDragEnd.AddListener(SaveMenuDialogPosition);
     }
   }
 
-  static void OnMenuDialogEndDrag(object sender, Vector3 position) {
-    MenuDialogPosition.Value = position;
+  static void SaveMenuDialogPosition(Vector2 anchoredPosition) {
+    MenuDialogPosition.Value = anchoredPosition;
   }
 
   public static void ShowMenuDialog(Menu menu) {

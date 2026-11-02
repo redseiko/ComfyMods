@@ -1,34 +1,26 @@
-﻿namespace AlaCarte; 
-
-using System;
+namespace AlaCarte;
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 using static PluginConfig;
 
 public sealed class MenuDialogDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
-  public RectTransform MenuRectTransform;
-  public event EventHandler<Vector3> OnMenuDragEnd;
-
-  Vector2 _lastMousePosition;
+  public RectTransform TargetRectTransform;
+  public readonly UnityEvent<Vector2> OnMenuDialogDragEnd = new();
 
   public void OnBeginDrag(PointerEventData eventData) {
-    _lastMousePosition = eventData.position;
-
     if (!MenuDialogCanDragPanel.Value) {
       eventData.pointerDrag = default;
     }
   }
 
   public void OnDrag(PointerEventData eventData) {
-    Vector2 difference = eventData.position - _lastMousePosition;
-    MenuRectTransform.position += new Vector3(difference.x, difference.y, 0f);
-
-    _lastMousePosition = eventData.position;
+    TargetRectTransform.anchoredPosition += eventData.delta;
   }
 
   public void OnEndDrag(PointerEventData eventData) {
-    OnMenuDragEnd?.Invoke(this, MenuRectTransform.anchoredPosition);
+    OnMenuDialogDragEnd.Invoke(TargetRectTransform.anchoredPosition);
   }
 }

@@ -1,4 +1,4 @@
-﻿namespace AlaCarte;
+namespace AlaCarte;
 
 using BepInEx.Configuration;
 
@@ -40,7 +40,7 @@ public static class PluginConfig {
             "MenuDialog",
             "menuDialogPosition",
             new Vector2(0f, 212f),
-            "Menu.m_menuDialog.position");
+            "Menu.m_menuDialog.anchoredPosition value.");
 
     MenuDialogCanDragPanel =
         config.BindInOrder(

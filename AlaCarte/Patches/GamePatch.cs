@@ -1,4 +1,4 @@
-﻿namespace AlaCarte;
+namespace AlaCarte;
 
 using HarmonyLib;
 
@@ -9,7 +9,7 @@ static class GamePatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Game.Pause))]
   static void PausePostfix() {
-    if (IsModEnabled.Value && DisableGamePauseOnMenu.Value) {
+    if (DisableGamePauseOnMenu.Value) {
       Game.m_pause = false;
     }
   }

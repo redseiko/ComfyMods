@@ -22,7 +22,8 @@
 
 ## Configuration
 
-Changes to any of the configuration options requires opening and closing the menu to take effect.
+  * Toggling `isModEnabled` requires a full game-restart to take effect.
+  * Changes to *any other* config-option requires opening and closing the menu to take effect.
 
 ![Configuration](https://i.imgur.com/gxqQoaK.png)
 
