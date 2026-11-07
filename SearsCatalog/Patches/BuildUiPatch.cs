@@ -113,6 +113,18 @@ static class BuildUiPatch {
 
     return true;
   }
+
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(BuildUi.PressedFavoriteButton))]
+  static void PressedFavoriteButtonPostfix(BuildUi __instance, BuildUiPieceButton btn) {
+    BuildUiController.UpdatePieceButtons(__instance);
+  }
+
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(BuildUi.RemoveFromFavorites))]
+  static void RemoveFromFavorites(BuildUi __instance, Piece piece) {
+    BuildUiController.UpdatePieceButtons(__instance);
+  }
 }
 
 [HarmonyPatch(typeof(BuildUiPieceButton))]
