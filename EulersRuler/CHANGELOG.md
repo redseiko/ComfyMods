@@ -1,5 +1,14 @@
 ## Changelog
 
+### 1.9.1
+
+  * The `Stability` information on the `HoverPiecePanel` now also displays the material it's made out of (Stone, Wood, Marble, etc).
+  * Added a new enum `Resists` to the `hoverPiecePanelEnabledRows` config-option. It is disabled by default.
+  * When enabled, the `HoverPiecePanel` will report whether the piece resists rain, ash, and burning damage.
+  * Added new enum `Stability` to the `placementGhostPanelEnabledRows` config-option. It is enabled by default.
+  * When enabled, it displays the material of the current piece and estimates how far (in meters) the pieces can be snapped to the sides and top of the selected target.
+  * This calculation is not very accurate (the game's stability calculations are complex) but will provide a rough guide.
+
 ### 1.9.0
 
   * Updated for the `v0.219.14` patch.
