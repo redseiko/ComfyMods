@@ -30,10 +30,42 @@
 
 All config-options can be modified in-game and will take effect when the `BuildUi` panel is re-opened.
 
-![Configuration](https://i.imgur.com/QkYSAzm.png)
+`[_Global]`
+
+  * `isModEnabled`
+    * Globally enable or disable this mod.
+    * Default: `true`
+
+`[BuildUi.Panel]`
+
+  * `canMovePanel`
+    * Allow moving the BuildUi panel.
+    * Default: `true`
+  * `panelPosition`
+    * BuildUi panel `RectTransform.anchoredPosition` value.
+    * Default: `(0, 0)`
+  * `canResizePanel`
+    * Allow resizing the BuildUi panel.
+    * Default: `true`
+  * `panelSizeDelta`
+    * BuildUi panel `RectTransform.sizeDelta` value.
+    * Default: `(0, 0)`
+
+`[BuildUi.AdvancedMenu]`
+
+  * `alwaysShowAdvancedMenu`
+    * If set, will always show/enable the advanced-menu (sidebar with tags) in the BuildUi panel.
+    * Default: `false`
+
+`[BuildUi.SearchFilter]`
+
+  * `searchFilterMode`
+    * BuildUi search-filter mode. `Advanced` enables multi-word searching.
+    * Options: `Vanilla`, `Advanced`
+    * Default: `Advanced`
 
 ## Notes
 
-  * See source at: [GitHub](https://github.com/redseiko/ComfyMods/tree/main/SearsCatalog).
+  * See source at: [GitHub/ComfyMods](https://github.com/redseiko/ComfyMods/tree/main/SearsCatalog).
   * Looking for a chill Valheim server? [Comfy Valheim Discord](https://discord.gg/ameHJz5PFk)
-  * SearsCatalog icon created by [@jenniely](https://twitter.com/jenniely) (jenniely.com)
+  * SearsCatalog icon created by [@jenniely](https://twitter.com/jenniely) ([jenniely.com](https://jenniely.com)).

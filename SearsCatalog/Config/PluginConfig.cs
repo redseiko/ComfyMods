@@ -20,6 +20,8 @@ public static class PluginConfig {
     Advanced
   }
 
+  public static ConfigEntry<bool> BuildUiAlwaysShowAdvancedMenu { get; private set; }
+
   public static ConfigEntry<SearchFilterMode> BuildUiSearchFilterMode { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
@@ -57,6 +59,13 @@ public static class PluginConfig {
             "panelSizeDelta",
             defaultValue: Vector2.zero,
             "BuildUi panel RectTransform.sizeDelta value.");
+
+    BuildUiAlwaysShowAdvancedMenu =
+        config.BindInOrder(
+            "BuildUi.AdvancedMenu",
+            "alwaysShowAdvancedMenu",
+            defaultValue: false,
+            "If set, will always show/enable the advanced-menu (sidebar with tags) in the BuildUi panel.");
 
     BuildUiSearchFilterMode =
         config.BindInOrder(

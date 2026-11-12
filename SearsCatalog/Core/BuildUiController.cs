@@ -129,9 +129,6 @@ public static class BuildUiController {
 
     WindowDragger.enabled = BuildUiCanMovePanel.Value;
     WindowResizer.enabled = BuildUiCanResizePanel.Value;
-
-    PieceGridView.UpdatePoolSize();
-    PieceGridView.Refresh();
   }
 
   public static void UpdatePieceButtons(BuildUi buildUi) {
@@ -245,6 +242,14 @@ public static class BuildUiController {
   public static void FocusPiece(Piece piece) {
     if (PieceSearchFilter.TryFindFilteredPieceIndex(piece, out int index)) {
       PieceGridView.ScrollToItem(index);
+    }
+  }
+
+  public static void RefreshFavoritePiece(string pieceName) {
+    if (PieceSearchFilter.TryFindFilteredPieceIndex(pieceName, out int index)
+        && PieceGridView.TryGetGridItem(index, out GameObject item)
+        && item.TryGetComponent(out BuildUiPieceButton pieceButton)) {
+      pieceButton.RefreshFavorite();
     }
   }
 

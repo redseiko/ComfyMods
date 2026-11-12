@@ -24,13 +24,13 @@ public sealed class PooledGridView {
   public int FirstVisibleIndex { get; private set; }
   public Navigation EdgeNavigation { get; set; }
   public float ScrollPadding { get; set; } = 0f;
-  public Vector2 StepSize => _stepSize;
+  public Vector2 StepSize { get; private set; } = Vector2.zero;
 
   int _columns = 1;
   int _totalRows = 0;
   int _maxVisibleRows = 0;
   float _totalHeight = 0f;
-  Vector2 _stepSize;
+  Vector2 _availableSize = Vector2.zero;
 
   Func<Transform, RectTransform> _itemFactory;
   Action<int, GameObject> _onItemRender = OnItemRender;
@@ -92,9 +92,7 @@ public sealed class PooledGridView {
     }
 
     ItemSize = size;
-
     UpdatePoolSize();
-    RefreshTotalHeight();
 
     return this;
   }
@@ -105,18 +103,14 @@ public sealed class PooledGridView {
     }
 
     ItemSpacing = spacing;
-
     UpdatePoolSize();
-    RefreshTotalHeight();
 
     return this;
   }
 
   public PooledGridView SetPadding(RectOffset padding) {
     Padding = padding;
-
     UpdatePoolSize();
-    RefreshTotalHeight();
 
     return this;
   }
@@ -133,10 +127,11 @@ public sealed class PooledGridView {
       return;
     }
 
-    _stepSize = ItemSize + ItemSpacing;
-    _columns = Mathf.Max(1, Mathf.FloorToInt((GetAvailableWidth() + ItemSpacing.x) / _stepSize.x));
+    StepSize = ItemSize + ItemSpacing;
+    _availableSize = new Vector2(GetAvailableWidth(), GetViewportHeight());
+    _columns = Mathf.Max(1, Mathf.FloorToInt((_availableSize.x + ItemSpacing.x) / StepSize.x));
     _maxVisibleRows =
-        Mathf.CeilToInt((GetViewportHeight() - Padding.top - Padding.bottom + _stepSize.y * 2f) / _stepSize.y);
+        Mathf.CeilToInt((_availableSize.y - Padding.top - Padding.bottom + StepSize.y * 2f) / StepSize.y);
 
     EnsurePoolCapacity((_maxVisibleRows + 2) * _columns);
     RefreshTotalHeight();
@@ -218,9 +213,20 @@ public sealed class PooledGridView {
 
   public void SetTotalItems(int count) {
     _totalItems = count;
+
+    if (HasAvailableSizeChanged()) {
+      UpdatePoolSize();
+      return;
+    }
+
     RefreshTotalHeight();
     Invalidate();
     Refresh();
+  }
+
+  bool HasAvailableSizeChanged() {
+    return !Mathf.Approximately(_availableSize.x, GetAvailableWidth())
+        || !Mathf.Approximately(_availableSize.y, GetViewportHeight());
   }
 
   public void Refresh() {
@@ -232,12 +238,12 @@ public sealed class PooledGridView {
     int column = index % _columns;
 
     return new Vector2(
-        Padding.left + (column * _stepSize.x) + (ItemSize.x / 2f),
-        -(Padding.top + (row * _stepSize.y) + (ItemSize.y / 2f)));
+        Padding.left + (column * StepSize.x) + (ItemSize.x / 2f),
+        -(Padding.top + (row * StepSize.y) + (ItemSize.y / 2f)));
   }
 
   void OnScroll(Vector2 sliderValue) {
-    if (_itemStates.Length <= 0 || _stepSize.y <= 0f || _columns <= 0) {
+    if (_itemStates.Length <= 0 || StepSize.y <= 0f || _columns <= 0) {
       return;
     }
 
@@ -270,7 +276,7 @@ public sealed class PooledGridView {
   void CalculateVisibleItemRange(out int startIndex, out int endIndex) {
     Vector2 scrollPosition = ScrollRect.content.anchoredPosition;
 
-    int firstVisibleRow = Mathf.Max(0, Mathf.FloorToInt((scrollPosition.y - Padding.top) / _stepSize.y));
+    int firstVisibleRow = Mathf.Max(0, Mathf.FloorToInt((scrollPosition.y - Padding.top) / StepSize.y));
     FirstVisibleIndex = Mathf.Min(firstVisibleRow * _columns, Mathf.Max(0, _totalItems - 1));
 
     int startRow = Mathf.Max(0, firstVisibleRow - 1);
@@ -328,7 +334,7 @@ public sealed class PooledGridView {
   }
 
   public void UpdateNavigation() {
-    if (_itemStates.Length <= 0 || _stepSize.y <= 0f || _columns <= 0) {
+    if (_itemStates.Length <= 0 || StepSize.y <= 0f || _columns <= 0) {
       return;
     }
 
@@ -360,7 +366,7 @@ public sealed class PooledGridView {
     }
 
     int row = index / _columns;
-    float rowTopY = Padding.top + (row * _stepSize.y);
+    float rowTopY = Padding.top + (row * StepSize.y);
     float rowBottomY = rowTopY + ItemSize.y;
 
     float viewportHeight = GetViewportHeight();
@@ -375,7 +381,7 @@ public sealed class PooledGridView {
     float targetScrollY = currentScrollY;
 
     if (rowTopY < safeTopY) {
-      targetScrollY = (row * _stepSize.y) - effectivePadding;
+      targetScrollY = (row * StepSize.y) - effectivePadding;
     } else if (rowBottomY > safeBottomY) {
       targetScrollY = rowBottomY + effectivePadding + Padding.bottom - viewportHeight;
     }

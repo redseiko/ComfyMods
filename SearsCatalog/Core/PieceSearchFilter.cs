@@ -68,6 +68,23 @@ public static class PieceSearchFilter {
     return false;
   }
 
+  public static bool TryFindFilteredPieceIndex(string pieceName, out int index) {
+    if (string.IsNullOrEmpty(pieceName)) {
+      index = -1;
+      return false;
+    }
+
+    for (int i = 0, count = FilteredPieces.Count; i < count; i++) {
+      if (FilteredPieces[i].gameObject.name == pieceName) {
+        index = i;
+        return true;
+      }
+    }
+
+    index = -1;
+    return false;
+  }
+
   public static void ApplySearch(string term) {
     if (string.IsNullOrEmpty(term)) {
       ResetFilteredPieces();

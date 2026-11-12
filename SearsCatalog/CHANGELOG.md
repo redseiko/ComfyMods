@@ -1,5 +1,12 @@
 ## Changelog
 
+### 1.11.0
+
+  * Updated for the `v1.0.21` patch.
+  * Fixed a bug where the `PooledGridView` would not refresh when swapping to/from `PieceTable` without advanced-menu.
+  * Added new config-option `[BuildUi.AdvancedMenu] alwaysShowAdvancedMenu` to always show the advanced-menu.
+  * Minor code clean-up and refactoring.
+
 ### 1.10.1
 
   * Fixed bug where adding or removing favorite pieces required closing and reopening build menu.
