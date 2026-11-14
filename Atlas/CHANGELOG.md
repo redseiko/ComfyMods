@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.20.0
+
+  * Modified `SetTimeCreatedDelegate` to be `PostDeserializeZDODelegate` to handle world-chunk edge-cases.
+  * Added new `ValidatePortalObjects()` to move out non-portal ZDOs on world load.
+
 ### 1.19.0
 
   * Updated for the `v1.0.21` patch.

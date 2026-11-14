@@ -76,22 +76,37 @@ static class ZDOManPatch {
     ZDOManUtils.SetTimeCreatedFields(zdo);
   }
 
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(ZDOMan.LoadChunks))]
+  static void LoadChunksPostfix(ZDOMan __instance) {
+    ZDOManUtils.ValidatePortalObjects(__instance);
+  }
+
   [HarmonyTranspiler]
   [HarmonyPatch(nameof(ZDOMan.RPC_ZDOData))]
   static IEnumerable<CodeInstruction> RPC_ZDODataTranspiler(IEnumerable<CodeInstruction> instructions) {
     return new CodeMatcher(instructions)
+        .Start()
+        .MatchEndForward(
+            new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(ZNet), nameof(ZNet.IsServer))),
+            new CodeMatch(OpCodes.Brfalse),
+            new CodeMatch(OpCodes.Ldloc_S))
+        .ThrowIfInvalid("Could not patch ZDOMan.RPC_ZDOData()! (is-server)")
+        .CopyInstruction(out CodeInstruction ldLocS13)
         .Start()
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldloc_S),
             new CodeMatch(OpCodes.Ldloc_3),
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(ZDO), nameof(ZDO.Deserialize))))
         .ThrowIfInvalid("Could not patch ZDOMan.RPC_ZDOData()! (deserialize)")
-        .SaveInstruction(offset: 0, out CodeInstruction ldLocS12)
+        .CopyInstruction(out CodeInstruction ldLocS12)
         .Advance(offset: 3)
         .InsertAndAdvance(
+            new CodeInstruction(OpCodes.Ldarg_0),
             ldLocS12,
+            ldLocS13,
             new CodeInstruction(
-                OpCodes.Call, AccessTools.Method(typeof(ZDOManUtils), nameof(ZDOManUtils.SetTimeCreatedDelegate))))
+                OpCodes.Call, AccessTools.Method(typeof(ZDOManUtils), nameof(ZDOManUtils.PostDeserializeZDODelegate))))
         .InstructionEnumeration();
   }
 

@@ -1,4 +1,4 @@
-﻿namespace Atlas;
+namespace Atlas;
 
 using System;
 using System.Collections.Generic;
@@ -13,14 +13,73 @@ public static class ZDOManUtils {
     }
   }
 
-  public static void SetTimeCreatedDelegate(ZDO zdo) {
-    if (!zdo.HasLong(Atlas.TimeCreatedHash)) {
-      zdo.Set(Atlas.TimeCreatedHash, (long) (ZNet.m_instance.m_netTime * TimeSpan.TicksPerSecond));
-      zdo.Set(Atlas.EpochTimeCreatedHash, DateTimeOffset.Now.ToUnixTimeSeconds());
+  public static void ValidatePortalObjects(ZDOMan zdoManager) {
+    HashSet<int> portalPrefabHashes = [.. Game.instance.PortalPrefabHash];
+    List<ZDO> nonPortalZDOs = [];
+    List<ZoneSystem.SectorIndex> emptySectors = [];
+
+    foreach (KeyValuePair<ZoneSystem.SectorIndex, List<ZDO>> pair in zdoManager.m_portalObjects) {
+      List<ZDO> portalObjects = pair.Value;
+
+      for (int i = portalObjects.Count - 1; i >= 0; i--) {
+        ZDO zdo = portalObjects[i];
+
+        if (!portalPrefabHashes.Contains(zdo.m_prefab)) {
+          nonPortalZDOs.Add(zdo);
+          portalObjects.RemoveAt(i);
+        }
+      }
+
+      if (portalObjects.Count <= 0) {
+        emptySectors.Add(pair.Key);
+      }
     }
 
-    if (!zdo.HasZDOID(Atlas.OriginalUidUserIdHash, Atlas.OriginalUidIdHash)) {
-      zdo.SetZDOID(Atlas.OriginalUidUserIdHash, Atlas.OriginalUidIdHash, zdo.m_uid);
+    foreach (ZoneSystem.SectorIndex sectorIndex in emptySectors) {
+      zdoManager.m_portalObjects.Remove(sectorIndex);
+    }
+
+    if (nonPortalZDOs.Count <= 0) {
+      return;
+    }
+
+    zdoManager.DirtyPortalObjects = true;
+
+    foreach (ZDO zdo in nonPortalZDOs) {
+      SetTimeCreatedFields(zdo);
+      zdoManager.AddToSector(zdo, zdo.GetSectorIndex());
+    }
+
+    PluginLogger.LogInfo($"Moved {nonPortalZDOs.Count} non-portal ZDOs from m_portalObjects to sectors.");
+  }
+
+  public static void PostDeserializeZDODelegate(ZDOMan zdoManager, ZDO zdo, bool isNewZDO) {
+    bool isDataModified = false;
+    ZDOID uid = zdo.m_uid;
+
+    if (isNewZDO || !zdo.HasLong(Atlas.TimeCreatedHash)) {
+      isDataModified |=
+          ZDOExtraData.Set(uid, Atlas.TimeCreatedHash, (long) (ZNet.m_instance.m_netTime * TimeSpan.TicksPerSecond));
+      isDataModified |= ZDOExtraData.Set(uid, Atlas.EpochTimeCreatedHash, DateTimeOffset.Now.ToUnixTimeSeconds());
+    }
+
+    if (isNewZDO || !zdo.HasZDOID(Atlas.OriginalUidUserIdHash, Atlas.OriginalUidIdHash)) {
+      isDataModified |= ZDOExtraData.Set(uid, Atlas.OriginalUidUserIdHash, uid.UserID);
+      isDataModified |= ZDOExtraData.Set(uid, Atlas.OriginalUidIdHash, uid.ID);
+    }
+
+    if (isDataModified) {
+      zdo.DataRevision++;
+    }
+
+    if (!zdo.Persistent) {
+      return;
+    }
+
+    if (Game.instance.PortalPrefabHash.Contains(zdo.m_prefab)) {
+      zdoManager.DirtyPortalObjects = true;
+    } else {
+      zdoManager.SetDirtyChunks(zdo.GetSectorIndex());
     }
   }
 
