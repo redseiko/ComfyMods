@@ -54,6 +54,15 @@
     <Reference Include="gui_framework_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\gui_framework_publicized.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Cecil" Private="false">
+      <HintPath>$(GamePath)\BepInEx\core\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.RuntimeDetour" Private="false">
+      <HintPath>$(GamePath)\BepInEx\core\MonoMod.RuntimeDetour.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.Utils" Private="false">
+      <HintPath>$(GamePath)\BepInEx\core\MonoMod.Utils.dll</HintPath>
+    </Reference>
     <Reference Include="SoftReferenceableAssets_publicized" Private="false">
       <HintPath>$(GamePath)\valheim_Data\Managed\publicized_assemblies\SoftReferenceableAssets_publicized.dll</HintPath>
     </Reference>

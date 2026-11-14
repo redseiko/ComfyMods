@@ -1,4 +1,4 @@
-﻿namespace BetterZeeLog;
+namespace BetterZeeLog;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -9,7 +9,7 @@ using HarmonyLib;
 static class UIGroupHandlerPatch {
   [HarmonyTranspiler]
   [HarmonyPatch(nameof(UIGroupHandler.Update))]
-  static IEnumerable<CodeInstruction> Update1Transpiler(
+  static IEnumerable<CodeInstruction> UpdateTranspiler(
       IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
     return new CodeMatcher(instructions, generator)
         .Start()

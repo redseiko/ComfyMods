@@ -1,5 +1,14 @@
 ## Changelog
 
+### 1.18.0
+
+  * Updated for the `v1.0.21` patch.
+  * Added new `ArmorStand`, `ItemStand` and `PickableItem` transpiler patches to remove the following log spam:
+    * `Missing item prefab ...`
+    * `Failed to get attach prefab for item ...`
+  * Replaced `ZLog.Log()` prefix-patch for `"Console: "` with new MonoMod `ILHook` specifically for dedicated servers.
+  * Updated `ZLog.Log*()` timestamp-transpilers to be more efficient.
+
 ### 1.17.0
 
   * Updated for the `v1.0.20` patch.

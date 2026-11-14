@@ -12,6 +12,9 @@ public static class PluginConfig {
   public static ConfigEntry<bool> RemoveContainerRequestOpenLogging { get; private set; }
   public static ConfigEntry<bool> RemovePlayerPlacePieceLogging { get; private set; }
   public static ConfigEntry<bool> RemovePlayerTryPlacePieceLogging { get; private set; }
+  public static ConfigEntry<bool> RemoveArmorStandSetVisualItemLogging { get; private set; }
+  public static ConfigEntry<bool> RemoveItemStandSetVisualItemLogging { get; private set; }
+  public static ConfigEntry<bool> RemovePickableItemSetupItemLogging { get; private set; }
 
   public static ConfigEntry<bool> CheckProjectFixedUpdateZeroVelocity { get; private set; }
 
@@ -35,7 +38,7 @@ public static class PluginConfig {
             "Logging",
             "removeFailedToSendDataLogging",
             true,
-            "Removes (NOPs out) 'Failed to send data' logging in ZSteamSocket.");
+            "Removes 'Failed to send data' logging in ZSteamSocket.SendQueuedPackages().");
 
     RemoveContainerRequestOpenLogging =
         config.BindInOrder(
@@ -57,6 +60,28 @@ public static class PluginConfig {
             "removePlayerTryPlacePieceLogging",
             true,
             "Removes 'Placed' logging in Player.TryPlacePiece().");
+
+    RemoveArmorStandSetVisualItemLogging =
+        config.BindInOrder(
+            "Logging",
+            "removeArmorStandSetVisualItemLogging",
+            true,
+            "Removes 'Missing item prefab' logging in ArmorStand.SetVisualItem().");
+
+    RemoveItemStandSetVisualItemLogging =
+        config.BindInOrder(
+            "Logging",
+            "removeItemStandSetVisualItemLogging",
+            true,
+            "Removes 'Missing item prefab' and 'Failed to get attach prefab for item' logging in "
+                + "ItemStand.SetVisualItem().");
+
+    RemovePickableItemSetupItemLogging =
+        config.BindInOrder(
+            "Logging",
+            "removePickableItemSetupItemLogging",
+            true,
+            "Removes 'Failed to get attach prefab for item' logging in PickableItem.SetupItem().");
 
     CheckProjectFixedUpdateZeroVelocity =
         config.BindInOrder(
