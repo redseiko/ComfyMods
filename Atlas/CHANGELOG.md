@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.19.0
+
+  * Updated for the `v1.0.21` patch.
+  * Added new `delete-zdos` command (for now).
+
 ### 1.18.0
 
   * Fixed for the `v1.0.12` patch.
