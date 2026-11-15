@@ -1,10 +1,8 @@
-﻿namespace Intermission;
+namespace Intermission;
 
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-
-using ComfyLib;
 
 using HarmonyLib;
 
@@ -17,7 +15,8 @@ public static class CustomAssets {
   static readonly Dictionary<string, Sprite> _loadingImageCache = [];
 
   static readonly MethodInfo _loadImageMethod =
-      AccessTools.Method(typeof(ImageConversion), nameof(ImageConversion.LoadImage), [typeof(Texture2D), typeof(byte[])]);
+      AccessTools.Method(
+          typeof(ImageConversion), nameof(ImageConversion.LoadImage), [typeof(Texture2D), typeof(byte[])]);
 
   public static void Initialize(string pluginDir) {
     LoadingTips.Clear();
@@ -37,14 +36,14 @@ public static class CustomAssets {
     } else {
       Intermission.LogInfo($"Creating new empty custom tips file: {path}");
       Directory.CreateDirectory(Path.GetDirectoryName(path));
-      File.Create(path);
+      File.Create(path).Dispose();
 
       return [];
     }
   }
 
   public static IEnumerable<string> ReadLoadingImageFiles(string path, string extension) {
-    Directory.CreateDirectory(Path.GetDirectoryName(path));
+    Directory.CreateDirectory(path);
 
     string[] loadingImageFiles = Directory.GetFiles(path, $"*{extension}", SearchOption.TopDirectoryOnly);
 
@@ -80,7 +79,7 @@ public static class CustomAssets {
 
   public static bool GetRandomLoadingTip(out string tipText) {
     if (LoadingTips.Count > 0) {
-      tipText = LoadingTips[UnityEngine.Random.Range(0, LoadingTips.Count)];
+      tipText = LoadingTips[Random.Range(0, LoadingTips.Count)];
       return true;
     }
 
@@ -93,7 +92,7 @@ public static class CustomAssets {
   public static bool GetRandomLoadingImage(out Sprite loadingImageSprite) {
     if (LoadingImageFiles.Count > 0) {
       if (_loadingImageIndex < 0 || _loadingImageIndex >= LoadingImageFiles.Count) {
-        LoadingImageFiles.Sort(RandomStringComparer.Instance);
+        Utils.Shuffle(LoadingImageFiles);
         _loadingImageIndex = 0;
       }
 

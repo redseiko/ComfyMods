@@ -1,5 +1,17 @@
 ## Changelog
 
+### 1.10.0
+
+  * Updated for the `v1.0.21` patch.
+  * Migrated to SDK-style project.
+  * Updated mod icon.
+  * Added new logic to toggle showing the loading-screen immediately on-death.    
+  * Added new logic to toggle showing the loading-screen instead of the vanilla portal animation.
+  * Added new config-options for the above:
+    * `[Hud.LoadingScreen] showImmediatelyOnDeath`
+    * `[Hud.LoadingScreen] showOnTeleport`
+  * Code clean-up and refactoring.
+
 ### 1.9.0
 
   * Fixed for the `0.221.10` patch.

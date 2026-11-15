@@ -1,4 +1,4 @@
-﻿namespace Intermission;
+namespace Intermission;
 
 using ComfyLib;
 
@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 using static PluginConfig;
 
-public static class HudUtils {
+public static class LoadingManager {
   static TMP_Text _cachedTipText;
   static Image _cachedLoadingImage;
   static Image _cachedLoadingBackground;
@@ -111,5 +111,45 @@ public static class HudUtils {
         .SetAnchorMax(Vector2.right)
         .SetPosition(LoadingTipTextPosition.Value)
         .SetSizeDelta(new(-50f, 78f));
+  }
+
+  public static void SetupFejdStartup(FejdStartup fejdStartup) {
+    Image loadingImage = fejdStartup.m_loading.transform.Find("Bkg").GetComponent<Image>();
+
+    // FejdStartup.m_menuAnimator locks the vanilla TMP_Text UI state, so work-around is to clone it to a new object.
+    TMP_Text sourceLoadingText = fejdStartup.m_loading.transform.Find("Text").GetComponent<TMP_Text>();
+    TMP_Text loadingText = Object.Instantiate(sourceLoadingText, fejdStartup.m_loading.transform);
+    loadingText.name = sourceLoadingText.name;
+    Object.Destroy(sourceLoadingText.gameObject);
+
+    Transform panelSeparator =
+        Object.Instantiate(
+            fejdStartup.m_menuList.transform.Find("ornament"), fejdStartup.m_loading.transform);
+
+    SetupTipText(loadingText);
+    SetupLoadingBackground(loadingImage.transform.parent);
+    SetupLoadingImage(loadingImage);
+    SetupPanelSeparator(panelSeparator);
+
+    SetLoadingTip(loadingText);
+    SetLoadingImage(loadingImage);
+  }
+
+  public static void SetupHud(Hud hud) {
+    Transform loadingProgress = hud.m_loadingProgress.transform;
+    Transform panelSeparator = loadingProgress.Find("panel_separator");
+
+    SetupTipText(hud.m_loadingTip);
+    SetupLoadingImage(hud.m_loadingImage);
+    SetupPanelSeparator(panelSeparator);
+
+    SetLoadingTip(hud.m_loadingTip);
+    SetLoadingImage(hud.m_loadingImage);
+
+    loadingProgress.Find("TopFade").Ref()?.gameObject.SetActive(false);
+    loadingProgress.Find("BottomFade").Ref()?.gameObject.SetActive(false);
+    loadingProgress.Find("text_darken").Ref()?.gameObject.SetActive(false);
+
+    SetupLoadingBackground(hud.transform.Find("LoadingBlack/Bkg").GetComponent<Image>());
   }
 }

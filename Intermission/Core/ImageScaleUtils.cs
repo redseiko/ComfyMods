@@ -1,4 +1,4 @@
-﻿namespace Intermission;
+namespace Intermission;
 
 using System.Collections;
 

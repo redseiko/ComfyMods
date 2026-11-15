@@ -1,4 +1,4 @@
-﻿namespace Intermission;
+namespace Intermission;
 
 using HarmonyLib;
 
@@ -31,9 +31,9 @@ static class SceneLoaderPatch {
       sceneLoader._showSaveNotification = false;
       sceneLoader._showHealthWarning = false;
 
-      HudUtils.SetupLoadingBackground(_loadingImage.transform.parent);
-      HudUtils.SetupLoadingImage(_loadingImage);
-      HudUtils.SetLoadingImage(_loadingImage);
+      LoadingManager.SetupLoadingBackground(_loadingImage.transform.parent);
+      LoadingManager.SetupLoadingImage(_loadingImage);
+      LoadingManager.SetLoadingImage(_loadingImage);
       sceneLoader.ScaleLerpLoadingImage(_loadingImage);
 
       sceneLoader.gameLogo = _loadingImage.gameObject;
@@ -41,10 +41,10 @@ static class SceneLoaderPatch {
 
     if (SceneLoaderShowProgressText.Value) {
       TMP_Text sourceLoadingText = sceneLoader.savingNotification.GetComponentInChildren<TMP_Text>();
-      _loadingText = UnityEngine.Object.Instantiate(sourceLoadingText, _loadingImage.transform.parent);
+      _loadingText = Object.Instantiate(sourceLoadingText, _loadingImage.transform.parent);
 
-      HudUtils.SetupTipText(_loadingText);
-      HudUtils.SetLoadingTip(_loadingText);
+      LoadingManager.SetupTipText(_loadingText);
+      LoadingManager.SetLoadingTip(_loadingText);
     }
 
     if (SceneLoaderCenterProgressIndicator.Value) {
@@ -70,10 +70,12 @@ static class SceneLoaderPatch {
   static void UpdatePostfix(SceneLoader __instance) {
     float time = Time.time;
 
-    if (SceneLoaderUseLoadingImages.Value && time - _lastImageTime >= 10f) {
+    if (SceneLoaderUseLoadingImages.Value
+        && CustomAssets.LoadingImageFiles.Count > 0
+        && time - _lastImageTime >= 10f) {
       _lastImageTime = time;
 
-      HudUtils.SetLoadingImage(_loadingImage);
+      LoadingManager.SetLoadingImage(_loadingImage);
       __instance.ScaleLerpLoadingImage(_loadingImage);
     }
 

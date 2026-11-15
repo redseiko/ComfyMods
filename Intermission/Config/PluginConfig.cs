@@ -1,4 +1,4 @@
-﻿namespace Intermission;
+namespace Intermission;
 
 using System;
 
@@ -30,6 +30,9 @@ public static class PluginConfig {
   public static ConfigEntry<Vector2> LoadingTipTextPosition { get; private set; }
   public static ConfigEntry<int> LoadingTipTextFontSize { get; private set; }
   public static ConfigEntry<Color> LoadingTipTextColor { get; private set; }
+
+  public static ConfigEntry<bool> ShowLoadingScreenImmediatelyOnDeath { get; private set; }
+  public static ConfigEntry<bool> ShowLoadingScreenOnTeleport { get; private set; }
 
   public static void BindConfig(ConfigFile config) {
     IsModEnabled =
@@ -154,21 +157,36 @@ public static class PluginConfig {
             "The position of the panel separator image on the loading screen.");
 
     LoadingScreenPanelSeparatorPosition.SettingChanged += OnPanelSeparatorConfigChanged;
+
+    // Hud
+    ShowLoadingScreenImmediatelyOnDeath =
+        config.BindInOrder(
+            "Hud.LoadingScreen",
+            "showImmediatelyOnDeath",
+            true,
+            "If set, will show the loading screen immediately on death.");
+
+    ShowLoadingScreenOnTeleport =
+        config.BindInOrder(
+            "Hud.LoadingScreen",
+            "showOnTeleport",
+            true,
+            "If set, will show loading screen instead of vanilla teleport animation.");
   }
 
   static void OnLoadingImageConfigChanged(object sender, EventArgs args) {
-    HudUtils.SetupLoadingImage();
+    LoadingManager.SetupLoadingImage();
   }
 
   static void OnLoadingTipConfigChanged(object sender, EventArgs args) {
-    HudUtils.SetupTipText();
+    LoadingManager.SetupTipText();
   }
 
   static void OnLoadingBackgroundConfigChanged(object sender, EventArgs args) {
-    HudUtils.SetupLoadingBackground();
+    LoadingManager.SetupLoadingBackground();
   }
 
   static void OnPanelSeparatorConfigChanged(object sender, EventArgs args) {
-    HudUtils.SetupPanelSeparator();
+    LoadingManager.SetupPanelSeparator();
   }
 }
