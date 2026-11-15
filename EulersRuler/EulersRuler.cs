@@ -12,7 +12,7 @@ using static PluginConfig;
 public sealed class EulersRuler : BaseUnityPlugin {
   public const string PluginGUID = "redseiko.valheim.eulersruler";
   public const string PluginName = "EulersRuler";
-  public const string PluginVersion = "1.9.0";
+  public const string PluginVersion = "1.9.1";
 
   void Awake() {
     BindConfig(Config);
