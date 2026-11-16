@@ -1,4 +1,4 @@
-﻿namespace ZoneScouter;
+namespace ZoneScouter;
 
 using BepInEx.Configuration;
 
@@ -12,6 +12,7 @@ public static class PluginConfig {
   public static ConfigEntry<bool> ShowSectorInfoPanel { get; private set; }
   public static ConfigEntry<Vector2> SectorInfoPanelPosition { get; private set; }
   public static ConfigEntry<Color> SectorInfoPanelBackgroundColor { get; private set; }
+  public static ConfigEntry<KeyboardShortcut> ToggleSectorInfoPanelShortcut { get; private set; }
 
   public static ConfigEntry<int> SectorInfoPanelFontSize { get; private set; }
 
@@ -80,6 +81,13 @@ public static class PluginConfig {
             "Show the SectorInfoPanel on the Hud.");
 
     ShowSectorInfoPanel.OnSettingChanged(SectorInfoPanelController.ToggleSectorInfoPanel);
+
+    ToggleSectorInfoPanelShortcut =
+        config.BindInOrder(
+            "SectorInfoPanel",
+            "toggleSectorInfoPanelShortcut",
+            new KeyboardShortcut(KeyCode.None),
+            "Shortcut to toggle on/off the SectorInfoPanel.");
 
     SectorInfoPanelPosition =
         config.BindInOrder(

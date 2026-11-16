@@ -55,9 +55,8 @@ public static class SectorBoundaries {
     WaitForSeconds waitInterval = new(seconds: 1f);
 
     while (true) {
-      yield return waitInterval;
-
       if (!ZoneSystem.s_instance || !Player.m_localPlayer) {
+        yield return waitInterval;
         continue;
       }
 
@@ -68,6 +67,8 @@ public static class SectorBoundaries {
       cubePosition.y = position.y;
 
       _boundaryCube.transform.position = cubePosition;
+
+      yield return waitInterval;
     }
   }
 

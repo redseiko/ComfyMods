@@ -26,7 +26,7 @@ public static class SectorInfoPanelController {
 
   public static void ToggleSectorInfoPanel() {
     if (_updateSectorInfoPanelCoroutine != null) {
-      Hud.m_instance.Ref().StopCoroutine(_updateSectorInfoPanelCoroutine);
+      Hud.m_instance.Ref()?.StopCoroutine(_updateSectorInfoPanelCoroutine);
       _updateSectorInfoPanelCoroutine = null;
     }
 
@@ -79,8 +79,8 @@ public static class SectorInfoPanelController {
   }
 
   public static void ToggleSectorZDOCountGrid() {
-    if (_updateSectorZDOCountGridCoroutine != null && Hud.m_instance) {
-      Hud.m_instance.StopCoroutine(_updateSectorZDOCountGridCoroutine);
+    if (_updateSectorZDOCountGridCoroutine != null) {
+      Hud.m_instance.Ref()?.StopCoroutine(_updateSectorZDOCountGridCoroutine);
       _updateSectorZDOCountGridCoroutine = null;
     }
 
@@ -106,16 +106,15 @@ public static class SectorInfoPanelController {
   static IEnumerator UpdateSectorInfoPanelCoroutine() {
     WaitForSeconds waitInterval = new(seconds: 0.25f);
 
-    Vector3Int lastPosition = Vector3Int.zero;
+    Vector3Int lastPosition = new(int.MinValue, int.MinValue, int.MaxValue);
     Vector2s lastSector = new(short.MinValue, short.MaxValue);
 
     long lastZDOCount = long.MaxValue;
     uint lastNextUid = uint.MaxValue;
 
     while (true) {
-      yield return waitInterval;
-
       if (!ZoneSystem.s_instance || !Player.m_localPlayer || !HasValidSectorInfoPanel()) {
+        yield return waitInterval;
         continue;
       }
 
@@ -138,15 +137,15 @@ public static class SectorInfoPanelController {
       Vector2s currentSector = ZoneSystem.GetZone(position);
       long currentZDOCount = GetSectorZDOCount(currentSector);
 
-      if (currentSector == lastSector && currentZDOCount == lastZDOCount) {
-        continue;
+      if (currentSector != lastSector || currentZDOCount != lastZDOCount) {
+        lastSector = currentSector;
+        lastZDOCount = currentZDOCount;
+
+        SectorInfoPanel.SectorXY.Value.SetText($"{currentSector.x},{currentSector.y}");
+        SectorInfoPanel.SectorZDOCount.Value.SetText($"{currentZDOCount}");
       }
 
-      lastSector = currentSector;
-      lastZDOCount = currentZDOCount;
-
-      SectorInfoPanel.SectorXY.Value.SetText($"{currentSector.x},{currentSector.y}");
-      SectorInfoPanel.SectorZDOCount.Value.SetText($"{currentZDOCount}");
+      yield return waitInterval;
     }
   }
 

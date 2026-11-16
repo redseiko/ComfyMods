@@ -18,7 +18,15 @@ static class HudPatch {
   [HarmonyPostfix]
   [HarmonyPatch(nameof(Hud.Update))]
   static void UpdatePostfix() {
-    if (IsModEnabled.Value && ToggleSectorBoundariesShortcut.Value.IsDown()) {
+    if (!IsModEnabled.Value) {
+      return;
+    }
+
+    if (ToggleSectorInfoPanelShortcut.Value.IsDown()) {
+      ShowSectorInfoPanel.Value = !ShowSectorInfoPanel.Value;
+    }
+
+    if (ToggleSectorBoundariesShortcut.Value.IsDown()) {
       ShowSectorBoundaries.Value = !ShowSectorBoundaries.Value;
     }
   }

@@ -66,6 +66,8 @@ public sealed class SectorInfoPanel {
 
     PanelDragger = Panel.AddComponent<PanelDragger>();
     PanelDragger.TargetRectTransform = Panel.GetComponent<RectTransform>();
+
+    ToggleMenuComponents(Menu.IsVisible());
   }
 
   public void SetPanelStyle() {

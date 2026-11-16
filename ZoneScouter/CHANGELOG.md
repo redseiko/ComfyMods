@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.12.0
+
+  * Updated for the `v1.0.21` patch.
+  * Minor code clean-up.
+  * Added new config-option `[SectorInfoPanel] toggleSectorInfoPanelShortcut`.
+
 ### 1.11.0
 
   * Updated for the `v1.0.16` patch.
