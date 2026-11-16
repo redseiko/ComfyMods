@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.7.0
+
+  * Updated for the `v1.0.21` patch.
+  * Fixed an issue with `Yggdrasil` becoming invisible at `Y >= 3000m`.
+
 ### 1.6.1
 
   * Actually include `CHANGELOG.md` (sigh).

@@ -67,6 +67,11 @@ public static class YggdrasilManager {
 
       YggdrasilBranchCollider.sharedMesh = filter.sharedMesh;
     }
+
+    if (YggdrasilBranch.TryGetComponent(out RenderGroupSubscriber subscriber)) {
+      SkyTree.LogInfo($"Setting YggdrasilBranch/branch RenderGroup from {subscriber.Group} to {RenderGroup.Always}.");
+      subscriber.Group = RenderGroup.Always;
+    }
   }
 
   public static void SetYggdrasilSkybox() {
@@ -75,6 +80,10 @@ public static class YggdrasilManager {
 
       if (YggdrasilBranch.TryGetComponent(out MeshCollider collider)) {
         UnityEngine.Object.Destroy(collider);
+      }
+
+      if (YggdrasilBranch.TryGetComponent(out RenderGroupSubscriber subscriber)) {
+        subscriber.Group = RenderGroup.Overworld;
       }
     }
 

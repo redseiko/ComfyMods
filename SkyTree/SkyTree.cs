@@ -1,4 +1,4 @@
-﻿namespace SkyTree;
+namespace SkyTree;
 
 using System;
 using System.Globalization;
@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class SkyTree : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.skytree";
   public const string PluginName = "SkyTree";
-  public const string PluginVersion = "1.6.1";
+  public const string PluginVersion = "1.7.0";
 
   static ManualLogSource _logger;
 
