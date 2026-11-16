@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.2.0
+
+  * Updated for the `v1.0.21` patch.
+  * Migrated all code to use new world-chunk format.
+  * Added transaction to `dump-zdos` making it 10x faster (at dumping).
+
 ### 1.1.0
 
   * Migrated to SDK-style project.

@@ -1,6 +1,5 @@
-﻿namespace Queryable;
+namespace Queryable;
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -44,16 +43,22 @@ public static class ZDOUtils {
   }
 
   public static bool TryReadContainerItems(ZDO zdo, List<ContainerItem> items) {
-    if (!zdo.GetString(ZDOVars.s_items, out string itemsInBase64) || string.IsNullOrEmpty(itemsInBase64)) {
+    if (!ZDOExtraData.GetByteArray(zdo.m_uid, ZDOVars.s_items, out byte[] itemsData)
+        || itemsData == null
+        || itemsData.Length <= 0) {
       return false;
     }
 
-    byte[] itemsData = Convert.FromBase64String(itemsInBase64);
-    MemoryStream stream = new(itemsData, writable: false);
-    BinaryReader reader = new(stream, Encoding.UTF8);
+    using MemoryStream stream = new(itemsData, writable: false);
+    using BinaryReader reader = new(stream, Encoding.UTF8);
 
     int version = reader.ReadInt32();
-    int count = reader.ReadInt32();
+
+    if (version < (int)global::Version.Item.Smaller) {
+      return false;
+    }
+
+    int count = reader.ReadUInt16();
 
     if (count <= 0) {
       return false;
@@ -61,66 +66,142 @@ public static class ZDOUtils {
 
     items.Clear();
 
-    if (version == 106) {
-      for (int i = 0; i < count; i++) {
-        ContainerItem item = ReadContainerItem(reader);
-        items.Add(item);
-      }
-    } else {
-      for (int i = 0; i < count; i++) {
-        ContainerItem item = ReadContainerItemOld(reader, version);
-        items.Add(item);
-      }
+    for (int i = 0; i < count; i++) {
+      items.Add(ReadContainerItem(reader, version));
     }
 
     return true;
   }
 
-  public static ContainerItem ReadContainerItem(BinaryReader reader) {
-    ContainerItem containerItem = new() {
-      Name = reader.ReadString(),
-      Stack = reader.ReadInt32(),
-      Durability = reader.ReadSingle(),
-      GridPositionX = reader.ReadInt32(),
-      GridPositionY = reader.ReadInt32(),
-      IsEquipped = reader.ReadBoolean(),
-      Quality = reader.ReadInt32(),
-      Variant = reader.ReadInt32(),
-      CrafterId = reader.ReadInt64(),
-      CrafterName = reader.ReadString(),
-      CustomDataJson = ReadItemCustomDataToJson(reader),
-      WorldLevel = reader.ReadInt32(),
-      IsPickedUp = reader.ReadBoolean(),
-    };
+  static int ReadNumItems(BinaryReader reader) {
+    int count = reader.ReadByte();
 
-    return containerItem;
+    if ((count & 128) != 0) {
+      count = ((count & 127) << 8) | reader.ReadByte();
+    }
+
+    return count;
   }
 
-  public static ContainerItem ReadContainerItemOld(BinaryReader reader, int version) {
-    ContainerItem containerItem = new() {
-      Name = reader.ReadString(),
-      Stack = reader.ReadInt32(),
-      Durability = reader.ReadSingle(),
-      GridPositionX = reader.ReadInt32(),
-      GridPositionY = reader.ReadInt32(),
-      IsEquipped = reader.ReadBoolean(),
-      Quality = version >= 101 ? reader.ReadInt32() : 1,
-      Variant = version >= 102 ? reader.ReadInt32() : 0,
-      CrafterId = version >= 103 ? reader.ReadInt64() : 0,
-      CrafterName = version >= 103 ? reader.ReadString() : string.Empty,
-      CustomDataJson = version >= 104 ? ReadItemCustomDataToJson(reader) : string.Empty,
-      WorldLevel = version >= 105 ? reader.ReadInt32() : 0,
-      IsPickedUp = version >= 106 && reader.ReadBoolean(),
-    };
+  static void ReadItemFields(
+      BinaryReader reader,
+      int version,
+      out int prefabHash,
+      out float durability,
+      out int gridPositionX,
+      out int gridPositionY,
+      out int worldLevel,
+      out bool isPickedUp,
+      out bool isEquipped,
+      out int quality,
+      out int stack,
+      out int variant,
+      out long crafterId,
+      out string crafterName,
+      out string customDataJson) {
+    durability = reader.ReadInt32() * 0.01f;
+    gridPositionX = reader.ReadByte();
+    gridPositionY = reader.ReadByte();
+    worldLevel = reader.ReadByte();
 
-    return containerItem;
+    byte flags = reader.ReadByte();
+    isPickedUp = (flags & 1) != 0;
+    isEquipped = (flags & 2) != 0;
+    quality = (flags & 4) == 0 ? 1 : reader.ReadUInt16();
+    stack = (flags & 8) == 0 ? 1 : reader.ReadUInt16();
+    variant = (flags & 16) == 0 ? 0 : reader.ReadInt32();
+    crafterId = (flags & 32) == 0 ? 0L : reader.ReadInt64();
+    crafterName = (flags & 32) == 0 ? string.Empty : reader.ReadString();
+    prefabHash = (flags & 64) == 0 ? 0 : reader.ReadInt32();
+
+    int customDataCount = (flags & 128) == 0 ? 0 : ReadNumItems(reader);
+    customDataJson = customDataCount > 0 ? ReadItemCustomDataToJson(reader, customDataCount) : string.Empty;
+
+    if (version >= (int) Version.Item.ChunksNCheats || version == (int) Version.Item.AbandonedDN) {
+      reader.ReadByte();
+    }
+  }
+
+  static ContainerItem ReadContainerItem(BinaryReader reader, int version) {
+    ReadItemFields(
+        reader,
+        version,
+        out int prefabHash,
+        out float durability,
+        out int gridPositionX,
+        out int gridPositionY,
+        out int worldLevel,
+        out bool isPickedUp,
+        out bool isEquipped,
+        out int quality,
+        out int stack,
+        out int variant,
+        out long crafterId,
+        out string crafterName,
+        out string customDataJson);
+
+    string name =
+        prefabHash == 0
+            ? string.Empty
+            : (PrefabUtils.TryGetPrefabName(prefabHash, out string prefabName) ? prefabName : prefabHash.ToString());
+
+    return new() {
+      Name = name,
+      Stack = stack,
+      Durability = durability,
+      GridPositionX = gridPositionX,
+      GridPositionY = gridPositionY,
+      IsEquipped = isEquipped,
+      Quality = quality,
+      Variant = variant,
+      CrafterId = crafterId,
+      CrafterName = crafterName,
+      CustomDataJson = customDataJson,
+      WorldLevel = worldLevel,
+      IsPickedUp = isPickedUp,
+    };
+  }
+
+  static ItemDropItem ReadItemDropItem(BinaryReader reader, int version) {
+    ReadItemFields(
+        reader,
+        version,
+        out int prefabHash,
+        out float durability,
+        out int _,
+        out int _,
+        out int worldLevel,
+        out bool isPickedUp,
+        out bool _,
+        out int quality,
+        out int stack,
+        out int variant,
+        out long crafterId,
+        out string crafterName,
+        out string customDataJson);
+
+    string? name =
+        prefabHash == 0
+            ? null
+            : (PrefabUtils.TryGetPrefabName(prefabHash, out string prefabName) ? prefabName : prefabHash.ToString());
+
+    return new() {
+      Name = name,
+      Durability = durability,
+      Stack = stack,
+      Quality = quality,
+      Variant = variant,
+      CrafterId = crafterId,
+      CrafterName = crafterName,
+      CustomDataJson = customDataJson,
+      WorldLevel = worldLevel,
+      IsPickedUp = isPickedUp,
+    };
   }
 
   static readonly StringBuilder _jsonBuilder = new(capacity: 128);
 
-  public static string ReadItemCustomDataToJson(BinaryReader reader) {
-    int count = reader.ReadInt32();
-
+  public static string ReadItemCustomDataToJson(BinaryReader reader, int count) {
     if (count <= 0) {
       return string.Empty;
     }
@@ -143,6 +224,42 @@ public static class ZDOUtils {
     return jsonResult;
   }
 
+  static bool TryReadItemDropItem(ZDOID zid, int itemDataHash, out ItemDropItem item) {
+    if (!ZDOExtraData.GetByteArray(zid, itemDataHash, out byte[] itemDataBytes)
+        || itemDataBytes == null
+        || itemDataBytes.Length <= 2) {
+      item = default;
+      return false;
+    }
+
+    using MemoryStream stream = new(itemDataBytes, writable: false);
+    using BinaryReader reader = new(stream, Encoding.UTF8);
+
+    int version = reader.ReadByte();
+
+    if (version >= (int) Version.Item.Smaller) {
+      item = ReadItemDropItem(reader, version);
+      return !item.IsNull();
+    }
+
+    item = default;
+    return false;
+  }
+
+  static bool TryGetAttachedItemName(ZDOID zid, int itemKeyHash, out string itemName) {
+    if (ZDOExtraData.GetInt(zid, itemKeyHash, out int itemHash) && itemHash != 0) {
+      itemName = PrefabUtils.TryGetPrefabName(itemHash, out string prefabName) ? prefabName : itemHash.ToString();
+      return true;
+    }
+
+    if (ZDOExtraData.GetString(zid, itemKeyHash, out itemName) && !string.IsNullOrEmpty(itemName)) {
+      return true;
+    }
+
+    itemName = default;
+    return false;
+  }
+
   public static bool TryReadArmorStandItems(ZDO zdo, int slotCount, List<ItemDropItem> armorStandItems) {
     if (slotCount <= 0) {
       return false;
@@ -154,177 +271,46 @@ public static class ZDOUtils {
 
     for (int slotIndex = 0; slotIndex < slotCount; slotIndex++) {
       ItemSlot itemSlot = PrefabUtils.ArmorStandItemSlots[slotIndex];
-      ItemDropItem item = new();
 
-      if (ZDOExtraData.GetString(zid, itemSlot.ItemHash, out string itemName)) {
-        item.Name = itemName;
+      if (!TryGetAttachedItemName(zid, itemSlot.ItemHash, out string itemName)) {
+        continue;
       }
 
-      if (ZDOExtraData.GetFloat(zid, itemSlot.DurabiltyHash, out float durability)) {
-        item.Durability = durability;
+      if (!TryReadItemDropItem(zid, itemSlot.ItemDataHash, out ItemDropItem item)) {
+        item = new ItemDropItem();
       }
 
-      if (ZDOExtraData.GetInt(zid, itemSlot.StackHash, out int stack)) {
-        item.Stack = stack;
-      }
-
-      if (ZDOExtraData.GetInt(zid, itemSlot.QualityHash, out int quality)) {
-        item.Quality = quality;
-      }
-
-      if (ZDOExtraData.GetInt(zid, itemSlot.VariantHash, out int variant)) {
-        item.Variant = variant;
-      }
-
-      if (ZDOExtraData.GetLong(zid, itemSlot.CrafterIdHash, out long crafterId)) {
-        item.CrafterId = crafterId;
-      }
-
-      if (ZDOExtraData.GetString(zid, itemSlot.CrafterNameHash, out string crafterName)) {
-        item.CrafterName = crafterName;
-      }
-
-      if (ZDOExtraData.GetInt(zid, itemSlot.DataCountHash, out int dataCount) && dataCount > 0) {
-        item.CustomDataJson = ReadItemCustomDataToJson(zid, slotIndex, dataCount);
-      }
-
-      if (ZDOExtraData.GetInt(zid, itemSlot.WorldLevelHash, out int worldLevel)) {
-        item.WorldLevel = worldLevel;
-      }
-
-      if (ZDOExtraData.GetBool(zid, itemSlot.PickedUpHash, out bool isPickedUp)) {
-        item.IsPickedUp = isPickedUp;
-      }
-
-      if (!item.IsNull()) {
-        armorStandItems.Add(item);
-      }
+      item.Name = itemName;
+      armorStandItems.Add(item);
     }
 
-    return true;
-  }
-
-  public static string ReadItemCustomDataToJson(ZDOID zid, int slotIndex, int dataCount) {
-    if (dataCount <= 0) {
-      return string.Empty;
-    }
-
-    string slotIndexStr = slotIndex.ToString();
-
-    _jsonBuilder
-        .Clear()
-        .Append("{")
-        .Append("\"")
-        .Append(ZDOExtraData.GetString(zid, $"{slotIndexStr}_data_0".GetStableHashCode(), string.Empty))
-        .Append("\":\"")
-        .Append(ZDOExtraData.GetString(zid, $"{slotIndexStr}_data__0".GetStableHashCode(), string.Empty))
-        .Append("\"");
-
-
-    for (int i = 1; i < dataCount; i++) {
-      _jsonBuilder.Append($",\"")
-          .Append(ZDOExtraData.GetString(zid, $"{slotIndexStr}_data_{i}".GetStableHashCode(), string.Empty))
-          .Append("\": \"")
-          .Append(ZDOExtraData.GetString(zid, $"{slotIndexStr}_data__{i}".GetStableHashCode(), string.Empty))
-          .Append("\"");
-    }
-
-    _jsonBuilder.Append("}");
-
-    string jsonResult = _jsonBuilder.ToString();
-
-    _jsonBuilder.Clear();
-
-    return jsonResult;
+    return armorStandItems.Count > 0;
   }
 
   public static bool TryReadItemStandItem(ZDO zdo, out ItemDropItem item) {
-    if (!TryReadItemDropItem(zdo, out item)) {
+    if (!TryGetAttachedItemName(zdo.m_uid, ZDOVars.s_item, out string itemName)) {
+      item = default;
       return false;
     }
 
-    if (ZDOExtraData.GetString(zdo.m_uid, ZDOVars.s_item, out string itemName)) {
-      item.Name = itemName;
+    if (!TryReadItemDropItem(zdo, out item)) {
+      item = new ItemDropItem();
     }
 
+    item.Name = itemName;
     return true;
   }
 
   public static bool TryReadItemDropItem(ZDO zdo, out ItemDropItem item) {
-    ZDOID zid = zdo.m_uid;
-    item = new ItemDropItem();
-
-    if (ZDOExtraData.GetFloat(zid, ZDOVars.s_durability, out float durability)) {
-      item.Durability = durability;
+    if (!TryReadItemDropItem(zdo.m_uid, ZDOVars.s_itemData, out item)) {
+      return false;
     }
 
-    if (ZDOExtraData.GetInt(zid, ZDOVars.s_stack, out int stack)) {
-      item.Stack = stack;
+    if (string.IsNullOrEmpty(item.Name) && zdo.m_prefab != 0) {
+      item.Name =
+          PrefabUtils.TryGetPrefabName(zdo.m_prefab, out string prefabName) ? prefabName : zdo.m_prefab.ToString();
     }
 
-    if (ZDOExtraData.GetInt(zid, ZDOVars.s_quality, out int quality)) {
-      item.Quality = quality;
-    }
-
-    if (ZDOExtraData.GetInt(zid, ZDOVars.s_variant, out int variant)) {
-      item.Variant = variant;
-    }
-
-    if (ZDOExtraData.GetLong(zid, ZDOVars.s_crafterID, out long crafterId)) {
-      item.CrafterId = crafterId;
-    }
-
-    if (ZDOExtraData.GetString(zid, ZDOVars.s_crafterName, out string crafterName)) {
-      item.CrafterName = crafterName;
-    }
-
-    if (ZDOExtraData.GetInt(zid, ZDOVars.s_dataCount, out int dataCount) && dataCount > 0) {
-      item.CustomDataJson = ReadItemCustomDataToJson(zid, dataCount);
-    }
-
-    if (ZDOExtraData.GetInt(zid, ZDOVars.s_worldLevel, out int worldLevel)) {
-      item.WorldLevel = worldLevel;
-    }
-
-    if (ZDOExtraData.GetBool(zid, ZDOVars.s_pickedUp, out bool isPickedUp)) {
-      item.IsPickedUp = isPickedUp;
-    }
-
-    return !item.IsNull();
-  }
-
-  public static readonly int CustomDataKey0HashCode = "data_0".GetStableHashCode();
-  public static readonly int CustomDataValue0HashCode = "data__0".GetStableHashCode();
-
-  public static string ReadItemCustomDataToJson(ZDOID zid, int dataCount) {
-    if (dataCount <= 0) {
-      return string.Empty;
-    }
-
-    _jsonBuilder
-        .Clear()
-        .Append("{")
-        .Append("\"")
-        .Append(ZDOExtraData.GetString(zid, CustomDataKey0HashCode, string.Empty))
-        .Append("\":\"")
-        .Append(ZDOExtraData.GetString(zid, CustomDataValue0HashCode, string.Empty))
-        .Append("\"");
-
-
-    for (int i = 1; i < dataCount; i++) {
-      _jsonBuilder.Append($",\"")
-          .Append(ZDOExtraData.GetString(zid, $"data_{i}".GetStableHashCode(), string.Empty))
-          .Append("\": \"")
-          .Append(ZDOExtraData.GetString(zid, $"data__{i}".GetStableHashCode(), string.Empty))
-          .Append("\"");
-    }
-
-    _jsonBuilder.Append("}");
-
-    string jsonResult = _jsonBuilder.ToString();
-
-    _jsonBuilder.Clear();
-
-    return jsonResult;
+    return true;
   }
 }

@@ -14,8 +14,6 @@ using SQLite;
 
 using UnityEngine;
 
-using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
-
 public static class DumpZDOsCommand {
   [ComfyCommand]
   public static Terminal.ConsoleCommand Register() {
@@ -41,7 +39,7 @@ public static class DumpZDOsCommand {
   public static IEnumerator RunCoroutine(Terminal context) {
     ConcurrentQueue<ZDO> zdos = new(ZDOMan.s_instance.m_objectsByID.Values);
     long startTimeSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-    string databaseName = $"{ZNet.m_world.m_fileName}-zdos-{startTimeSeconds}.db";
+    string databaseName = $"{WorldUtils.GetWorldName(ZNet.m_world)}-zdos-{startTimeSeconds}.db";
 
     using (SQLiteConnection populateDatabase = DatabaseUtils.CreateDatabaseAndTables(databaseName)) {
       Task populateTask =
@@ -53,7 +51,7 @@ public static class DumpZDOsCommand {
     }
 
 
-    ComfyLogger.LogInfo($"Parsing {zdos.Count} ZDOs and dumping items to: {databaseName}", context);
+    ComfyLogger.LogInfo($"Parsing {zdos.Count} ZDOs and dumping ZDOs to: {databaseName}", context);
 
     using SQLiteConnection database = DatabaseUtils.CreateDatabase(databaseName);
 
@@ -79,9 +77,13 @@ public static class DumpZDOsCommand {
   }
 
   public static void RunThread(SQLiteConnection database, ConcurrentQueue<ZDO> zdos) {
+    database.BeginTransaction();
+
     while (zdos.TryDequeue(out ZDO zdo)) {
-      InsertDataObject(database, zdo);      
+      InsertDataObject(database, zdo);
     }
+
+    database.Commit();
   }
 
   static DataObject InsertDataObject(SQLiteConnection database, ZDO zdo) {

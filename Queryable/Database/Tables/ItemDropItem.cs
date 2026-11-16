@@ -25,7 +25,8 @@ public sealed class ItemDropItem {
 
   public bool IsNull() {
     return
-        Durability == null
+        Name == null
+        && Durability == null
         && Stack == null
         && Quality == null
         && Variant == null

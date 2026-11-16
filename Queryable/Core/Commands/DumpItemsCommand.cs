@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading.Tasks;
 
 using ComfyLib;
@@ -39,7 +38,7 @@ public static class DumpItemsCommand {
   public static IEnumerator RunCoroutine(Terminal context) {
     ConcurrentQueue<ZDO> zdos = new(ZDOMan.s_instance.m_objectsByID.Values);
     long startTimeSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-    string databaseName = $"{ZNet.m_world.m_fileName}-items-{startTimeSeconds}.db";
+    string databaseName = $"{WorldUtils.GetWorldName(ZNet.m_world)}-items-{startTimeSeconds}.db";
 
     using (SQLiteConnection populateDatabase = DatabaseUtils.CreateDatabaseAndTables(databaseName)) {
       Task populateTask =
@@ -99,6 +98,8 @@ public static class DumpItemsCommand {
     List<ContainerItem> containerItems = [];
     List<ItemDropItem> armorStandItems = [];
 
+    database.BeginTransaction();
+
     while (zdos.TryDequeue(out ZDO zdo)) {
       DataObject dataObject = default;
 
@@ -113,7 +114,7 @@ public static class DumpItemsCommand {
           containerItems[i].ObjectId = containerId;
         }
 
-        database.InsertAll(containerItems, typeof(ContainerItem), runInTransaction: true);
+        database.InsertAll(containerItems, typeof(ContainerItem), runInTransaction: false);
         containerItems.Clear();
       }
 
@@ -146,10 +147,12 @@ public static class DumpItemsCommand {
           armorStandItems[i].ArmorStandId = armorStandId;
         }
 
-        database.InsertAll(armorStandItems, typeof(ItemDropItem), runInTransaction: true);
+        database.InsertAll(armorStandItems, typeof(ItemDropItem), runInTransaction: false);
         armorStandItems.Clear();
       }
     }
+
+    database.Commit();
   }
 
   static DataObject InsertDataObject(SQLiteConnection database, ZDO zdo) {

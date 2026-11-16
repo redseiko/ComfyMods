@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 using ComfyLib;
 
@@ -18,11 +17,19 @@ public static class QueryWorldCommand {
   }
 
   public static List<string> GetWorldFilenames() {
-    if (Directory.Exists(WorldUtils.WorldsDir)) {
-      return [.. Directory.GetFiles(WorldUtils.WorldsDir, "*.db").Select(Path.GetFileName)];
+    if (!Directory.Exists(WorldUtils.WorldsDir)) {
+      return [];
     }
 
-    return [];
+    List<string> worldFilenames = [];
+
+    foreach (string directory in Directory.GetDirectories(WorldUtils.WorldsDir)) {
+      if (Directory.GetFiles(directory, "_main.*.db2").Length > 0) {
+        worldFilenames.Add(Path.GetFileName(directory));
+      }
+    }
+
+    return worldFilenames;
   }
 
   public static object Run(Terminal.ConsoleEventArgs args) {   
@@ -36,7 +43,7 @@ public static class QueryWorldCommand {
 
       string filenameArg = args[1];
 
-      if (string.IsNullOrEmpty(filenameArg) || filenameArg.Length <= 3) {
+      if (string.IsNullOrEmpty(filenameArg)) {
         ComfyLogger.LogError($"Missing or invalid filename arg.");
         return false;
       }

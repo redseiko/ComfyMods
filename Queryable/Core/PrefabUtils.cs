@@ -40,6 +40,7 @@ public static class PrefabUtils {
     return netScene;
   }
 
+  public static readonly Dictionary<int, string> PrefabNames = [];
   public static readonly Dictionary<int, ArmorStand> ArmorStandPrefabs = [];
   public static readonly Dictionary<int, ItemStand> ItemStandPrefabs = [];
   public static readonly Dictionary<int, ItemDrop> ItemDropPrefabs = [];
@@ -53,6 +54,7 @@ public static class PrefabUtils {
   }
 
   public static void ProcessPrefabCache(Dictionary<int, GameObject> prefabCache) {
+    PrefabNames.Clear();
     ArmorStandPrefabs.Clear();
     ItemStandPrefabs.Clear();
     ItemDropPrefabs.Clear();
@@ -60,6 +62,8 @@ public static class PrefabUtils {
     foreach (KeyValuePair<int, GameObject> pair in prefabCache) {
       int prefabHash = pair.Key;
       GameObject prefab = pair.Value;
+
+      PrefabNames[prefabHash] = prefab.name;
 
       if (prefab.TryGetComponent(out ArmorStand armorStand)) {
         ArmorStandPrefabs[prefabHash] = armorStand;
@@ -77,9 +81,14 @@ public static class PrefabUtils {
     ComfyLogger.LogInfo(
         $"Processed prefab-cache.\n"
             + $"Cached prefab-hashes by type:\n"
+            + $"  * PrefabNames: {PrefabNames.Count}\n"
             + $"  * ArmorStand: {ArmorStandPrefabs.Count}\n"
             + $"  * ItemStand: {ItemStandPrefabs.Count}\n"
             + $"  * ItemDrop: {ItemDropPrefabs.Count}");
+  }
+
+  public static bool TryGetPrefabName(int prefabHash, out string prefabName) {
+    return PrefabNames.TryGetValue(prefabHash, out prefabName);
   }
 
   public static bool HasArmorStandComponent(ZDO zdo, out int slotCount) {
