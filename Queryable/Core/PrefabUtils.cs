@@ -21,9 +21,13 @@ public static class PrefabUtils {
       return true;
     }
 
-    prefabCache = new(capacity: netScene.m_prefabs.Count);
+    prefabCache = new(capacity: netScene.m_prefabs.Count + netScene.m_nonNetViewPrefabs.Count);
 
     foreach (GameObject prefab in netScene.m_prefabs) {
+      prefabCache[prefab.name.GetStableHashCode()] = prefab;
+    }
+
+    foreach (GameObject prefab in netScene.m_nonNetViewPrefabs) {
       prefabCache[prefab.name.GetStableHashCode()] = prefab;
     }
 
@@ -92,7 +96,11 @@ public static class PrefabUtils {
   }
 
   public static bool HasArmorStandComponent(ZDO zdo, out int slotCount) {
-    if (ArmorStandPrefabs.TryGetValue(zdo.m_prefab, out ArmorStand armorStand)) {
+    return HasArmorStandComponent(zdo.m_prefab, out slotCount);
+  }
+
+  public static bool HasArmorStandComponent(int prefabHash, out int slotCount) {
+    if (ArmorStandPrefabs.TryGetValue(prefabHash, out ArmorStand armorStand)) {
       slotCount = armorStand.m_slots.Count;
       return true;
     }
@@ -102,10 +110,18 @@ public static class PrefabUtils {
   }
 
   public static bool HasItemStandComponent(ZDO zdo) {
-    return ItemStandPrefabs.ContainsKey(zdo.m_prefab);
+    return HasItemStandComponent(zdo.m_prefab);
+  }
+
+  public static bool HasItemStandComponent(int prefabHash) {
+    return ItemStandPrefabs.ContainsKey(prefabHash);
   }
 
   public static bool HasItemDropComponent(ZDO zdo) {
-    return ItemDropPrefabs.ContainsKey(zdo.m_prefab);
+    return HasItemDropComponent(zdo.m_prefab);
+  }
+
+  public static bool HasItemDropComponent(int prefabHash) {
+    return ItemDropPrefabs.ContainsKey(prefabHash);
   }
 }

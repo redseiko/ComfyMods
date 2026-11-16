@@ -41,4 +41,19 @@ public static class DatabaseUtils {
 
     database.Commit();
   }
+
+  public static void InsertPrefabHashes(SQLiteConnection database, Dictionary<int, string> prefabNames) {
+    database.BeginTransaction();
+
+    foreach (KeyValuePair<int, string> pair in prefabNames) {
+      database.InsertOrReplace(
+          new PrefabHash() {
+            Hash = pair.Key,
+            PrefabName = pair.Value,
+          },
+          typeof(PrefabHash));
+    }
+
+    database.Commit();
+  }
 }

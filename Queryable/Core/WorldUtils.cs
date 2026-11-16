@@ -1,6 +1,7 @@
 namespace Queryable;
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -9,6 +10,22 @@ using ComfyLib;
 public static class WorldUtils {
   public static string WorldsDir {
     get => Path.Combine(Utils.GetSaveDataPath(FileHelpers.FileSource.Local), "worlds_local");
+  }
+
+  public static List<string> GetWorldFilenames() {
+    if (!Directory.Exists(WorldsDir)) {
+      return [];
+    }
+
+    List<string> worldFilenames = [];
+
+    foreach (string directory in Directory.GetDirectories(WorldsDir)) {
+      if (Directory.GetFiles(directory, "_main.*.db2").Length > 0) {
+        worldFilenames.Add(Path.GetFileName(directory));
+      }
+    }
+
+    return worldFilenames;
   }
 
   public static string GetWorldName(World world) {
@@ -20,6 +37,63 @@ public static class WorldUtils {
   }
 
   static readonly Regex _mainDb2Regex = new(@"^_main\.(\d+)\.db2$", RegexOptions.Compiled);
+
+  public static bool TryGetWorldChunks(
+      string worldFilename, out int totalZDOCount, out List<string> chunkFilePaths) {
+    totalZDOCount = 0;
+    chunkFilePaths = [];
+
+    string worldPath = Path.Combine(WorldsDir, worldFilename);
+
+    if (!Directory.Exists(worldPath)) {
+      ComfyLogger.LogError($"Could not find world directory at: {worldPath}");
+      return false;
+    }
+
+    if (!TryGetLatestSaveNumber(worldPath, out uint saveNumber, out string _)) {
+      ComfyLogger.LogError($"Could not find any _main.<N>.db2 file in: {worldPath}");
+      return false;
+    }
+
+    string chunksPath = Path.Combine(worldPath, $"_main.{saveNumber}.chunks");
+
+    if (!File.Exists(chunksPath)) {
+      ComfyLogger.LogError($"Could not find chunks file at: {chunksPath}");
+      return false;
+    }
+
+    try {
+      using MemoryStream stream = new(File.ReadAllBytes(chunksPath), writable: false);
+      using BinaryReader reader = new(stream);
+
+      reader.ReadUInt16();
+      totalZDOCount = reader.ReadInt32();
+      int chunkCount = reader.ReadInt32();
+
+      chunkFilePaths = new(capacity: chunkCount);
+
+      for (int i = 0; i < chunkCount; i++) {
+        ushort chunkIndex = reader.ReadUInt16();
+        byte chunkSize = reader.ReadByte();
+        uint chunkVersion = reader.ReadUInt32();
+        reader.ReadInt32();
+
+        string chunkFilename = $"{(chunkIndex >> 8):x2}_{chunkIndex & 0xFF:x2}__{chunkSize}_{chunkVersion}.chunk";
+        string chunkFilePath = Path.Combine(worldPath, chunkFilename);
+
+        if (File.Exists(chunkFilePath)) {
+          chunkFilePaths.Add(chunkFilePath);
+        } else {
+          ComfyLogger.LogError($"Missing chunk file: {chunkFilePath}");
+        }
+      }
+
+      return chunkFilePaths.Count > 0;
+    } catch (Exception exception) {
+      ComfyLogger.LogError($"Exception while reading chunks file: {chunksPath}\n{exception}");
+      return false;
+    }
+  }
 
   public static bool QueryWorldFile(string worldFilename) {
     string worldPath = Path.Combine(WorldsDir, worldFilename);

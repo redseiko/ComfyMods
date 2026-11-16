@@ -42,10 +42,51 @@ public static class ZDOUtils {
     return dataObject;
   }
 
+  public static DataObject CreateDataObject(ChunkZDO zdo) {
+    Vector3 position = zdo.Position;
+
+    DataObject dataObject =
+        new DataObject() {
+          PrefabHash = zdo.PrefabHash,
+          PositionX = Mathf.RoundToInt(position.x),
+          PositionY = Mathf.RoundToInt(position.y),
+          PositionZ = Mathf.RoundToInt(position.z),
+        };
+
+    if (zdo.Longs.TryGetValue(ZDOVars.s_creator, out long creatorId)) {
+      dataObject.CreatorId = creatorId;
+    }
+
+    if (zdo.Longs.TryGetValue(EpochTimeCreatedHash, out long epochTimeCreated)) {
+      dataObject.EpochTimeCreated = epochTimeCreated;
+    }
+
+    if (zdo.Longs.TryGetValue(OriginalUidUserHash, out long originalUidUser)
+        && zdo.Longs.TryGetValue(OriginalUidIdHash, out long originalUidId)) {
+      dataObject.OriginalUid = $"{originalUidUser}:{originalUidId}";
+    }
+
+    return dataObject;
+  }
+
   public static bool TryReadContainerItems(ZDO zdo, List<ContainerItem> items) {
-    if (!ZDOExtraData.GetByteArray(zdo.m_uid, ZDOVars.s_items, out byte[] itemsData)
-        || itemsData == null
-        || itemsData.Length <= 0) {
+    if (!ZDOExtraData.GetByteArray(zdo.m_uid, ZDOVars.s_items, out byte[] itemsData)) {
+      return false;
+    }
+
+    return TryReadContainerItems(itemsData, items);
+  }
+
+  public static bool TryReadContainerItems(ChunkZDO zdo, List<ContainerItem> items) {
+    if (!zdo.ByteArrays.TryGetValue(ZDOVars.s_items, out byte[] itemsData)) {
+      return false;
+    }
+
+    return TryReadContainerItems(itemsData, items);
+  }
+
+  public static bool TryReadContainerItems(byte[] itemsData, List<ContainerItem> items) {
+    if (itemsData == null || itemsData.Length <= 0) {
       return false;
     }
 
@@ -54,7 +95,7 @@ public static class ZDOUtils {
 
     int version = reader.ReadInt32();
 
-    if (version < (int)global::Version.Item.Smaller) {
+    if (version < (int) Version.Item.Smaller) {
       return false;
     }
 
@@ -225,9 +266,25 @@ public static class ZDOUtils {
   }
 
   static bool TryReadItemDropItem(ZDOID zid, int itemDataHash, out ItemDropItem item) {
-    if (!ZDOExtraData.GetByteArray(zid, itemDataHash, out byte[] itemDataBytes)
-        || itemDataBytes == null
-        || itemDataBytes.Length <= 2) {
+    if (!ZDOExtraData.GetByteArray(zid, itemDataHash, out byte[] itemDataBytes)) {
+      item = default;
+      return false;
+    }
+
+    return TryReadItemDropItem(itemDataBytes, out item);
+  }
+
+  static bool TryReadItemDropItem(ChunkZDO zdo, int itemDataHash, out ItemDropItem item) {
+    if (!zdo.ByteArrays.TryGetValue(itemDataHash, out byte[] itemDataBytes)) {
+      item = default;
+      return false;
+    }
+
+    return TryReadItemDropItem(itemDataBytes, out item);
+  }
+
+  static bool TryReadItemDropItem(byte[] itemDataBytes, out ItemDropItem item) {
+    if (itemDataBytes == null || itemDataBytes.Length <= 2) {
       item = default;
       return false;
     }
@@ -253,6 +310,20 @@ public static class ZDOUtils {
     }
 
     if (ZDOExtraData.GetString(zid, itemKeyHash, out itemName) && !string.IsNullOrEmpty(itemName)) {
+      return true;
+    }
+
+    itemName = default;
+    return false;
+  }
+
+  static bool TryGetAttachedItemName(ChunkZDO zdo, int itemKeyHash, out string itemName) {
+    if (zdo.Ints.TryGetValue(itemKeyHash, out int itemHash) && itemHash != 0) {
+      itemName = PrefabUtils.TryGetPrefabName(itemHash, out string prefabName) ? prefabName : itemHash.ToString();
+      return true;
+    }
+
+    if (zdo.Strings.TryGetValue(itemKeyHash, out itemName) && !string.IsNullOrEmpty(itemName)) {
       return true;
     }
 
@@ -287,6 +358,32 @@ public static class ZDOUtils {
     return armorStandItems.Count > 0;
   }
 
+  public static bool TryReadArmorStandItems(ChunkZDO zdo, int slotCount, List<ItemDropItem> armorStandItems) {
+    if (slotCount <= 0) {
+      return false;
+    }
+
+    PrefabUtils.CacheArmorStandSlots(slotCount);
+    armorStandItems.Clear();
+
+    for (int slotIndex = 0; slotIndex < slotCount; slotIndex++) {
+      ItemSlot itemSlot = PrefabUtils.ArmorStandItemSlots[slotIndex];
+
+      if (!TryGetAttachedItemName(zdo, itemSlot.ItemHash, out string itemName)) {
+        continue;
+      }
+
+      if (!TryReadItemDropItem(zdo, itemSlot.ItemDataHash, out ItemDropItem item)) {
+        item = new ItemDropItem();
+      }
+
+      item.Name = itemName;
+      armorStandItems.Add(item);
+    }
+
+    return armorStandItems.Count > 0;
+  }
+
   public static bool TryReadItemStandItem(ZDO zdo, out ItemDropItem item) {
     if (!TryGetAttachedItemName(zdo.m_uid, ZDOVars.s_item, out string itemName)) {
       item = default;
@@ -294,6 +391,20 @@ public static class ZDOUtils {
     }
 
     if (!TryReadItemDropItem(zdo, out item)) {
+      item = new ItemDropItem();
+    }
+
+    item.Name = itemName;
+    return true;
+  }
+
+  public static bool TryReadItemStandItem(ChunkZDO zdo, out ItemDropItem item) {
+    if (!TryGetAttachedItemName(zdo, ZDOVars.s_item, out string itemName)) {
+      item = default;
+      return false;
+    }
+
+    if (!TryReadItemDropItem(zdo, ZDOVars.s_itemData, out item)) {
       item = new ItemDropItem();
     }
 
@@ -309,6 +420,19 @@ public static class ZDOUtils {
     if (string.IsNullOrEmpty(item.Name) && zdo.m_prefab != 0) {
       item.Name =
           PrefabUtils.TryGetPrefabName(zdo.m_prefab, out string prefabName) ? prefabName : zdo.m_prefab.ToString();
+    }
+
+    return true;
+  }
+
+  public static bool TryReadItemDropItem(ChunkZDO zdo, out ItemDropItem item) {
+    if (!TryReadItemDropItem(zdo, ZDOVars.s_itemData, out item)) {
+      return false;
+    }
+
+    if (string.IsNullOrEmpty(item.Name) && zdo.PrefabHash != 0) {
+      item.Name =
+          PrefabUtils.TryGetPrefabName(zdo.PrefabHash, out string prefabName) ? prefabName : zdo.PrefabHash.ToString();
     }
 
     return true;

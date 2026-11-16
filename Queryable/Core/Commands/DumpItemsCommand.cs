@@ -42,7 +42,7 @@ public static class DumpItemsCommand {
 
     using (SQLiteConnection populateDatabase = DatabaseUtils.CreateDatabaseAndTables(databaseName)) {
       Task populateTask =
-          Task.Run(() => DatabaseUtils.InsertPrefabHashes(populateDatabase, ZNetScene.s_instance.m_namedPrefabs));
+          Task.Run(() => DatabaseUtils.InsertPrefabHashes(populateDatabase, PrefabUtils.PrefabNames));
 
       while (!populateTask.IsCompleted) {
         yield return null;

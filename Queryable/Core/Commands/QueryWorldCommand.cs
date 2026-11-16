@@ -1,8 +1,5 @@
 ﻿namespace Queryable;
 
-using System.Collections.Generic;
-using System.IO;
-
 using ComfyLib;
 
 public static class QueryWorldCommand {
@@ -12,24 +9,8 @@ public static class QueryWorldCommand {
         "query-world",
         "(Queryable) query-world",
         Run,
-        optionsFetcher: GetWorldFilenames,
+        optionsFetcher: WorldUtils.GetWorldFilenames,
         alwaysRefreshTabOptions: true);
-  }
-
-  public static List<string> GetWorldFilenames() {
-    if (!Directory.Exists(WorldUtils.WorldsDir)) {
-      return [];
-    }
-
-    List<string> worldFilenames = [];
-
-    foreach (string directory in Directory.GetDirectories(WorldUtils.WorldsDir)) {
-      if (Directory.GetFiles(directory, "_main.*.db2").Length > 0) {
-        worldFilenames.Add(Path.GetFileName(directory));
-      }
-    }
-
-    return worldFilenames;
   }
 
   public static object Run(Terminal.ConsoleEventArgs args) {   
