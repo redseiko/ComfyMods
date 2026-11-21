@@ -1,4 +1,4 @@
-﻿namespace Unbuildable;
+namespace Unbuildable;
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -18,19 +18,20 @@ static class ZDOManPatch {
             new CodeMatch(OpCodes.Ldloc_S),
             new CodeMatch(OpCodes.Ldloc_3),
             new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(ZDO), nameof(ZDO.Deserialize))))
-        .ThrowIfInvalid("Could not patch ZDOMan.RPC_ZDOData()! (Deserialize)")
-        .SaveInstruction(offset: 0, out CodeInstruction ldLocS12)
+        .ThrowIfInvalid("Could not patch ZDOMan.RPC_ZDOData()! (deserialize)")
+        .CopyInstruction(out CodeInstruction ldLocS12)
         .MatchStartForward(
             new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(ZDOMan), nameof(ZDOMan.m_deadZDOs))),
             new CodeMatch(OpCodes.Ldloc_S),
             new CodeMatch(
                 OpCodes.Callvirt,
                 AccessTools.Method(typeof(Dictionary<ZDOID, long>), nameof(Dictionary<ZDOID, long>.ContainsKey))))
-        .ThrowIfInvalid("Could not patch ZDOMan.RPC_ZDOData()! (ContainsKey)")
+        .ThrowIfInvalid("Could not patch ZDOMan.RPC_ZDOData()! (contains-key)")
         .Advance(offset: 3)
         .InsertAndAdvance(
             ldLocS12,
-            Transpilers.EmitDelegate(ZDOManUtils.DestroyZDOsDelegate))
+            new CodeInstruction(
+                OpCodes.Call, AccessTools.Method(typeof(ZDOManUtils), nameof(ZDOManUtils.DestroyZDOsDelegate))))
         .InstructionEnumeration();
   }
 }

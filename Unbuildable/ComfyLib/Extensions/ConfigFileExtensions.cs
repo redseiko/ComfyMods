@@ -1,4 +1,4 @@
-﻿namespace ComfyLib;
+namespace ComfyLib;
 
 using System;
 using System.Collections.Generic;
@@ -90,10 +90,6 @@ public static class ConfigFileExtensions {
       this ConfigEntry<T> configEntry, Action<ConfigEntry<T>> settingChangedHandler) {
     configEntry.SettingChanged +=
         (_, eventArgs) => settingChangedHandler((ConfigEntry<T>) ((SettingChangedEventArgs) eventArgs).ChangedSetting);
-  }
-
-  public static string[] GetStringValues(this ConfigEntry<string> configEntry) {
-    return configEntry.Value.Split([','], StringSplitOptions.RemoveEmptyEntries);
   }
 
   internal sealed class ConfigurationManagerAttributes {

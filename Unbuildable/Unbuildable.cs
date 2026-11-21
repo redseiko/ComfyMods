@@ -1,4 +1,4 @@
-﻿namespace Unbuildable;
+namespace Unbuildable;
 
 using System;
 using System.Globalization;
@@ -15,7 +15,7 @@ using static PluginConfig;
 public sealed class Unbuildable : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.unbuildable";
   public const string PluginName = "Unbuildable";
-  public const string PluginVersion = "1.0.0";
+  public const string PluginVersion = "1.1.0";
 
   static ManualLogSource _logger;
 
