@@ -1,12 +1,10 @@
-﻿namespace Queryable;
+namespace Queryable;
 
 using System.Collections.Generic;
 
 using Database;
 
 using SQLite;
-
-using UnityEngine;
 
 public static class DatabaseUtils {
   public static SQLiteConnection CreateDatabase(string databaseName) {
@@ -25,21 +23,6 @@ public static class DatabaseUtils {
     database.CreateTable<ItemDropItem>();
 
     return database;
-  }
-
-  public static void InsertPrefabHashes(SQLiteConnection database, Dictionary<int, GameObject> prefabCache) {
-    database.BeginTransaction();
-
-    foreach (KeyValuePair<int, GameObject> pair in prefabCache) {
-      database.InsertOrReplace(
-          new PrefabHash() {
-            Hash = pair.Key,
-            PrefabName = pair.Value.name,
-          },
-          typeof(PrefabHash));
-    }
-
-    database.Commit();
   }
 
   public static void InsertPrefabHashes(SQLiteConnection database, Dictionary<int, string> prefabNames) {

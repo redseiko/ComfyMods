@@ -1,4 +1,4 @@
-﻿namespace Queryable;
+namespace Queryable;
 
 using ComfyLib;
 

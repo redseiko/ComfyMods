@@ -79,14 +79,10 @@ public sealed class ChunkZDO {
     if ((extraDataFlags & 16) != 0) {
       int count = ReadNumItems(reader, worldVersion);
 
-      if (includeItemData) {
-        for (int i = 0; i < count; i++) {
-          int key = reader.ReadInt32();
-          int value = reader.ReadInt32();
-          Ints[key] = value;
-        }
-      } else {
-        reader.BaseStream.Seek(count * 8L, SeekOrigin.Current);
+      for (int i = 0; i < count; i++) {
+        int key = reader.ReadInt32();
+        int value = reader.ReadInt32();
+        Ints[key] = value;
       }
     }
 

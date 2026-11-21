@@ -1,4 +1,4 @@
-﻿namespace Queryable.Database;
+namespace Queryable.Database;
 
 using SQLite;
 
@@ -22,18 +22,5 @@ public sealed class ItemDropItem {
   public string? CustomDataJson { get; set; }
   public int? WorldLevel { get; set; }
   public bool? IsPickedUp { get; set; }
-
-  public bool IsNull() {
-    return
-        Name == null
-        && Durability == null
-        && Stack == null
-        && Quality == null
-        && Variant == null
-        && CrafterId == null
-        && CrafterName == null
-        && CustomDataJson == null
-        && WorldLevel == null
-        && IsPickedUp == null;
-  }
+  public bool? IsCheated { get; set; }
 }

@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.4.0
+
+  * Added support for dumping `cheated` flag on items and ZDOs.
+  * Code clean-up and refactoring.
+
 ### 1.3.0
 
   * Added new `dump-world-items` and `dump-world-zdos` commands.

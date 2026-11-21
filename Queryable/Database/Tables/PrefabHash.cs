@@ -1,4 +1,4 @@
-﻿namespace Queryable.Database;
+namespace Queryable.Database;
 
 using SQLite;
 

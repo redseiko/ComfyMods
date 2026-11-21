@@ -30,6 +30,10 @@ public static class ZDOUtils {
       dataObject.CreatorId = creatorId;
     }
 
+    if (ZDOExtraData.GetInt(zid, ZDOVars.s_cheated, out int cheated)) {
+      dataObject.Cheated = cheated;
+    }
+
     if (ZDOExtraData.GetLong(zid, EpochTimeCreatedHash, out long epochTimeCreated)) {
       dataObject.EpochTimeCreated = epochTimeCreated;
     }
@@ -55,6 +59,10 @@ public static class ZDOUtils {
 
     if (zdo.Longs.TryGetValue(ZDOVars.s_creator, out long creatorId)) {
       dataObject.CreatorId = creatorId;
+    }
+
+    if (zdo.Ints.TryGetValue(ZDOVars.s_cheated, out int cheated)) {
+      dataObject.Cheated = cheated;
     }
 
     if (zdo.Longs.TryGetValue(EpochTimeCreatedHash, out long epochTimeCreated)) {
@@ -139,7 +147,8 @@ public static class ZDOUtils {
       out int variant,
       out long crafterId,
       out string crafterName,
-      out string customDataJson) {
+      out string customDataJson,
+      out bool isCheated) {
     durability = reader.ReadInt32() * 0.01f;
     gridPositionX = reader.ReadByte();
     gridPositionY = reader.ReadByte();
@@ -158,8 +167,14 @@ public static class ZDOUtils {
     int customDataCount = (flags & 128) == 0 ? 0 : ReadNumItems(reader);
     customDataJson = customDataCount > 0 ? ReadItemCustomDataToJson(reader, customDataCount) : string.Empty;
 
+    isCheated = false;
+
     if (version >= (int) Version.Item.ChunksNCheats || version == (int) Version.Item.AbandonedDN) {
-      reader.ReadByte();
+      byte flags2 = reader.ReadByte();
+
+      if (version >= (int) Version.Item.NewCheats) {
+        isCheated = (flags2 & 1) != 0;
+      }
     }
   }
 
@@ -179,7 +194,8 @@ public static class ZDOUtils {
         out int variant,
         out long crafterId,
         out string crafterName,
-        out string customDataJson);
+        out string customDataJson,
+        out bool isCheated);
 
     string name =
         prefabHash == 0
@@ -200,6 +216,7 @@ public static class ZDOUtils {
       CustomDataJson = customDataJson,
       WorldLevel = worldLevel,
       IsPickedUp = isPickedUp,
+      IsCheated = isCheated,
     };
   }
 
@@ -219,7 +236,8 @@ public static class ZDOUtils {
         out int variant,
         out long crafterId,
         out string crafterName,
-        out string customDataJson);
+        out string customDataJson,
+        out bool isCheated);
 
     string? name =
         prefabHash == 0
@@ -237,6 +255,7 @@ public static class ZDOUtils {
       CustomDataJson = customDataJson,
       WorldLevel = worldLevel,
       IsPickedUp = isPickedUp,
+      IsCheated = isCheated,
     };
   }
 
@@ -296,7 +315,7 @@ public static class ZDOUtils {
 
     if (version >= (int) Version.Item.Smaller) {
       item = ReadItemDropItem(reader, version);
-      return !item.IsNull();
+      return true;
     }
 
     item = default;

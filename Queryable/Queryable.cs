@@ -12,7 +12,7 @@ using HarmonyLib;
 public sealed class Queryable : BaseUnityPlugin {
   public const string PluginGuid = "redseiko.valheim.queryable";
   public const string PluginName = "Queryable";
-  public const string PluginVersion = "1.3.0";
+  public const string PluginVersion = "1.4.0";
 
   void Awake() {
     ComfyLogger.BindLogger(Logger);

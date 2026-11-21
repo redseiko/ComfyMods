@@ -1,4 +1,4 @@
-﻿namespace Queryable;
+namespace Queryable;
 
 public static class ItemDropUtils {
 

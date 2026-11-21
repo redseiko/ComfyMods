@@ -77,21 +77,25 @@ public static class DumpItemsCommand {
         $"Finished dumping items, elapsed time: {elapsedTime}\n"
             + $"Parsed {zdoCount} ZDOs and found...\n"
             + $"  * {report.ContainerCount} Containers\n"
-            + $"  * {report.ContainerItemCount} items in Containers\n"
-            + $"  * {report.ItemDropCount} ItemDrop items\n"
-            + $"  * {report.ItemStandItemCount} ItemStand items\n"
+            + $"  * {report.ContainerItemCount} items in Containers ({report.CheatedContainerItemCount} cheated)\n"
+            + $"  * {report.ItemDropCount} ItemDrop items ({report.CheatedItemDropCount} cheated)\n"
+            + $"  * {report.ItemStandItemCount} ItemStand items ({report.CheatedItemStandItemCount} cheated)\n"
             + $"  * {report.ArmorStandCount} ArmorStands\n"
-            + $"  * {report.ArmorStandItemCount} items on ArmorStands",
+            + $"  * {report.ArmorStandItemCount} items on ArmorStands ({report.CheatedArmorStandItemCount} cheated)",
         context);
   }
 
   public sealed class DumpReport {
     public int ContainerCount = 0;
     public int ContainerItemCount = 0;
+    public int CheatedContainerItemCount = 0;
     public int ItemDropCount = 0;
+    public int CheatedItemDropCount = 0;
     public int ItemStandItemCount = 0;
+    public int CheatedItemStandItemCount = 0;
     public int ArmorStandCount = 0;
     public int ArmorStandItemCount = 0;
+    public int CheatedArmorStandItemCount = 0;
   }
 
   public static void RunThread(SQLiteConnection database, ConcurrentQueue<ZDO> zdos, DumpReport report) {
@@ -112,6 +116,10 @@ public static class DumpItemsCommand {
 
         for (int i = 0, count = containerItems.Count; i < count; i++) {
           containerItems[i].ObjectId = containerId;
+
+          if (containerItems[i].IsCheated) {
+            report.CheatedContainerItemCount++;
+          }
         }
 
         database.InsertAll(containerItems, typeof(ContainerItem), runInTransaction: false);
@@ -121,7 +129,12 @@ public static class DumpItemsCommand {
       if (PrefabUtils.HasItemDropComponent(zdo) && ZDOUtils.TryReadItemDropItem(zdo, out ItemDropItem itemDropItem)) {
         report.ItemDropCount++;
 
+        if (itemDropItem.IsCheated == true) {
+          report.CheatedItemDropCount++;
+        }
+
         dataObject ??= InsertDataObject(database, zdo);
+        itemDropItem.ObjectId = dataObject.ObjectId;
         itemDropItem.ItemDropId = dataObject.ObjectId;
         database.Insert(itemDropItem, typeof(ItemDropItem));
       }
@@ -130,7 +143,12 @@ public static class DumpItemsCommand {
           && ZDOUtils.TryReadItemStandItem(zdo, out ItemDropItem itemStandItem)) {
         report.ItemStandItemCount++;
 
+        if (itemStandItem.IsCheated == true) {
+          report.CheatedItemStandItemCount++;
+        }
+
         dataObject ??= InsertDataObject(database, zdo);
+        itemStandItem.ObjectId = dataObject.ObjectId;
         itemStandItem.ItemStandId = dataObject.ObjectId;
         database.Insert(itemStandItem, typeof(ItemDropItem));
       }
@@ -144,7 +162,12 @@ public static class DumpItemsCommand {
         int armorStandId = dataObject.ObjectId;
 
         for (int i = 0, count = armorStandItems.Count; i < count; i++) {
+          armorStandItems[i].ObjectId = armorStandId;
           armorStandItems[i].ArmorStandId = armorStandId;
+
+          if (armorStandItems[i].IsCheated == true) {
+            report.CheatedArmorStandItemCount++;
+          }
         }
 
         database.InsertAll(armorStandItems, typeof(ItemDropItem), runInTransaction: false);

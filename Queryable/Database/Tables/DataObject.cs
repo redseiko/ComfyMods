@@ -1,4 +1,4 @@
-﻿namespace Queryable.Database;
+namespace Queryable.Database;
 
 using SQLite;
 
@@ -15,6 +15,9 @@ public sealed class DataObject {
 
   // Piece
   public long? CreatorId { get; set; }
+
+  // Cheat
+  public int? Cheated { get; set; }
 
   // Atlas
   public long? EpochTimeCreated { get; set; }

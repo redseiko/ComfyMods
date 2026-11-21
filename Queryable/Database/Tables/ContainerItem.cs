@@ -1,4 +1,4 @@
-﻿namespace Queryable.Database;
+namespace Queryable.Database;
 
 using SQLite;
 
@@ -22,4 +22,5 @@ public sealed class ContainerItem {
   public string CustomDataJson { get; set; }
   public int WorldLevel { get; set; }
   public bool IsPickedUp { get; set; }
+  public bool IsCheated { get; set; }
 }
