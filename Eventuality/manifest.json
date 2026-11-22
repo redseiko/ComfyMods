@@ -1,0 +1,8 @@
+{
+  "name": "Eventuality",
+  "version_number": "1.5.0",
+  "author": "ComfyMods",
+  "description": "RandEventSystem customization and control.",
+  "website_url": "https://github.com/redseiko/ComfyMods/tree/main/Eventuality",
+  "dependencies": [ "denikson-BepInExPack_Valheim-5.4.2202" ]
+}
