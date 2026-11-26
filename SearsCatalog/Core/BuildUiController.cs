@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using ComfyLib;
 
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 using static PluginConfig;
@@ -101,6 +100,7 @@ public static class BuildUiController {
 
   public static void DestroyBuildUi(BuildUi buildUi) {
     PieceSearchFilter.Destroy();
+
     SelectionWindow = default;
     WindowDragger = default;
     WindowResizer = default;
@@ -178,7 +178,7 @@ public static class BuildUiController {
 
     if (!specialButton) {
       specialButton =
-          UnityEngine.Object.Instantiate(buildUi.m_pieceButtonPrefab, buildUi.m_specialButtonsContainer)
+          Object.Instantiate(buildUi.m_pieceButtonPrefab, buildUi.m_specialButtonsContainer)
               .GetComponent<BuildUiPieceButton>();
 
       specialButton.transform.SetAsFirstSibling();
@@ -198,6 +198,7 @@ public static class BuildUiController {
   public static void UpdateSearch(BuildUi buildUi, string term) {
     if (!string.IsNullOrWhiteSpace(term) && buildUi.m_currentTagId != -1) {
       buildUi.SetCurrentTag(-1, false);
+      buildUi.FocusTag(-1);
       buildUi.UpdatePieceButtons();
       return;
     }
@@ -212,35 +213,32 @@ public static class BuildUiController {
   }
 
   public static void UpdatePieceSelection(BuildUi buildUi, Piece selectedPiece) {
-    if (TryGetTargetSelection(buildUi, selectedPiece, out GameObject target)) {
-      EventSystem.current.SetSelectedGameObject(target);
-    }
-  }
-
-  static bool TryGetTargetSelection(BuildUi buildUi, Piece selectedPiece, out GameObject target) {
     if (PieceSearchFilter.TryFindFilteredPieceIndex(selectedPiece, out int index)) {
       PieceGridView.ScrollToItem(index);
 
-      if (PieceGridView.TryGetGridItem(index, out target)) {
-        return true;
+      if (PieceGridView.TryGetGridItem(index, out GameObject item)
+          && item.TryGetComponent(out BuildUiPieceButton pieceButton)) {
+        buildUi.SelectPiece(pieceButton);
+        return;
       }
     }
 
-    if (FilteredPieces.Count > 0 && PieceGridView.TryGetFirstVisibleItem(out target)) {
-      return true;
+    if (FilteredPieces.Count > 0
+        && PieceGridView.TryGetFirstVisibleItem(out GameObject firstItem)
+        && firstItem.TryGetComponent(out BuildUiPieceButton firstButton)) {
+      buildUi.SelectPiece(firstButton);
+      return;
     }
 
     if (buildUi.m_tagListContainer.gameObject.activeSelf) {
-      target = buildUi.m_showAllTagsButton.gameObject;
-      return target;
+      buildUi.SelectTag(buildUi.m_showAllTagsButton.gameObject);
     }
-
-    target = default;
-    return false;
   }
 
-  public static void FocusPiece(Piece piece) {
-    if (PieceSearchFilter.TryFindFilteredPieceIndex(piece, out int index)) {
+  public static void FocusPiece(BuildUi buildUi, BuildUiPieceButton button) {
+    buildUi.OnHoverPiece(button);
+
+    if (button && PieceSearchFilter.TryFindFilteredPieceIndex(button.Piece, out int index)) {
       PieceGridView.ScrollToItem(index);
     }
   }
@@ -257,11 +255,13 @@ public static class BuildUiController {
     ConfigureGridNavigation(buildUi);
 
     GridNavigationUtility.ConfigureExplicitNavigation(
-        buildUi.m_tagListScrollContent, buildUi.GetTagListEdgeNavigation());
+        buildUi.m_tagListScrollContent, buildUi.GetTagListEdgeNavigation(), shouldWrapHorizontally: false);
 
     if (buildUi.m_specialPieceButton && buildUi.m_specialPieceButton.TryGetComponent(out Button specialButton)) {
       specialButton.navigation = buildUi.GetSpecialButtonNavigation();
     }
+
+    ConfigureSearchFieldNavigation(buildUi);
   }
 
   static void ConfigureGridNavigation(BuildUi buildUi) {
@@ -270,10 +270,7 @@ public static class BuildUiController {
             ? buildUi.m_specialPieceButton.GetComponent<Selectable>()
             : buildUi.m_searchField;
 
-    Selectable leftTarget =
-        buildUi.TryGetTagButtonById(buildUi.m_currentTagId, out BuildUiTagButton tagButton) && tagButton
-            ? tagButton.GetComponent<Selectable>()
-            : buildUi.m_showAllTagsButton.GetComponent<Selectable>();
+    Selectable leftTarget = GetActiveTagSelectable(buildUi);
 
     PieceGridView.EdgeNavigation =
         new Navigation {
@@ -284,6 +281,38 @@ public static class BuildUiController {
     PieceGridView.UpdateNavigation();
   }
 
+  static void ConfigureSearchFieldNavigation(BuildUi buildUi) {
+    Selectable downTarget = GetActiveTagSelectable(buildUi);
+
+    if (!downTarget
+        && PieceGridView.TryGetFirstVisibleItem(out GameObject firstItem)
+        && firstItem.TryGetComponent(out Selectable firstSelectable)) {
+      downTarget = firstSelectable;
+    }
+
+    Selectable rightTarget =
+        buildUi.m_specialPieceButton && buildUi.m_specialPieceButton.gameObject.activeInHierarchy
+            ? buildUi.m_specialPieceButton.GetComponent<Selectable>()
+            : default;
+
+    buildUi.m_searchField.navigation =
+        new Navigation {
+          mode = Navigation.Mode.Explicit,
+          selectOnDown = downTarget,
+          selectOnRight = rightTarget,
+        };
+  }
+
+  static Selectable GetActiveTagSelectable(BuildUi buildUi) {
+    if (!buildUi.m_tagListContainer.gameObject.activeSelf) {
+      return default;
+    }
+
+    return buildUi.TryGetTagButtonById(buildUi.m_currentTagId, out BuildUiTagButton tagButton) && tagButton
+        ? tagButton.GetComponent<Selectable>()
+        : buildUi.m_showAllTagsButton.GetComponent<Selectable>();
+  }
+
   public static GameObject GetFirstPieceButton() {
     if (PieceGridView.TryGetFirstVisibleItem(out GameObject item)) {
       return item;
@@ -292,24 +321,19 @@ public static class BuildUiController {
     return default;
   }
 
-  public static void SelectFirstPiece() {
-    if (PieceGridView.TryGetFirstVisibleItem(out GameObject item)) {
-      EventSystem.current.SetSelectedGameObject(item);
+  public static void SelectFirstPiece(BuildUi buildUi) {
+    if (PieceGridView.TryGetFirstVisibleItem(out GameObject item)
+        && item.TryGetComponent(out BuildUiPieceButton pieceButton)) {
+      buildUi.SelectPiece(pieceButton);
     }
   }
 
   public static void SelectFirstAvailableButton(BuildUi buildUi) {
     if (buildUi.m_tagListContainer.gameObject.activeSelf) {
-      if (buildUi.m_showAllTagsButton.TryGetComponent(out Selectable buttonSelectable)) {
-        buttonSelectable.Select();
-      }
-
+      buildUi.SelectTag(buildUi.m_showAllTagsButton.gameObject);
       return;
     }
 
-    if (PieceGridView.TryGetFirstVisibleItem(out GameObject item)
-        && item.TryGetComponent(out Selectable itemSelectable)) {
-      itemSelectable.Select();
-    }
+    SelectFirstPiece(buildUi);
   }
 }

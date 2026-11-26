@@ -295,6 +295,19 @@ public sealed class PooledGridView {
       return;
     }
 
+    Navigation edgeNavigation = EdgeNavigation;
+    Selectable edgeLeft = edgeNavigation.selectOnLeft;
+    Selectable edgeRight = edgeNavigation.selectOnRight;
+    Selectable edgeUp = edgeNavigation.selectOnUp;
+    Selectable edgeDown = edgeNavigation.selectOnDown;
+
+    bool hasEdgeLeft = edgeLeft;
+    bool hasEdgeRight = edgeRight;
+
+    int lastItemIndex = _totalItems - 1;
+    int lastRow = lastItemIndex / _columns;
+    Selectable lastRowFallback = lastItemIndex < endIndex ? GetItemSelectable(lastItemIndex) : edgeDown;
+
     for (int i = startIndex; i < endIndex; i++) {
       PooledItemState state = _itemStates[i % _itemStates.Length];
       Selectable selectable = state.Selectable;
@@ -310,24 +323,24 @@ public sealed class PooledGridView {
       int row = i / _columns;
 
       navigation.selectOnLeft =
-          column > 0 && i - 1 >= startIndex
+          (column > 0 || !hasEdgeLeft) && i - 1 >= startIndex
               ? GetItemSelectable(i - 1)
-              : EdgeNavigation.selectOnLeft;
+              : edgeLeft;
 
       navigation.selectOnRight =
-          column < _columns - 1 && i + 1 < endIndex
+          (column < _columns - 1 || !hasEdgeRight) && i + 1 < endIndex
               ? GetItemSelectable(i + 1)
-              : EdgeNavigation.selectOnRight;
+              : edgeRight;
 
       navigation.selectOnUp =
           row > 0 && i - _columns >= startIndex
               ? GetItemSelectable(i - _columns)
-              : (row == 0 ? EdgeNavigation.selectOnUp : null);
+              : (row == 0 ? edgeUp : default);
 
       navigation.selectOnDown =
           i + _columns < endIndex
               ? GetItemSelectable(i + _columns)
-              : default;
+              : (row < lastRow ? lastRowFallback : edgeDown);
 
       selectable.navigation = navigation;
     }

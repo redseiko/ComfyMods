@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.12.0
+
+  * Fixed for the `v1.0.30` patch.
+  * Added a fix for vanilla-bug that would duplicate event-listeners when opening the `BuildUi` panel.
+
 ### 1.11.0
 
   * Updated for the `v1.0.21` patch.
