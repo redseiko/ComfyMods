@@ -129,6 +129,8 @@ public static class BuildUiController {
 
     WindowDragger.enabled = BuildUiCanMovePanel.Value;
     WindowResizer.enabled = BuildUiCanResizePanel.Value;
+
+    buildUi.m_tabHandler.m_keybaordInput = true;
   }
 
   public static void UpdatePieceButtons(BuildUi buildUi) {
@@ -204,6 +206,12 @@ public static class BuildUiController {
     }
 
     ApplySearch(term);
+
+    if (!buildUi.gameObject.activeSelf) {
+      Player.m_localPlayer.GetBuildSelection(out Piece piece, out _, out _, out _, out _);
+      UpdatePieceSelection(buildUi, piece);
+    }
+
     buildUi.ConfigureButtonNavigation();
   }
 
@@ -213,6 +221,13 @@ public static class BuildUiController {
   }
 
   public static void UpdatePieceSelection(BuildUi buildUi, Piece selectedPiece) {
+    if (buildUi.m_specialPieceButton
+        && buildUi.m_specialPieceButton.gameObject.activeSelf
+        && buildUi.m_specialPieceButton.Piece == selectedPiece) {
+      buildUi.SelectPiece(buildUi.m_specialPieceButton);
+      return;
+    }
+
     if (PieceSearchFilter.TryFindFilteredPieceIndex(selectedPiece, out int index)) {
       PieceGridView.ScrollToItem(index);
 

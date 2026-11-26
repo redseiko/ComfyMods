@@ -1,5 +1,13 @@
 ## Changelog
 
+### 1.13.0
+
+  * Fixed for the `v1.0.31` patch.
+  * Removed fix for duplicate event-listeners vanilla-bug as it's now fixed in vanilla.
+  * Added fix for *new* vanilla-bug that would prevent `BuildUi` keyboard tab-switching in certain edge-cases.
+  * Added fix for vanilla-bug where selecting a piece with `Enter` in `BuildUi` also activates `Chat` input.
+  * Added fix for vanilla-bug where reopening `BuildUi` could fail to select the active piece.
+
 ### 1.12.0
 
   * Fixed for the `v1.0.30` patch.

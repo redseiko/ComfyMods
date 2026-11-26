@@ -1,12 +1,7 @@
 namespace SearsCatalog;
 
-using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-
-using ComfyLib;
 
 using HarmonyLib;
 
@@ -16,105 +11,24 @@ using static PluginConfig;
 
 [HarmonyPatch(typeof(BuildUi))]
 static class BuildUiPatch {
-  [HarmonyPrefix]
-  [HarmonyPatch(nameof(BuildUi.Start))]
-  static void StartPrefix(BuildUi __instance) {
-    SubscribeStartEvents(__instance);
-  }
-
   [HarmonyPostfix]
   [HarmonyPatch(nameof(BuildUi.Start))]
   static void StartPostfix(BuildUi __instance) {
     BuildUiController.SetupBuildUi(__instance);
   }
 
-  [HarmonyReversePatch(HarmonyReversePatchType.Original)]
-  [HarmonyPatch(nameof(BuildUi.SubscribeEvents))]
-  [MethodImpl(MethodImplOptions.NoInlining)]
-  static void SubscribeStartEvents(BuildUi instance) {
-    static IEnumerable<CodeInstruction> Transpiler(
-        IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
-      ConstructorInfo actionConstructor = AccessTools.Constructor(typeof(Action), [typeof(object), typeof(IntPtr)]);
-
-      return new CodeMatcher(instructions, generator)
-          .Start()
-          .MatchStartForward(
-              new CodeMatch(OpCodes.Ldarg_0),
-              new CodeMatch(OpCodes.Ldftn, AccessTools.Method(typeof(BuildUi), nameof(BuildUi.OnLayoutChanged))),
-              new CodeMatch(OpCodes.Newobj, actionConstructor),
-              new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZInput), "add_OnInputLayoutChanged")))
-          .ThrowIfInvalid("Could not reverse-patch BuildUi.SubscribeEvents()! (on-input-layout-changed)")
-          .ExtractLabels(out List<Label> layoutChangedLabels)
-          .CreateLabelOffset(offset: 4, out Label skipLayoutChangedLabel)
-          .Insert(new CodeInstruction(OpCodes.Br, skipLayoutChangedLabel))
-          .AddLabels(layoutChangedLabels)
-          .Advance(offset: 5)
-          .MatchStartForward(
-              new CodeMatch(OpCodes.Ldarg_0),
-              new CodeMatch(
-                  OpCodes.Ldftn, AccessTools.Method(typeof(BuildUi), nameof(BuildUi.OnTouchLongPressStarted))),
-              new CodeMatch(OpCodes.Newobj, actionConstructor),
-              new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(TouchLongPress), "add_Started")),
-              new CodeMatch(OpCodes.Ldarg_0),
-              new CodeMatch(
-                  OpCodes.Ldftn, AccessTools.Method(typeof(BuildUi), nameof(BuildUi.OnTouchLongPressPerformed))),
-              new CodeMatch(OpCodes.Newobj, actionConstructor),
-              new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(TouchLongPress), "add_Performed")))
-          .ThrowIfInvalid("Could not reverse-patch BuildUi.SubscribeEvents()! (touch-long-press)")
-          .ExtractLabels(out List<Label> touchLongPressLabels)
-          .CreateLabelOffset(offset: 8, out Label skipTouchLongPressLabel)
-          .Insert(new CodeInstruction(OpCodes.Br, skipTouchLongPressLabel))
-          .AddLabels(touchLongPressLabels)
-          .InstructionEnumeration();
-    }
-
-    _ = Transpiler(default, default);
-  }
-
-  [HarmonyTranspiler]
-  [HarmonyPatch(nameof(BuildUi.SubscribeEvents))]
-  static IEnumerable<CodeInstruction> SubscribeEventsTranspiler(
-      IEnumerable<CodeInstruction> instructions, ILGenerator generator) {
-    ConstructorInfo actionConstructor = AccessTools.Constructor(typeof(Action), [typeof(object), typeof(IntPtr)]);
-
-    return new CodeMatcher(instructions, generator)
-        .Start()
-        .MatchStartForward(
-            new CodeMatch(OpCodes.Ldarg_0),
-            new CodeMatch(OpCodes.Ldftn, AccessTools.Method(typeof(BuildUi), nameof(BuildUi.OnLayoutChanged))),
-            new CodeMatch(OpCodes.Newobj, actionConstructor),
-            new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZInput), "add_OnInputLayoutChanged")))
-        .ThrowIfInvalid("Could not patch BuildUi.SubscribeEvents()! (on-input-layout-changed)")
-        .CreateLabel(out Label onLayoutChangedLabel)
-        .MatchStartForward(
-            new CodeMatch(OpCodes.Ldarg_0),
-            new CodeMatch(OpCodes.Ldftn, AccessTools.Method(typeof(BuildUi), nameof(BuildUi.OnTouchLongPressStarted))),
-            new CodeMatch(OpCodes.Newobj, actionConstructor),
-            new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(TouchLongPress), "add_Started")))
-        .ThrowIfInvalid("Could not patch BuildUi.SubscribeEvents()! (touch-long-press)")
-        .CreateLabel(out Label touchLongPressLabel)
-        .Start()
-        .MatchStartForward(
-            new CodeMatch(OpCodes.Ldarg_0),
-            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(BuildUi), nameof(BuildUi.m_searchField))))
-        .ThrowIfInvalid("Could not patch BuildUi.SubscribeEvents()! (search-field)")
-        .ExtractLabels(out List<Label> searchFieldLabels)
-        .Insert(new CodeInstruction(OpCodes.Br, onLayoutChangedLabel))
-        .AddLabels(searchFieldLabels)
-        .MatchStartForward(
-            new CodeMatch(OpCodes.Ldarg_0),
-            new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(BuildUi), nameof(BuildUi.m_recentPieceList))))
-        .ThrowIfInvalid("Could not patch BuildUi.SubscribeEvents()! (recent-piece-list)")
-        .ExtractLabels(out List<Label> recentPieceListLabels)
-        .Insert(new CodeInstruction(OpCodes.Br, touchLongPressLabel))
-        .AddLabels(recentPieceListLabels)
-        .InstructionEnumeration();
-  }
-
   [HarmonyPrefix]
   [HarmonyPatch(nameof(BuildUi.OpenBuildMenu))]
   static void OpenBuildMenuPrefix(BuildUi __instance) {
     BuildUiController.ShowBuildUi(__instance);
+  }
+
+  [HarmonyPostfix]
+  [HarmonyPatch(nameof(BuildUi.OnSelectPiece))]
+  static void OnSelectPiecePostfix() {
+    if (IsModEnabled.Value) {
+      ZInput.ResetButtonStatus("Chat");
+    }
   }
 
   [HarmonyPrefix]
